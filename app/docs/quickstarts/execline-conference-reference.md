@@ -13,7 +13,7 @@ Our conference will include two user types:
 
 In our example conference, conference members will call into our conference line to speak with our host, regarding some service. 
 
-Our conference host will then be notified of new members joining his conference which the conference host can start conferencing with as needed.
+Our host will then be notified of new members calling which he can start conferencing with as needed.
 
 ## How it works
 
