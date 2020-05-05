@@ -240,8 +240,17 @@ class RegisterController extends ApiAuthController
       }
       $user = $this->getUser($request);
       $user->update( $data );
+      if (isset($data['password'])) {
+          $mail = Config::get("mail");
+          $data = [];
+          Mail::send('emails.password_was_reset', $data, function ($message) use ($user, $mail) {
+              $message->to($user->email);
+              $message->subject("Lineblocs.com - Password reset successfully");
+              $from = $mail['from'];
+              $message->from($from['address'], $from['name']);
+          });
+      }
       return $this->response->noContent();
-  
     }
     public function updateWorkspace(Request $request)
     {
