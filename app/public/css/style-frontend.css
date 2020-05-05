@@ -158,8 +158,37 @@ p {
 .pricing-hdg {
   margin: 35px 0 0px;
 }
+.related-bar  {
+}
 .related-bar .inner {
-  margin-left: 30px;
+  margin-left: 70px;
+  position: relative;
+}
+
+.related-bar ul {
+  margin: 25px 0 10px;
+}
+.related-bar ul li {
+  margin-bottom: 15px;
+  padding-left: 30px;
+}
+
+.related-bar ul li a {
+  position: relative;
+  top: -5px;
+}
+.related-bar ul li:before {
+    background-color: #0052CC;
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 8px;
+    width: 8px;
+    border-radius: 5px;
+    background-color: #A5ADBA;
+}
+.markdown img {
+  max-width: 100%;
 }
 .social-media a {
   z-index: 2147483648;
