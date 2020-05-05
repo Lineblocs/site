@@ -1,0 +1,295 @@
+<?php
+namespace App\Helpers;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use App\DIDNumber;
+use App\Extension;
+use App\Workspace;
+use App\Flow;
+use App\FlowTemplate;
+use App\ExtensionCode;
+use Config;
+use Auth;
+use DB;
+
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
+use App\User;
+use JWTAuth;
+use JWTFactory;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use DateTime;
+
+final class RegionDataHelper {
+    public static $areas = [
+      'US' => [
+        'name' => 'United States',
+        'regions' => [
+          'CA' => [
+            'name' => 'California',
+            'rate_centers' => []
+          ]
+        ],
+      ],
+      'CA' => [
+        'name' => 'Canada',
+        'regions_pretty' => 'BC, AB, ON, QC, SK, NV',
+        'regions' => [
+          'AB' => [
+            'name' => 'Alberta',
+            'rate_centers' => [
+              'Lethbridge',
+'Medicine Hat',
+'Calgary',
+'Edmonton',
+'Grande Prairie'
+            ]
+            ],
+           'BC' => [
+            'name' => 'British Columbia',
+            'rate_centers' => [
+              'Victoria',
+'Vancouver',
+'North Vancouver',
+'Aldergrove',
+'Langley',
+'Fort Langley',
+'New Westminster',
+'Newton',
+'Port Coquitlam',
+'Richmond',
+'West Vancouver'
+            ]
+            ],
+         'MB' => [
+            'name' => 'Manitoba',
+            'rate_centers' => [
+              'Winnipeg'
+            ]
+            ],
+           'ON' => [
+            'name' => 'Ontario',
+            'rate_centers' => [
+'Sarnia',
+'Brantford',
+'Preston',
+'Galt',
+'Hespeler',
+'Kitchener-Waterloo',
+'Amherstburg',
+'Belle River',
+'Essex',
+'Harrow',
+'Maidstone',
+'McGregor',
+'Stoney Point',
+'Wheatley',
+'Woodslee',
+'Guelph',
+'Chatham',
+'Aurora',
+'Port Credit',
+'Brampton',
+'Clarkson',
+'Binbrook',
+'Mount Hope',
+'Hamilton',
+'Burlington',
+'Georgetown',
+'Milton',
+'Oakville',
+'Waterdown',
+'Cobourg',
+'Port Hope',
+'Cooksville',
+'Ancaster',
+'Dundas',
+'Grimsby',
+'Stoney Creek',
+'Bradford',
+'Mount Albert',
+'King City',
+'Maple',
+'Markham',
+'Newmarket',
+'Oak Ridges',
+'Thornhill',
+'Unionville',
+'Woodbridge',
+'Richmond Hill',
+'Fort Erie',
+'Niagara Falls',
+'Port Colborne',
+'St. Catharines-Thorold',
+'Welland',
+'Oshawa',
+'Ajax-Pickering',
+'Whitby',
+'South Pickering',
+'Port Perry',
+'Bolton',
+'Malton',
+'Uxbridge',
+'Streetsville',
+'Alexandria',
+'Cornwall',
+'Bancroft',
+'Kingston',
+'Napanee',
+'Gananoque',
+'Brockville',
+'Iroquois',
+'Williamsburg',
+'Thorndale',
+'London',
+'Windsor',
+'Jockvale',
+'Osgoode',
+'Cumberland',
+'Brighton',
+'Tweed',
+'Belleville',
+'Wooler',
+'Frankford',
+'Stirling',
+'Thurlow',
+'Trenton',
+'Gloucester',
+'Carleton Place',
+'Kanata-Stittsville',
+'Orleans',
+'Ottawa-Hull',
+'Toronto',
+'Peterborough',
+'Campbellford',
+'Sudbury',
+'Espanola',
+'Barrie',
+'Lively',
+'Blezard Valley'
+            ]
+            ],
+          'QC' => [
+            'name' => 'Quebec',
+            'rate_centers' => [
+'Quebec',
+'Montreal',
+'Chomedey',
+'Laval-Est',
+'Laval-Ouest',
+'Sorel',
+'Ste-Rose',
+'St-Vincent-de-Paul',
+'Pont-Viau',
+'St-Lambert',
+'Beloeil',
+'Boucherville',
+'Chambly',
+'Laprairie',
+'St-Bruno',
+'Varennes',
+'Longueuil',
+'Chateauguay',
+'Beauharnois',
+'St-Constant',
+'St-Remi',
+'Granby',
+'Cowansville',
+'Hudson',
+'Terrebonne',
+'Mascouche',
+'Coteau-du-Lac',
+'Les Cedres',
+'Rigaud',
+'Vaudreuil',
+'Valleyfield',
+'St-Eustache',
+'Ste-Julie-de-Vercheres',
+'St-Jerome',
+'Farnham',
+'Joliette',
+'Ste-Marthe',
+'Ste-Martine',
+'St-Chrysostome',
+'St-Jean',
+'Napierville',
+'Bedford',
+'Lacolle',
+'Riviere-Beaudette',
+'St-Clet',
+'Ste-Justine-de-Newton',
+'St-Polycarpe',
+'St-Jean-de-Matha',
+'St-Felix-de-Valois',
+'St-Gabriel-de-Brandon',
+'St-Barthelemy',
+'St-Alphonse-de-Rodriguez',
+'St-Jacques',
+'St-Michel-des-Saints',
+'Coteau-Landing',
+'Ile-Perrot',
+'Lachine',
+'Roxboro',
+'Pointe-Claire',
+'Ste-Genevieve',
+'Rawdon',
+'Le Gardeur',
+'Lanoraie',
+'L\'Epiphanie-L\'Assomption',
+'Berthierville',
+'Crabtree',
+'Eastman',
+'St-Sauveur',
+'Ste-Therese',
+'Mirabel-Aeroport',
+'Ste-Anne-des-Plaines',
+'St-Hyacinthe',
+'Thetford Mines',
+'Amqui',
+'Chibougamau',
+'Rimouski',
+'Chicoutimi',
+'Alma',
+'Levis',
+'Dolbeau',
+'St-Felicien',
+'Drummondville',
+'Sherbrooke',
+'Ottawa-Hull',
+'Gatineau',
+'Aylmer',
+'Trois-Rivieres',
+'Shawinigan',
+'Lebel-sur-Quevillon',
+'La Sarre',
+'Ville-Marie',
+'Amos',
+'La Minerve',
+'Arundel',
+'St-Jovite',
+'L\'Annonciation',
+'Labelle',
+'Rouyn-Noranda',
+'Val-D\'Or',
+'Victoriaville',
+'Ste-Agathe'
+            ]
+            ],
+          'NS' => [
+            'name' => 'Nova Scotia',
+            'rate_centers' => [
+              'Halifax'
+            ]
+            ],
+          'MB' => [
+            'name' => 'Manitoba',
+            'rate_centers' => [
+              'Winnipeg'
+            ]
+            ],
+
+       ],
+      ]
+    ];
+  
+}

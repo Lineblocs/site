@@ -1,0 +1,6 @@
+ISO Country Code,Description,Price / min,Prefixes
+US,United States & Canada,0.01300,1
+US,United States & Canada - Toll Free,0.01300,"1800, 1833, 1844, 1855, 1866, 1877, 1888"
+US,United States - Alaska,0.09000,1907
+US,United States - Hawaii,0.01300,1808
+CA,Outbound Minute - Canada - Yukon Territory,0.14500,1867

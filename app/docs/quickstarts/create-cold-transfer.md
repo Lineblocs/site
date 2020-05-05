@@ -1,0 +1,92 @@
+# Create A Cold Transfer
+
+![Cold Transfer](/img/frontend/docs/cold-transfer/main.jpg)
+
+Lineblocs flow editor lets you programtically create workflows for call transfers, which can be used when you are on a call, or when you are dialing a number. A common type of call transfer is a cold transfer which transfers a call from one endpoint to another.
+
+Cold transfers can usually be found or integrated into a PBX. Most widely used PBX systems have a way to transfer calls between extensions, by using dialing codes or feature codes.
+
+In this tutorial we will walk through the setup of a cold transfer using two extensions, one extension code and a custom Lineblocs flow.
+
+## Getting Started
+
+to create a new lineblocs flow for your cold transfer:
+
+1. In [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click "Create" -> "New Flow"
+2. Enter a name for your flow
+3. Select template "Cold Transfer" under Extension Codes
+4. Click "Create"
+
+## Creating an Extension Code
+
+to create an extension code for your cold transfers:
+
+1. In [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click "Settings" -> "Extension Codes"
+2. click "Add Code"
+3. in field "Name" use "Cold Transfer"
+4. in field "Code" use "*72"
+5. in field "Flow" use the "Cold Transfer" flow you created earlier
+
+![Extension Codes Info](/img/frontend/docs/cold-transfer/ext-codes-info.png)
+
+## Creating Extensions
+
+To do a cold transfer between two extensions, we will need to create new extensions on our account. 
+
+Please follow steps in this post [Creating Extensions](https://lineblocs.com/resources/quickstarts/setup-extension) to create two new extensions.
+
+Below is an example of how you may want to setup extension 1000 and 1001
+
+### Extension 1000
+
+```
+Username: 1000
+```
+
+```
+Secret: your-strong-password
+```
+
+```
+Caller ID: 1000
+```
+
+### Extension 1001
+
+```
+Username: 1001
+```
+
+```
+Secret: your-strong-password
+```
+
+```
+Caller ID: 1001
+```
+
+## Registering a DID
+
+The final piece to get our flow, extension code and inbound call routing work is to register a DID or use an existing one if you have already registered a DID.
+
+Our DID will be used by outside callers that will need to place calls and speak to extension 1000 or 1001. 
+
+We will register a DID and setup a call forward workflow so that extension 1000 can receive calls directly from our DID, and then forward them to 1001 using our newly created extension code.
+
+To learn more about registering DIDs please refer to: [Creating Extensions](https://lineblocs.com/resources/managing-numbers/purchase-numbers)
+
+To learn how to create a call transfer flow please read this post: [Call Transfer](https://lineblocs.com/resources/quickstarts/call-forward-extension)
+
+## Testing Cold Transfer
+
+You can test the cold transfer by logging into extension "1000", and having a peer login to "1001". 
+
+When you receive calls on your DID they should be forwarded to "1000" you can press *72, and you will be redirected to a auto attendant, that will ask you the extension number you want to transfer the call to. You can then dial 1001 to complete the call transfer.
+
+## Next Steps
+
+in this guide we discussed setting up cold transfers on Lineblocs. for other related quickstart posts please see guides below:
+
+[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+
+[Voicemail and Recordings](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)

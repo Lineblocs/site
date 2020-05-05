@@ -1,0 +1,4 @@
+    Route::get('systemstatus/{systemstatus}/show', 'Admin\SIPStatusController@show');
+    Route::get('systemstatus/{systemstatus}/edit', 'Admin\SIPStatusController@edit');
+    Route::get('systemstatus/{systemstatus}/delete', 'Admin\SIPStatusController@delete');
+    Route::resource('systemstatus', 'Admin\SIPStatusController');

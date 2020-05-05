@@ -1,0 +1,171 @@
+sections:
+  - name: Quickstarts
+    link: quickstarts
+    description: learn how to use Lineblocs to make / receive calls
+    size: s6
+    show_desc: false
+    items:
+      - name: Create a call forwarding
+        description: learn how to create a simple call forward flow.
+        link: call-forward
+        tags: call forward, PBX, lineblocs, drag and drop
+      - name: Setup a basic 3 option IVR
+        description: get more in depth and learn how to create IVRs
+        link: basic-ivr
+        tags: IVR setup, drag and drop, PBX
+      - name: Add recordings/voicemail
+        description: stay in touch with your callers by adding voicemail
+        link: recordings-and-voicemail
+        tags: voicemail, recordings, manage recordings, lineblocs
+      - name: Setup Call Queues
+        description: create call queues to better manage your incoming call flow.
+        link: call-queues
+        tags: calls, queues, queue, incoming, lineblocs
+      - name: Setup a Pin Conference
+        description: create a basic pin conference using lineblocs
+        link: pin-conference
+        tags: calls, pin, conferencing, conference, lineblocs
+      - name: Create a Pinless Conference
+        description: create a basic pinless conference using lineblocs
+        link: pinless-conference
+        tags: calls, pinless, conferencing, conference, lineblocs
+
+      - name: Setup an extension
+        description: learn how to provision an extension for use with a softphone or supported hard phone
+        link: setup-extension
+        tags: extension setup, microsip, lineblocs, softphone, hardphone
+      - name: Using macros to check for business hours
+        description: learn how to use lineblocs macros to customize your call flows using typescript code.
+        link: business-hours-with-custom-macros
+        tags: lineblocs, macros, macro, business hours, hours, business
+      - name: Create a cold transfer
+        description: learn how to use extension codes to make on call transfers between extensions
+        link: create-cold-transfer
+        tags: lineblocs, cold transfer, cold, transfer, pbx, transfers
+      - name: How to accept Fax
+        description: learn how to accept fax on DIDs in lineblocs
+        link: how-to-accept-fax
+        tags: lineblocs, fax, pbx, accept fax, DIDs, SIP
+      - name: Saving widget templates
+        description: learn how to save a widget as a template for later use
+        link: saving-widget-templates
+        tags: lineblocs, widget, template, save widget, SIP, PBX
+      - name: Provisioning A GXP2160
+        description: learn how to use Lineblocs to provision Grandstream GXP21XX series phones
+        link: provision-grandstream-gxp2160
+        tags: lineblocs, grandstream, gxp21xx, gxp2160, GXP, pbx, cloud, sip
+      - name: "Reference Integration: ExecLine conferencing"
+        description: learn how to create a complex small business conferencing workflow using lineblocs
+        link: execline-conference-reference
+        tags: lineblocs, conference, execline, conferencing, pbx
+
+  - name: Managing Numbers
+
+    description: how to manage lineblocs DIDs on your account
+    link: managing-numbers
+    size: s6
+    show_desc: false
+    items:
+      - name: Purchasing new numbers
+        description: learn how to buy numbers in your web portal.
+        link: purchase-numbers
+        tags: did numbers, dids, purchase, buy, lineblocs
+      - name: Managing number tags and flows
+        description: add number tags and flows to your number
+        link: manage-numbers
+        tags: did numbers, manage dids, edit, delete
+      - name: Releasing numbers
+        description: a guide on unrenting numbers
+        link: release-numbers
+        tags: release numbers, unrent, lineblocs
+      - name: Porting Numbers
+        description: creating port in or port out requests 
+        link: porting-numbers
+        tags: port numbers, port in, port out, lineblocs
+  - name: Billing & Pricing
+    description: all about your account's billing and pricing.
+    link: billing-and-pricing
+    size: s6
+    show_desc: false
+    items:
+      - name: Call pricing
+        description: learn about the pricing behind your calls and when you are charged for inbound or outbound calling.
+        link: call-pricing
+        tags: call pricing, CSVs, inbound, outbound, lineblocs
+      - name: Monthly Invoices
+        description: how to view invoices in your dashboard and manage invoice billing.
+        link: monthly-invoices
+        tags: invoices, monthly invoices, billing, lineblocs
+      - name: Payment options
+        description: learn about the payment options available to fund your lineblocs account.
+        link: payment-options
+        tags: payment options, billing, types of payment, paypal, credit card, lineblocs, adding credit
+      - name: Finding your billing plan
+        description: learn where to find your billing plan and/or manage it.
+        link: billing-plans
+        tags: billing plans, manage billing, lineblocs
+  - name: Other Topics
+    description: get more info on topics on managing lineblocs and getting it to work.
+    link: other-topics
+    size: s6
+    show_desc: false
+    items:
+      - name: Learn about trial balance
+        description: learn how does the lineblocs trial work and what are the limits.
+        link: learn-trial
+        tags: trial info, trial balance, lineblocs
+      - name: Account Settings
+        description: how to update your account's settings
+        link: account-settings
+        tags: account settings, edit password, edit email, lineblocs
+      - name: Usage Limits
+        description: all about the Lineblocs plans and their usage limits / constraints
+        link: usage-limits
+        tags: limits, plans, resource limits, usage triggers, usage limits, lineblocs
+      - name: Reporting Call Spam
+        description: learn how to file a spam report on lineblocs
+        link: report-spam
+        tags: call spam, unwanted calls, lineblocs
+      - name: Adding Workspace Users
+        description: how to add workspace users to your lineblocs account
+        link: adding-workspace-users
+        tags: workspace, users, add user, lineblocs, account settings
+      - name: Managing IP Whitelist
+        description: how to add the IPs that can access your lineblocs PBX
+        link: managing-ip-whitelist
+        tags: managing, ip whitelist, whitelist, ip, manage, lineblocs
+      - name: Blocking a number
+        description: how to block and manage blocked numbers on lineblocs
+        link: blocking-a-number
+        tags: blocking, number, blocking numbers, lineblocs
+      - name: Create Extension Codes
+        description: how to manage and create extension codes on lineblocs
+        link: create-extension-codes
+        tags: extension, codes, lineblocs, create, pbx
+      - name: Managing Media Files
+        description: learn how to store WAV/MP3 media files on lineblocs as well as use them in lineblocs flows
+        link: managing-mediafiles
+        tags: managing, media files, media, cloud, google drive, lineblocs
+
+  - name: Open Source
+    link: open-source
+    description: how to install and configure lineblocs open source edition
+    size: s12
+    show_desc: true
+    items:
+      - name: Installing on CentOS 8
+        description: learn how to install and setup lineblocs on centos
+        link: install-centos8
+        tags: install, linux, centos 8, centos, lineblocs, pbx, asterisk, apache
+      - name: Creating Trunks
+        description: how to setup and manage SIP trunks in lineblocs
+        link: creating-trunks
+        tags: trunks, setup trunk, SIP, asterisk, open source, lineblocs
+      - name: Working With Routes
+        description: how to create and manage routes in lineblocs open source
+        link: working-with-routes
+        tags: routes, manage routes, SIP, asterisk, open source, lineblocs
+      - name: Setup Extension
+        description: how to setup extensions using open source lineblocs edition
+        link: setup-extension
+        tags: extensions, setup, lineblocs, open source

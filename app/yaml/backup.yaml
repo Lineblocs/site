@@ -1,0 +1,77 @@
+sections:
+  - name: Quickstarts
+    link: quickstarts
+    description: learn how to use Lineblocs to make / receive calls
+    items:
+      - name: Create a call forwarding
+        description: learn how to create a simple call forward flow.
+        link: call-forward
+        tags: call forward, PBX, lineblocs, drag and drop
+      - name: Setup a basic 3 option IVR
+        description: get more in depth and learn how to create IVRs
+        link: basic-ivr
+        tags: IVR setup, drag and drop, PBX
+      - name: Add recordings/voicemail
+        description: stay in touch with your callers by adding voicemail
+        link: recordings-and-voicemail
+        tags: voicemail, recordings, manage recordings, lineblocs
+      - name: Setup an extension
+        description: learn how to provision an extension for use with a softphone or supported hard phone
+        link: setup-extension
+        tags: extension setup, microsip, lineblocs, softphone, hardphone
+  - name: Managing Numbers
+    description: how to manage lineblocs DIDs on your account
+    link: managing-numbers
+    items:
+      - name: Purchasing new numbers
+        description: learn how to buy numbers in your web portal.
+        link: purchase-numbers
+        tags: did numbers, dids, purchase, buy, lineblocs
+      - name: Managing number tags and flows
+        description: add number tags and flows to your number
+        link: manage-numbers
+        tags: did numbers, manage dids, edit, delete
+      - name: Releasing numbers
+        description: a guide on unrenting numbers
+        link: release-numbers
+        tags: release numbers, unrent, lineblocs
+  - name: Billing & Pricing
+    description: all about your account's billing and pricing.
+    link: billing-and-pricing
+    items:
+      - name: Call pricing
+        description: learn about the pricing behind your calls and when you are charged for inbound or outbound calling.
+        link: call-pricing
+        tags: call pricing, CSVs, inbound, outbound, lineblocs
+      - name: Monthly Invoices
+        description: how to view invoices in your dashboard and manage invoice billing.
+        link: monthly-invoices
+        tags: invoices, monthly invoices, billing, lineblocs
+      - name: Payment options
+        description: learn about the payment options available to fund your lineblocs account.
+        link: payment-options
+        tags: payment options, billing, types of payment, paypal, credit card, lineblocs, adding credit
+      - name: Finding your billing plan
+        description: learn where to find your billing plan and/or manage it.
+        link: billing-plans
+        tags: billing plans, manage billing, lineblocs
+  - name: Other Topics
+    description: get more info on topics on managing lineblocs and getting it to work.
+    link: other-topics
+    items:
+      - name: Learn about trial balance
+        description: learn how does the lineblocs trial work and what are the limits.
+        link: learn-trial
+        tags: trial info, trial balance, lineblocs
+      - name: Account Settings
+        description: how to update your account's settings
+        link: account-settings
+        tags: account settings, edit password, edit email, lineblocs
+      - name: Usage Limits
+        description: all about the Lineblocs plans and their usage limits / constraints
+        link: usage-limits
+        tags: limits, plans, resource limits, usage triggers, usage limits, lineblocs
+      - name: Reporting Call Spam
+        description: learn how to file a spam report on lineblocs
+        link: report-spam
+        tags: call spam, unwanted calls, lineblocs

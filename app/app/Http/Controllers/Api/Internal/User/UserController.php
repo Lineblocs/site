@@ -1,0 +1,269 @@
+<?php
+
+namespace App\Http\Controllers\Api\Internal\User;
+use \App\Http\Controllers\Api\ApiAuthController;
+use \JWTAuth;
+use \Dingo\Api\Routing\Helpers;
+use \Illuminate\Http\Request;
+use \App\User;
+use \App\Workspace;
+use \App\WorkspaceParam;
+use \App\DIDNumber;
+use \App\IpWhitelist;
+use \App\MacroFunction;
+use \App\BlockedNumber;
+use \App\Extension;
+use \App\Helpers\MainHelper;
+use \Config;
+use \DB;
+use \Log;
+
+
+class UserController extends ApiAuthController {
+  private function userByDomain($domain) {
+      $splitted = explode(".", $domain);
+      $container = $splitted[0];
+      $workspace = Workspace::where('name', $container)->firstOrFail();
+      $user = User::findOrFail($workspace->creator_id);
+      $data = $user->toArray();
+      $data['workspace'] = $workspace->toArray();
+      $data['workspace_name'] = $data['workspace']['name'];
+      $data['workspace_id'] = $data['workspace']['id'];
+      $data['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $data['workspace']['id'])->get()->toArray());
+      return $data;
+  }
+  private function doVerifyCaller($workspaceId, $number)
+  {
+      $check = Config::get("api_routing.caller_id_spoof_check");
+      if ($check) {
+        $isValid = FALSE;
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $numberProto = $phoneUtil->parse($number, "US");
+            if ( !  $phoneUtil->isValidNumber($numberProto) ) {
+              $isValid = FALSE;
+            }
+            $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
+            $count = DIDNumber::where('workspace_id', '=', $workspaceId)->where('number', '=', $number)->count();
+            if ($count > 0) {
+              $isValid = TRUE;
+            }
+            return $isValid;
+        } catch (\libphonenumber\NumberParseException $e) {
+            return $isValid;
+        }
+      }
+      return TRUE;
+    }
+    public function verifyCaller(Request $request)
+    {
+      return $this->response->array(['valid' => $this->doVerifyCaller($request->get("workspaceId"), $request->get("number"))]);
+    }
+  public function verifyCallerByDomain(Request $request)
+    {
+      $workspace = MainHelper::workspaceByDomain($request->get("domain"));
+      $valid = $this->doVerifyCaller($workspace->id, $request->get("number"));
+      if (!$valid) {
+        return $this->response->errorBadRequest();
+      }
+      return $this->response->noContent();
+    }
+
+    public function getUserByDomain(Request $request)
+    {
+      $domain = $request->get("domain");
+      $data = $this->userByDomain($domain);
+      return $this->response->array($data);
+    }
+    public function getWorkspaceMacros(Request $request)
+    {
+      $workspace= $request->get("workspace");
+      \Log::info("getting macros for workspace: " . $workspace);
+      $macros = MacroFunction::where('workspace_id', '=', $workspace)->get()->toArray();
+      return $this->response->array($macros);
+    }
+
+    public function getDIDNumberData(Request $request)
+
+    {
+      $debug = Config::get("app.debug");
+      $number = $request->get("number");
+      Log::info(sprintf("looking up number %s",$number));
+      $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
+        users.plan,
+        workspaces.creator_id,
+        workspaces.id AS workspace_id,
+        workspaces.api_token,
+        workspaces.api_secret
+        "));
+
+      $workspace->join('did_numbers', 'workspaces.id', '=', 'did_numbers.workspace_id');
+      $workspace->join('flows', 'flows.id', '=', 'did_numbers.flow_id');
+      $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('did_numbers.api_number', '=', $number);
+      $workspace= $workspace->firstOrFail(); 
+      $array = $workspace->toArray();
+      $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
+      $user = User::findOrFail($workspace['creator_id'] );
+      $array['free_trial_status'] = $user->checkFreeTrialStatus();
+
+      return $this->response->array($array);
+    }
+
+    public function getExtensionFlowInfo(Request $request)
+
+    {
+      $debug = Config::get("app.debug");
+      $extension = $request->get("extension");
+      $workspace = $request->get("workspace");
+      $number = $request->get("number");
+      Log::info(sprintf("looking up number %s",$number));
+      $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, extensions.username, workspaces.name, workspaces.name AS workspace_name, 
+        users.plan,
+        workspaces.creator_id,
+        workspaces.id AS workspace_id,
+        workspaces.api_token,
+        workspaces.api_secret
+
+        "));
+
+      $workspace->join('extensions', 'workspaces.id', '=', 'extensions.workspace_id');
+      $workspace->join('flows', 'flows.id', '=', 'extensions.flow_id');
+      $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('extensions.username', '=', $extension);
+      $workspace= $workspace->firstOrFail(); 
+      $array = $workspace->toArray();
+      $user = User::findOrFail($workspace['creator_id'] );
+      $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
+      $array['free_trial_status'] = $user->checkFreeTrialStatus();
+      return $this->response->array($array);
+    }
+
+    public function getCodeFlowInfo(Request $request)
+
+    {
+      $debug = Config::get("app.debug");
+      $code = $request->get("code");
+      $workspaceId = $request->get("workspace");
+      $number = $request->get("number");
+      Log::info(sprintf("looking up number %s",$number));
+      $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, extension_codes.code, workspaces.name, workspaces.name AS workspace_name, 
+        users.plan,
+        workspaces.creator_id,
+        workspaces.id AS workspace_id
+        "));
+
+      $workspace->join('extension_codes', 'workspaces.id', '=', 'extension_codes.workspace_id');
+      $workspace->join('flows', 'flows.id', '=', 'extension_codes.flow_id');
+      $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('extension_codes.code', '=', $code);
+      $workspace->where('extension_codes.workspace_id', '=', $workspaceId);
+      $workspace= $workspace->firstOrFail(); 
+      $array = $workspace->toArray();
+      $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
+      $user = User::findOrFail($workspace['creator_id'] );
+      $array['free_trial_status'] = $user->checkFreeTrialStatus();
+      return $this->response->array($array);
+    }
+
+
+    public function ipWhitelistLookup(Request $request) {
+      $ip = $request->get("ip");
+      $domain = $request->get("domain");
+      $user = $this->userByDomain($domain);
+      $workspace = MainHelper::workspaceByDomain($domain);
+      $ips = IpWhitelist::where('workspace_id', '=', $workspace->id)->get();
+      if ($user['ip_whitelist_disabled']) {
+        return $this->response->noContent();
+      }
+      foreach ($ips as $target) {
+        $full = sprintf("%s%s", $target['ip'], $target['range']);
+        if ( MainHelper::CIDRMatch($ip, $full) ) {
+          return $this->response->noContent();
+        }
+      }
+      return $this->response->errorNotFound();
+    }
+    public function getDIDAssignedIP(Request $request) {
+      $did = $request->get("did");
+      $workspaceId = $request->get("workspace");
+      $number = $request->get("number");
+      Log::info(sprintf("looking up number %s",$number));
+      $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
+        users.plan,
+        users.ip_private,
+        users.ip_address,
+        workspaces.creator_id,
+        workspaces.id AS workspace_id
+        "));
+
+      $workspace->join('did_numbers', 'workspaces.id', '=', 'did_numbers.workspace_id');
+      $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('did_numbers.api_number', '=', $did);
+      $workspace= $workspace->firstOrFail(); 
+
+      return response($workspace->ip_private);
+    }
+    public function getUserAssignedIP(Request $request) {
+      $username = $request->get("username");
+      $domain = $request->get("domain");
+      $workspace = MainHelper::workspaceByDomain($domain);
+      $user = User::findOrFail($workspace->creator_id);
+      return response($user->ip_private);
+    }
+    public function getPSTNProviderIP(Request $request) {
+      $from = $request->get("from");
+      $to = $request->get("to");
+      $domain = $request->get("domain");
+      $ru = $request->get("ru");
+      $providerIp = "toronto5.voip.ms";
+      return response($providerIp);
+    }
+    public function getDIDAcceptOption(Request $request) {
+      $did = $request->get("did");
+      $did = DIDNumber::where('api_number', $did)->firstOrFail();
+      return response($did->did_action);
+    }
+    public function getCallerIdToUse(Request $request) {
+      $domain = $request->get("domain");
+      $workspace = MainHelper::workspaceByDomain($domain);
+      $extension = $request->get("extension");
+      $extensionObj = Extension::where('workspace_id', $workspace->id) ->where('username', $extension)->firstOrFail();
+      return $this->response->array(['caller_id' => $extensionObj->caller_id]);
+    }
+    public function checkNumberBlocked(Request $request) {
+      $number = $request->get("number");
+      $did = $request->get("did");
+      //$region = $request->get("region");
+      $did = DIDNumber::where('api_number', $did)->firstOrFail();
+      $region= "US";
+       $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $numberProto = $phoneUtil->parse($number, $region);
+            if ( !  $phoneUtil->isValidNumber($numberProto) ) {
+              return $this->response->errorInternal('Invalid number');
+            }
+            $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
+            $check1 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
+            if ($check1) {
+              return $this->response->noContent();
+            }
+            $number = str_replace("+", "", $number);
+            $check2 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
+            if ($check2) {
+              return $this->response->noContent();
+            }
+            // remove country code
+            $number = preg_replace("/^1/", "", $number);
+            $check3 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
+            if ($check3) {
+              return $this->response->noContent();
+            }
+
+            return $this->response->errorNotFound();
+        } catch (\libphonenumber\NumberParseException $e) {
+          return $this->response->errorInternal('Internal error');
+        }
+    }
+}
+
