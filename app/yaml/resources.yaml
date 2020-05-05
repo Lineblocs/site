@@ -57,7 +57,7 @@ sections:
       - name: "Reference Integration: ExecLine conferencing"
         description: learn how to create a complex small business conferencing workflow using lineblocs
         link: execline-conference-reference
-        tags: lineblocs, conference, execline, conferencing, pbx
+        tags: lineblocs, conference, execline, conferencing, advanced, pbx
 
   - name: Managing Numbers
 
