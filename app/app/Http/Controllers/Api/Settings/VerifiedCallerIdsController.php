@@ -11,6 +11,7 @@ use \App\Transformers\VerifiedCallerIdTransformer;
 use \App\Helpers\MainHelper;
 use \Config;
 use \Twilio\Rest\Client;
+use \Exception;
 
 
 
@@ -31,21 +32,26 @@ class VerifiedCallerIdsController extends ApiAuthController {
         $twilio= Config::get('twilio');
         $client = new Client($twilio['account_sid'], $twilio['auth_token']);
         $message = sprintf("Your Lineblocs Caller ID verification code is %s", $code);
-        $client->messages->create(
-            // Where to send a text message (your cell phone?)
-           $number,
-            array(
-                'from' => $twilio['verification_number'],
-                'body' => $message
-            )
-        );
+        try {
+            $client->messages->create(
+                // Where to send a text message (your cell phone?)
+            $number,
+                array(
+                    'from' => $twilio['verification_number'],
+                    'body' => $message
+                )
+            );
 
-        VerifiedCallerId::create([
-            'user_id' => $user->id,
-            'workspace_id' => $workspace->id,
-            'code' => $code,
-            'number' => MainHelper::toE164($data['number'])
-        ]);
+            VerifiedCallerId::create([
+                'user_id' => $user->id,
+                'workspace_id' => $workspace->id,
+                'code' => $code,
+                'number' => MainHelper::toE164($data['number'])
+            ]);
+        } catch (Exception $ex) {
+            return $this->errorInternal($request, 'Could not validate number..');
+
+        }
         return $this->response->noContent();
     }
     public function postVerifiedConfirm(Request $request)
