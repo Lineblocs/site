@@ -14,6 +14,8 @@ use \App\MacroFunction;
 use \App\BlockedNumber;
 use \App\Extension;
 use \App\Helpers\MainHelper;
+use \App\SIPProvider;
+use \App\SIPProviderHost;
 use \Config;
 use \DB;
 use \Log;
