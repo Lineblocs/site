@@ -8,6 +8,7 @@ use Auth;
 use Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\ApiAuthController;
 use App\User;
 use App\Workspace;
 use App\UserDevice;
@@ -16,7 +17,7 @@ use Mail;
 use Exception;
 use App\Helpers\MainHelper;
 
-class AuthenticateController extends ApiController
+class AuthenticateController extends ApiAuthController
 {
     public function authenticatePublic(Request $request)
     {
@@ -42,7 +43,7 @@ class AuthenticateController extends ApiController
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return $this->response->errorInternal('Could not create token');
+            return $this->errorInternal($request, 'Could not create token');
         }
         // add subdomain matching
         return $this->response->array($token);
@@ -73,7 +74,7 @@ class AuthenticateController extends ApiController
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return $this->response->errorInternal('Could not create token');
+            return $this->errorInternal($request, 'Could not create token');
         }
         $currentUser = Auth::user();
         $now = new \DateTime();
@@ -81,7 +82,8 @@ class AuthenticateController extends ApiController
         $challenge=  $request->get('challenge');
         if ($challenge) {
           if (!MainHelper::checkUserInWorkspace($challenge, $currentUser)) {
-            return $this->response->errorInternal('workspace challenge failed.');
+            return $this->errorInternal($request, 'workspace challenge failed.');
+
           }
         }
 

@@ -241,7 +241,7 @@ class UserController extends ApiAuthController {
         try {
             $numberProto = $phoneUtil->parse($number, $region);
             if ( !  $phoneUtil->isValidNumber($numberProto) ) {
-              return $this->response->errorInternal('Invalid number');
+            return $this->errorInternal( $request, 'Invalid number'); 
             }
             $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
             $check1 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
@@ -262,7 +262,7 @@ class UserController extends ApiAuthController {
 
             return $this->response->errorNotFound();
         } catch (\libphonenumber\NumberParseException $e) {
-          return $this->response->errorInternal('Internal error');
+            return $this->errorInternal( $request, 'lib phone number error');
         }
     }
 }

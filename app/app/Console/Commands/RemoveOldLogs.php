@@ -41,7 +41,9 @@ class RemoveOldLogs extends Command
     public function handle()
     {
         //
-        $daysToRetain = 7;
-        $logs = DB::table('debugger_logs')->where('created_at', '<=', Carbon::now()->subDays($daysToRetain)->toDateTimeString())->delete();
+        $daysToRetain1 = 7;
+        $logs = DB::table('debugger_logs')->where('created_at', '<=', Carbon::now()->subDays($daysToRetain1)->toDateTimeString())->delete();
+        $daysToRetain2 = 7;
+        $logs = DB::table('error_user_trace')->where('created_at', '<=', Carbon::now()->subDays($daysToRetain2)->toDateTimeString())->delete();
     }
 }

@@ -44,7 +44,7 @@ class CreditController extends HasStripeController {
           ]); 
         } catch (Exception $ex) {
           \Log::error("error while charging stripe customer: " . $ex->getMessage());
-          return $this->response->errorInternal();
+          return $this->errorInternal($request, 'Error charging stripe user');
         }
 
         $credit = [
@@ -169,7 +169,7 @@ class CreditController extends HasStripeController {
         } catch (Exception $ex) {
           Log::info("PayPal error: " . $ex->getMessage());
           Log::info($ex->getTraceAsString());
-          return $this->response->errorInternal();
+          return $this->errorInternal($request, 'PayPal error');
         }
 
         // ### Get redirect url

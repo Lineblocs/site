@@ -116,6 +116,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::post('systemstatus/{systemstatus}/add_alert', 'Admin\SystemStatusController@add_alert_save');
     Route::resource('systemstatus', 'Admin\SystemStatusController');
 
+    # system status
+    Route::get('errortrace/data', 'Admin\ErrorTraceController@data');
+    Route::get('errortrace/{errortrace}/show', 'Admin\ErrorTraceController@show');
+    Route::get('errortrace/{errortrace}/edit', 'Admin\ErrorTraceController@edit');
+    Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
+    Route::resource('errortrace', 'Admin\ErrorTraceController');
+
 
 });
 // API routes

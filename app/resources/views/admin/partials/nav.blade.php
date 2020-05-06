@@ -65,6 +65,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/errortrace')}}">
+                        <i class="glyphicon glyphicon-user"></i> Error Trace
+                    </a>
+                </li>
+                <li>
                     <a href="{{ url('auth/logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
                 </li>
             </ul>

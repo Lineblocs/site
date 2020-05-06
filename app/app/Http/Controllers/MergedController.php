@@ -417,7 +417,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           }
       } catch (JWTException $e) {
           // something went wrong whilst attempting to encode the token
-          return $this->response->errorInternal('Could not create token');
+          return $this->errorInternal($request, 'Could not create token');
       }
 
       $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
@@ -441,7 +441,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           }
       } catch (JWTException $e) {
           // something went wrong whilst attempting to encode the token
-          return $this->response->errorInternal('Could not create token');
+          return $this->errorInternal($request, 'Could not create token');
       }
 
       $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);

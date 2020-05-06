@@ -32,7 +32,7 @@ class CardController extends HasStripeController {
             );
         } catch (Exception $ex) {
             Log::error("error while processing new user card: " . $ex->getMessage());
-            return $this->response->errorInternal();
+            return $this->errorInternal($request, 'Stripe card process error');
         }
         $card = UserCard::create([
             'last_4' => $data['last_4'],
@@ -59,7 +59,7 @@ class CardController extends HasStripeController {
 
             } catch (Exception $ex) {
                 Log::error("error while processing new user card: " . $ex->getMessage());
-                return $this->response->errorInternal();
+                return $this->errorInternal($request, 'Error deleting card..');
             }
             $card->delete();
             return $this->response->noContent();

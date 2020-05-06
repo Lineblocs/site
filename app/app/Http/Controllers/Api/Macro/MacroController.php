@@ -28,11 +28,11 @@ class MacroController extends ApiAuthController {
         }
         $existing = MacroFunction::where('title', $data['title'])->where('workspace_id', $workspace->id)->first();
         if ($existing) {
-          return $this->response->errorInternal('function already exists..');
+            return $this->errorInternal( $request, 'function already exists..');
         }
         MainHelper::compileTypescript($data['code'], $output, $return);
         if ($return != 0) {
-          return $this->response->errorInternal('could not compile code. errors: ' . json_encode($output));
+            return $this->errorInternal( $request, 'could not compile code. errors: ' . json_encode($output));
           }
 
         $compiled = implode("\n", $output);
@@ -53,7 +53,7 @@ class MacroController extends ApiAuthController {
         }
         MainHelper::compileTypescript($data['code'], $output, $return);
         if ($return != 0) {
-          return $this->response->errorInternal('could not compile code');
+            return $this->errorInternal( $request, 'could not compile code. errors: ' . json_encode($output));
           }
         $compiled = implode("\n", $output);
         $data['compiled_code'] = $compiled;
@@ -70,7 +70,7 @@ class MacroController extends ApiAuthController {
         }
         $user = $this->getUser($request);
         $function->delete();
-        return $this->response->errorInternal();
+            return $this->errorInternal( $request, 'delete function error'); 
   }
 
 
@@ -119,7 +119,7 @@ class MacroController extends ApiAuthController {
         $template = MacroTemplate::where('public_id', '=', $templateId)->firstOrFail();
         $user = $this->getUser($request);
         $template->delete();
-        return $this->response->errorInternal();
+            return $this->errorInternal( $request );
   }
 
 

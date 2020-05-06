@@ -94,7 +94,7 @@ class PortNumberController extends ApiAuthController {
         )));
         if (!$this->uploadDocs($request, $number)) {
           $number->delete();
-          return $this->response->errorInternal(sprintf("One of the documents could not be uploaded please be sure to upload a file size less than %s and use one of the following file formats: %s", self::$maxDocumentSizeReadable, implode(",", self::$acceptedDocumentFormats)));
+          return $this->errorInternal(sprintf("One of the documents could not be uploaded please be sure to upload a file size less than %s and use one of the following file formats: %s", self::$maxDocumentSizeReadable, implode(",", self::$acceptedDocumentFormats)));
         }
         $mail = Config::get("mail");
         $mailData = compact('user','workspace', 'number');
@@ -117,7 +117,7 @@ class PortNumberController extends ApiAuthController {
         }
         $number->update( $data );
         if (!$this->uploadDocs($request, $number)) {
-          return $this->response->errorInternal(sprintf("One of the documents could not be uploaded please be sure to upload a file size less than %s and use one of the following file formats: %s", self::$maxDocumentSizeReadable, implode(",", self::$acceptedDocumentFormats)));
+          return $this->errorInternal(sprintf("One of the documents could not be uploaded please be sure to upload a file size less than %s and use one of the following file formats: %s", self::$maxDocumentSizeReadable, implode(",", self::$acceptedDocumentFormats)));
         }
           Mail::send('emails.port_updated', $data, function ($message) use ($user, $mail) {
               $message->to($user->email);

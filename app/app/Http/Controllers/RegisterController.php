@@ -48,7 +48,7 @@ class RegisterController extends ApiAuthController
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return $this->response->errorInternal('Could not create token');
+            return $this->errorInternal($request, 'Could not create token');
         }
 
         return $this->response->array([
@@ -174,11 +174,11 @@ class RegisterController extends ApiAuthController
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
           $result = PBXServerHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo'], $trial['ports']/** needed ports **/);
           if (!$result) {
-            return $this->response->errorInternal('could not create/provision user on PBX server');
+            return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
           $result = NamecheapHelper::refreshIPs();
           if (!$result) {
-            return $this->response->errorInternal('DNS error occured');
+            return $this->errorInternal($request, 'DNS error occured');
           }
 
           //add register credit for user
@@ -346,7 +346,7 @@ class RegisterController extends ApiAuthController
         $challenge=  $request->get('challenge');
         if ($challenge) {
           if (!MainHelper::checkUserInWorkspace($challenge, $currentUser)) {
-            return $this->response->errorInternal('workspace challenge failed.');
+            return $this->errorInternal($request, 'workspace challenge failed.');
           }
         }
 

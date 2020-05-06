@@ -14,6 +14,7 @@ use App\Flow;
 use App\Call;
 use App\Recording;
 use App\User;
+use App\ErrorUserTrace;
 use Config;
 
 
@@ -79,5 +80,23 @@ class ApiAuthController extends ApiController {
               return FALSE;
          }
          return TRUE;
+    }
+
+    public function errorInternal(Request $request, $message='') {
+          $user = $this->getUser( $request );
+          $workspace = $this->getWorkspace( $request );
+          $params = [
+               'message' => $message
+          ];
+          if ($user) {
+               $params['user_id'] = $user->id;
+          }
+          if ($workspace) {
+               $params['workspace_id'] = $workspace->id;
+          }
+
+          $params['full_url'] = $request->fullUrl();
+          ErrorUserTrace::create($params);
+          return $this->response->errorInternal( $message );
     }
 }

@@ -116,7 +116,7 @@ class DIDNumberController extends ApiAuthController {
             });
             return $this->response->array(['success' => TRUE, 'number' => $number->toArray()])->withHeader('X-Number-ID', $number->public_id);
         }
-        return $this->response->errorInternal();
+        return $this->errorInternal($request, 'DID register error');
     }
     public function updateNumber(Request $request, $numberId)
     {
@@ -170,7 +170,7 @@ class DIDNumberController extends ApiAuthController {
         $provider = NumberService::getProvider($number->provider);
         $status = $provider->unrent($number->api_number);
         if (!$status) {
-            return $this->response->errorInternal();
+            return $this->errorInternal($request, 'Number unrent error');
         }
         $number->delete();
         return $this->response->noContent();

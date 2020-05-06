@@ -96,7 +96,7 @@ class ExtensionController extends ApiAuthController {
             });
             return $this->response->array($extension->toArray())->withHeader('X-Extension-ID', $extension->public_id);
         }
-        return $this->response->errorInternal();
+        return $this->errorInternal($request, 'Provision extension error..');
     }
     public function updateExtension(Request $request, $extensionId)
     {
@@ -122,7 +122,7 @@ class ExtensionController extends ApiAuthController {
         if ($status) {
             return $this->response->noContent();
         }
-        return $this->response->errorInternal();
+        return $this->errorInternal($request, 'Provision extension error..');
     }
     public function deleteExtension(Request $request, $extensionId)
     {
@@ -140,7 +140,7 @@ class ExtensionController extends ApiAuthController {
         if ($status) {
             return $this->response->array($extension->toArray())->withHeader('X-Extension-ID', $extension->id);
         }
-        return $this->response->errorInternal();
+        return $this->errorInternal($request, 'Provision extension error..');
   }
 
 

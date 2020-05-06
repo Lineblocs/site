@@ -8,6 +8,7 @@ use \App\User;
 use \App\PortNumber;
 use \App\SIPProvider;
 use \App\CallRate;
+use App\ErrorUserTrace;
 use \App\SIPCountry;
 use \App\SIPRegion;
 use \App\SIPRateCenter;
@@ -42,6 +43,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('region', SIPRegion::class);
        \Route::model('center', SIPRateCenter::class);
        \Route::model('systemstatus', SystemStatusCategory::class);
+       \Route::model('errortrace', ErrorUserTrace::class);
     }
 
     /**
