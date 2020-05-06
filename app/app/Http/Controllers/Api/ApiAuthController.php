@@ -96,7 +96,7 @@ class ApiAuthController extends ApiController {
           }
 
           $params['full_url'] = $request->fullUrl();
-          ErrorUserTrace::create($params);
-          return $this->response->errorInternal( $message );
+          $error = ErrorUserTrace::create($params);
+          return $this->response->errorInternal( $message )->withHeader('X-ErrorCode-ID', $error->id);
     }
 }
