@@ -23,7 +23,7 @@
     <div class="page-header">
         &nbsp;
         <div class="pull-right">
-            <button class="btn btn-primary btn-xs close_popup">
+            <button class="btn btn-primary btn-xs close_popup back_btn dont-show">
                 <span class="glyphicon glyphicon-backward"></span> {!! trans('admin/admin.back')!!}
             </button>
         </div>
@@ -33,6 +33,11 @@
             <!-- ./ content -->
     <script type="text/javascript">
         $(function () {
+                @if (isset($backLocation))
+                var back = "{{$backLocation}}";
+                @else
+                var back = null;
+                @endif
             $('textarea').summernote({height: 250});
             $('form').submit(function (event) {
                 event.preventDefault();
@@ -48,16 +53,25 @@
                         type: form.attr('method'),
                         url: form.attr('action'),
                         data: form.serialize()
-                    }).success(function () {
+                    }).success(function (data, textStatus, request) {
                         var close = form.attr('close');
                         if (close && close !== "yes") {
                             var next = form.attr("next");
                             document.location.href = next;
                             return;
                         }
+                        var goto = request.getResponseHeader('X-Goto-URL');
+                        if ( goto !== null ) {
+                            var next = goto;
+                            document.location.href = next;
+                            return;
+                        }
+                        document.location.href = back;
+                        /*
                         setTimeout(function () {
-                            parent.$.colorbox.close();
+                            //parent.$.colorbox.close();
                         }, 10);
+                        */
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         // Optionally alert the user of an error here...
                         var textResponse = jqXHR.responseText;
@@ -107,9 +121,20 @@
                 ;
             });
 
+            /*
             $('.close_popup').click(function () {
                 parent.$.colorbox.close();
             });
+
+            */
+            $('.back_btn').click(function () {
+                document.location.href = back;
+            });
+            if (back === null) {
+                $(".back_btn").hide();
+            } else {
+                $(".back_btn").show();
+            }
         });
     </script>
     @yield('scripts')

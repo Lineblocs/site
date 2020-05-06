@@ -60,6 +60,7 @@ class SIPProviderController extends AdminController
 
         $provider = new SIPProvider ($request->all());
         $provider->save();
+        header("X-Goto-URL: /admin/provider/" . $provider->id . "/edit");
     }
 
     /**
@@ -85,6 +86,7 @@ class SIPProviderController extends AdminController
     public function update(SIPProviderRequest $request, SIPProvider $provider)
     {
         $provider->update($request->all());
+        header("X-Goto-URL: /admin/provider/" . $provider->id . "/edit");
     }
 
     /**

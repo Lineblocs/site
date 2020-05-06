@@ -11,6 +11,6 @@ class Cors
       ->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
       ->header('Access-Control-Allow-Headers', 'X-Requested-With, X-Flow-ID, X-GlobalSetting-ID, X-IndividualSetting-ID, Content-Type, X-Token-Auth, X-Workspace-ID, X-Admin-Token, X-ErrorCode-ID, Authorization, Sec-Fetch-Dest') 
 
-      ->header('Access-Control-Expose-Headers', 'X-Flow-ID, X-Number-ID, X-Card-ID, X-GlobalSetting-ID, X-IndividualSetting-ID, X-ErrorCode-ID');
+      ->header('Access-Control-Expose-Headers', 'X-Flow-ID, X-Number-ID, X-Card-ID, X-GlobalSetting-ID, X-IndividualSetting-ID, X-ErrorCode-ID, X-Goto-URL');
   }
 }

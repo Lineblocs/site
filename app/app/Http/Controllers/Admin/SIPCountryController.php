@@ -55,6 +55,7 @@ class SIPCountryController extends AdminController
 
         $country = new SIPCountry ($request->all());
         $country->save();
+        header("X-Goto-URL: /admin/country/" . $country->id . "/edit");
     }
 
     /**
@@ -78,6 +79,7 @@ class SIPCountryController extends AdminController
     public function update(SIPCountryRequest $request, SIPCountry $country)
     {
         $country->update($request->all());
+        header("X-Goto-URL: /admin/country/" . $country->id . "/edit");
     }
 
     /**
@@ -168,7 +170,7 @@ class SIPCountryController extends AdminController
         $data = $request->all();
         $providers = [];
         if (isset($data['providers'])) {
-            $data['providers'];
+            $providers = $data['providers'];
             unset($data['providers']);
         }
 

@@ -1,4 +1,4 @@
-@extends('admin.layouts.modal')
+@extends('admin.layouts.modal', ['backLocation' => url('admin/provider/' . $provider->id. '/edit')])
 {{-- Content --}}
 @section('content')
 <!-- Tabs -->
