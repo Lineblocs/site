@@ -5,6 +5,11 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
+            @if (!empty($hosts))
+     <li><a href="#tab-hosts" data-toggle="tab"> {{
+            trans("admin/modal.hosts") }}</a></li>
+            @endif
+
 </ul>
 <!-- ./ tabs -->
 @if (isset($provider))
@@ -68,6 +73,14 @@
             </div>
         </div>
 
+        <div class="form-group  {{ $errors->has('type_of_provider') ? 'has-error' : '' }}">
+            {!! Form::label('type_of_provider', trans("admin/sipproviders.provider_of_provider"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::select('type_of_provider', $providerTypes, null, array('class' => 'form-control', 'id' => 'status')) !!}
+                <span class="help-block">{{ $errors->first('type_of_provider', ':message') }}</span>
+            </div>
+        </div>
+
 
 
 
@@ -93,11 +106,69 @@
         </button>
         </div>
     </div>
+        @if (isset($provider))
+    <div class="tab-pane" id="tab-hosts">
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <br/>
+                    <a href="/admin/provider/{{$provider->id}}/add_host" class="btn btn-success">Add Host</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <input type="hidden" id="token" value="{{csrf_token()}}"/>
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Name</th>
+                        <th>IP Address</th>
+                        <th>Priority</th>
+                        <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($hosts as $host)
+                            <tr>
+                                <td>{{$host->name}}</td>
+                                <td>{{$host->ip_address}}</td>
+                                <td>{{$host->priority}}</td>
+                                <td>
+                                    <a href="/admin/provider/{{$provider->id}}/edit_host/{{$host->id}}" class="btn btn-warning">Edit</a>
+                                    <button type="button" class="btn btn-danger del-host" data-id="{{$host->id}}">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+
+
     {!! Form::close() !!}
     @endsection @section('scripts')
         <script type="text/javascript">
             $(function () {
+                @if (!empty($provider))
+                    var providerId = "{{$provider->id}}";
+                @else
+                    var providerId = null;
+                @endif
                 $("#roles").select2()
+                $(".del-host").each(function() {
+                    $( this ).click(function() {
+                        var id = $( this ).attr("data-id");
+                        var params = {
+                            "_token": $("#token").val()
+                        };
+                        $.post("/admin/provider/" + providerId + "/del_host/" + id, params, function() {
+                            alert("Host deleted..");
+                            window.location.reload();
+                        });
+                    });
+                });
             });
         </script>
 </div>

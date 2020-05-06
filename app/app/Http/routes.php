@@ -83,7 +83,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('provider/{provider}/show', 'Admin\SIPProviderController@show');
     Route::get('provider/{provider}/edit', 'Admin\SIPProviderController@edit');
     Route::get('provider/{provider}/delete', 'Admin\SIPProviderController@delete');
+    Route::get('provider/{provider}/add_host', 'Admin\SIPProviderController@add_host');
+    Route::post('provider/{provider}/add_host', 'Admin\SIPProviderController@add_host_save');
+    Route::get('provider/{provider}/edit_host/{host}', 'Admin\SIPProviderController@edit_host');
+    Route::post('provider/{provider}/edit_host/{host}', 'Admin\SIPProviderController@edit_host_save');
+    Route::put('provider/{provider}/edit_host/{host}', 'Admin\SIPProviderController@edit_host_save');
+    Route::post('provider/{provider}/del_host/{host}', 'Admin\SIPProviderController@del_host');
     Route::resource('provider', 'Admin\SIPProviderController');
+    Route::resource('host', 'Admin\SIPProviderController');
 
      # SIPCountrys
     Route::get('country/data', 'Admin\SIPCountryController@data');

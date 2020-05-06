@@ -26,6 +26,7 @@
             <th>{!! trans("admin/sipproviders.name") !!}</th>
             <th>{!! trans("admin/sipproviders.active") !!}</th>
             <th>{!! trans("admin/sipproviders.country") !!}</th>
+            <th>{!! trans("admin/sipproviders.type_of_provider") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>
             <th>{!! trans("admin/admin.action") !!}</th>
         </tr>

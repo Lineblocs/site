@@ -8,5 +8,6 @@ return [
     'country' =>   'Country',
     'priority' => 'Priority',
     'host' => 'Host',
+    'type_of_provider' => 'Type of provider',
     'active' => 'Active'
 ];

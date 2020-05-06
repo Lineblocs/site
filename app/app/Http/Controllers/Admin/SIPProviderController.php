@@ -7,6 +7,7 @@ use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\SIPProviderRequest;
 use App\Helpers\MainHelper;
+use App\SIPProviderHost;
 use Datatables;
 use DB;
 use Config;
@@ -45,7 +46,8 @@ class SIPProviderController extends AdminController
     public function create()
     {
         $countries = self::$countries; 
-        return view('admin.sipprovider.create_edit', compact('countries'));
+        $providerTypes = $this->providerTypes();
+        return view('admin.sipprovider.create_edit', compact('countries', 'providerTypes'));
     }
 
     /**
@@ -69,7 +71,9 @@ class SIPProviderController extends AdminController
     public function edit(SIPProvider $provider)
     {
         $countries = self::$countries; 
-        return view('admin.sipprovider.create_edit', compact('provider', 'countries'));
+        $hosts = SIPProviderHost::where('provider_id', $provider->id)->get();
+        $providerTypes = $this->providerTypes();
+        return view('admin.sipprovider.create_edit', compact('provider', 'countries', 'hosts', 'providerTypes'));
     }
 
     /**
@@ -106,6 +110,44 @@ class SIPProviderController extends AdminController
         $provider->delete();
     }
 
+
+    public function add_host(SIPProvider $provider)
+    {
+        return view('admin.sipprovider.add_host', compact('provider'));
+    }
+
+    public function add_host_save(Request $request, SIPProvider $provider)
+    {
+        $data = $request->all();
+        $host = SIPProviderHost::create(array_merge([
+            'provider_id' => $provider->id
+        ], $data));
+        return response("");
+    }
+
+
+    public function edit_host(SIPProvider $provider, SIPProviderHost $host)
+    {
+        return view('admin.sipprovider.add_host', compact('provider', 'host'));
+    }
+
+    public function edit_host_save(Request $request, SIPProvider $provider, SIPProviderHost $host)
+    {
+        $data = $request->all();
+        $host->update( $data );
+            
+        return response("");
+    }
+
+
+    public function del_host(Request $request, SIPProvider $provider, SIPProviderHost $host)
+    {
+        $host->delete();
+            
+        return response("");
+    }
+
+
     /**
      * Show a list of all the languages posts formatted for Datatables.
      *
@@ -113,7 +155,7 @@ class SIPProviderController extends AdminController
      */
     public function data()
     {
-        $providers = SIPProvider::select(array('sip_providers.id', 'sip_providers.name','sip_providers.active', 'sip_providers.country', 'sip_providers.created_at'));
+        $providers = SIPProvider::select(array('sip_providers.id', 'sip_providers.name','sip_providers.active', 'sip_providers.country', 'sip_providers.type_of_provider', 'sip_providers.created_at'));
 
         return Datatables::of($providers)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
@@ -121,5 +163,12 @@ class SIPProviderController extends AdminController
                     <a href="{{{ url(\'admin/provider/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
+    }
+    public function providerTypes() {
+        return [
+            'inbound' => 'inbound',
+            'outbound' => 'outbound',
+            'both' => 'both'
+        ];
     }
 }

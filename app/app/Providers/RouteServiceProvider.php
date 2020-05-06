@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use \App\User;
 use \App\PortNumber;
 use \App\SIPProvider;
+use \App\SIPProviderHost;
 use \App\CallRate;
 use App\ErrorUserTrace;
 use \App\SIPCountry;
@@ -38,6 +39,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('user', User::class);
        \Route::model('port', PortNumber::class);
        \Route::model('provider', SIPProvider::class);
+       \Route::model('host', SIPProviderHost::class);
        \Route::model('rate', CallRate::class);
        \Route::model('country', SIPCountry::class);
        \Route::model('region', SIPRegion::class);
