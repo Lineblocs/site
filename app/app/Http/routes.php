@@ -168,6 +168,7 @@ $api->version('v1', function($api) {
       $api->get("/getDIDAssignedIP", "UserController@getDIDAssignedIP");
       $api->get("/getUserAssignedIP", "UserController@getUserAssignedIP");
       $api->get("/getPSTNProviderIP", "UserController@getPSTNProviderIP");
+      $api->get("/addPSTNProviderTechPrefix", "UserController@addPSTNProviderTechPrefix");
       $api->get("/getCallerIdToUse", "UserController@getCallerIdToUse");
       $api->get("/getExtensionFlowInfo", "UserController@getExtensionFlowInfo");
       $api->get("/getDIDDomain", "UserController@getDIDDomain");

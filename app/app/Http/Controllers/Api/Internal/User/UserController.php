@@ -213,11 +213,32 @@ class UserController extends ApiAuthController {
       $user = User::findOrFail($workspace->creator_id);
       return response($user->ip_private);
     }
+    private function BYORouteMatches($from, $to, $route) {
+
+      return TRUE;
+    }
     public function getPSTNProviderIP(Request $request) {
       $from = $request->get("from");
       $to = $request->get("to");
       $domain = $request->get("domain");
       $ru = $request->get("ru");
+      $workspace = MainHelper::workspaceByDomain($domain);
+      if ($workspace->byo_enabled) {
+        $carriers = BYOCarrier::select(array('byo_carriers.name', 'byo_carriers.ip_address', 'byo_carriers_routes.prefix', 'byo_carriers_routes.prepend', 'byo_carriers_routes.match'));
+        $carriers = $carriers->leftJoin('byo_carriers_routes', 'byo_carriers_routes.carrier_id', '=', 'byo_carriers.id');
+        $carriers->where('byo_carriers.workspace_id', $workspace->id);
+        $routes = $carriers->get();
+        foreach ($routes as $route) {
+          if ( $this->BYORouteMatches($from, $to, $route)) {
+            $ip = $route->ip_address;
+            return Response::json([
+              'ip_addr' => $ip, 
+              'did' => $from
+            ]);
+          }
+        }
+        return;
+      }
       $providerIp = "toronto5.voip.ms";
       $providers = SIPProvider::select(array('sip_providers.name', 'sip_providers_hosts.ip_address'));
       $providers = $providers->leftJoin('sip_providers_hosts', 'sip_providers_hosts.provider_id', '=', 'sip_providers.id');
@@ -227,7 +248,16 @@ class UserController extends ApiAuthController {
       return response($providerIp);
       $providerIp = $provider->ip_address;
       //return response($providerIp);
+      return Response::json([
+              'ip_addr' => $providerIp,
+              'did' => $from
+            ]);
+
     }
+    public function addPSTNProviderTechPrefix(Request $request) {
+
+    }
+
     public function getDIDAcceptOption(Request $request) {
       $did = $request->get("did");
       $did = DIDNumber::where('api_number', $did)->firstOrFail();

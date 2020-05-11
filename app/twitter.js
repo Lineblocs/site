@@ -16,7 +16,7 @@
 	* Gist by Joan Alba Maldonado: https://gist.github.com/jalbam/d7678c32b6f029c602c0bfb2a72e0c26
 */
 var UNFOLLOWED = 0;
-var TO_UNFOLLOW = 250;
+var TO_UNFOLLOW = 100;
 var TO_SKIP = 0;
 var N_SKIPPED = 0;
 
