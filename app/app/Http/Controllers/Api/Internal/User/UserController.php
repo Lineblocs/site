@@ -92,6 +92,7 @@ class UserController extends ApiAuthController {
     {
       $debug = Config::get("app.debug");
       $number = $request->get("number");
+
       Log::info(sprintf("looking up number %s",$number));
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
@@ -131,9 +132,8 @@ class UserController extends ApiAuthController {
         "));
 
       $workspace->join('byo_did_numbers', 'workspaces.id', '=', 'byo_did_numbers.workspace_id');
-      $workspace->join('flows', 'flows.id', '=', 'did_numbers.flow_id');
+      $workspace->join('flows', 'flows.id', '=', 'byo_did_numbers.flow_id');
       $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
-      $workspace->where('byo_did_numbers.number', '=', $number);
       $workspace= $workspace->first();
 
       if ($workspace) {
