@@ -15,6 +15,7 @@ class CreateByoDids extends Migration
         Schema::create('byo_did_numbers', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->string('public_id');
             $table->string('number');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');

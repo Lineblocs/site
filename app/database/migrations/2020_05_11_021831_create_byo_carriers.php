@@ -15,6 +15,7 @@ class CreateByoCarriers extends Migration
         Schema::create('byo_carriers', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->string('public_id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
             $table->integer('workspace_id')->unsigned();
