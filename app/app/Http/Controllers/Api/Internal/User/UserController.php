@@ -116,6 +116,7 @@ class UserController extends ApiAuthController {
         $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
         $user = User::findOrFail($workspace['creator_id'] );
         $array['free_trial_status'] = $user->checkFreeTrialStatus();
+        $array['is_byo'] = FALSE;
 
         return $this->response->array($array);
       }
@@ -142,6 +143,7 @@ class UserController extends ApiAuthController {
         $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
         $user = User::findOrFail($workspace['creator_id'] );
         $array['free_trial_status'] = $user->checkFreeTrialStatus();
+        $array['is_byo'] = TRUE;
 
         return $this->response->array($array);
       }
