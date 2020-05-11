@@ -37,7 +37,11 @@ class WorkspaceUser extends PublicResource {
       'manage_phoneglobalsettings' => 'bool',
       'create_phoneindividualsetting' => 'bool',
       'manage_phoneindividualsettings' => 'bool',
-      'manage_billing' => 'bool'
+      'manage_billing' => 'bool',
+      'manage_byo_carriers' => 'bool',
+      'manage_byo_create_carrier' => 'bool',
+      'manage_byo_did_numbers' => 'bool',
+      'manage_byo_create_did_number' => 'bool',
 
 
 
@@ -70,7 +74,11 @@ class WorkspaceUser extends PublicResource {
       'manage_phoneglobalsettings',
       'create_phoneindividualsetting',
       'manage_phoneindividualsettings',
-      'manage_billing'
+      'manage_billing',
+      'manage_byo_carriers',
+      'manage_byo_create_carrier',
+      'manage_byo_did_numbers',
+      'manage_byo_create_did_number'
   ];
   public static function createSuperAdmin($workspace, $user) {
       $attrs = [];

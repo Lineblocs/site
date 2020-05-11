@@ -77,6 +77,18 @@ case 'manage_phoneindividualsetting':
 case 'create_phoneindividualsetting':
         return $settings->create_phoneindividualsetting;
       break;
+case 'manage_byo_carriers':
+        return $settings->manage_byo_carriers;
+      break;
+case 'create_byo_carrier':
+        return $settings->create_byo_carrier;
+      break;
+case 'manage_byo_did_numbers':
+        return $settings->manage_byo_did_numbers;
+      break;
+case 'create_byo_did_number':
+        return $settings->create_byo_did_number;
+      break;
 
 
 
