@@ -105,13 +105,48 @@ class UserController extends ApiAuthController {
       $workspace->join('flows', 'flows.id', '=', 'did_numbers.flow_id');
       $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
       $workspace->where('did_numbers.api_number', '=', $number);
-      $workspace= $workspace->firstOrFail(); 
-      $array = $workspace->toArray();
-      $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
-      $user = User::findOrFail($workspace['creator_id'] );
-      $array['free_trial_status'] = $user->checkFreeTrialStatus();
 
-      return $this->response->array($array);
+      // DID numbers first
+      $workspace= $workspace->first();
+
+      if ($workspace) {
+
+        $array = $workspace->toArray();
+        $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
+        $user = User::findOrFail($workspace['creator_id'] );
+        $array['free_trial_status'] = $user->checkFreeTrialStatus();
+
+        return $this->response->array($array);
+      }
+
+
+      // check BYO DID next
+
+      $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, byo_did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
+        users.plan,
+        workspaces.creator_id,
+        workspaces.id AS workspace_id,
+        workspaces.api_token,
+        workspaces.api_secret
+        "));
+
+      $workspace->join('byo_did_numbers', 'workspaces.id', '=', 'byo_did_numbers.workspace_id');
+      $workspace->join('flows', 'flows.id', '=', 'did_numbers.flow_id');
+      $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('byo_did_numbers.number', '=', $number);
+      $workspace= $workspace->first();
+
+      if ($workspace) {
+
+        $array = $workspace->toArray();
+        $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
+        $user = User::findOrFail($workspace['creator_id'] );
+        $array['free_trial_status'] = $user->checkFreeTrialStatus();
+
+        return $this->response->array($array);
+      }
+
+      return $this->response->errorNotFound();
     }
 
     public function getExtensionFlowInfo(Request $request)
