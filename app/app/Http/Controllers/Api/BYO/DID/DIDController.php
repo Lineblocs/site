@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api\BYO\DIDNumber;
-use \App\Http\Controllers\Api\ApiAuthController;
+
+use \App\Http\Controllers\Api\BYO\BYOController;
 use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
@@ -17,7 +18,7 @@ use Config;
 
 
 
-class DIDNumberController extends ApiAuthController {
+class DIDNumberController extends BYOController {
     public function didData(Request $request, $didId)
     {
         $did = BYODIDNumber::where('public_id', '=', $didId)->firstOrFail();

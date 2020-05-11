@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\BYO\Carrier;
-use \App\Http\Controllers\Api\ApiAuthController;
+use \App\Http\Controllers\Api\BYO\BYOController;
 use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Config;
 
 
 
-class BYOCarrierController extends ApiAuthController {
+class BYOCarrierController extends BYOController {
     public function carrierData(Request $request, $carrierId)
     {
         $carrier = BYOCarrier::where('public_id', '=', $carrierId)->firstOrFail();
