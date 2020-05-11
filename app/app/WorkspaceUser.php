@@ -89,6 +89,14 @@ class WorkspaceUser extends PublicResource {
       $attrs['workspace_id'] = $workspace->id;
       return WorkspaceUser::create($attrs);
   }
+  public static function updateSuperAdmin($workspace, $user) {
+      $user = WorkspaceUser::where('user_id', $user->id)->where('workspace_id', $workspace->id)->firstOrFail();
+      $attrs = [];
+      foreach (WorkspaceUser::$permissions as $perm) {
+        $attrs[$perm] = TRUE;
+      }
+      $user->update( $attrs );
+  }
   public function createJoinHash() {
     $hash = bin2hex(random_bytes(16));
     $this->update([
