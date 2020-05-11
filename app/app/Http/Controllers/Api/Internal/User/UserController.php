@@ -16,9 +16,11 @@ use \App\Extension;
 use \App\Helpers\MainHelper;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
+use \App\BYOCarrier;
 use \Config;
 use \DB;
 use \Log;
+use \Response;
 
 
 class UserController extends ApiAuthController {
@@ -245,7 +247,12 @@ class UserController extends ApiAuthController {
       $providers->where('sip_providers.type_of_provider', 'outbound');
       $provider = $providers->first();
       $providerIp = "toronto5.voip.ms";
-      return response($providerIp);
+      return Response::json([
+              'ip_addr' => $providerIp,
+              'did' => $from
+            ]);
+
+
       $providerIp = $provider->ip_address;
       //return response($providerIp);
       return Response::json([

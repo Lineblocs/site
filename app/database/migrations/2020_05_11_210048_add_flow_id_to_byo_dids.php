@@ -14,7 +14,7 @@ class AddFlowIdToByoDids extends Migration
     {
         Schema::table('byo_did_numbers', function (Blueprint $table) {
             //
-            $table->integer('flow_id')->unsigned();
+            $table->integer('flow_id')->nullable()->unsigned();
             $table->foreign('flow_id')->references('id')->on('flows')->onDelete('CASCADE');
         });
     }
