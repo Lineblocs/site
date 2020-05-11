@@ -17,7 +17,7 @@ use Config;
 
 
 
-class CarrierController extends ApiAuthController {
+class BYOCarrierController extends ApiAuthController {
     public function carrierData(Request $request, $carrierId)
     {
         $carrier = BYOCarrier::where('public_id', '=', $carrierId)->firstOrFail();

@@ -218,13 +218,15 @@ class UserController extends ApiAuthController {
       $to = $request->get("to");
       $domain = $request->get("domain");
       $ru = $request->get("ru");
+      $providerIp = "toronto5.voip.ms";
       $providers = SIPProvider::select(array('sip_providers.name', 'sip_providers_hosts.ip_address'));
       $providers = $providers->leftJoin('sip_providers_hosts', 'sip_providers_hosts.provider_id', '=', 'sip_providers.id');
       $providers->where('sip_providers.type_of_provider', 'outbound');
       $provider = $providers->first();
-      //$providerIp = "toronto5.voip.ms";
-      $providerIp = $provider->ip_address;
+      $providerIp = "toronto5.voip.ms";
       return response($providerIp);
+      $providerIp = $provider->ip_address;
+      //return response($providerIp);
     }
     public function getDIDAcceptOption(Request $request) {
       $did = $request->get("did");

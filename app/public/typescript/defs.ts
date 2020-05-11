@@ -2,6 +2,7 @@ declare class module {
     public static exports: any;
 }
 declare var console: any;
+declare var require: any;
 declare class LineUser {
     public info: any;
     public id: number;
@@ -61,7 +62,7 @@ declare class LineChannel {
 
     public getBridge(): LineBridge;
     public removeFromBridge();
-    public playTTS(flow: LineFlow, text: string, gender ? : string, voice ? : string);
+    public playTTS(flow: LineFlow, text: string, lang ? : string, gender ? : string, voice ? : string);
     public startAcceptingInput(keyTimeout: number);
     public hangup();
 }
@@ -90,4 +91,5 @@ type LineEvent = Object;
 declare class LineFlow {
     public callerId: string;
     public exten: string;
+    public vars: any;
 }
