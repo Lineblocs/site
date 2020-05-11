@@ -25,6 +25,8 @@ class BYOCarrierController extends BYOController {
             return $this->response->errorForbidden();
         }
 
+        $array = $carrier->toArray();
+        $array['routes'] =BYOCarrierRoute::where('carrier_id', $array['id'])->get()->toArray();
         return $this->response->array($array);
     }
     public function listCarriers(Request $request)
@@ -39,7 +41,7 @@ class BYOCarrierController extends BYOController {
 
     public function deleteCarrier(Request $request, $carrierId)
     {
-        $carrier = BYOCarrier::findOrFail($carrierId);
+        $carrier = BYOCarrier::where('public_id', $carrierId)->firstOrFail();
         if (!$this->hasPermissions($request, $carrier, 'manage_byo_carriers')) {
             return $this->response->errorForbidden();
         }
@@ -68,7 +70,10 @@ class BYOCarrierController extends BYOController {
         }
         $routes = $data['routes'];
         unset( $data['routes'] );
-        $carrier = BYOCarrier::create( $data );
+        $carrier = BYOCarrier::create( array_merge($data, [
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id
+          ] ) );
         $this->saveCarrierRoutes($carrier, $routes);
         return $this->response->noContent()->withHeader('X-Carrier-ID', $carrier->id);
     }

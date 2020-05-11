@@ -282,16 +282,16 @@ $api->version('v1', function($api) {
     $api->group([ 'prefix' => 'carrier', 'namespace' => '\Carrier'], function($api) {
       $api->get("/carrierData/{carrierId}", "BYOCarrierController@carrierData");
       $api->post("/saveCarrier", "BYOCarrierController@saveCarrier");
-      $api->post("/updatearrier/{carrierId}", "BYOCarrierController@updateCarrier");
+      $api->post("/updateCarrier/{carrierId}", "BYOCarrierController@updateCarrier");
       $api->delete("/deleteCarrier/{carrierId}", "BYOCarrierController@deleteCarrier");
       $api->get("/listCarriers", "BYOCarrierController@listCarriers");
      });
     $api->group([ 'prefix' => 'did', 'namespace' => '\DID'], function($api) {
-      $api->get("/didData/{didId}", "BYODIDNumberController@didData");
-      $api->post("/saveDID", "BYODIDNumberController@saveDID");
-      $api->post("/updateDID/{didId}", "BYODIDNumberController@updateDID");
-      $api->delete("/deleteDID/{didId}", "BYODIDNumberController@deleteDID");
-      $api->get("/listDIDs", "BYODIDNumberController@listDIDs");
+      $api->get("/numberData/{numbrId}", "BYODIDNumberController@numberData");
+      $api->post("/saveNumber", "BYODIDNumberController@saveNumber");
+      $api->post("/updateNumber/{numberId}", "BYODIDNumberController@updateNumber");
+      $api->delete("/deleteDID/{numberId}", "BYODIDNumberController@deleteNumber");
+      $api->get("/listNumbers", "BYODIDNumberController@listNumbers");
      });
 
   });

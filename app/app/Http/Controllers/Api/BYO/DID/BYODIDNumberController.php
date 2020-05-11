@@ -19,16 +19,17 @@ use Config;
 
 
 class BYODIDNumberController extends BYOController {
-    public function didData(Request $request, $didId)
+    public function numberData(Request $request, $didId)
     {
         $did = BYODIDNumber::where('public_id', '=', $didId)->firstOrFail();
         if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
             return $this->response->errorForbidden();
         }
 
-        return $this->response->array($did);
+        $array = $did->toArray();
+        return $this->response->array($array);
     }
-    public function listDIDNumbers(Request $request)
+    public function listNumbers(Request $request)
     {
         $user = $this->getUser($request);
         $paginate = $this->getPaginate( $request );
@@ -38,7 +39,7 @@ class BYODIDNumberController extends BYOController {
         return $this->response->paginator($dids->paginate($paginate), new BYODIDNumberTransformer);
     }
 
-    public function deleteDIDNumber(Request $request, $didId)
+    public function deleteNumber(Request $request, $didId)
     {
         $did = BYODIDNumber::findOrFail($didId);
         if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
@@ -46,7 +47,7 @@ class BYODIDNumberController extends BYOController {
         }
         $did->delete();
    }
-    public function updateDIDNumber(Request $request, $didId)
+    public function updateNumber(Request $request, $didId)
     {
         $data = $request->json()->all();
         $did = BYODIDNumber::where('public_id', $didId)->firstOrFail();
@@ -55,7 +56,7 @@ class BYODIDNumberController extends BYOController {
         }
         $did->update($data);
    }
-    public function saveDIDNumber(Request $request)
+    public function saveNumber(Request $request)
     {
         $data = $request->all();
         $user = $this->getUser($request);
@@ -63,7 +64,10 @@ class BYODIDNumberController extends BYOController {
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'create_byo_did_number')) {
           return $this->errorPerformingAction();
         }
-        $did = BYODIDNumber::create( $data );
+        $did = BYODIDNumber::create( array_merge($data, [
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+      ]));
         return $this->response->noContent()->withHeader('X-DIDNumber-ID', $did->id);
     }
 

@@ -4,8 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BYOCarrierRoute extends PublicResource {
-  public static $publicPrefix = "d";
+class BYOCarrierRoute extends Model {
   protected $dates = ['created_at', 'updated_at'];
 
   protected $guarded  = array('id');
