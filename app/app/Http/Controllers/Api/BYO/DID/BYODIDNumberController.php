@@ -9,7 +9,7 @@ use \Illuminate\Http\Request;
 use \App\User;
 use \App\BYODIDNumber; 
 use \App\BYODIDNumberRoute; 
-use \App\Transformers\DIDNumberTransformer;
+use \App\Transformers\BYODIDNumberTransformer;
 use \DB;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
@@ -35,7 +35,7 @@ class BYODIDNumberController extends BYOController {
         $workspace = $workspace = $this->getWorkspace($request); 
         $dids = BYODIDNumber::where('workspace_id', $workspace->id);
         MainHelper::addSearch($request, $dids, ['number']);
-        return $this->response->paginator($dids->paginate($paginate), new DIDNumberTransformer);
+        return $this->response->paginator($dids->paginate($paginate), new BYODIDNumberTransformer);
     }
 
     public function deleteDIDNumber(Request $request, $didId)
