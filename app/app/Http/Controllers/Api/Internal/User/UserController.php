@@ -17,6 +17,7 @@ use \App\Helpers\MainHelper;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
 use \App\BYOCarrier;
+use \App\BYODIDNumber;
 use \Config;
 use \DB;
 use \Log;
@@ -230,6 +231,7 @@ class UserController extends ApiAuthController {
       $workspaceId = $request->get("workspace");
       $number = $request->get("number");
       Log::info(sprintf("looking up number %s",$number));
+      //return response("35.183.88.150");
       $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
         users.ip_private,
@@ -241,16 +243,40 @@ class UserController extends ApiAuthController {
       $workspace->join('did_numbers', 'workspaces.id', '=', 'did_numbers.workspace_id');
       $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
       $workspace->where('did_numbers.api_number', '=', $did);
-      $workspace= $workspace->firstOrFail(); 
+      $workspace= $workspace->first();
 
-      return response($workspace->ip_private);
+      if ($workspace) {
+          return response($workspace->ip_address);
+      }
+
+
+      // check BYO DID next
+      $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
+        users.plan,
+        users.ip_private,
+        users.ip_address,
+        workspaces.creator_id,
+        workspaces.id AS workspace_id
+        "));
+
+      $workspace->join('byo_did_numbers', 'workspaces.id', '=', 'byo_did_numbers.workspace_id');
+      $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('byo_did_numbers.number', '=', $did);
+      $workspace= $workspace->first();
+
+      if ($workspace) {
+          return response($workspace->ip_address);
+      }
+
+      return $this->response->errorInternal('no result found..');
     }
     public function getUserAssignedIP(Request $request) {
       $username = $request->get("username");
       $domain = $request->get("domain");
       $workspace = MainHelper::workspaceByDomain($domain);
       $user = User::findOrFail($workspace->creator_id);
-      return response($user->ip_private);
+      //return response("35.183.88.150");
+      return response($user->ip_address);
     }
     private function BYORouteMatches($from, $to, $route) {
 
@@ -303,9 +329,17 @@ class UserController extends ApiAuthController {
     }
 
     public function getDIDAcceptOption(Request $request) {
-      $did = $request->get("did");
-      $did = DIDNumber::where('api_number', $did)->firstOrFail();
-      return response($did->did_action);
+      $didArg = $request->get("did");
+      $did = DIDNumber::where('api_number', $didArg)->first();
+      if ($did) {
+        $did = DIDNumber::where('api_number', $didArg)->first();
+        return response($did->did_action);
+      }
+      $did = BYODIDNumber::where('number', $didArg)->first();
+      if ($did) {
+        return response('accept-call');
+      }
+       return $this->response->errorNotFound('no results found..');
     }
     public function getCallerIdToUse(Request $request) {
       $domain = $request->get("domain");
@@ -314,17 +348,14 @@ class UserController extends ApiAuthController {
       $extensionObj = Extension::where('workspace_id', $workspace->id) ->where('username', $extension)->firstOrFail();
       return $this->response->array(['caller_id' => $extensionObj->caller_id]);
     }
-    public function checkNumberBlocked(Request $request) {
-      $number = $request->get("number");
-      $did = $request->get("did");
-      //$region = $request->get("region");
-      $did = DIDNumber::where('api_number', $did)->firstOrFail();
+
+    private function finishBlockingStuff($number, $did /** did number or byo did **/) {
       $region= "US";
-       $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
         try {
             $numberProto = $phoneUtil->parse($number, $region);
             if ( !  $phoneUtil->isValidNumber($numberProto) ) {
-            return $this->errorInternal( $request, 'Invalid number'); 
+            return $this->response->errorInternal(  'Invalid number'); 
             }
             $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
             $check1 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
@@ -345,8 +376,25 @@ class UserController extends ApiAuthController {
 
             return $this->response->errorNotFound();
         } catch (\libphonenumber\NumberParseException $e) {
-            return $this->errorInternal( $request, 'lib phone number error');
+        
+            return $this->response->errorInternal( 'lib phone number error');
         }
+
+    }
+    public function checkNumberBlocked(Request $request) {
+      $number = $request->get("number");
+      $didArg = $request->get("did");
+      //$region = $request->get("region");
+      $did = DIDNumber::where('api_number', $didArg)->first();
+      if ($did) {
+          return $this->finishBlockingStuff($number, $did);
+      }
+      $did = BYODIDNumber::where('number', $didArg)->first();
+      if ($did) {
+          return $this->finishBlockingStuff($number, $did);
+      }
+      return $this->response->errorInternal('no results found..');
+
     }
 }
 
