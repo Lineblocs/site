@@ -235,7 +235,7 @@ class UserController extends ApiAuthController {
       $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
         users.ip_private,
-        users.ip_address,
+        users.ip_private,
         workspaces.creator_id,
         workspaces.id AS workspace_id
         "));
@@ -246,7 +246,7 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_address);
+          return response($workspace->ip_private);
       }
 
 
@@ -254,7 +254,7 @@ class UserController extends ApiAuthController {
       $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
         users.ip_private,
-        users.ip_address,
+        users.ip_private,
         workspaces.creator_id,
         workspaces.id AS workspace_id
         "));
@@ -265,7 +265,7 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_address);
+          return response($workspace->ip_private);
       }
 
       return $this->response->errorInternal('no result found..');
@@ -276,7 +276,7 @@ class UserController extends ApiAuthController {
       $workspace = MainHelper::workspaceByDomain($domain);
       $user = User::findOrFail($workspace->creator_id);
       //return response("35.183.88.150");
-      return response($user->ip_address);
+      return response($user->ip_private);
     }
     private function BYORouteMatches($from, $to, $route) {
 
@@ -289,13 +289,13 @@ class UserController extends ApiAuthController {
       $ru = $request->get("ru");
       $workspace = MainHelper::workspaceByDomain($domain);
       if ($workspace->byo_enabled) {
-        $carriers = BYOCarrier::select(array('byo_carriers.name', 'byo_carriers.ip_address', 'byo_carriers_routes.prefix', 'byo_carriers_routes.prepend', 'byo_carriers_routes.match'));
+        $carriers = BYOCarrier::select(array('byo_carriers.name', 'byo_carriers.ip_private', 'byo_carriers_routes.prefix', 'byo_carriers_routes.prepend', 'byo_carriers_routes.match'));
         $carriers = $carriers->leftJoin('byo_carriers_routes', 'byo_carriers_routes.carrier_id', '=', 'byo_carriers.id');
         $carriers->where('byo_carriers.workspace_id', $workspace->id);
         $routes = $carriers->get();
         foreach ($routes as $route) {
           if ( $this->BYORouteMatches($from, $to, $route)) {
-            $ip = $route->ip_address;
+            $ip = $route->ip_private;
             return Response::json([
               'ip_addr' => $ip, 
               'did' => $from
@@ -305,7 +305,7 @@ class UserController extends ApiAuthController {
         return;
       }
       $providerIp = "toronto5.voip.ms";
-      $providers = SIPProvider::select(array('sip_providers.name', 'sip_providers_hosts.ip_address'));
+      $providers = SIPProvider::select(array('sip_providers.name', 'sip_providers_hosts.ip_private'));
       $providers = $providers->leftJoin('sip_providers_hosts', 'sip_providers_hosts.provider_id', '=', 'sip_providers.id');
       $providers->where('sip_providers.type_of_provider', 'outbound');
       $provider = $providers->first();
@@ -316,7 +316,7 @@ class UserController extends ApiAuthController {
             ]);
 
 
-      $providerIp = $provider->ip_address;
+      $providerIp = $provider->ip_private;
       //return response($providerIp);
       return Response::json([
               'ip_addr' => $providerIp,
