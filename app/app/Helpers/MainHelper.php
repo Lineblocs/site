@@ -275,8 +275,14 @@ final class MainHelper {
           break;
         }
       }
-    }
+}
 
+    $extensions = Extension::where('workspace_id', '=', $workspace->id)->get()->toArray();
+    $status = PBXServerHelper::provision($user, $workspace, $extensions);
+    if (!$status) {
+      return FALSE;
+    }
+    return TRUE;
   }
   public static function randomPassword() {
       $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';

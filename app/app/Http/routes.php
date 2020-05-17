@@ -291,7 +291,7 @@ $api->version('v1', function($api) {
       $api->get("/numberData/{numbrId}", "BYODIDNumberController@numberData");
       $api->post("/saveNumber", "BYODIDNumberController@saveNumber");
       $api->post("/updateNumber/{numberId}", "BYODIDNumberController@updateNumber");
-      $api->delete("/deleteDID/{numberId}", "BYODIDNumberController@deleteNumber");
+      $api->delete("/deleteNumber/{numberId}", "BYODIDNumberController@deleteNumber");
       $api->get("/listNumbers", "BYODIDNumberController@listNumbers");
       $api->post("/importNumbers", "BYODIDNumberController@importNumbers");
      });

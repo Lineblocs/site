@@ -335,7 +335,10 @@ class RegisterController extends ApiAuthController
         $user = User::findOrFail($data['userId']);
         $workspace = Workspace::where('creator_id', '=', $user->id)->first();
         $template = CallSystemTemplate::findOrFail($data['templateId']);
-        MainHelper::provisionCallSystem($user, $workspace, $template);
+        $status =MainHelper::provisionCallSystem($user, $workspace, $template);
+        if (!$status) {
+          return $this->response->errorInternal();
+        }
       return $this->response->noContent();
   }
 
