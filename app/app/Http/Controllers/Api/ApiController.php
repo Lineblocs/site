@@ -23,4 +23,60 @@ class ApiController extends Controller {
      }
      return 10;
    }
+     public function hasPermissions($request, $resource, $action) {
+          $workspace = $this->getWorkspace($request);
+          $user = $this->getUser($request);
+          $info = WorkspaceUser::where('workspace_id', $workspace->id)
+                         ->where('user_id', $user->id);
+          if (!$info) {
+               return FALSE;
+          }
+          if ($resource->workspace_id != $workspace->id) {
+               return FALSE;
+          }
+          if ($resource->workspace_id == $workspace->id && $workspace->creator_id == $user->id) {
+               return TRUE;
+          }
+          // check actions
+          if ($resource instanceof Extension && $resource->user_id == $user->id && $action == 'manage_extensions') {
+               return TRUE;
+          }
+          if ($resource instanceof DIDNumber && $resource->user_id == $user->id && $action == 'manage_dids') {
+               return TRUE;
+          }
+
+          return FALSE;
+     }
+  
+     public function errorPerformingAction() {
+          return $this->response->errorForbidden("Cannot perform action..");
+     }
+    public function checkAdminAuth(Request $request) {
+         $auth = $request->header("X-Admin-Token");
+         $admin = Config::get("admin");
+         if ($admin['frontend_token']!=$auth){
+              return FALSE;
+         }
+         return TRUE;
+    }
+
+    public function errorInternal(Request $request, $message='') {
+          $user = $this->getUser( $request );
+          $workspace = $this->getWorkspace( $request );
+          $params = [
+               'message' => $message
+          ];
+          if ($user) {
+               $params['user_id'] = $user->id;
+          }
+          if ($workspace) {
+               $params['workspace_id'] = $workspace->id;
+          }
+
+          $params['full_url'] = $request->fullUrl();
+          $error = ErrorUserTrace::create($params);
+          header('X-ErrorCode-ID: '. $error->id);
+
+          return $this->response->errorInternal( $message );
+    }
 }

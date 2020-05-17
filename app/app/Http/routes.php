@@ -135,6 +135,43 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 // API routes
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function($api) {
+  $api->group([ 'prefix' => 'public', 'namespace' => '\App\Http\Controllers\Api\Public'], function($api) {
+    $api->group([ 'prefix' => 'did', 'namespace' => '\DIDNumber'], function($api) {
+        $api->get("/{didId}", "DIDNumberController@get");
+        $api->post("/", "DIDNumberController@post");
+        $api->post("/{didId}", "DIDNumberController@put");
+        $api->get("/list", "DIDNumberController@list");
+        $api->delete("/{didId}", "DIDNumberController@delete");
+    });
+    $api->group([ 'prefix' => 'extension', 'namespace' => '\ExtensionNumber'], function($api) {
+        $api->get("/{extensionId}", "ExtensionNumberController@get");
+        $api->post("/", "ExtensionNumberController@post");
+        $api->post("/{extensionId}", "ExtensionNumberController@put");
+        $api->get("/list", "ExtensionNumberController@list");
+        $api->delete("/{extensionId}", "ExtensionNumberController@delete");
+    });
+    $api->group([ 'prefix' => 'user', 'namespace' => '\User'], function($api) {
+        $api->get("/{userId}", "UserController@get");
+        $api->post("/", "UserController@post");
+        $api->post("/{userId}", "UserController@put");
+        $api->get("/list", "UserController@list");
+        $api->delete("/{userId}", "UserController@delete");
+    });
+    $api->group([ 'prefix' => 'blocked', 'namespace' => '\BlockedNumber'], function($api) {
+        $api->get("/{blockedId}", "BlockedNumberController@get");
+        $api->post("/", "BlockedNumberController@post");
+        $api->post("/{blockedId}", "BlockedNumberController@put");
+        $api->get("/list", "BlockedNumberController@list");
+        $api->delete("/{blockedId}", "BlockedNumberController@delete");
+    });
+    $api->group([ 'prefix' => 'recording', 'namespace' => '\Recording'], function($api) {
+        $api->get("/{recordingId}", "RecordingController@get");
+        $api->post("/", "RecordingController@post");
+        $api->post("/{recordingId}", "RecordingController@put");
+        $api->get("/list", "RecordingController@list");
+        $api->delete("/{recordingId}", "RecordingController@delete");
+    });
+  });
   $api->group([ 'prefix' => 'internal', 'namespace' => '\App\Http\Controllers\Api\Internal'], function($api) {
     $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {
       $api->post("/createCall", "CallController@createCall");
