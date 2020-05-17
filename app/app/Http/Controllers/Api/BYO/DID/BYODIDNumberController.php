@@ -68,7 +68,12 @@ class BYODIDNumberController extends BYOController {
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'create_byo_did_number')) {
           return $this->errorPerformingAction();
         }
-        $did = BYODIDNumber::create( array_merge($data, [
+        $params = [];
+        $params['number'] = $data['number'];
+        if (!empty($data['flow_id'])) {
+          $params['flow_id'] = $data['flow_id'];
+        }
+        $did = BYODIDNumber::create( array_merge($params, [
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,
       ]));
@@ -96,20 +101,20 @@ class BYODIDNumberController extends BYOController {
         }
         $path = $file->getRealPath();
         //$contents = File::get($path);
-        $row = 1;
+        $row = 0;
         if (($handle = fopen($path, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
                 //echo "<p> $num fields in line $row: <br /></p>\n";
                 $row++;
-                $flowId = NULL;
-                if (!empty( $data[ 1 ] )) {
-                    $flowId = $data[1];
+                if ($row == 1) {
+                  continue;
                 }
-                $params = array(
-                    "flow_id" => $flowId,
-                    "number" => $data[0]
-                );
+                $params = [];
+                $params['number'] = $data[0];
+                if (!empty($data[1])) {
+                  $params['flow_id'] = $data[1];
+                }
                 $did = BYODIDNumber::create( array_merge(array(
                     "user_id" => $user->id, 
                     "workspace_id" => $workspace->id
