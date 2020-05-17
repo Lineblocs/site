@@ -14,7 +14,7 @@ class ChangeFlowsJsonToNullable extends Migration
     {
         Schema::table('flows', function (Blueprint $table) {
             //
-            $table->text('flow_json')->nullable()->change();
+            $table->mediumText('flow_json')->nullable()->change();
         });
     }
 

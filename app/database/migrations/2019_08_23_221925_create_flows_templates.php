@@ -17,7 +17,7 @@ class CreateFlowsTemplates extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('description');
-            $table->text('flow_json')->nullable();
+            $table->mediumText('flow_json')->nullable();
 
         });
     }

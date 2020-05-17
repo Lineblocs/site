@@ -65,6 +65,10 @@ declare class LineChannel {
     public playTTS(flow: LineFlow, text: string, lang ? : string, gender ? : string, voice ? : string);
     public startAcceptingInput(keyTimeout: number);
     public hangup();
+    public on(name: string, callback: any);
+    public automateCallHangup: boolean;
+    public gotoFlowWidget(flow: LineFlow, name: string, voice ? : string);
+
 }
 declare class LineBridge {
     public channels: Array < LineChannel > ;

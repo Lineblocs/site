@@ -124,7 +124,6 @@ class UserController extends ApiAuthController {
 
 
       // check BYO DID next
-
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, byo_did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
         workspaces.creator_id,
@@ -133,9 +132,11 @@ class UserController extends ApiAuthController {
         workspaces.api_secret
         "));
 
-      $workspace->join('byo_did_numbers', 'workspaces.id', '=', 'byo_did_numbers.workspace_id');
+
+      $workspace->Join('byo_did_numbers', 'workspaces.id', '=', 'byo_did_numbers.workspace_id');
       $workspace->join('flows', 'flows.id', '=', 'byo_did_numbers.flow_id');
       $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
+      $workspace->where('byo_did_numbers.number', '=', $number);
       $workspace= $workspace->first();
 
       if ($workspace) {
@@ -234,7 +235,7 @@ class UserController extends ApiAuthController {
       //return response("35.183.88.150");
       $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
-        users.ip_private,
+        users.ip_address,
         users.ip_private,
         workspaces.creator_id,
         workspaces.id AS workspace_id
@@ -246,14 +247,14 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_private);
+          return response($workspace->ip_address);
       }
 
 
       // check BYO DID next
       $workspace = Workspace::select(DB::raw("workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
-        users.ip_private,
+        users.ip_address,
         users.ip_private,
         workspaces.creator_id,
         workspaces.id AS workspace_id
@@ -265,7 +266,7 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_private);
+          return response($workspace->ip_address);
       }
 
       return $this->response->errorInternal('no result found..');
@@ -276,7 +277,7 @@ class UserController extends ApiAuthController {
       $workspace = MainHelper::workspaceByDomain($domain);
       $user = User::findOrFail($workspace->creator_id);
       //return response("35.183.88.150");
-      return response($user->ip_private);
+      return response($user->ip_address);
     }
     private function BYORouteMatches($from, $to, $route) {
 
@@ -289,16 +290,19 @@ class UserController extends ApiAuthController {
       $ru = $request->get("ru");
       $workspace = MainHelper::workspaceByDomain($domain);
       if ($workspace->byo_enabled) {
-        $carriers = BYOCarrier::select(array('byo_carriers.name', 'byo_carriers.ip_private', 'byo_carriers_routes.prefix', 'byo_carriers_routes.prepend', 'byo_carriers_routes.match'));
+        $carriers = BYOCarrier::select(array('byo_carriers.name', 'byo_carriers.ip_address', 'users.ip_private', 'byo_carriers_routes.prefix', 'byo_carriers_routes.prepend', 'byo_carriers_routes.match'));
         $carriers = $carriers->leftJoin('byo_carriers_routes', 'byo_carriers_routes.carrier_id', '=', 'byo_carriers.id');
+        $carriers = $carriers->leftJoin('workspaces', 'workspaces.id', '=', 'byo_carriers.workspace_id');
+        $carriers = $carriers->leftJoin('users', 'users.id', '=', 'workspaces.creator_id');
         $carriers->where('byo_carriers.workspace_id', $workspace->id);
         $routes = $carriers->get();
         foreach ($routes as $route) {
           if ( $this->BYORouteMatches($from, $to, $route)) {
-            $ip = $route->ip_private;
+            $ip = $route->ip_address;
+            $changed = $route->prepend . $to;
             return Response::json([
               'ip_addr' => $ip, 
-              'did' => $from
+              'did' => $changed
             ]);
           }
         }
@@ -316,7 +320,7 @@ class UserController extends ApiAuthController {
             ]);
 
 
-      $providerIp = $provider->ip_private;
+      $providerIp = $provider->ip_address;
       //return response($providerIp);
       return Response::json([
               'ip_addr' => $providerIp,

@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Api\BYO\DID;
+<?php namespace App\Http\Controllers\Api\BYO\DID;
 
 use \App\Http\Controllers\Api\BYO\BYOController;
 use \JWTAuth;
@@ -21,12 +19,15 @@ use Config;
 class BYODIDNumberController extends BYOController {
     public function numberData(Request $request, $didId)
     {
-        $did = BYODIDNumber::where('public_id', '=', $didId)->firstOrFail();
-        if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
+        $number = BYODIDNumber::select(DB::raw("byo_did_numbers.*, flows.id AS flow_id, flows.public_id AS flow_public_id"));
+        $number->leftJoin('flows', 'flows.id', '=', 'byo_did_numbers.flow_id');
+        $number = $number->where('byo_did_numbers.public_id', '=', $didId)->firstOrFail();
+
+        if (!$this->hasPermissions($request, $number, 'manage_byo_did_numbers')) {
             return $this->response->errorForbidden();
         }
 
-        $array = $did->toArray();
+        $array = $number->toArray();
         return $this->response->array($array);
     }
     public function listNumbers(Request $request)
