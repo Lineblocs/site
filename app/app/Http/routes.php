@@ -135,7 +135,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 // API routes
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function($api) {
-  $api->group([ 'prefix' => 'public', 'namespace' => '\App\Http\Controllers\Api\Public'], function($api) {
+  $api->group([ 'prefix' => 'public', 'namespace' => '\App\Http\Controllers\Api\PublicAPI'], function($api) {
     $api->group([ 'prefix' => 'did', 'namespace' => '\DIDNumber'], function($api) {
         $api->get("/{didId}", "DIDNumberController@get");
         $api->post("/", "DIDNumberController@post");
