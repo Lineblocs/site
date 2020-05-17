@@ -33,6 +33,7 @@ class DIDNumberController extends ApiPublicController {
     }
     public function list(Request $request)
     {
+        \Log::info("listing DIDs..");
         return $this->listNumebrs($request);
     }
     public function delete(Request $request, $numberId)
