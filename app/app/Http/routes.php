@@ -143,12 +143,12 @@ $api->version('v1', function($api) {
         $api->get("/list", "DIDNumberController@list");
         $api->delete("/{didId}", "DIDNumberController@delete");
     });
-    $api->group([ 'prefix' => 'extension', 'namespace' => '\ExtensionNumber'], function($api) {
-        $api->get("/{extensionId}", "ExtensionNumberController@get");
-        $api->post("/", "ExtensionNumberController@post");
-        $api->post("/{extensionId}", "ExtensionNumberController@put");
-        $api->get("/list", "ExtensionNumberController@list");
-        $api->delete("/{extensionId}", "ExtensionNumberController@delete");
+    $api->group([ 'prefix' => 'extension', 'namespace' => '\Extension'], function($api) {
+        $api->get("/{extensionId}", "ExtensionController@get");
+        $api->post("/", "ExtensionController@post");
+        $api->post("/{extensionId}", "ExtensionController@put");
+        $api->get("/list", "ExtensionController@list");
+        $api->delete("/{extensionId}", "ExtensionController@delete");
     });
     $api->group([ 'prefix' => 'user', 'namespace' => '\User'], function($api) {
         $api->get("/{userId}", "UserController@get");
