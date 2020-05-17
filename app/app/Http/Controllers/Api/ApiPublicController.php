@@ -20,7 +20,6 @@ use Config;
 class ApiPublicController extends ApiController {
      use Helpers;
      public function __construct() {
-          $this->performAuthentication();
      }
 
      public function performAuthentication() {
@@ -59,9 +58,11 @@ class ApiPublicController extends ApiController {
 
      }
      public function getWorkspace(Request $request) {
+          $this->performAuthentication();
           return $this->workspace;
      }
      public function getUser(Request $request) {
+          $this->performAuthentication();
           $user = User::findOrFail($this->workspace->creator_id);
           return $user;
      }
