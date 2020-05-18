@@ -46,7 +46,7 @@ trait DIDNumberWorkflow {
 
     public function deleteNumber(Request $request, $didId)
     {
-        $did = BYODIDNumber::findOrFail($didId);
+        $did = BYODIDNumber::where('public_id', $didId)->firstOrFail();
         if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
             return $this->response->errorForbidden();
         }
@@ -63,7 +63,7 @@ trait DIDNumberWorkflow {
    }
     public function saveNumber(Request $request)
     {
-        $data = $request->all();
+        $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'create_byo_did_number')) {
@@ -78,7 +78,7 @@ trait DIDNumberWorkflow {
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,
       ]));
-        return $this->response->noContent()->withHeader('X-DIDNumber-ID', $did->id);
+        return $this->response->noContent()->withHeader('X-DIDNumber-ID', $did->public_id);
     }
     public function importNumbers(Request $request)
     {

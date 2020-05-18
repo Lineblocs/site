@@ -389,12 +389,14 @@ class UserController extends ApiAuthController {
       $number = $request->get("number");
       $didArg = $request->get("did");
       //$region = $request->get("region");
+      \Log::info("blocked check number is: " . $didArg);
       $did = DIDNumber::where('api_number', $didArg)->first();
       if ($did) {
           return $this->finishBlockingStuff($number, $did);
       }
       $did = BYODIDNumber::where('number', $didArg)->first();
       if ($did) {
+        \Log::info("got BYO DID..");
           return $this->finishBlockingStuff($number, $did);
       }
       return $this->response->errorInternal('no results found..');
