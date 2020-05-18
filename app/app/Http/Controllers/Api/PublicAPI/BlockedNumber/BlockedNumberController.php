@@ -21,6 +21,7 @@ use Config;
 
 
 class BlockedNumberController extends ApiPublicController {
+  use BlockedNumberWorkflow;
     public function post(Request $request)
     {
       return $this->postNumber($request);
