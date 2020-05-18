@@ -16,7 +16,23 @@ use App\Recording;
 use App\User;
 use App\ErrorUserTrace;
 use Config;
+// function to parse the http auth header
+function http_digest_parse($txt)
+{
+    // protect against missing data
+    $needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
+    $data = array();
+    $keys = implode('|', array_keys($needed_parts));
 
+    preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
+
+    foreach ($matches as $m) {
+        $data[$m[1]] = $m[3] ? $m[3] : $m[4];
+        unset($needed_parts[$m[1]]);
+    }
+
+    return $needed_parts ? false : $data;
+}
 class ApiPublicController extends ApiController {
      use Helpers;
      public function __construct() {
@@ -43,7 +59,7 @@ class ApiPublicController extends ApiController {
           if (!$data) {
                die('Wrong Credentials!');
           }
-          $workspace = Workspace::where('api_token', $data['user'])->firstOrFail();
+          $workspace = Workspace::where('api_token', $data['username'])->firstOrFail();
           $user = $workspace->api_token;
           $secret =  $workspace->api_secret;
           // generate the valid response
