@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\PublicAPI\DIDNumber;
+namespace App\Http\Controllers\Api\PublicAPI\BYO\DIDNumber;
 use \App\Http\Controllers\Api\ApiPublicController;
 use \App\Http\Controllers\Api\BYO\BYOController;
 use \JWTAuth;
