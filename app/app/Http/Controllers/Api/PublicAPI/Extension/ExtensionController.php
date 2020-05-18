@@ -13,6 +13,7 @@ use \App\Flow;
 use \App\Transformers\DIDNumberTransformer;
 use \App\ThirdParty\NumberService;
 use \App\Helpers\MainHelper;
+use \App\Helpers\WorkflowTraits\Extension\ExtensionWorkflow;
 use \DB;
 use Mail;
 use Config;
@@ -20,6 +21,7 @@ use Config;
 
 
 class ExtensionController extends ApiPublicController {
+  use ExtensionWorkflow;
     public function post(Request $request)
     {
       return $this->saveExtension($request);
