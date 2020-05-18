@@ -172,6 +172,16 @@ $api->version('v1', function($api) {
         $api->post("/{recordingId}", "RecordingController@put");
         $api->delete("/{recordingId}", "RecordingController@delete");
     });
+    $api->group([ 'prefix' => 'byo', 'namespace' => '\BYO'], function($api) {
+      $api->group([ 'prefix' => 'did', 'namespace' => '\DIDNumber'], function($api) {
+          $api->get("/list", "DIDNumberController@list");
+          $api->get("/{didId}", "DIDNumberController@get");
+          $api->post("/", "DIDNumberController@post");
+          $api->put("/{didId}", "DIDNumberController@put");
+          $api->delete("/{didId}", "DIDNumberController@delete");
+      });
+
+    });
   });
   $api->group([ 'prefix' => 'internal', 'namespace' => '\App\Http\Controllers\Api\Internal'], function($api) {
     $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {

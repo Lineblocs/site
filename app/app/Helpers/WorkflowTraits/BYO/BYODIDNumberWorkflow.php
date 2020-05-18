@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\BYO\DIDNumber;
-
+namespace App\Helpers\WorkflowTraits\BYO;
 use \App\Http\Controllers\Api\BYO\BYOController;
 use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
@@ -9,7 +8,7 @@ use \Illuminate\Http\Request;
 use \App\User;
 use \App\BYODIDNumber; 
 use \App\BYODIDNumberRoute; 
-use \App\Transformers\DIDNumberTransformer;
+use \App\Transformers\BYODIDNumberTransformer;
 use \DB;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
@@ -19,29 +18,32 @@ use File;
 
 
 
-class DIDNumberController extends BYOController {
-
-     public static $acceptedFileFormats = array("csv");
-    public function didData(Request $request, $didId)
+trait DIDNumberWorkflow {
+     public static $acceptedFileFormats = array("csv", "txt");
+    public function numberData(Request $request, $didId)
     {
-        $did = BYODIDNumber::where('public_id', '=', $didId)->firstOrFail();
-        if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
+        $number = BYODIDNumber::select(DB::raw("byo_did_numbers.*, flows.id AS flow_id, flows.public_id AS flow_public_id"));
+        $number->leftJoin('flows', 'flows.id', '=', 'byo_did_numbers.flow_id');
+        $number = $number->where('byo_did_numbers.public_id', '=', $didId)->firstOrFail();
+
+        if (!$this->hasPermissions($request, $number, 'manage_byo_did_numbers')) {
             return $this->response->errorForbidden();
         }
 
-        return $this->response->array($did);
+        $array = $number->toArray();
+        return $this->response->array($array);
     }
-    public function listDIDNumbers(Request $request)
+    public function listNumbers(Request $request)
     {
         $user = $this->getUser($request);
         $paginate = $this->getPaginate( $request );
         $workspace = $workspace = $this->getWorkspace($request); 
         $dids = BYODIDNumber::where('workspace_id', $workspace->id);
         MainHelper::addSearch($request, $dids, ['number']);
-        return $this->response->paginator($dids->paginate($paginate), new DIDNumberTransformer);
+        return $this->response->paginator($dids->paginate($paginate), new BYODIDNumberTransformer);
     }
 
-    public function deleteDIDNumber(Request $request, $didId)
+    public function deleteNumber(Request $request, $didId)
     {
         $did = BYODIDNumber::findOrFail($didId);
         if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
@@ -49,16 +51,16 @@ class DIDNumberController extends BYOController {
         }
         $did->delete();
    }
-    public function updateDIDNumber(Request $request, $didId)
+    public function updateNumber(Request $request, $didId)
     {
         $data = $request->json()->all();
         $did = BYODIDNumber::where('public_id', $didId)->firstOrFail();
-        if (!$this->haspermissions($request, $did, 'manage_byo_did_numbers')) {
-            return $this->response->errorforbidden();
+        if (!$this->hasPermissions($request, $did, 'manage_byo_did_numbers')) {
+            return $this->response->errorForbidden();
         }
         $did->update($data);
    }
-    public function saveDIDNumber(Request $request)
+    public function saveNumber(Request $request)
     {
         $data = $request->all();
         $user = $this->getUser($request);
@@ -66,18 +68,24 @@ class DIDNumberController extends BYOController {
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'create_byo_did_number')) {
           return $this->errorPerformingAction();
         }
-        $did = BYODIDNumber::create( array_merge(array(
-            "user_id" => $user->id, 
-            "workspace_id" => $workspace->id
-        ), $data ));
+        $params = [];
+        $params['number'] = $data['number'];
+        if (!empty($data['flow_id'])) {
+          $params['flow_id'] = $data['flow_id'];
+        }
+        $did = BYODIDNumber::create( array_merge($params, [
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+      ]));
         return $this->response->noContent()->withHeader('X-DIDNumber-ID', $did->id);
     }
-    public function importNumber(Request $request)
+    public function importNumbers(Request $request)
     {
+        \Log::info("importNumbers called..");
         $data = $request->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
-        if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_byo_numbers')) {
+        if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_byo_did_numbers')) {
           return $this->errorPerformingAction();
         }
         $file = \Input::file("file");
@@ -89,24 +97,24 @@ class DIDNumberController extends BYOController {
         $extension = $file->guessExtension();
         \Log::info(sprintf("uploading file size: %d, format is %s", $size, $extension));
         if (!in_array($extension, self::$acceptedFileFormats)) {
-          return FALSE;
+          return $this->response->errorInternal("File format not accepted..");
         }
         $path = $file->getRealPath();
         //$contents = File::get($path);
-        $row = 1;
+        $row = 0;
         if (($handle = fopen($path, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
                 //echo "<p> $num fields in line $row: <br /></p>\n";
                 $row++;
-                $flowId = NULL;
-                if (!empty( $data[ 1 ] )) {
-                    $flowId = $data[1];
+                if ($row == 1) {
+                  continue;
                 }
-                $params = array(
-                    "flow_id" => $flowId,
-                    "numbr" => $data[0]
-                );
+                $params = [];
+                $params['number'] = $data[0];
+                if (!empty($data[1])) {
+                  $params['flow_id'] = $data[1];
+                }
                 $did = BYODIDNumber::create( array_merge(array(
                     "user_id" => $user->id, 
                     "workspace_id" => $workspace->id
@@ -121,6 +129,4 @@ class DIDNumberController extends BYOController {
         return $this->response->noContent();
 
     }
-
 }
-
