@@ -8,6 +8,7 @@ use \Illuminate\Http\Request;
 use \App\User;
 use \App\BYODIDNumber; 
 use \App\BYODIDNumberRoute; 
+use \App\Flow;
 use \App\Transformers\BYODIDNumberTransformer;
 use \DB;
 use App\Helpers\MainHelper;
@@ -71,7 +72,7 @@ trait DIDNumberWorkflow {
         $params = [];
         $params['number'] = $data['number'];
         if (!empty($data['flow_id'])) {
-          $params['flow_id'] = $data['flow_id'];
+          $params['flow_id'] = MainHelper::resolveAppId(new Flow, $data['flow_id']);
         }
         $did = BYODIDNumber::create( array_merge($params, [
           'user_id' => $user->id,

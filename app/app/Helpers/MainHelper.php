@@ -496,4 +496,14 @@ final class MainHelper {
         }
         return $result;
     }
+    public function resolveAppId($model, $id) {
+      if ( is_int( $id ) ) {
+        return $id;
+      }
+      if ( is_string( $id )) {
+        $result = $model->where('public_id', $id)->firstOrFail();
+        return $result->id;
+      }
+      return NULL;
+    }
 }
