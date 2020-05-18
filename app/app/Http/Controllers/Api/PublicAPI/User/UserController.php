@@ -13,28 +13,36 @@ use \App\Flow;
 use \App\Transformers\DIDNumberTransformer;
 use \App\ThirdParty\NumberService;
 use \App\Helpers\MainHelper;
+use \App\Helpers\WorkflowTraits\User\UserWorkflow;
 use \DB;
 use Mail;
 use Config;
 
 
 
+
 class UserController extends ApiPublicController {
+    use UserWorkflow;
     public function post(Request $request)
     {
+        return $this->addUser($request);
     }
-    public function put(Request $request, $extensionId)
+    public function put(Request $request, $userId)
     {
+        return $this->updateUser($request, $userId);
     }
 
-    public function get(Request $request, $extensionId)
+    public function get(Request $request, $userId)
     {
+        return $this->userData($request, $userId);
     }
     public function list(Request $request)
     {
+        return $this->listUsers($request);
     }
-    public function delete(Request $request, $extensionId)
+    public function delete(Request $request, $userId)
     {
+        return $this->deletetUser($request, $userId);
     }
 
 

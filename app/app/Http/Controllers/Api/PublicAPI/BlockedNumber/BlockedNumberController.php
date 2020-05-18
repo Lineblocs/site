@@ -13,6 +13,7 @@ use \App\Flow;
 use \App\Transformers\DIDNumberTransformer;
 use \App\ThirdParty\NumberService;
 use \App\Helpers\MainHelper;
+use \App\Helpers\WorkflowTraits\BlockedNumber\BlockedNumberWorkflow;
 use \DB;
 use Mail;
 use Config;
@@ -22,19 +23,15 @@ use Config;
 class BlockedNumberController extends ApiPublicController {
     public function post(Request $request)
     {
-    }
-    public function put(Request $request, $extensionId)
-    {
-    }
-
-    public function get(Request $request, $extensionId)
-    {
+      return $this->postNumber($request);
     }
     public function list(Request $request)
     {
+      return $this->getNumbers($request);
     }
-    public function delete(Request $request, $extensionId)
+    public function delete(Request $request, $numberId)
     {
+      return $this->deleteNumber($request, $numberId);
     }
 
 

@@ -22,19 +22,24 @@ use Config;
 class ExtensionController extends ApiPublicController {
     public function post(Request $request)
     {
+      return $this->saveExtension($request);
     }
     public function put(Request $request, $extensionId)
     {
+      return $this->updateExtension($request, $extensionId);
     }
 
     public function get(Request $request, $extensionId)
     {
+      return $this->extensionData($request, $extensionId);
     }
     public function list(Request $request)
     {
+      return $this->listExtensions($request);
     }
     public function delete(Request $request, $extensionId)
     {
+      return $this->deleteExtension($request, $extensionId);
     }
 
 
