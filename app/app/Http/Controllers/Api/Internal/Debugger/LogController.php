@@ -17,6 +17,7 @@ use DateInterval;
 use Config;
 use Mail;
 use Exception;
+use Log;
 
 
 
@@ -32,6 +33,12 @@ class LogController extends ApiAuthController {
         ];
         $mail = Config::get('mail');
         $log = DebuggerLog::create($params);
+        Log::info(sprintf("
+          Sending log to: %s, 
+
+          Title: %s
+          Report: %s
+        ", $creator->getEmail(), $params['title'], $params['report']));
         try {
           Mail::send('emails.debugger_error', $data, function ($message) use ($mail, $creator) {
               $message->to($creator->email);
