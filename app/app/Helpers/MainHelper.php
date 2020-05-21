@@ -496,7 +496,7 @@ final class MainHelper {
         }
         return $result;
     }
-    public function resolveAppId($model, $id) {
+    public static function resolveAppId($model, $id) {
       if ( is_int( $id ) ) {
         return $id;
       }

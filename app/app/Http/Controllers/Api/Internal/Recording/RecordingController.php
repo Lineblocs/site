@@ -22,12 +22,15 @@ class RecordingController extends ApiAuthController {
       $data = $request->json()->all();
       $user = User::findOrFail($data['user_id']);
       $call = Call::findOrFail($data['call_id']);
-      $tags = $data['tags'];
+      $tags = [];
+      if (!empty($tags)) {
+          $tags = $data['tags'];
+      }
+      
 
       $recording = Recording::create([
         'uri' => '',
         'status' => 'started',
-        'tag' => $tag,
         'user_id' => $user->id,
         'call_id' => $call->id,
         'workspace_id' => $data['workspace_id']
@@ -50,10 +53,10 @@ class RecordingController extends ApiAuthController {
             $name = $recording->api_id.'.'.$request->file('file')->getClientOriginalExtension();
             $params['name'] = $name;
             $request->file('file')->move(
-              public_path('/recordings'),
+              public_path('/fs/recordings'),
               $name
             );
-            $http = Config::get("app.url")."/recordings/".$name;
+            $http = Config::get("app.url")."/fs/recordings/".$name;
             $file = public_path('/fs/recordings').'/'.$name;
             $size = filesize($file);
             $params['uri'] = $http;

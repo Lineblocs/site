@@ -22,7 +22,7 @@ use Mail;
 class LogController extends ApiAuthController {
   private function startLogRoutine($level, $params, $workspace, $creator) {
       if ($level == 'error') {
-        $workspace = Workspace::findOrFail($data['workspace_id']);
+        $workspace = Workspace::findOrFail($params['workspace_id']);
         $creator = User::findOrFail($workspace->creator_id);
         $data = [
           'params' => $params,
@@ -51,9 +51,18 @@ class LogController extends ApiAuthController {
       if ( isset ( $data['level'] ) ) {
         $level = $data['level'];
       }
+      $from = "";
+      if ( !empty($data['from']) ) {
+        $from = $data['from'];
+      }
+      $to = "";
+      if ( !empty($data['tom']) ) {
+        $to = $data['to'];
+      }
+
       $params = [
-        'from' => $data['from'],
-        'to' => $data['to'],
+        'from' => $from,
+        'to' => $to,
         'title' => $data['title'],
         'report' => $data['report'],
         'workspace_id' => $data['workspace_id'],

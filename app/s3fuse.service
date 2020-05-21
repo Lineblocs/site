@@ -1,0 +1,9 @@
+[Unit]
+Description=S3Fuse service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'sudo -u apache /usr/local/bin/s3fs lineblocs /var/www/html/lineblocs-pbx-server-admin/app/public/fs -o passwd_file=/usr/share/passwd-s3fs -o nonempty -f -o url=https://s3-ca-central-1.amazonaws.com -o allow_other -o use_cache=/tmp -o use_rrs -o umask=0000'
+
+[Install]
+WantedBy=multi-user.target

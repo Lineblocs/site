@@ -29,7 +29,7 @@ class DebitController extends ApiAuthController {
       
       $rate = MainHelper::lookupBestCallRate($data['number'], $data['type']);
       if (!$rate) {
-        return $this->response->error('could not find call rate..');
+        return $this->response->errorInternal('could not find call rate..');
       }
       $seconds = (int) $data['seconds']; 
       $minutes = floor($seconds / 60);

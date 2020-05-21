@@ -10,6 +10,9 @@ class Workspace extends Model {
 
   protected $guarded  = array('id');
   protected $table = "workspaces";
+  protected $casts = array(
+    "byo_enabled" => "boolean"
+    );
   public function toArray() {
         $array = parent::toArray();
         $array['domain'] = sprintf("%s.lineblocs.com", $array['name']);

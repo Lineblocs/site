@@ -64,6 +64,7 @@ declare class LineChannel {
     public removeFromBridge();
     public playTTS(flow: LineFlow, text: string, lang ? : string, gender ? : string, voice ? : string);
     public startAcceptingInput(keyTimeout: number);
+    public resetDTMFListeners();
     public hangup();
     public on(name: string, callback: any);
     public automateCallHangup: boolean;
@@ -72,7 +73,12 @@ declare class LineChannel {
 }
 declare class LineBridge {
     public channels: Array < LineChannel > ;
+    public channelsToAdd: Array < LineChannel > ;
     public addChannel(lineChannel: LineChannel);
+    public destroy();
+  public automateLegAHangup: boolean;
+  public automateLegBHangup: boolean;
+
 }
 declare class LineSession {
     public info: any;

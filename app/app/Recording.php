@@ -12,7 +12,9 @@ class Recording extends ApiResource {
   public static $apiPrefix = "recording";
   public function toArray() {
     $array = parent::toArray();
-    $array['public_url'] = \Config::get("app.url")."/fs/recording/".$array['name'];
+    if (!empty($array['name'])) {
+      $array['public_url'] = \Config::get("app.url")."/fs/recording/".$array['name'];
+    }
     //$array['public_url'] = "https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_1MG.wav";
     return $array;
   }

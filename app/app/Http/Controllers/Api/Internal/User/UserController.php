@@ -97,6 +97,7 @@ class UserController extends ApiAuthController {
       Log::info(sprintf("looking up number %s",$number));
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
+        workspaces.byo_enabled,
         workspaces.creator_id,
         workspaces.id AS workspace_id,
         workspaces.api_token,
@@ -126,6 +127,7 @@ class UserController extends ApiAuthController {
       // check BYO DID next
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, byo_did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
+        workspaces.byo_enabled,
         workspaces.creator_id,
         workspaces.id AS workspace_id,
         workspaces.api_token,
@@ -201,12 +203,17 @@ class UserController extends ApiAuthController {
       $workspace->join('users', 'users.id', '=', 'workspaces.creator_id');
       $workspace->where('extension_codes.code', '=', $code);
       $workspace->where('extension_codes.workspace_id', '=', $workspaceId);
-      $workspace= $workspace->firstOrFail(); 
-      $array = $workspace->toArray();
-      $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
-      $user = User::findOrFail($workspace['creator_id'] );
-      $array['free_trial_status'] = $user->checkFreeTrialStatus();
-      return $this->response->array($array);
+      $workspace= $workspace->first();
+      if ($workspace) {
+        $array = $workspace->toArray();
+        $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
+        $user = User::findOrFail($workspace['creator_id'] );
+        $array['free_trial_status'] = $user->checkFreeTrialStatus();
+        $array['found_code'] = TRUE;
+        return $this->response->array($array);
+      }
+      $array = array('found_code' => FALSE);
+        return $this->response->array($array);
     }
 
 
