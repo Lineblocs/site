@@ -6,11 +6,15 @@
     a lineblocs error occured during a call.
     </p>
     <br/>
+    <br/>
     <p>
     full details:
     </p>
+    <h5>Title: {{$params['title']}}</h5>
+    <br/>
+    <br/>
+    <strong>Report</strong>
     <p>
-        {{$params['title']}}<br/>
         {{$params['report']}}<br/>
     </p>
     <br/>
