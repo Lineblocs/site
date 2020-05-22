@@ -62,6 +62,9 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
+            'options'   => array(
+                PDO::ATTR_PERSISTENT => true,
+            ),
         ],
         'mysql-opensips' => array(
             'driver'    => 'mysql',
@@ -73,7 +76,9 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
-
+            'options'   => array(
+                PDO::ATTR_PERSISTENT => true,
+            ),
         ),
 
         'pgsql' => [

@@ -37,8 +37,15 @@ trait DIDNumberWorkflow {
     public function listNumbers(Request $request)
     {
         $user = $this->getUser($request);
-        $paginate = $this->getPaginate( $request );
         $workspace = $workspace = $this->getWorkspace($request); 
+        $all = $request->get("all");
+        if ($all) {
+          $dids = BYODIDNumber::where('workspace_id', $workspace->id);
+          MainHelper::addSearch($request, $dids, ['number']);
+          return $this->response->collection($dids->get(), new BYODIDNumberTransformer);
+
+        }
+        $paginate = $this->getPaginate( $request );
         $dids = BYODIDNumber::where('workspace_id', $workspace->id);
         MainHelper::addSearch($request, $dids, ['number']);
         return $this->response->paginator($dids->paginate($paginate), new BYODIDNumberTransformer);
