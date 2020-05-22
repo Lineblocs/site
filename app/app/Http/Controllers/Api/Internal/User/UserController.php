@@ -255,7 +255,7 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_address);
+          return response($workspace->ip_private);
       }
 
 
@@ -274,7 +274,7 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_address);
+          return response($workspace->ip_private);
       }
 
       return $this->response->errorInternal('no result found..');
@@ -395,7 +395,7 @@ class UserController extends ApiAuthController {
     }
     public function checkNumberBlocked(Request $request) {
       $number = $request->get("number");
-      $source = $request->get("source");
+      $sourceIp = $request->get("source");
       $didArg = $request->get("did");
       //$region = $request->get("region");
       \Log::info("blocked check number is: " . $didArg);
