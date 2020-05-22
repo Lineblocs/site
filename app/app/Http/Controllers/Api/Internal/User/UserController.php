@@ -17,6 +17,7 @@ use \App\Helpers\MainHelper;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
 use \App\BYOCarrier;
+use \App\BYOCarrierIP;
 use \App\BYODIDNumber;
 use \Config;
 use \DB;
@@ -394,20 +395,47 @@ class UserController extends ApiAuthController {
     }
     public function checkNumberBlocked(Request $request) {
       $number = $request->get("number");
+      $source = $request->get("source");
       $didArg = $request->get("did");
       //$region = $request->get("region");
       \Log::info("blocked check number is: " . $didArg);
       $did = DIDNumber::where('api_number', $didArg)->first();
       if ($did) {
+          $result = $this->checkPSTNIPWhitelist($did, $sourceIp);
+          if (!$result) {
+            return $this->response->errorInternal( 'source IP not whitelisted.');
+          }
           return $this->finishBlockingStuff($number, $did);
       }
       $did = BYODIDNumber::where('number', $didArg)->first();
       if ($did) {
         \Log::info("got BYO DID..");
+            $result = $this->checkBYOPSTNIPWhitelist($did, $sourceIp);
+          if (!$result) {
+            return $this->response->errorInternal( 'source IP not whitelisted.');
+          }
+
           return $this->finishBlockingStuff($number, $did);
       }
       return $this->response->errorInternal('no results found..');
 
     }
+    public function checkPSTNIPWhitelist($did, $sourceIp) {
+      return TRUE;
+    }
+    public function checkBYOPSTNIPWhitelist($did, $sourceIp) {
+      return TRUE;
+        $result = BYOCarier::select(array('byo_carriers.*', 'byo_carriers_ips.ip', 'byo_carriers_ips.range'));
+        $result->leftJoin('byo_carriers_ips.carrier_id', '=', 'byo_carriers.id');
+        $results = $result->get();
+        foreach ($results as $result) {
+          $range = $result->ip . $result->range;
+          if ( MainHelper::CIDRMatch($sourceIp, $range) ) {
+            return TRUE;
+          }
+        }
+        return FALSE;
+    }
+
 }
 
