@@ -202,6 +202,12 @@ final class MainHelper {
         }
       });
     }
+    foreach ( $filters as $filter ) {
+      $option = $request->get($filter);
+      if ( $option ) {
+          $resource->where($filter, 'like', '%' . $option . '%');
+      }
+    }
   }
   public static function emailVerifyHash($email) {
     $hashing = Config::get("hashing"); 
