@@ -256,7 +256,8 @@ $api->version('v1', function($api) {
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');
   $api->get('getBillingHistory', '\App\Http\Controllers\BillingController@getBillingHistory');
   $api->get('downloadBillingHistory', '\App\Http\Controllers\BillingController@downloadBillingHistory');
-
+  $api->post('verifyPasswordStrength', '\App\Http\Controllers\BillingController@verifyPasswordStrength');
+  $api->post('generateSecurePassword', '\App\Http\Controllers\BillingController@generateSecurePassword');
   $api->post('changeBillingSettings', '\App\Http\Controllers\BillingController@changeBillingSettings');
   $api->post('addUsageTrigger', '\App\Http\Controllers\BillingController@addUsageTrigger');
   $api->delete('delUsageTrigger/{triggerId}', '\App\Http\Controllers\BillingController@delUsageTrigger');

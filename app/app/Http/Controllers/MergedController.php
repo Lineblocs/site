@@ -50,6 +50,55 @@ use DB;
 
 class MergedController extends ApiAuthController
 {
+
+    public function verifyPasswordStrength(Request $request) {
+        $password = $request->get('password');
+        if (strlen($password) <= '8') {
+          return $this->response->array([
+            'success' => FALSE,
+            'validationError' => 'Length must be 8 or more characters'
+          ]);
+        }
+        elseif(!preg_match("#[0-9]+#",$password)) {
+          return $this->response->array([
+            'success' => FALSE,
+            'validationError' => 'Must contain 1 number'
+          ]);
+
+        }
+        elseif(!preg_match("#[A-Z]+#",$password)) {
+            return $this->response->array([
+            'success' => FALSE,
+            'validationError' => 'Must contain 1 capital letter'
+          ]);
+
+        }
+        elseif(!preg_match("#[a-z]+#",$password)) {
+          return $this->response->array([
+            'success' => FALSE,
+            'validationError' => 'Must contain 1 lowercase letter'
+          ]);
+
+        }
+        elseif(!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $password)) {
+            return $this->response->array([
+            'success' => FALSE,
+            'validationError' => 'Must contain 1 special character'
+          ]);
+
+        }
+        return $this->response->array([
+            'success' => TRUE
+          ]);
+
+    }
+    public function generateSecurePassword(Request $request) {
+        $password = MainHelper::randomPassword();
+        return $this->response->array([
+            'password' => $password
+          ]);
+
+    }
     public function getBillingHistory(Request $request)
     {
       $user = $this->getUser($request);

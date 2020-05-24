@@ -24,7 +24,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\CallRate;
 use App\CallRateDialPrefix;
-use Hackzilla\PasswordGenerator\Generator\HybridPasswordGenerator;
+use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Mail;
 
 
@@ -303,21 +303,22 @@ final class MainHelper {
       return implode($pass); //turn the array into a string
   }
   public static function randomPassword() {
-      $generator = new HybridPasswordGenerator();
+    $generator = new ComputerPasswordGenerator();
 
-      $generator
-        ->setUppercase()
-        ->setLowercase()
-        ->setNumbers()
-        ->setSymbols(false)
-        ->setSegmentLength(3)
-        ->setSegmentCount(4)
-        ->setSegmentSeparator('-')
-        ->setLength(12);
-
+    $generator
+      ->setUppercase()
+      ->setLowercase()
+      ->setNumbers()
+      ->setSymbols(FALSE)
+      ->setLength(24);
       $password = $generator->generatePasswords(1);
       return $password[0];
   }
+  public static function verifyPasswordStrength() {
+  }
+
+
+
   public static function createAPIToken() {
     return bin2hex(random_bytes(16));
   }
