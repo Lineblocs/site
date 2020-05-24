@@ -12,7 +12,10 @@ use \App\Call;
 use \App\Transformers\RecordingTransformer;
 use \DB;
 use App\Helpers\MainHelper;
+
 use \Config;
+use \Storage;
+
 
 
 
@@ -52,13 +55,18 @@ class RecordingController extends ApiAuthController {
       if ($request->hasFile('file')) {
             $name = $recording->api_id.'.'.$request->file('file')->getClientOriginalExtension();
             $params['name'] = $name;
+            $s3 = \Storage::disk('s3');
+            $file = $request->file;
+            $filePath = '/recordings/' . $name;
+            $s3->put($filePath, file_get_contents($file), 'public');
+            /*
             $request->file('file')->move(
               public_path('/fs/recordings'),
               $name
             );
-            $http = Config::get("app.url")."/fs/recordings/".$name;
-            $file = public_path('/fs/recordings').'/'.$name;
-            $size = filesize($file);
+            */
+            $http = MainHelper::createStorageUrl($filePath);
+            $size =$file->getSize();
             $params['uri'] = $http;
             $params['size'] = $size;
       }
