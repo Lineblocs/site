@@ -235,7 +235,7 @@ $api->version('v1', function($api) {
       $api->get("/getExtensionFlowInfo", "UserController@getExtensionFlowInfo");
       $api->get("/getDIDDomain", "UserController@getDIDDomain");
       $api->get("/getCodeFlowInfo", "UserController@getCodeFlowInfo");
-      $api->get("/checkNumberBlocked", "UserController@checkNumberBlocked");
+      $api->get("/incomingPSTNValidation", "UserController@incomingPSTNValidation");
     });
     $api->group([ 'prefix' => 'debit', 'namespace' => '\Debit'], function($api) {
       $api->post("/createDebit", "DebitController@createDebit");

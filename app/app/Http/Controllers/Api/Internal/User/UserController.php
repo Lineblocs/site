@@ -361,7 +361,7 @@ class UserController extends ApiAuthController {
       return $this->response->array(['caller_id' => $extensionObj->caller_id]);
     }
 
-    private function finishBlockingStuff($number, $did /** did number or byo did **/) {
+    private function finishValidation($number, $did /** did number or byo did **/) {
       $region= "US";
         $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
         try {
@@ -386,14 +386,14 @@ class UserController extends ApiAuthController {
               return $this->response->errorInternal();
             }
 
-            return $this->response->errorNotFound();
+            return $this->response->noContent();
         } catch (\libphonenumber\NumberParseException $e) {
         
             return $this->response->errorInternal( 'lib phone number error');
         }
 
     }
-    public function checkNumberBlocked(Request $request) {
+    public function incomingPSTNValidation(Request $request) {
       $number = $request->get("number");
       $sourceIp = $request->get("source");
       $didArg = $request->get("did");
@@ -405,7 +405,7 @@ class UserController extends ApiAuthController {
           if (!$result) {
             return $this->response->errorInternal( 'source IP not whitelisted.');
           }
-          return $this->finishBlockingStuff($number, $did);
+          return $this->finishValidation($number, $did);
       }
       $did = BYODIDNumber::where('number', $didArg)->first();
       if ($did) {
@@ -415,7 +415,7 @@ class UserController extends ApiAuthController {
             return $this->response->errorInternal( 'source IP not whitelisted.');
           }
 
-          return $this->finishBlockingStuff($number, $did);
+          return $this->finishValidation($number, $did);
       }
       return $this->response->errorInternal('no results found..');
 
@@ -425,7 +425,8 @@ class UserController extends ApiAuthController {
     }
     public function checkBYOPSTNIPWhitelist($did, $sourceIp) {
         $result = BYOCarrier::select(array('byo_carriers.*', 'byo_carriers_ips.ip', 'byo_carriers_ips.range'));
-        $result->leftJoin('byo_carriers_ips.carrier_id', '=', 'byo_carriers.id');
+        $result->join('byo_carriers_ips', 'byo_carriers_ips.carrier_id', '=', 'byo_carriers.id');
+        $result->where('byo_carriers.workspace_id', $did->workspace_id);
         $results = $result->get();
         foreach ($results as $result) {
           $range = $result->ip . $result->range;
