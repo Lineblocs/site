@@ -424,8 +424,7 @@ class UserController extends ApiAuthController {
       return TRUE;
     }
     public function checkBYOPSTNIPWhitelist($did, $sourceIp) {
-      return TRUE;
-        $result = BYOCarier::select(array('byo_carriers.*', 'byo_carriers_ips.ip', 'byo_carriers_ips.range'));
+        $result = BYOCarrier::select(array('byo_carriers.*', 'byo_carriers_ips.ip', 'byo_carriers_ips.range'));
         $result->leftJoin('byo_carriers_ips.carrier_id', '=', 'byo_carriers.id');
         $results = $result->get();
         foreach ($results as $result) {
