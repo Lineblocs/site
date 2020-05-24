@@ -24,6 +24,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\CallRate;
 use App\CallRateDialPrefix;
+use Hackzilla\PasswordGenerator\Generator\HybridPasswordGenerator;
 use Mail;
 
 
@@ -291,7 +292,7 @@ final class MainHelper {
     }
     return TRUE;
   }
-  public static function randomPassword() {
+  public static function randomPassword1() {
       $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
       $pass = array(); //remember to declare $pass as an array
       $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
@@ -300,6 +301,22 @@ final class MainHelper {
           $pass[] = $alphabet[$n];
       }
       return implode($pass); //turn the array into a string
+  }
+  public static function randomPassword() {
+      $generator = new HybridPasswordGenerator();
+
+      $generator
+        ->setUppercase()
+        ->setLowercase()
+        ->setNumbers()
+        ->setSymbols(false)
+        ->setSegmentLength(3)
+        ->setSegmentCount(4)
+        ->setSegmentSeparator('-')
+        ->setLength(12);
+
+      $password = $generator->generatePasswords(1);
+      return $password[0];
   }
   public static function createAPIToken() {
     return bin2hex(random_bytes(16));

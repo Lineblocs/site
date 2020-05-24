@@ -41,6 +41,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 #RUN groupadd -g 1000 www
 #RUN useradd -u 1000 -ms /bin/bash -g www www
 
+RUN a2enmod rewrite
+RUN a2enmod headers
+RUN a2enmod expires
+RUN a2enmod filter
+RUN a2enmod deflate
+
 # Copy existing application directory contents
 COPY . /var/www/html
 COPY apache.conf /etc/apache2/apache2.conf
@@ -50,7 +56,8 @@ RUN source .env
 RUN php artisan key:generate
 
 # Copy existing application directory permissions
-RUN chown -R www-data:www-data /var/www/html
+#RUN chown -R www-data:www-data /var/www/html
+RUN ./deploy-docker.sh
 
 # Change current user to www
 # Expose port 9000 and start php-fpm server

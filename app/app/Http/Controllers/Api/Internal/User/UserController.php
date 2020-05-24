@@ -372,18 +372,18 @@ class UserController extends ApiAuthController {
             $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
             $check1 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
             if ($check1) {
-              return $this->response->noContent();
+              return $this->response->errorInternal();
             }
             $number = str_replace("+", "", $number);
             $check2 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
             if ($check2) {
-              return $this->response->noContent();
+              return $this->response->errorInternal();
             }
             // remove country code
             $number = preg_replace("/^1/", "", $number);
             $check3 = BlockedNumber::where('workspace_id', $did->workspace_id)->where('number', $number)->first();
             if ($check3) {
-              return $this->response->noContent();
+              return $this->response->errorInternal();
             }
 
             return $this->response->errorNotFound();

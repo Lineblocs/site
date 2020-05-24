@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5da46620d40659ded6003294ca3ed713",
+    "content-hash": "77823a8070295e3f5551dc28ef316972",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2086,6 +2086,46 @@
                 "url"
             ],
             "time": "2020-05-17T20:05:25+00:00"
+        },
+        {
+            "name": "hackzilla/password-generator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hackzilla/password-generator.git",
+                "reference": "22c7af49ef46d349d60af0fa30f61dd4dec53330"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hackzilla/password-generator/zipball/22c7af49ef46d349d60af0fa30f61dd4dec53330",
+                "reference": "22c7af49ef46d349d60af0fa30f61dd4dec53330",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hackzilla\\PasswordGenerator\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Platt",
+                    "email": "github@ofdan.co.uk",
+                    "homepage": "http://www.hackzilla.org"
+                }
+            ],
+            "description": "Password Generator Library",
+            "time": "2020-04-06T15:47:25+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -6811,7 +6851,8 @@
     "stability-flags": {
         "barryvdh/laravel-debugbar": 20,
         "dingo/api": 20,
-        "linkorb/vultr-client-php": 20
+        "linkorb/vultr-client-php": 20,
+        "hackzilla/password-generator": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

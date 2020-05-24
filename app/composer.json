@@ -45,7 +45,8 @@
         "barryvdh/laravel-dompdf": "v0.8.2",
         "mobiledetect/mobiledetectlib": "^2.8",
         "google/apiclient": "^2.0",
-        "league/flysystem-aws-s3-v3": "~1.0"
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "hackzilla/password-generator": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
