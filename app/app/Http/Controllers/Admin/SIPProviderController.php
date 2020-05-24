@@ -8,6 +8,7 @@ use App\PortNumber;
 use App\Http\Requests\Admin\SIPProviderRequest;
 use App\Helpers\MainHelper;
 use App\SIPProviderHost;
+use App\SIPProviderWhitelistIp;
 use Datatables;
 use DB;
 use Config;
@@ -21,7 +22,12 @@ class SIPProviderController extends AdminController
         'UK' => 'United Kingdon',
         'CA' => 'Canada'
     ];
-
+    public static $ipRanges = [
+            '/8' => '/8',
+            '/16' => '/16',
+            '/24' => '/24',
+            '/32' => '/32',
+        ];
     public function __construct()
     {
         view()->share('type', 'provider');
@@ -73,8 +79,15 @@ class SIPProviderController extends AdminController
     {
         $countries = self::$countries; 
         $hosts = SIPProviderHost::where('provider_id', $provider->id)->get();
+        $ips = SIPProviderWhitelistIp::where('provider_id', $provider->id)->get();
         $providerTypes = $this->providerTypes();
-        return view('admin.sipprovider.create_edit', compact('provider', 'countries', 'hosts', 'providerTypes'));
+        $ranges = [
+            '/8' => '/8',
+            '/16' => '/16',
+            '/24' => '/24',
+            '/32' => '/32',
+        ];
+        return view('admin.sipprovider.create_edit', compact('provider', 'countries', 'hosts', 'providerTypes', 'ips', 'ranges'));
     }
 
     /**
@@ -145,6 +158,53 @@ class SIPProviderController extends AdminController
     public function del_host(Request $request, SIPProvider $provider, SIPProviderHost $host)
     {
         $host->delete();
+            
+        return response("");
+    }
+
+
+
+    public function add_ip(SIPProvider $provider)
+    {
+        return view('admin.sipprovider.add_ip', array(
+            'provider' => $provider,
+            'ranges' => self::$ipRanges
+        ));
+    }
+
+    public function add_ip_save(Request $request, SIPProvider $provider)
+    {
+        $data = $request->all();
+        $ip = SIPProviderWhitelistIp::create(array_merge([
+            'provider_id' => $provider->id
+        ], $data));
+        return response("");
+    }
+
+
+    public function edit_ip(SIPProvider $provider, SIPProviderWhitelistIp $ip)
+    {
+        $params = array(
+            'provider' => $provider,
+            'ranges' => self::$ipRanges
+        );
+
+        return view('admin.sipprovider.add_ip', $params);
+    }
+
+    public function edit_ip_save(Request $request, SIPProvider $provider, SIPProviderWhitelistIp $ip)
+    {
+        $data = $request->all();
+        $ip->update( $data );
+            
+        return response("");
+    }
+
+
+    public function del_ip(Request $request, SIPProvider $provider, SIPProviderWhitelistIp $ip)
+    {
+        \Log::info("DELETING IP: " . $ip->ip_address);
+        $ip->delete();
             
         return response("");
     }

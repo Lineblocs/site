@@ -8,6 +8,7 @@ use \App\User;
 use \App\PortNumber;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
+use \App\SIPProviderWhitelistIp;
 use \App\CallRate;
 use App\ErrorUserTrace;
 use \App\SIPCountry;
@@ -40,6 +41,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('port', PortNumber::class);
        \Route::model('provider', SIPProvider::class);
        \Route::model('host', SIPProviderHost::class);
+       \Route::model('ip', SIPProviderWhitelistIp::class);
        \Route::model('rate', CallRate::class);
        \Route::model('country', SIPCountry::class);
        \Route::model('region', SIPRegion::class);

@@ -9,6 +9,10 @@
      <li><a href="#tab-hosts" data-toggle="tab"> {{
             trans("admin/modal.hosts") }}</a></li>
             @endif
+            @if (!empty($ips))
+     <li><a href="#tab-ips" data-toggle="tab"> {{
+            trans("admin/modal.ip_whitelist") }}</a></li>
+            @endif
 
 </ul>
 <!-- ./ tabs -->
@@ -144,7 +148,47 @@
                     </table>
                 </div>
             </div>
+        </div>
             @endif
+        @if (isset($provider))
+    <div class="tab-pane" id="tab-ips">
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <br/>
+                    <a href="/admin/provider/{{$provider->id}}/add_ip" class="btn btn-success">Add IP</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <input type="hidden" id="token" value="{{csrf_token()}}"/>
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>IP Address</th>
+                        <th>Range</th>
+                        <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($ips as $ip)
+                            <tr>
+                                <td>{{$ip->ip_address}}</td>
+                                <td>{{$ip->range}}</td>
+                                <td>
+                                    <a href="/admin/provider/{{$provider->id}}/edit_ip/{{$ip->id}}" class="btn btn-warning">Edit</a>
+                                    <button type="button" class="btn btn-danger del-ip" data-id="{{$ip->id}}">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+         </div>
+            @endif
+
 
 
     {!! Form::close() !!}
@@ -165,6 +209,18 @@
                         };
                         $.post("/admin/provider/" + providerId + "/del_host/" + id, params, function() {
                             alert("Host deleted..");
+                            window.location.reload();
+                        });
+                    });
+                });
+                $(".del-ip").each(function() {
+                    $( this ).click(function() {
+                        var id = $( this ).attr("data-id");
+                        var params = {
+                            "_token": $("#token").val()
+                        };
+                        $.post("/admin/provider/" + providerId + "/del_ip/" + id, params, function() {
+                            alert("IP deleted..");
                             window.location.reload();
                         });
                     });

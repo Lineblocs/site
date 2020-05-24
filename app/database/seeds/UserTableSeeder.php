@@ -13,7 +13,7 @@ class UserTableSeeder extends Seeder {
 		$admin = \App\User::create([
 			'name' => 'Admin User',
 			'username' => 'admin_user',
-			'email' => 'admin@lineblocs.com',
+			'email' => 'support@lineblocs.com',
 			'password' => bcrypt('jY4xm8<9Hw6`yp/L'),
 			'confirmed' => 1,
 			'admin' => 1,
