@@ -205,6 +205,7 @@ final class MainHelper {
     foreach ( $filters as $filter ) {
       $option = $request->get($filter);
       if ( $option ) {
+          \Log::info("adding search option: " . $filter . " = " . $option);
           $resource->where($filter, 'like', '%' . $option . '%');
       }
     }

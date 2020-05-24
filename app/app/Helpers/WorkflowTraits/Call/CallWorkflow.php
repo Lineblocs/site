@@ -40,6 +40,7 @@ trait CallWorkflow {
         \Log::info('getting calls for user ' . $user->id);
         $calls = Call::where('user_id', $user->id);
         MainHelper::addSearch($request, $calls, ['from', 'to', 'status', 'direction']);
-        return $this->response->paginator($calls->paginate($paginate), new CallTransformer);
+        return $this->sendPaginationResults($request, $calls, $paginate, new CallTransformer);
+        //return $this->response->paginator($calls->paginate($paginate), new CallTransformer);
     }
 }

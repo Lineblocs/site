@@ -38,7 +38,7 @@ class LogController extends ApiAuthController {
 
           Title: %s
           Report: %s
-        ", $creator->getEmail(), $params['title'], $params['report']));
+        ", $creator->email, $params['title'], $params['report']));
         try {
           Mail::send('emails.debugger_error', $data, function ($message) use ($mail, $creator) {
               $message->to($creator->email);
@@ -47,7 +47,7 @@ class LogController extends ApiAuthController {
               $message->from($from['address'], $from['name']);
           });
         } catch (Exception $ex) {
-          Log::info("could not send logger to " . $creator->getEmail());
+          Log::info("could not send logger to " . $creator->email);
           return $log;
         }
       }

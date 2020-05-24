@@ -94,4 +94,12 @@ class ApiController extends Controller {
 
           return $this->response->errorInternal( $message );
     }
+   public function sendPaginationResults($request, $resources, $paginate, $transformer) {
+      $all = $request->get("all");
+      if ($all) {
+        return $this->response->collection($resources->get(),$transformer);
+      }
+      return $this->response->paginator($resources->paginate($paginate), $transformer);
+   }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\PublicAPI\DIDNumber;
+namespace App\Http\Controllers\Api\PublicAPI\Call;
 use \App\Http\Controllers\Api\ApiPublicController;
 use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
