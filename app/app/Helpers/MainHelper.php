@@ -309,7 +309,7 @@ final class MainHelper {
       ->setUppercase()
       ->setLowercase()
       ->setNumbers()
-      ->setSymbols(FALSE)
+      ->setSymbols(TRUE)
       ->setLength(24);
       $password = $generator->generatePasswords(1);
       return $password[0];

@@ -52,8 +52,8 @@ class MergedController extends ApiAuthController
 {
 
     public function verifyPasswordStrength(Request $request) {
-        $password = $request->get('password');
-        if (strlen($password) <= '8') {
+        $password = $request->json()->all()['password'];
+        if (strlen($password) < 8) {
           return $this->response->array([
             'success' => FALSE,
             'validationError' => 'Length must be 8 or more characters'

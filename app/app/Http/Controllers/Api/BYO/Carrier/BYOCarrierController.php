@@ -58,9 +58,13 @@ class BYOCarrierController extends BYOController {
         }
         $routes = $data['routes'];
         unset( $data['routes'] );
+        $auths = $data['auths'];
+        unset( $data['auths'] );
+
 
         $carrier->update($data);
         $this->saveCarrierRoutes($carrier, $routes);
+        $this->saveCarrierAuths($carrier, $auths);
    }
     public function saveCarrier(Request $request)
     {
