@@ -421,8 +421,17 @@ class UserController extends ApiAuthController {
 
     }
     public function checkPSTNIPWhitelist($did, $sourceIp) {
-      return TRUE;
-    }
+      $result = SIPProvider::select(array('sip_providers.*', 'sip_providers_whitelist_ips.ip_address', 'sip_providers_whitelist_ips.range'));
+      $result->join('sip_providers_whitelist_ips', 'sip_providers_whitelist_ips',  '=', 'sip_providers.id');
+      $results = $result->get();
+      foreach ($results as $result) {
+        $range = $result->ip . $result->range;
+        if ( MainHelper::CIDRMatch($sourceIp, $range) ) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+  }
     public function checkBYOPSTNIPWhitelist($did, $sourceIp) {
         $result = BYOCarrier::select(array('byo_carriers.*', 'byo_carriers_ips.ip', 'byo_carriers_ips.range'));
         $result->join('byo_carriers_ips', 'byo_carriers_ips.carrier_id', '=', 'byo_carriers.id');
