@@ -38,7 +38,7 @@ class CallController extends ApiAuthController {
       $data = $request->json()->all();
       $call = Call::findOrFail($data['call_id']);
       $params = [];
-      if ($data['status'] == "completed") {
+      if ($data['status'] == "ended") {
         $params['ended_at'] = new DateTime();
       }
       $params['status'] = $data['status'];

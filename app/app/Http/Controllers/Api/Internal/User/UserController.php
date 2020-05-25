@@ -422,10 +422,10 @@ class UserController extends ApiAuthController {
     }
     public function checkPSTNIPWhitelist($did, $sourceIp) {
       $result = SIPProvider::select(array('sip_providers.*', 'sip_providers_whitelist_ips.ip_address', 'sip_providers_whitelist_ips.range'));
-      $result->join('sip_providers_whitelist_ips', 'sip_providers_whitelist_ips',  '=', 'sip_providers.id');
+      $result->join('sip_providers_whitelist_ips', 'sip_providers_whitelist_ips.provider_id',  '=', 'sip_providers.id');
       $results = $result->get();
       foreach ($results as $result) {
-        $range = $result->ip . $result->range;
+        $range = $result->ip_address . $result->range;
         if ( MainHelper::CIDRMatch($sourceIp, $range) ) {
           return TRUE;
         }
