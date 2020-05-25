@@ -1,10 +1,15 @@
 <?php
 
 use App\Helpers\MainHelper;
-$match = "8SpGhTMA";
-$got = MainHelper::randomPassword();
-while ($got != $match) {
-        printf("testing %s != %s\r\n", $got, $match);
-        $got = MainHelper::randomPassword();
-}
+        $abs = base_path("/sql-backups/flows_templates.sql");
+        $username = getenv('DB_USERNAME');
+        $host = getenv('DB_HOST');
+        $password = getenv('DB_PASSWORD');
+        $database = getenv('DB_DATABASE');
+
+        $command = "mysql -u $username -p$password  $database < $abs";
+        $result = exec($command);
+        if ($result != 0) {
+            die("error when importing flows dump..");
+        }
 

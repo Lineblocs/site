@@ -63,6 +63,7 @@ class RegisterController extends ApiAuthController
       $data = $request->all();
       $user = User::findOrFail($data['userId']);
       $code = $data['confirmation_code'];
+      $code = $data['confirmation_code'];
       $bypass = "BYPASS-0uu5hIw0CL";
       if ($user->call_code == $code || $code == $bypass) {
         $user->update([

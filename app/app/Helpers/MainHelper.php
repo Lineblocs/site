@@ -114,7 +114,7 @@ final class MainHelper {
   }
   public static function reservedIPsForHost() {
       $data = array();
-      $info = User::where('admin', '=', '0')->whereNotNull('reserved_ip')->whereNotNull('region')->get();
+      $info = User::where('admin', '=', '0')->whereNotNull('region')->get();
       $config = Config::get("mothernodes");
       foreach ($info as $item) {
         $workspace = Workspace::where('creator_id', '=', $item->id)->first();
@@ -531,7 +531,7 @@ final class MainHelper {
       }
       return NULL;
     }
-    function secondsToHumanReadable(/*int*/ $seconds)/*: string*/ {
+    public static function secondsToHumanReadable(/*int*/ $seconds)/*: string*/ {
     //if you dont need php5 support, just remove the is_int check and make the input argument type int.
     if(!\is_int($seconds)){
         throw new \InvalidArgumentException('Argument 1 passed to secondsToHumanReadable() must be of the type int, '.\gettype($seconds).' given');
