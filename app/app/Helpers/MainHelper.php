@@ -531,4 +531,35 @@ final class MainHelper {
       }
       return NULL;
     }
+    function secondsToHumanReadable(/*int*/ $seconds)/*: string*/ {
+    //if you dont need php5 support, just remove the is_int check and make the input argument type int.
+    if(!\is_int($seconds)){
+        throw new \InvalidArgumentException('Argument 1 passed to secondsToHumanReadable() must be of the type int, '.\gettype($seconds).' given');
+    }
+    $dtF = new \DateTime ( '@0' );
+    $dtT = new \DateTime ( "@$seconds" );
+    $ret = '';
+    if ($seconds === 0) {
+        // special case
+        return '0 seconds';
+    }
+    $diff = $dtF->diff ( $dtT );
+    foreach ( array (
+            'y' => 'year',
+            'm' => 'month',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second' 
+    ) as $time => $timename ) {
+        if ($diff->$time !== 0) {
+            $ret .= $diff->$time . ' ' . $timename;
+            if ($diff->$time !== 1 && $diff->$time !== -1 ) {
+                $ret .= 's';
+            }
+            $ret .= ' ';
+        }
+    }
+    return substr ( $ret, 0, - 1 );
+}
 }
