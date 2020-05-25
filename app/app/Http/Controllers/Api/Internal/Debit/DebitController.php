@@ -47,5 +47,31 @@ class DebitController extends ApiAuthController {
       //return $this->response->array($debit->toArray())->withHeader("X-Debit-ID", $debit->id);
       return $this->response->noContent();
     }
+    public function createAPIUsageDebit(Request $request)
+    {
+      $data = $request->json()->all();
+      $params = $data['params'];
+      $type = $data['type'];
+      $source = sprintf("API usage - %s", $type);
+      $info = [
+        'user_id' => $data['user_id'],
+        'workspace_id' => $data['workspace_id'],
+        'source' => $source
+      ];
+      //get costs
+      if ( $type == "TTS" ) {
+          // 5.00 per 1M characters
+          $costs = $params['length'] * .000005;
+          $cents = MainHelper::toCents( $costs );
+          $user = User::findOrFail($data['user_id']);
+          $started = new DateTime();
+          $debit = UserDebit::create([
+            'user_id' => $user->id,
+            'cents' => $cents,
+            'source' => $source
+          ]);
+          }
+
+      }
 }
 

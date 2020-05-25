@@ -99,6 +99,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('provider', 'Admin\SIPProviderController');
     Route::resource('host', 'Admin\SIPProviderController');
 
+
+    # MediaServers
+    Route::get('server/data', 'Admin\MediaServerController@data');
+    Route::get('server/{server}/show', 'Admin\MediaServerController@show');
+    Route::get('server/{server}/edit', 'Admin\MediaServerController@edit');
+    Route::get('server/{server}/delete', 'Admin\MediaServerController@delete');
+    Route::resource('server', 'Admin\MediaServerController');
+
      # SIPCountrys
     Route::get('country/data', 'Admin\SIPCountryController@data');
     Route::get('country/{country}/add_region', 'Admin\SIPCountryController@add_region');
@@ -239,6 +247,7 @@ $api->version('v1', function($api) {
     });
     $api->group([ 'prefix' => 'debit', 'namespace' => '\Debit'], function($api) {
       $api->post("/createDebit", "DebitController@createDebit");
+      $api->post("/createAPIUsageDebit", "DebitController@createAPIUsageDebit");
       });
   });
   $api->get('admin/getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');
