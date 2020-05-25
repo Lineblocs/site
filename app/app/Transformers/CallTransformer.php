@@ -11,6 +11,9 @@ final class CallTransformer extends TransformerAbstract {
         $array = $call->toArray();
         $live = time() - $call->created_at->getTimestamp();
         $array['duration_live'] = $live;
+        if ($array['status'] == 'ended') {
+          $array['duration_ended'] = $call->ended_at->getTimestamp() - $call->started_at->getTimestamp();
+        }
         return $array;
     }
 }
