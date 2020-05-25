@@ -420,6 +420,21 @@ class UserController extends ApiAuthController {
       return $this->response->errorInternal('no results found..');
 
     }
+
+    public function incomingMediaServerValidation(Request $request) {
+      $number = $request->get("number");
+      $sourceIp = $request->get("source");
+      $didArg = $request->get("did");
+      $result = MediaServer::select(array('media_servers.*'));
+      $results = $result->get();
+      foreach ($results as $result) {
+         $range = $result->ip_address . $result->range;
+        if ( MainHelper::CIDRMatch($sourceIp, $range) ) {
+          return $this->response->noContent();
+        }
+      }
+      return $this->response->errorInternal();
+    }
     public function checkPSTNIPWhitelist($did, $sourceIp) {
       $result = SIPProvider::select(array('sip_providers.*', 'sip_providers_whitelist_ips.ip_address', 'sip_providers_whitelist_ips.range'));
       $result->join('sip_providers_whitelist_ips', 'sip_providers_whitelist_ips.provider_id',  '=', 'sip_providers.id');
