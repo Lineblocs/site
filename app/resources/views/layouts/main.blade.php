@@ -49,6 +49,8 @@
   <link href="/css/style-frontend.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <title>Home</title>
     <!-- Start of Async Drift Code -->
+
+  @if (!isset($show_drift) || (isset($show_drift) && $show_drift))
 <script>
 "use strict";
 
@@ -75,6 +77,7 @@
 drift.SNIPPET_VERSION = '0.3.1';
 drift.load('84i5z2ttdxg5');
 </script>
+@endif
 <!-- End of Async Drift Code -->
 </head>
 

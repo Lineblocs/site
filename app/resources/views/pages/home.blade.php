@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main', ['show_drift' => FALSE])
 @section('title') Home :: @parent @endsection
 @section('content')
 <section id="hero">
