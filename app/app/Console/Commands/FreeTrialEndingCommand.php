@@ -41,6 +41,8 @@ class FreeTrialEndingCommand extends Command
     public function handle()
     {
         //
+      $date = new \DateTime();
+      printf("Starting cron at %s\r\n", $date->format("Y-m-d H:i:s"));
         $daysCheck = 8;
         $users = User::whereRaw("free_trial_started <= DATE_ADD(NOW(), INTERVAL -$daysCheck DAY)")
                     ->where('free_trial_reminder_sent', '0')

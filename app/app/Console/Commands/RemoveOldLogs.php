@@ -41,6 +41,8 @@ class RemoveOldLogs extends Command
     public function handle()
     {
         //
+      $date = new \DateTime();
+      printf("Starting cron at %s\r\n", $date->format("Y-m-d H:i:s"));
         $daysToRetain1 = 7;
         $logs = DB::table('debugger_logs')->where('created_at', '<=', Carbon::now()->subDays($daysToRetain1)->toDateTimeString())->delete();
         $daysToRetain2 = 7;

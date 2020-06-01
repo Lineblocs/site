@@ -44,6 +44,8 @@ class SendBackgroundEmails extends Command
      */
     public function handle()
     {
+      $date = new \DateTime();
+      printf("Starting cron at %s\r\n", $date->format("Y-m-d H:i:s"));
         //
         // 14 day inactivity email
         $ago = new DateTime('-14 day');

@@ -51,6 +51,8 @@ class MonthlyBillCommand extends Command
      */
     public function handle()
     {
+      $date = new \DateTime();
+      printf("Starting cron at %s\r\n", $date->format("Y-m-d H:i:s"));
         $stripe = \Config::get("stripe");
         $costs = \Config::get("costs");
         \Stripe\Stripe::setApiKey($stripe['secret_key']);

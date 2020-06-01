@@ -39,6 +39,8 @@ class DeleteUnsetPasswordUsers extends Command
     public function handle()
     {
         //
+      $date = new \DateTime();
+      printf("Starting cron at %s\r\n", $date->format("Y-m-d H:i:s"));
         $daysCheck = "7";
         $users = User::whereRaw("needs_set_password_date <= DATE_ADD(NOW(), INTERVAL -$daysCheck DAY)")
                     ->where('needs_password_set', '1')
