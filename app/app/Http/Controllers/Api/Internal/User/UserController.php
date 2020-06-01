@@ -19,6 +19,7 @@ use \App\SIPProviderHost;
 use \App\BYOCarrier;
 use \App\BYOCarrierIP;
 use \App\BYODIDNumber;
+use \App\MediaServer;
 use \Config;
 use \DB;
 use \Log;
@@ -428,7 +429,8 @@ class UserController extends ApiAuthController {
       $result = MediaServer::select(array('media_servers.*'));
       $results = $result->get();
       foreach ($results as $result) {
-         $range = $result->ip_address . $result->range;
+         $range = $result->ip_address . $result->ip_address_range;
+      
         if ( MainHelper::CIDRMatch($sourceIp, $range) ) {
           return $this->response->noContent();
         }

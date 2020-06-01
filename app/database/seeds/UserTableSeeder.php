@@ -39,6 +39,7 @@ class UserTableSeeder extends Seeder {
 			'confirmation_code' => md5(microtime() . env('APP_KEY')),
 			'mobile_number' => 'USER',
 			'office_number' => 'USER',
+      'region' => 'ca-central-1'
 
 		]);
       $workspace = Workspace::create([
