@@ -7,6 +7,7 @@ use App\UserInvoice;
 use App\UserDebit;
 use App\DIDNumber;
 use App\Recording;
+use App\Fax;
 use DateTime;
 use Config;
 
@@ -67,6 +68,7 @@ class MonthlyBillCommand extends Command
           $costs = 0;
           $callTolls = 0;
           $recordingCosts = 0;
+          $faxCosts = 0;
           $monthlyNumberRentals =  0;
           $balance = $user->getBillingInfo();
           $invoiceDesc=  sprintf("LineBlocs invoice for %s", $balance['thisInvoiceDue']);
@@ -96,11 +98,21 @@ class MonthlyBillCommand extends Command
             $recordingCosts += $cost;
           }
 
+          // TODO add fax costs
+          $faxes = Fax::where('user_id', $user->id)->get();
+          foreach ($faxes as $fax) {
+            $cost =  0;
+            $size = $fax->size;
+            $faxCosts += $cost;
+          }
+
           echo "call tolls are: " . $callTolls . PHP_EOL;
           echo "recording costs are: " . $recordingCosts . PHP_EOL;
+          echo "fax costs are: " . $faxCosts . PHP_EOL;
           echo "monthly number rental costs are: " . $monthlyNumberRentals . PHP_EOL;
           $costs += $callTolls;
           $costs += $recordingCosts;
+          $costs += $faxCosts;
           $costs += $monthlyNumberRentals;
           $invoice = UserInvoice::create([
             'cents' => $costs,
