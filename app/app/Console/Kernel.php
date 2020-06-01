@@ -8,6 +8,7 @@ use App\Console\Commands\MonthlyBillCommand;
 use App\Console\Commands\SendBackgroundEmails;
 use App\Console\Commands\RemoveOldLogs;
 use App\Console\Commands\FreeTrialEndingCommand;
+use App\Console\Commands\DeleteUnsetPasswordUsers;
 
 class Kernel extends ConsoleKernel
 {
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
         SendBackgroundEmails::class,
         FreeTrialEndingCommand::class,
         RemoveOldLogs::class,
+        DeleteUnsetPasswordUsers::class
     ];
 
     /**

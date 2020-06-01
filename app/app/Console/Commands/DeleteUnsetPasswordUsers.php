@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\User;
 
 class DeleteUnsetPasswordUsers extends Command
 {
@@ -28,13 +29,6 @@ class DeleteUnsetPasswordUsers extends Command
     public function __construct()
     {
         parent::__construct();
-        $daysCheck = "7";
-        $users = User::whereRaw("needs_set_password_date <= DATE_ADD(NOW(), INTERVAL -$daysCheck DAY)")
-                    ->where('needs_password_set', '1')
-                    ->get();
-        foreach ($users as $user) {
-            $user->delete();
-        }
     }
 
     /**
@@ -45,5 +39,13 @@ class DeleteUnsetPasswordUsers extends Command
     public function handle()
     {
         //
+        $daysCheck = "7";
+        $users = User::whereRaw("needs_set_password_date <= DATE_ADD(NOW(), INTERVAL -$daysCheck DAY)")
+                    ->where('needs_password_set', '1')
+                    ->get();
+        foreach ($users as $user) {
+            $user->delete();
+        }
+
     }
 }

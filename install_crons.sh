@@ -11,4 +11,5 @@ else
     echo "0 * * * * /bin/bash -c 'cd $LINEBLOCS_APP && php artisan send-bg-emails >> ./crons/bg-emails.txt'" >> $FILE
     echo "0 * * * * /bin/bash -c 'cd $LINEBLOCS_APP && php artisan cleanups:delete-unset-passwords  >> ./crons/delete-pwds.txt'" >> $FILE
     echo "0 * * * * /bin/bash -c 'cd $LINEBLOCS_APP && php artisan debuggerlogs:remove  >> ./crons/logs-removal.txt'" >> $FILE
+  echo "Crons installed!"
 fi
