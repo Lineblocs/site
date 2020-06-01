@@ -8,12 +8,11 @@
         </div>
         <div class="hero-text">
             <h1 class="heading">Your Line</h1>
-            <p class="desc">LineBlocs make it easy to provision a cloud PBX and customize your inbound calling needs
-                through visual flows</p>
+            <p class="desc">LineBlocs is a fully customizable cloud phone system developed for productive teams.</p>
 
-            <a href="/pricing">
+            <a href="https://app.lineblocs.com/#/register">
                 <div class="btn-custom">
-                    <span>View Pricing</span>
+                    <span>Get started in 30 seconds</span>
                     <svg width="20px" height="20px" viewBox="0 0 30 20" version="1.1">
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
                             stroke-linecap="round" stroke-linejoin="round">
