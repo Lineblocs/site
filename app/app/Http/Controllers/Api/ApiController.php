@@ -36,7 +36,7 @@ class ApiController extends Controller {
      if ($request->has("per_page")) {
           return (int)$request->get("per_page");
      }
-     return 10;
+     return 20;
    }
      public function hasPermissions($request, $resource, $action) {
           $workspace = $this->getWorkspace($request);
