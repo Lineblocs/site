@@ -24,7 +24,7 @@ declare class LineWorkspace{
 
 declare class LineSDK {
     public createSession(token: string, secret: string): LineSession;
-    public createBridge(): LineBridge;
+    public createBridge(autoHangup: boolean): LineBridge;
     public createCall(flow: LineFlow, call: string, callerId: string, callType: string);
     public createConference(flow: LineFlow, name: string);
     public addChannel(channel: LineChannel);

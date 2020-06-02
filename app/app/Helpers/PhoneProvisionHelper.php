@@ -239,7 +239,7 @@ final class PhoneProvisionHelper {
                 'setting_description' => '',
                 'setting_variable_type' => $option['type']
             ];
-            if ( empty( $option['xml_attrs'] ) ) {
+            if ( !empty( $option['xml_attrs'] ) ) {
                 $attrs['xml_attrs'] = json_encode($option['xml_attrs']);
             }
             if ($option['type'] == '1') {
