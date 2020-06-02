@@ -562,4 +562,33 @@ final class MainHelper {
     }
     return substr ( $ret, 0, - 1 );
 }
+  public function sendSMS($from='', $to='', $body='') {
+    \Config::get("messagebird.access_key");
+    $MessageBird = new \MessageBird\Client('YOUR_ACCESS_KEY'); // Set your own API access key here.
+
+    $Message             = new \MessageBird\Objects\Message();
+    $Message->originator = $from;
+    $Message->recipients = array($to);
+    $Message->body       = $body;
+
+    try {
+        $MessageResult = $MessageBird->messages->create($Message);
+        return TRUE;
+
+    } catch (\MessageBird\Exceptions\AuthenticateException $e) {
+        // That means that your accessKey is unknown
+        \Log::info('message bird wrong login');
+        return FALSE;
+
+    } catch (\MessageBird\Exceptions\BalanceException $e) {
+        // That means that you are out of credits, so do something about it.
+        \Log::info('message bird no balance');
+        return FALSE;
+
+    } catch (\Exception $e) {
+      \Log::info('message bird error: ' . $e->getMessage());
+        return FALSE;
+
+    }
+  }
 }

@@ -103,6 +103,7 @@ class RegisterController extends ApiAuthController
           $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
           //send code through call
           $twilio= Config::get('twilio');
+          $mb= Config::get('messagebird');
           $client = new Client($twilio['account_sid'], $twilio['auth_token']);
           /*
           $client->account->calls->create(  
@@ -114,14 +115,10 @@ class RegisterController extends ApiAuthController
           );
           */
         $message = sprintf("Your Lineblocs verification code is %s", $code);
-        $client->messages->create(
-            // Where to send a text message (your cell phone?)
-           $number,
-            array(
-                'from' => $twilio['verification_number'],
-                'body' => $message
-            )
-        );
+        $sent = MainHelper::sendSMS( $mb['verification_number'], $number, $message );
+        if (!$sent) {
+          return $this->response->array(['valid' => FALSE, 'error' => 'could not send SMS']);
+        }
           return $this->response->array(['valid' => TRUE]);
       } catch (\libphonenumber\NumberParseException $e) {
         return $this->response->array(['valid' => FALSE]);

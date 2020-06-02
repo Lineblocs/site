@@ -496,6 +496,19 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
       return $this->response->array( $result );
     }
+    public function updateWorkspace2(Request $request) {
+      $data =$request->json()->all();
+      $workspace =$this->getWorkspace($request);
+      $workspace->update($data);
+      return $this->response->noContent();
+    }
+  public function getWorkspace(Request $request) {
+      $data =$request->json()->all();
+      $workspace =$this->getWorkspace($request);
+      return $this->response->array(Workspace::findOrFail($workspace->id)->toArray());
+    }
+
+
 
 
 
