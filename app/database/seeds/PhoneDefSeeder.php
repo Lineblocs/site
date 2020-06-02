@@ -71,6 +71,16 @@ class PhoneDefSeeder extends Seeder
             'manufacturer' => 'Cisco',
             'model' => 'SPA514G'
         ]);
+        PhoneDefinition::create([
+            'phone_type' =>11,
+            'manufacturer' => 'Polycom',
+            'model' => 'IP330'
+        ]);
+        PhoneDefinition::create([
+            'phone_type' =>12,
+            'manufacturer' => 'Polycom',
+            'model' => 'IP331'
+        ]);
 
 
 
