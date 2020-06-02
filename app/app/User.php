@@ -130,6 +130,7 @@ class User extends Model implements AuthenticatableContract,
     }
     public function toArray($allData=FALSE) {
         $array = parent::toArray();
+        $array['free_trial_status'] = $this->checkFreeTrialStatus();
         if (!$allData) {
           return $array;
         }
@@ -153,7 +154,6 @@ class User extends Model implements AuthenticatableContract,
           $array['domain'] = $domain;
         }
         //$array['proxy'] = sprintf("proxy_%s", $array['container_name']);
-        $array['free_trial_status'] = $this->checkFreeTrialStatus();
       return $array;
       }
     public function checkFreeTrialStatus() {

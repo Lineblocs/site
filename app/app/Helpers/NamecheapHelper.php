@@ -145,6 +145,7 @@ final class NamecheapHelper {
       $nc['Address'.$number] = $ip;
       $nc['TTL'.$number] = '60';
     }
+    //echo var_dump($nc);
     $result = $namecheap->dnsSetHosts("lineblocs.com", $nc);
     if (!$result) {
       Log::error( "error occured: " . $namecheap->Error);

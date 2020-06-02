@@ -100,7 +100,7 @@ final class MainHelper {
     return $apiContext;
   }
   public static function getHostIPForUser($region, $user) {
-      $info = User::where('admin', '=', '0')->whereNotNull('reserved_ip')->get();
+      $info = User::whereNotNull('region')->get();
       $mothernode = Config::get("mothernodes");
       $info = $mothernode['regions'][$region]['options'][0];
       $proxy= $mothernode['regions'][$region]['proxy'];
@@ -114,7 +114,7 @@ final class MainHelper {
   }
   public static function reservedIPsForHost() {
       $data = array();
-      $info = User::where('admin', '=', '0')->whereNotNull('region')->get();
+      $info = User::whereNotNull('region')->get();
       $config = Config::get("mothernodes");
       foreach ($info as $item) {
         $workspace = Workspace::where('creator_id', '=', $item->id)->first();

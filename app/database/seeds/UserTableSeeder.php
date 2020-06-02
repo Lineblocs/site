@@ -20,6 +20,8 @@ class UserTableSeeder extends Seeder {
 			'mobile_number' => 'ADMIN',
 			'office_number' => 'ADMIN',
 			'confirmation_code' => md5(microtime() . env('APP_KEY')),
+      'region' => 'ca-central-1',
+      'plan' => 'standard'
 		]);
       $workspace = Workspace::create([
         'creator_id' => $admin->id,
@@ -39,12 +41,13 @@ class UserTableSeeder extends Seeder {
 			'confirmation_code' => md5(microtime() . env('APP_KEY')),
 			'mobile_number' => 'USER',
 			'office_number' => 'USER',
-      'region' => 'ca-central-1'
+      'region' => 'ca-central-1',
+      'plan' => 'standard'
 
 		]);
       $workspace = Workspace::create([
         'creator_id' => $user->id,
-        'name' => 'Workspace',
+        'name' => 'workspace',
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
       ]);
