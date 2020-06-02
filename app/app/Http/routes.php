@@ -266,9 +266,10 @@ $api->version('v1', function($api) {
   $api->post('provisionCallSystem', '\App\Http\Controllers\RegisterController@provisionCallSystem');
   $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
   $api->get('self', '\App\Http\Controllers\RegisterController@getSelf');
-  $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspace');
+  $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');
   $api->get('getUserInfo', '\App\Http\Controllers\RegisterController@getUserInfo');
   $api->post('updateSelf', '\App\Http\Controllers\RegisterController@updateSelf');
+  $api->post('updateWorkspace', '\App\Http\Controllers\RegisterController@updateWorkspace');
   $api->post('updateWorkspace2', '\App\Http\Controllers\MergedController@updateWorkspace2');
   $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');
