@@ -502,7 +502,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $workspace->update($data);
       return $this->response->noContent();
     }
-  public function getWorkspace(Request $request) {
+  public function getWorkspaceAPI(Request $request) {
       $data =$request->json()->all();
       $workspace =$this->getWorkspace($request);
       return $this->response->array(Workspace::findOrFail($workspace->id)->toArray());
