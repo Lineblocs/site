@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Helpers\MainHelper;
+use App\Helpers\PBXServerHelper;
 use App\Workspace;
 use App\WorkspaceUser;
 
@@ -27,7 +28,8 @@ class UserTableSeeder extends Seeder {
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
       ]);
-    WorkspaceUser::createSuperAdmin($workspace, $admin);
+	WorkspaceUser::createSuperAdmin($workspace, $admin);
+    PBXServerHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
 
 
 		$user = \App\User::create([
@@ -49,7 +51,7 @@ class UserTableSeeder extends Seeder {
         'api_secret' => MainHelper::createAPISecret(),
       ]);
     WorkspaceUser::createSuperAdmin($workspace, $user);
-
+    PBXServerHelper::addUserToProxy($user->toArray(), $workspace->toArray());
 	}
 
 }
