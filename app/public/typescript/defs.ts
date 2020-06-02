@@ -32,6 +32,7 @@ declare class LineSDK {
     public listRecordings(tags: string, page: number): LineListResource < LineRecording > ;
 
     public playRecording(flow: LineFlow, channel: LineChannel, fileUrl: string);
+    public getChannel(channelId: string);
 }
 declare class LineContext {
     public channel: LineChannel;
@@ -77,7 +78,9 @@ declare class LineBridge {
     public addChannel(lineChannel: LineChannel);
     public destroy();
   public automateLegAHangup: boolean;
+
   public automateLegBHangup: boolean;
+    public on(name: string, callback: any);
 
 }
 declare class LineSession {
