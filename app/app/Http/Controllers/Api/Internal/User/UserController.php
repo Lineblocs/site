@@ -285,8 +285,12 @@ class UserController extends ApiAuthController {
       $domain = $request->get("domain");
       $workspace = MainHelper::workspaceByDomain($domain);
       $user = User::findOrFail($workspace->creator_id);
-      //return response("35.183.88.150");
-      return response($user->ip_address);
+      $result = MediaServer::select(array('media_servers.*'));
+      $results = $result->get();
+      //todo add logic
+      foreach ($results as $result) {
+        return response($result->private_ip_address);
+      }
     }
     private function BYORouteMatches($from, $to, $route) {
 
@@ -317,18 +321,10 @@ class UserController extends ApiAuthController {
         }
         return;
       }
-      $providerIp = "toronto5.voip.ms";
       $providers = SIPProvider::select(array('sip_providers.name', 'sip_providers_hosts.ip_private'));
       $providers = $providers->leftJoin('sip_providers_hosts', 'sip_providers_hosts.provider_id', '=', 'sip_providers.id');
       $providers->where('sip_providers.type_of_provider', 'outbound');
       $provider = $providers->first();
-      $providerIp = "toronto5.voip.ms";
-      return Response::json([
-              'ip_addr' => $providerIp,
-              'did' => $from
-            ]);
-
-
       $providerIp = $provider->ip_address;
       //return response($providerIp);
       return Response::json([
