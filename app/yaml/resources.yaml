@@ -34,6 +34,10 @@ sections:
         description: learn how to provision an extension for use with a softphone or supported hard phone
         link: setup-extension
         tags: extension setup, microsip, lineblocs, softphone, hardphone
+      - name: "Call Screening"
+        description: learn how to create call screenings using Lineblocs
+        link: call-screening
+        tags: call screening, screening, call, lineblocs, voip, call whisper, whisper
       - name: Using macros to check for business hours
         description: learn how to use lineblocs macros to customize your call flows using typescript code.
         link: business-hours-with-custom-macros
