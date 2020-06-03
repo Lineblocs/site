@@ -33,7 +33,7 @@ class UserController extends ApiAuthController {
       $workspace = Workspace::where('name', $container)->firstOrFail();
       $user = User::findOrFail($workspace->creator_id);
       $data = $user->toArray();
-      $data['workspace'] = $workspace->toArray();
+      $data['outbound_macro_id'] = $workspace->outbound_macro_id;
       $data['workspace_name'] = $data['workspace']['name'];
       $data['workspace_id'] = $data['workspace']['id'];
       $data['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $data['workspace']['id'])->get()->toArray());
@@ -99,6 +99,7 @@ class UserController extends ApiAuthController {
       Log::info(sprintf("looking up number %s",$number));
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
+        workspaces.outbound_macro_id,
         workspaces.byo_enabled,
         workspaces.creator_id,
         workspaces.id AS workspace_id,
@@ -130,6 +131,7 @@ class UserController extends ApiAuthController {
       // check BYO DID next
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, byo_did_numbers.number, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
+        workspaces.outbound_macro_id,
         workspaces.byo_enabled,
         workspaces.creator_id,
         workspaces.id AS workspace_id,
@@ -169,6 +171,7 @@ class UserController extends ApiAuthController {
       Log::info(sprintf("looking up number %s",$number));
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, extensions.username, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
+        workspaces.outbound_macro_id,
         workspaces.creator_id,
         workspaces.id AS workspace_id,
         workspaces.api_token,
@@ -198,6 +201,7 @@ class UserController extends ApiAuthController {
       Log::info(sprintf("looking up number %s",$number));
       $workspace = Workspace::select(DB::raw("flows.workspace_id, flows.flow_json, extension_codes.code, workspaces.name, workspaces.name AS workspace_name, 
         users.plan,
+        workspaces.outbound_macro_id,
         workspaces.creator_id,
         workspaces.id AS workspace_id
         "));
@@ -248,6 +252,7 @@ class UserController extends ApiAuthController {
         users.plan,
         users.ip_address,
         users.ip_private,
+        workspaces.outbound_macro_id,
         workspaces.creator_id,
         workspaces.id AS workspace_id
         "));
@@ -273,6 +278,7 @@ class UserController extends ApiAuthController {
         users.plan,
         users.ip_address,
         users.ip_private,
+        workspaces.outbound_macro_id,
         workspaces.creator_id,
         workspaces.id AS workspace_id
         "));
