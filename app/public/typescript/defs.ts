@@ -70,6 +70,8 @@ declare class LineChannel {
     public on(name: string, callback: any);
     public automateCallHangup: boolean;
     public gotoFlowWidget(flow: LineFlow, name: string, voice ? : string);
+    public startRinging();
+    public stopRinging();
 
 }
 declare class LineBridge {
