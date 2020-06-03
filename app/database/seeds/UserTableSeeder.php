@@ -8,34 +8,34 @@ use App\WorkspaceUser;
 
 class UserTableSeeder extends Seeder {
 
-	public function run()
-	{
+public function run()
+{
 
-		$admin = \App\User::create([
-			'name' => 'Admin User',
-			'username' => 'admin_user',
-			'email' => 'support@lineblocs.com',
-			'password' => bcrypt('jY4xm8<9Hw6`yp/L'),
-			'confirmed' => 1,
-			'admin' => 1,
-			'mobile_number' => 'ADMIN',
-			'office_number' => 'ADMIN',
-			'confirmation_code' => md5(microtime() . env('APP_KEY')),
-      'region' => 'ca-central-1',
-      'plan' => 'standard'
-		]);
-      $workspace = Workspace::create([
-        'creator_id' => $admin->id,
-        'name' => 'admin',
-        'api_token' => MainHelper::createAPIToken(),
-        'api_secret' => MainHelper::createAPISecret(),
-      ]);
-	WorkspaceUser::createSuperAdmin($workspace, $admin);
-    PBXServerHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
+  $admin = \App\User::create([
+    'name' => 'Admin User',
+    'username' => 'admin_user',
+    'email' => 'support@lineblocs.com',
+    'password' => bcrypt('jY4xm8<9Hw6`yp/L'),
+    'confirmed' => 1,
+    'admin' => 1,
+    'mobile_number' => 'ADMIN',
+    'office_number' => 'ADMIN',
+    'confirmation_code' => md5(microtime() . env('APP_KEY')),
+    'region' => 'ca-central-1',
+    'plan' => 'standard'
+  ]);
+    $workspace = Workspace::create([
+      'creator_id' => $admin->id,
+      'name' => 'admin',
+      'api_token' => MainHelper::createAPIToken(),
+      'api_secret' => MainHelper::createAPISecret(),
+    ]);
+WorkspaceUser::createSuperAdmin($workspace, $admin);
+  PBXServerHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
 
 
-		$user = \App\User::create([
-			'name' => 'Test User',
+  $user = \App\User::create([
+        'name' => 'Test User',
 			'username' => 'test_user',
 			'email' => 'user@lineblocs.com',
 			'password' => bcrypt('GQv>jcJ4{3K!S%"^'),

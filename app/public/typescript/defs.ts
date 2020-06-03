@@ -3,6 +3,7 @@ declare class module {
 }
 declare var console: any;
 declare var require: any;
+declare var setTimeout: any;
 declare class LineUser {
     public info: any;
     public id: number;
@@ -15,6 +16,8 @@ declare class LineCell {
     public getMacroParam(name: string): any;
     public eventVars: Object;
     public processVars: Object;
+    public channel: LineChannel;
+    public cellChannel: LineChannel;
 }
 declare class LineWorkspace{
     public api_token: string;
@@ -78,6 +81,7 @@ declare class LineBridge {
     public channels: Array < LineChannel > ;
     public channelsToAdd: Array < LineChannel > ;
     public addChannel(lineChannel: LineChannel);
+    public addChannels(lineChannel1: LineChannel, lineChannel2: LineChannel);
     public destroy();
   public automateLegAHangup: boolean;
 

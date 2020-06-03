@@ -117,6 +117,7 @@ class UserController extends ApiAuthController {
       if ($workspace) {
 
         $array = $workspace->toArray();
+        $array['workspace'] = $workspace->toArray();
         $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
         $user = User::findOrFail($workspace['creator_id'] );
         $array['free_trial_status'] = $user->checkFreeTrialStatus();
@@ -146,6 +147,7 @@ class UserController extends ApiAuthController {
       if ($workspace) {
 
         $array = $workspace->toArray();
+        $array['workspace'] = $workspace->toArray();
         $array['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $array['workspace_id'])->get()->toArray());
         $user = User::findOrFail($workspace['creator_id'] );
         $array['free_trial_status'] = $user->checkFreeTrialStatus();
@@ -256,7 +258,13 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_private);
+          $result = MediaServer::select(array('media_servers.*'));
+          $results = $result->get();
+          //todo add logic
+          foreach ($results as $result) {
+            return response($result->private_ip_address);
+          }
+
       }
 
 
@@ -275,7 +283,12 @@ class UserController extends ApiAuthController {
       $workspace= $workspace->first();
 
       if ($workspace) {
-          return response($workspace->ip_private);
+          $result = MediaServer::select(array('media_servers.*'));
+          $results = $result->get();
+          //todo add logic
+          foreach ($results as $result) {
+            return response($result->private_ip_address);
+          }
       }
 
       return $this->response->errorInternal('no result found..');
@@ -400,7 +413,7 @@ class UserController extends ApiAuthController {
       if ($did) {
           $result = $this->checkPSTNIPWhitelist($did, $sourceIp);
           if (!$result) {
-            return $this->response->errorInternal( 'source IP not whitelisted.');
+            return $this->response->errorInternal( 'Lineblocs source IP not whitelisted.');
           }
           return $this->finishValidation($number, $did);
       }
@@ -409,7 +422,7 @@ class UserController extends ApiAuthController {
         \Log::info("got BYO DID..");
             $result = $this->checkBYOPSTNIPWhitelist($did, $sourceIp);
           if (!$result) {
-            return $this->response->errorInternal( 'source IP not whitelisted.');
+            return $this->response->errorInternal( 'BYO source IP not whitelisted.');
           }
 
           return $this->finishValidation($number, $did);
