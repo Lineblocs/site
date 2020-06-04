@@ -124,6 +124,12 @@ final class NamecheapHelper {
       'address' => 'custom-email-domain.stripe.com.',
       'ttl' => '60'
     ];
+    $baseRecords[] = [
+      'host' => '@',
+      'type' => 'TXT',
+      'address' => 'google-site-verification=OdyUqonYof7cCbTWAPKJ4Wu-SvYxcfkMq9afhcP7rDs',
+      'ttl' => '60'
+    ];
 
     foreach ($baseRecords as $cnt =>$info) {
       $number = $cnt + 1;

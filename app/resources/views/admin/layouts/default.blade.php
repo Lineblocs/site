@@ -31,6 +31,7 @@
     var oTable;
     $(document).ready(function () {
         oTable = $('#table').DataTable({
+            "ordering": false,
             "oLanguage": {
                 "sProcessing": "{{ trans('table.processing') }}",
                 "sLengthMenu": "{{ trans('table.showmenu') }}",
