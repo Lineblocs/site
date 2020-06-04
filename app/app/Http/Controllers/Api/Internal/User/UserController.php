@@ -34,8 +34,10 @@ class UserController extends ApiAuthController {
       $user = User::findOrFail($workspace->creator_id);
       $data = $user->toArray();
       $data['outbound_macro_id'] = $workspace->outbound_macro_id;
-      $data['workspace_name'] = $data['workspace']['name'];
-      $data['workspace_id'] = $data['workspace']['id'];
+      $data['workspace_name'] = $workspace->name;
+      $data['workspace_id'] = $workspace->id;
+      $data['workspace_domain'] = $workspace->makeDomainName();
+
       $data['workspace_params'] = MainHelper::makeParamsArray(WorkspaceParam::where('workspace_id', $data['workspace']['id'])->get()->toArray());
       return $data;
   }
