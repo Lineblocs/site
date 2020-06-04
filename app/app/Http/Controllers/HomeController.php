@@ -182,6 +182,13 @@ class HomeController extends BaseController {
 
       $m->to($config['contact']['email_address'], $config['contact']['email_name'])->subject('New Lineblocs contact');
   });
+    Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {
+      $subject = 'Thanks for contacting us';
+      $m->from('contact@lineblocs.com', 'Lineblocs');
+      $name = sprintf("%s %s", $config['first_name'], $config['last_name']);
+      $m->to($template['email'], $name)->subject($subject);
+  });
+
     $request->session()->flash('status', 'Thanks for contacting us we will get in touch with you within 24-78 hours.');
     return view('pages.contact', $vars);
   }
