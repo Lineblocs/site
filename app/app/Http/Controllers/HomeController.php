@@ -177,15 +177,16 @@ class HomeController extends BaseController {
       'comments' => $data['comments']
     ];
     $config = Config::get("company_reps");
-    Mail::send('emails.contact', $template, function ($m) use ($config) {
+    Mail::send('emails.contact', $template, function ($m) use ($config, $template) {
       $m->from('contact@lineblocs.com', 'Lineblocs Contact');
 
       $m->to($config['contact']['email_address'], $config['contact']['email_name'])->subject('New Lineblocs contact');
+      $m->cc([$template['email']]);
   });
     Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {
       $subject = 'Thanks for contacting us';
       $m->from('contact@lineblocs.com', 'Lineblocs');
-      $name = sprintf("%s %s", $config['first_name'], $config['last_name']);
+      $name = sprintf("%s %s", $template['first_name'], $template['last_name']);
       $m->to($template['email'], $name)->subject($subject);
   });
 
