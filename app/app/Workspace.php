@@ -18,6 +18,10 @@ class Workspace extends Model {
         $array['domain'] = sprintf("%s.lineblocs.com", $array['name']);
       return $array;
       }
+  public function makeDomainName() {
+         return sprintf("%s.lineblocs.com", $this->name);
+  }
+
   public function toArrayWithRoles(User $user) {
         $array = $this->toArray();
         $workspaceUser = WorkspaceUser::where('user_id', '=', $user->id)->where('workspace_id', '=', $this->id)->first();
