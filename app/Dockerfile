@@ -34,6 +34,10 @@ RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --wi
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install mysqli
 
+RUN apt-get update && apt-get install -y zlib1g-dev libicu-dev g++
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
+
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
