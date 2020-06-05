@@ -22,6 +22,7 @@ class LoadBasicData extends Seeder
         require_once($dir2."load_sip_ca_data.php");
         require_once($dir2."load_sip_us_data.php");
         require_once($dir2."load_sip_countries.php");
+        require_once($dir2."load_sip_routers.php");
 
     }
 }
