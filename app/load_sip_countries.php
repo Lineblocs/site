@@ -6,7 +6,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPRateCenterProvider;
 use App\SIPProvider;
-$provider1 = SIPProvider::where('name', 'VoIPms')->firstOrFail();
+$provider1 = SIPProvider::where('name', 'VoIPMS')->firstOrFail();
 foreach (RegionDataHelper::$areas as $iso =>  $area) {
     $country = SIPCountry::create([
         'iso' => $iso,

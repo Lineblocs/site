@@ -1,14 +1,10 @@
-<<?php
-use App\User;
+<<?php use App\User;
 use App\UserDebit;
 use App\ThirdParty\VoIPMSNumberService;
 $country = "US";
 $region = "CA";
 $prefix = "";
 $instance = new VoIPMSNumberService();
-function csvResults($array) {
-
-}
 $states = [
   [
     'iso' => 'CA',
