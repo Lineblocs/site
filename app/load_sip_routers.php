@@ -18,12 +18,11 @@ $router1 = SIPRouter::create([
   'region' => 'ca-central-1'
 ]);
 $server1 = MediaServer::create([
-  'name' => 'Canada PBX 1',,
+  'name' => 'Canada PBX 1',
   'ip_address' => '35.183.88.150',
   'ip_address_range' => '/32',
   'private_ip_address' => '172.31.18.26',
   'ip_address_range' => '/32',
-  'active' => TRUE
 ]);
 SIPRouterMediaServer::create([
   'router_id' => $router1->id,

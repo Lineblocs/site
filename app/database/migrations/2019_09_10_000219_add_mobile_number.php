@@ -14,7 +14,7 @@ class AddMobileNumber extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('mobile_number')->unique();
+            $table->string('mobile_number')->nullable()->unique();
         });
     }
 

@@ -50,6 +50,7 @@ RUN a2enmod deflate
 # Copy existing application directory contents
 COPY . /var/www/html
 COPY apache.conf /etc/apache2/apache2.conf
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN mv .env.k8s .env
 RUN composer install --no-scripts
 RUN source .env
