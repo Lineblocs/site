@@ -1,6 +1,6 @@
 # Call Screening
 
-At a high level, call screenings allow your agents to accept calls or reject calls based on call related details such as a Caller ID, calling department, and more. 
+At a high level, call screenings allow your agents to accept calls based on call related details such as a Caller ID, calling department, and more. 
 
 Basic call screenings can be used to avoid spam and notify agents of caller details. In more advanced cases you could use call screenings to allow your callers to record a greeting message or allow your agents to listen to a message being recorded on an answering machine.
 
