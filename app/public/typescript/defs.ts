@@ -27,7 +27,7 @@ declare class LineWorkspace{
 
 declare class LineSDK {
     public createSession(token: string, secret: string): LineSession;
-    public createBridge(autoHangup: boolean): LineBridge;
+    public createBridge(autoHangup?: boolean): LineBridge;
     public createCall(flow: LineFlow, call: string, callerId: string, callType: string);
     public createConference(flow: LineFlow, name: string);
     public addChannel(channel: LineChannel);
@@ -82,6 +82,7 @@ declare class LineBridge {
     public channelsToAdd: Array < LineChannel > ;
     public addChannel(lineChannel: LineChannel);
     public addChannels(lineChannel1: LineChannel, lineChannel2: LineChannel);
+    public playTTS(flow: LineFlow, text: string, lang ? : string, gender ? : string, voice ? : string);
     public destroy();
   public automateLegAHangup: boolean;
 
