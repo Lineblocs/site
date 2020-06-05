@@ -29,6 +29,15 @@ use Mail;
 
 
 final class MainHelper {
+    public static $ipRanges = [
+            '/8' => '/8',
+            '/16' => '/16',
+            '/24' => '/24',
+            '/32' => '/32',
+        ];
+    public static $regions = [
+      'ca-central-1'
+    ];
   public static function createApiId($prefix="") {
     $uuid4 = Uuid::uuid4(); 
     return sprintf("%s-%s",$prefix, $uuid4->toString());

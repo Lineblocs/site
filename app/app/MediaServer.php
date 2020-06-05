@@ -9,6 +9,14 @@ class MediaServer extends Model {
 
   protected $guarded  = array('id');
   protected $table  = "media_servers";
+  public static function asSelect() {
+    $all = self::all();
+    $results = [];
+    foreach ($all as $item) {
+      $results[ $item->id ] = $item->name;
+    }
+    return $results;
+  }
 }
 
 

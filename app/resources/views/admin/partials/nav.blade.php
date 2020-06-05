@@ -55,6 +55,13 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/router')}}">
+                        <i class="glyphicon glyphicon-user"></i> SIP Routers
+                    </a>
+                </li>
+
+
+                <li>
                     <a href="{{url('admin/server')}}">
                         <i class="glyphicon glyphicon-user"></i> Media Servers
                     </a>

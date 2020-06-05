@@ -100,6 +100,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('host', 'Admin\SIPProviderController');
 
 
+    # SIPRouters
+    Route::get('router/data', 'Admin\SIPRouterController@data');
+    Route::get('router/{router}/show', 'Admin\SIPRouterController@show');
+    Route::get('router/{router}/edit', 'Admin\SIPRouterController@edit');
+    Route::get('router/{router}/delete', 'Admin\SIPRouterController@delete');
+    Route::get('router/{router}/add_server', 'Admin\SIPRouterController@add_server');
+    Route::post('router/{router}/add_server', 'Admin\SIPRouterController@add_server_save');
+    Route::get('router/{router}/edit_server/{routerServer}', 'Admin\SIPRouterController@edit_server');
+    Route::post('router/{router}/del_server/{routerServer}', 'Admin\SIPRouterController@del_server');
+    Route::resource('router', 'Admin\SIPRouterController');
+    Route::resource('routerServer', 'Admin\SIPRouterController');
+
+
     # MediaServers
     Route::get('server/data', 'Admin\MediaServerController@data');
     Route::get('server/{server}/show', 'Admin\MediaServerController@show');
