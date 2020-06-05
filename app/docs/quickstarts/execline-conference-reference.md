@@ -1,6 +1,6 @@
 # Reference Integration: ExecLine Conferencing
 
-Complex conferencing workflows allow you to communicate with multiple end users on demand. Advanced conference workflows can be integrated to work with third party apps, web services and APIs. using modern CPaaS, you can design and develop unique conferencing apps that provide your callers a fluent conferencing experience.
+Complex conferencing workflows allow you to communicate with multiple end users on demand. Advanced conference workflows can be integrated to work with third party apps, web services and APIs. Using modern CPaaS, you can design and develop unique conferencing apps that provide your callers a stellar conferencing experience.
 
 In this tutorial we will be looking at an advanced reference integration of a conferencing line for a small business owner.
 
@@ -13,11 +13,9 @@ Our conference will include two user types:
 
 In our example conference, conference members will call into our conference line to speak with our host, regarding some service. 
 
-Our host will then be notified of new members calling, which he can start conferencing with as needed.
-
 ## How it works
 
-1. The conference member calls into our conferencing line, and waits for the host to join the line
+1. The conference member calls into our conferencing line and waits for the host to join the line
 2. Our conference host is sent an SMS telling them a new caller is on his conference line
 3. The host then joins his conferencing line to speak with the caller
 

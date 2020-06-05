@@ -1,20 +1,19 @@
 # Provision Grandstream GXP2160
 
-Lineblocs phone provisioning UI allows you to setup supported hard phones -- as well as fully manage global, and individual configurations, that you want to use to deploy new hardphones onto your PBX.
+Lineblocs Phone Provisioner allows you to fully manage global, and individual phone configurations.
 
-In this guide we will go over how to use the Lineblocs provisioning server to manage and update a Grandstream GXP2160's
-SIP configuration, as well as create a hard phone in the Lineblocs phone provisioning dashboard.
+In this guide we will go over how to use the Lineblocs provisioning server to manage and update a Grandstream GXP2160's SIP configuration.
 
 ## Requirements
 
-to complete this guide you will need the following items:
+To complete this guide you will need the following items:
 
 1. Grandstream GXP2160
 2. Lineblocs account
 
 ## Configuring GXP2160
 
-We will first need to update our Grandstream GXP2160's "Config Server Path", so that we can configure our phone with Lineblocs. This can be done in one of the following ways:
+We will first need to update our Grandstream GXP2160's "Config Server Path" so that we can configure our phone with Lineblocs. This can be done in one of the following ways:
 
 1. Use DHCP option 66
 2. Update the "Config Server Path" in the Grandstream web GUI
@@ -33,7 +32,7 @@ If this is a new phone you can login to your Grandstream Admin with username: ad
 
 ## Changing Provisioning Path
 
-To change your Provisioning Path please go to "Maintenance -> Upgrade and Provisioning" section, Then please set your "Config Server Path" to:
+To change your Provisioning Path please go to "Maintenance -> Upgrade and Provisioning" section, then please set your "Config Server Path" to:
 
 ```
 prv.lineblocs.com
@@ -126,7 +125,7 @@ Please save all changes once you are complete.
 
 ## Deploying Config
 
-Your phone is now ready to fetch its config from Lineblocs.
+Your phone is now ready to fetch its configuration from Lineblocs.
 
 To Deploy the config please go to ["Provision" -> "Deploy Now"](http://app.lineblocs.com/#/provision/deploy).
 
@@ -136,7 +135,7 @@ To Deploy your config please click "Begin Deployment"
 
 ![Grandstream GXP2160](/img/frontend/docs/provision-gxp2160/deploy.png)
 
-If all goes well the configurations should be deployed, and you should get a success message with instructions to complete the deployment process.
+If all goes well the configurations should be deployed and you should get a success message with instructions to complete the deployment process.
 
 ![Grandstream GXP2160](/img/frontend/docs/provision-gxp2160/deploy-complete.png)
 
@@ -148,7 +147,7 @@ For tips on troubleshooting please read article [Debugging Config Deployment](ht
 
 ## Next Steps
 
-In this guide we discussed how to provision a Grandstream GXP2160 in Lineblocs phone provisioner. for related articles be sure to check out the following posts:
+In this guide we discussed how to provision a Grandstream GXP2160 in Lineblocs phone provisioner. For related articles be sure to check out the following posts:
 
 [Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
 

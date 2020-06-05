@@ -3,9 +3,9 @@
 ![Pinless Conference](/img/frontend/docs/pinless-conference/main.png)
 
 Pinless conferences allow you to create discussion rooms you and your team can access on demand.
-A basic pinless conference usually includes a dial in phone number, that can be accessed by a set of assigned attendee numbers.
+A basic pinless conference usually includes a dial in phone number and a set of assigned attendee numbers.
 
-In Lineblocs you can fully create basic and advanced pinless conferences, as well as customize pinless conferencing workflows as per your needs
+In Lineblocs you can fully create basic and advanced pinless conferences as well as customize pinless conferencing workflows as per your needs
 
 In this tutorial we will go over how to create a basic pinless conference using the Lineblocs flow editor.
 

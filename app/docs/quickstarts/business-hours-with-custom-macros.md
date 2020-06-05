@@ -2,7 +2,7 @@
 
 ![Call Queues example](/img/frontend/docs/macros/business-hours.png)
 
-Lineblocs macros allow you to add custom functionality to your call flows, using the TypeScript language. 
+Lineblocs macros allow you to further customize your call flows using the TypeScript language.
 
 Using Lineblocs macros, you can create high level integrations that include tasks such as sending a lead to a CRM, or sending out an email using an API.
 
@@ -17,17 +17,17 @@ You will need the following to complete this tutorial:
 
 ##  Setup Workspace
 
-We will first bootstrap our workspace with some timezone values, so that we can later route our calls according to the correct timezone.
+We will first bootstrap our workspace with some timezone values so that we can later route our calls according to the correct timezone.
 
-to access the workspace params screen: in [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click "Settings" -> "Workspace Params"
+To access the workspace params screen: in [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click "Settings" -> "Workspace Params"
 
-to add a timezone workspace param please click "Add Param". in the key field use "timezone" then use any valid timezone name in the value field. for example "America/Toronto". 
+To add a timezone workspace param please click "Add Param". In the key field use "timezone" then use any valid timezone name in the value field. for example "America/Toronto". 
 
-to see a full list of timezones please use [this link](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+To see a full list of timezones please use [this link](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 
 #### Workspace Params
 
-your workspace params screen should now look like the following image:
+Your workspace params screen should now look like the following image:
 ![Workspace Params](/img/frontend/docs/macros/workspace-params.png)
 
 ## Create flow
@@ -140,9 +140,9 @@ the "HoursSwitch" link section should now look like the following:
 
 ## Connecting the links
 
-Next, we will need to update the flow, so that we use our macro and the widgets we just created. 
+Next, we will need to update the flow to use our widgets.
 
-To make adjustments to your flow so that all of the widgets are working correctly you will need to connect "Incoming Call" port from the Launch widget into the Macro's "In" port, as well as add a link from widget Macro's "Completed" port into the HoursSwitch's "In" port.
+To make adjustments to your flow so that all of the widgets are working correctly you will need to connect "Incoming Call" port from the Launch widget into the Macro's "In" port and add a link from widget Macro's "Completed" port into the HoursSwitch's "In" port.
 
 Below is an example of how the final flow should look like:
 ![Select Macro](/img/frontend/docs/macros/flow-updated.png)

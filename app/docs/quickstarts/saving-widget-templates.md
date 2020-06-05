@@ -8,7 +8,7 @@ In this tutorial we will go over how you can save widget templates, to reuse the
 
 ## Save Widget
 
-to save a widget as a template:
+To save a widget as a template:
 
 1. In [Lineblocs Flow Editor](https://app.lineblocs.com/#/flows/new) click a widget
 2. click the "Save Widget as template" ![Save widget](/img/frontend/docs/widget-templates/save.png) button.
@@ -24,7 +24,7 @@ to save a widget as a template:
 
 ## Next Steps
 
-in this guide we discussed how you can save a widget and reuse it. for more related articles please see:
+In this guide we discussed how you can save a widget and reuse it. for more related articles please see:
 
 [Create a cold transfer](http://lineblocs.com/resources/quickstarts/setup-cold-transfers)
 

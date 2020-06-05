@@ -1,9 +1,8 @@
 # Call Queues
 
-Call queues allow you to receive multiple incoming calls at the same time, as well as provide your callers
-a smooth experience in case of a long wait time for a call.
+Call queues can allow you to receive multiple calls simultanously. A well designed call queue can also provide a smooth experience in case of a long wait time for a call.
 
-In this guide we will be creating a basic call queue, using the Lineblocs flow editor. The call queue will be assigned to all our extensions, and setup with basic options. 
+In this guide we will be creating a basic call queue using the Lineblocs flow editor. The call queue will be assigned to all our extensions and setup with basic options. 
 
 ## Getting Started
 
@@ -23,7 +22,7 @@ To update the widget extensions settings for your queue please click the "Suppor
 
 ## Max Queue Wait Time
 
-Max queue wait time allow you to adjust how long a caller can wait in the call queue before either terminating the call, or going to an alternate destination.
+Max queue wait time allow you to adjust how long a caller can wait in the call queue before either terminating the call or going to an alternate destination.
 
 By default the max queue wait time is set to 60 seconds.
 
@@ -52,7 +51,7 @@ After you have made your changes, your flow should now look similar to the follo
 
 ## Using the flow on a DID number
 
-to save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
+To save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
 
 To use your call flow on a DID Number:
 
@@ -67,7 +66,7 @@ Your callers should now be placed in a queue with music on hold when they call y
 
 ## Next Steps
 
-in this guide we discussed setting up call queues on Lineblocs. for other related quickstart posts, be sure to view the following:
+In this guide we discussed setting up call queues on Lineblocs. for other related quickstart posts, be sure to view the following:
 
 [Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
 

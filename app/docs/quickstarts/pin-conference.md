@@ -3,7 +3,7 @@
 ![Queue Max Ext Timeout](/img/frontend/docs/pinned-conference/pinned-conference.png)
 
 Pinned conferences allow you to create discussion rooms you and your team can access on demand.
-A basic pin conference usually includes an assigned number as well as a set of access pins your team members can use to access the conference room.
+A basic pin conference usually includes an assigned number and a set of access pins your team members can use to access the conferencing room.
 
 In Lineblocs you can fully create basic and advanced pinned conferences as well as customize conferencing workflows as per your needs. 
 
@@ -28,7 +28,7 @@ To update the pin numbers used for your conference, please click the "Switch" wi
 
 ## Conference Settings
 
-by default the pinned conference will wait for a moderator to join, end when the moderator leaves as well as only allow up to 10 max participants on the call at any given time.
+By default the pinned conference will wait for a moderator to join, end when the moderator leaves as well as only allow up to 10 max participants on the call at any given time.
 
 To update settings for your conference please open the PinConference widget.
 
@@ -49,7 +49,7 @@ To update settings for your conference please open the PinConference widget.
 
 ## Using the flow on a DID number
 
-to save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
+To save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
 
 To use your call flow on a DID Number:
 

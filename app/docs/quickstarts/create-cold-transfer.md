@@ -2,11 +2,11 @@
 
 ![Cold Transfer](/img/frontend/docs/cold-transfer/main.jpg)
 
-Lineblocs flow editor lets you programtically create workflows for call transfers, which can be used when you are on a call, or when you are dialing a number. A common type of call transfer is a cold transfer which transfers a call from one endpoint to another.
+Lineblocs flow editor lets you programtically create workflows for call transfers. A common type of call transfer is a cold transfer which transfers a call from one endpoint to another.
 
-Cold transfers can usually be found or integrated into a PBX. Most widely used PBX systems have a way to transfer calls between extensions, by using dialing codes or feature codes.
+Cold transfers can usually be integrated into a PBX. Most widely used PBX systems have a way to transfer calls between extensions by using dialing codes or feature codes.
 
-In this tutorial we will walk through the setup of a cold transfer using two extensions, one extension code and a custom Lineblocs flow.
+In this tutorial we will walk through the setup of a cold transfer using two extensions, one extension code, and a custom Lineblocs flow.
 
 ## Getting Started
 
@@ -85,7 +85,7 @@ When you receive calls on your DID they should be forwarded to "1000" you can pr
 
 ## Next Steps
 
-in this guide we discussed setting up cold transfers on Lineblocs. for other related quickstart posts please see guides below:
+In this guide we discussed setting up cold transfers on Lineblocs. for other related quickstart posts please see guides below:
 
 [Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
 
