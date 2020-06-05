@@ -26,8 +26,8 @@ return [
     |
     */
 
-    'url' => 'http://lineblocs.com',
-    'portal_url' => 'http://app.lineblocs.com',
+    'url' => 'https://lineblocs.com',
+    'portal_url' => 'https://app.lineblocs.com',
 
     /*
     |--------------------------------------------------------------------------
