@@ -47,7 +47,8 @@
         "google/apiclient": "^2.0",
         "league/flysystem-aws-s3-v3": "~1.0",
         "hackzilla/password-generator": "dev-master",
-        "messagebird/php-rest-api": "dev-master"
+        "messagebird/php-rest-api": "dev-master",
+        "fideloper/proxy": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
