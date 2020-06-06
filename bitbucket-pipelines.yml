@@ -26,5 +26,5 @@ pipelines:
           - mv ./doctl /usr/local/bin
           # Get the config file
           - doctl -t $DOCTL_TOKEN k8s cluster kubeconfig show ${K8S_CLUSTER_NAME} > kubeconfig.yml
-          - kubectl --insecure-skip-tls-verify --kubeconfig=kubeconfig.yml patch deployment lineblocs -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+          - kubectl --insecure-skip-tls-verify --kubeconfig=kubeconfig.yml patch deployment lineblocs-com -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
           - ./wait_for_rollout.sh
