@@ -26,8 +26,8 @@ return [
     |
     */
 
-    'url' => 'http://lineblocs.com',
-    'portal_url' => 'http://app.lineblocs.com',
+    'url' => 'https://lineblocs.com',
+    'portal_url' => 'https://app.lineblocs.com',
 
     /*
     |--------------------------------------------------------------------------
@@ -110,6 +110,7 @@ return [
     */
 
     'providers' => [
+
        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
 
         Dingo\Api\Provider\LaravelServiceProvider::class,
@@ -154,6 +155,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Cviebrock\EloquentSluggable\SluggableServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Fideloper\Proxy\TrustedProxyServiceProvider::class
 
     ],
 

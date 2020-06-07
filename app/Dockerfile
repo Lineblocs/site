@@ -34,6 +34,10 @@ RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --wi
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install mysqli
 
+RUN apt-get update && apt-get install -y zlib1g-dev libicu-dev g++
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
+
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -50,6 +54,7 @@ RUN a2enmod deflate
 # Copy existing application directory contents
 COPY . /var/www/html
 COPY apache.conf /etc/apache2/apache2.conf
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN mv .env.k8s .env
 RUN composer install --no-scripts
 RUN source .env

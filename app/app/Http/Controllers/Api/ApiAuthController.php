@@ -33,7 +33,7 @@ class ApiAuthController extends ApiController {
           $workspace = Workspace::findOrFail($id);
           return $workspace;
      }
-     public function getUser(Request $request) {
+    public function getUser(Request $request) {
           $admin = $request->header('X-Admin-Token');
           $workspaceId = $request->header('X-Workspace-ID');
           $adminThings = Config::get("admin");
@@ -42,8 +42,16 @@ class ApiAuthController extends ApiController {
                $user = User::findOrFail($workspace->creator_id);
                return $user;
           }
+          $user = NULL;
+          $headers = apache_request_headers();
+          $token = $headers['authorization'];
 
-          $user = $this->auth->user();
+           if (!empty($token)) {
+             $parts = explode(" ", $token);
+             $user = JWTAuth::authenticate($parts[1]);
+          }
+
           return $user;
      }
+
 }
