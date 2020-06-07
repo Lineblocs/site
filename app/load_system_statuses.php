@@ -5,16 +5,16 @@ use App\SystemStatusCategory;
 use App\CallRateDialPrefix;
         // outbound rates
         $cat1= SystemStatusCategory::create([
-            'name' => 'DID API availability'
+            'name' => 'DID APIs'
         ]);
         $cat2= SystemStatusCategory::create([
-            'name' => 'Partner SIP Trunking Networks'
+            'name' => 'SIP Trunking Networks'
         ]);
         $cat3= SystemStatusCategory::create([
-            'name' => 'Media Storage Uptime'
+            'name' => 'Media Storage Servers'
         ]);
         $cat4= SystemStatusCategory::create([
-            'name' => 'PoP uptime'
+            'name' => 'PoP Servers'
         ]);
 
 
