@@ -24,9 +24,9 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install -y libmcrypt-dev && \
     pecl install mcrypt-1.0.2 && \
     docker-php-ext-enable mcrypt
-    RUN apt-get update -y \
-# get SOAP client
-RUN && apt-get install -y \
+
+RUN apt-get update -y \
+  && apt-get install -y \
     libxml2-dev \
     php-soap \
   && apt-get clean -y \
