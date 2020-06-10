@@ -1,9 +1,6 @@
 FROM php:7.3.0-apache
 SHELL ["/bin/bash", "-c"]
 
-# Copy composer.lock and composer.json
-COPY composer.lock composer.json /var/www/
-
 # Set working directory
 WORKDIR /var/www/html
 
