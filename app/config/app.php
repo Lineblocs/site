@@ -155,7 +155,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Cviebrock\EloquentSluggable\SluggableServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Fideloper\Proxy\TrustedProxyServiceProvider::class
+        Fideloper\Proxy\TrustedProxyServiceProvider::class,
+        Sentry\Laravel\ServiceProvider::class
 
     ],
 
