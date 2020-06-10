@@ -25,6 +25,9 @@ RUN apt-get install -y libmcrypt-dev && \
     pecl install mcrypt-1.0.2 && \
     docker-php-ext-enable mcrypt
 
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 RUN rm -rf /etc/apt/preferences.d/no-debian-php && \
   && apt-get update -y \
   && apt-get install -y \
@@ -32,9 +35,6 @@ RUN rm -rf /etc/apt/preferences.d/no-debian-php && \
     php-soap \
   && apt-get clean -y \
   && docker-php-ext-install soap	
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
