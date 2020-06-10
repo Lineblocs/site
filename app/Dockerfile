@@ -25,7 +25,8 @@ RUN apt-get install -y libmcrypt-dev && \
     pecl install mcrypt-1.0.2 && \
     docker-php-ext-enable mcrypt
 
-RUN apt-get update -y \
+RUN rm -rf /etc/apt/preferences.d/no-debian-php && \
+  && apt-get update -y \
   && apt-get install -y \
     libxml2-dev \
     php-soap \
