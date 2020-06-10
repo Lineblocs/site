@@ -28,7 +28,7 @@ RUN apt-get install -y libmcrypt-dev && \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN rm -rf /etc/apt/preferences.d/no-debian-php && \
+RUN rm -rf /etc/apt/preferences.d/no-debian-php \
   && apt-get update -y \
   && apt-get install -y \
     libxml2-dev \
