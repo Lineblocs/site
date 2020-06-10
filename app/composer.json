@@ -6,15 +6,6 @@
     "type": "project",
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/nadirhamid/jwt-auth"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/nadirhamid/vultr-client-php"
-        },
-
-        {
              "type": "composer", 
              "url": "https://packagist.org"
         },
@@ -38,7 +29,6 @@
         "giggsey/libphonenumber-for-php": "^8.10",
         "twilio/sdk": "^5.35",
         "paypal/rest-api-sdk-php": "1.13.0",
-        "linkorb/vultr-client-php": "dev-update",
         "google/cloud": "^0.112.0",
         "michelf/php-markdown": "^1.8",
         "guzzlehttp/guzzle": "^6.2",
