@@ -4,6 +4,7 @@
 /public/recordings
 /storage/*.key
 /vendor
+/app/composer.lock
 .env
 .env.backup
 .phpunit.result.cache
