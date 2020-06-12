@@ -13,7 +13,7 @@ pipelines:
           - aws configure set aws_secret_access_key "${AWS_SECRET}"
           - aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 754569496111.dkr.ecr.ca-central-1.amazonaws.com
           # build the Docker image (this will use the Dockerfile in the root of the repo)
-          - docker build --memory=3072M -t lineblocs ./app/
+          - docker build --memory=8192M -t lineblocs ./app/
           - docker tag lineblocs:latest 754569496111.dkr.ecr.ca-central-1.amazonaws.com/lineblocs:latest
           - docker push 754569496111.dkr.ecr.ca-central-1.amazonaws.com/lineblocs:latest
         services:

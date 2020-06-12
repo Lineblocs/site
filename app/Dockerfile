@@ -61,8 +61,11 @@ COPY . /var/www/html
 COPY apache.conf /etc/apache2/apache2.conf
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN mv .env.k8s .env
-RUN php -d memory_limit=-1 /usr/local/bin/composer install
-RUN source .env
+
+# Change current user to www
+# Expose port 9000 and start php-fpm server
+
+RUN php -d memory_limit=-1 /usr/local/bin/composer install --no-scripts
 RUN php artisan key:generate
 
 # Copy existing application directory permissions
