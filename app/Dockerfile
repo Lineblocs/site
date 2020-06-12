@@ -61,7 +61,7 @@ COPY . /var/www/html
 COPY apache.conf /etc/apache2/apache2.conf
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN mv .env.k8s .env
-RUN composer install --no-scripts
+RUN php -d memory_limit=-1 /usr/local/bin/composer install
 RUN source .env
 RUN php artisan key:generate
 
