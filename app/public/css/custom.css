@@ -512,3 +512,11 @@ table {
   font-size: 22px;
   display: none;
 }
+.top-login-btn {
+  position: relative; 
+  padding: 7px; 
+  top: -6px;
+}
+.top-login-btn span {
+  font-size: 16px;
+}

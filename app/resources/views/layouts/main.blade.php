@@ -94,7 +94,7 @@ drift.load('84i5z2ttdxg5');
                                 <a href="/features">Features</a>
                             </li>
                             <li>
-                                <a href="https://app.lineblocs.com/#/login">My Account</a>
+                              <a href="https://app.lineblocs.com/#/login"><button type="submit" class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
                             </li>
                         </ul>
                     </div>
