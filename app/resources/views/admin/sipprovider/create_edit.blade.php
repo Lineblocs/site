@@ -78,7 +78,7 @@
         </div>
 
         <div class="form-group  {{ $errors->has('type_of_provider') ? 'has-error' : '' }}">
-            {!! Form::label('type_of_provider', trans("admin/sipproviders.provider_of_provider"), array('class' => 'control-label')) !!}
+            {!! Form::label('type_of_provider', trans("admin/sipproviders.type_of_provider"), array('class' => 'control-label')) !!}
             <div class="controls">
                 {!! Form::select('type_of_provider', $providerTypes, null, array('class' => 'form-control', 'id' => 'status')) !!}
                 <span class="help-block">{{ $errors->first('type_of_provider', ':message') }}</span>

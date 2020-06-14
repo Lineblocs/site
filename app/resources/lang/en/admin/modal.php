@@ -17,5 +17,7 @@ return [
     'regions' => 'Regions',
     'ratecenters' => 'Rate Centers',
     'sendemail' => 'Send Email',
-    'servers' => 'Servers'
+    'servers' => 'Servers',
+    'hosts' => 'Hosts',
+    'ip_whitelist' => 'IP Whitelist',
 ];

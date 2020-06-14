@@ -24,5 +24,6 @@ return [
     'country' => 'Country',
     'number' => 'Number',
     'provider' => 'Provider',
-    'status' => 'Status'
+    'status' => 'Status',
+    'plan' => 'Plan'
 ];

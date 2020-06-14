@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LoadSampleCalls::class);
         $this->call(PhoneDefSeeder::class);
         $this->call(LoadBasicData::class);
+        $this->call(LoadPhoneData::class);
         Model::reguard();
     }
 }
