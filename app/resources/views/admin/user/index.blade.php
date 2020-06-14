@@ -26,7 +26,8 @@
             <th>{!! trans("admin/users.first_name") !!}</th>
             <th>{!! trans("admin/users.last_name") !!}</th>
             <th>{!! trans("admin/users.email") !!}</th>
-            <th>{!! trans("admin/users.active_user") !!}</th>
+			<th>{!! trans("admin/users.active_user") !!}</th>
+            <th>{!! trans("admin/users.plan") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>
             <th>{!! trans("admin/admin.action") !!}</th>
         </tr>
@@ -54,6 +55,11 @@
 			"data": "confirmed",
 			"name": "confirmed"
 		},
+		{
+			"data": "plan",
+			"name": "plan"
+		},
+
 		{
 			"data": "created_at",
 			"name": "created_at"

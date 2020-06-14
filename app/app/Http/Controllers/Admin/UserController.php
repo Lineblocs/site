@@ -135,7 +135,7 @@ class UserController extends AdminController
      */
     public function data()
     {
-        $users = User::select(array('users.id', 'users.first_name', 'users.last_name',  'users.email', 'users.confirmed', 'users.created_at'));
+        $users = User::select(array('users.id', 'users.first_name', 'users.last_name',  'users.email', 'users.confirmed', 'users.plan', 'users.created_at'));
 
         return Datatables::of($users)
             ->edit_column('confirmed', '@if ($confirmed=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')

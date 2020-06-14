@@ -130,10 +130,11 @@ class User extends Model implements AuthenticatableContract,
     }
     public function toArray($allData=FALSE) {
         $array = parent::toArray();
-        $array['free_trial_status'] = $this->checkFreeTrialStatus();
         if (!$allData) {
           return $array;
         }
+
+        $array['free_trial_status'] = $this->checkFreeTrialStatus();
         // data was not fully queried
         //if (!isset($array['reserved_ip'])) {
           //return $array;
