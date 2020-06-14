@@ -16,5 +16,6 @@ return [
     'ports' => 'Port-In Requests',
     'regions' => 'Regions',
     'ratecenters' => 'Rate Centers',
-    'sendemail' => 'Send Email'
+    'sendemail' => 'Send Email',
+    'servers' => 'Servers'
 ];
