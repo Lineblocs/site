@@ -2,7 +2,7 @@
 
 lineblocs bills you monthly for the resources you use in numbers, calls, storage space and hosting. Monthly invoices are generated in your lineblocs dashboard and available at any time for download or viewing purposes. in this guide we discuss monthly billing, how you can manage or download your monthly invoices and how to get in touch with us about a monthly invoice.
 
-# What are you billed for
+## What are you billed for
 
 when you use lineblocs and you have an active subscription with DID numbers and call flows you are billed for the following resources:
 
@@ -26,7 +26,7 @@ below are a list of services we bill for as a monthly recurring service:
 
 1. DID numbers
 
-# managing invoices
+## Managing Invoices
 
 to view your billing invoices on lineblocs you can download monthly copies at any time. to access a monthly invoice please use steps below:
 
@@ -36,7 +36,7 @@ to view your billing invoices on lineblocs you can download monthly copies at an
 4. enter a start and end date range for your invoice
 5. Click "Download"
 
-# invoices by email
+## Receiving Invoices By Email
 
 in addition to downloading invoices using the dashboard you can also use the "Invoices By Email" feature which lets you receive an email at the 1st of every month including a PDF attachment of your invoice. to enable this feature please follow steps below:
 
@@ -46,7 +46,7 @@ in addition to downloading invoices using the dashboard you can also use the "In
 4. check "Receive monthly invoices by email"
 5. click "Save"
 
-# tracking monthly invoices
+## Tracking Monthly Invoices
 
 Your lineblocs account keeps an active record of the charges you've accumulated at all times for viewing purposes. to get an idea of your monthly spending for the current month you can always view the 3 metrics we have listed below.
 
@@ -58,12 +58,12 @@ Estimated balance: balance including charges this month.
 
 you can view these metrics at all times in Billing -> History section in your dashboard.
 
-# disputing a monthly invoice
+## Disputing Monthly Invoice
 
 if you have any queries about the amount you've been billed or would like to discuss the charges with the lineblocs team you can reach out to us any time. for more info on our contact details please refer to [Contact Us](http://lineblocs.com/contact) page
 
 
-# Next Steps
+## Next Steps
 
 in this article we discussed monthly billing. for more info on billing matters please see articles below:
 

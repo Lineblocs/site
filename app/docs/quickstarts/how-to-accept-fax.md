@@ -10,7 +10,7 @@ When you search for a DID on lineblocs you can check if the number has fax servi
 
 ![Fax example](/img/frontend/docs/fax/check.png)
 
-# Change DID action to accept fax
+## Change DID action to accept fax
 
 By default any DID you purchase on lineblocs will be set to accept voice calls. to update the number to accept fax please use the following steps:
 
@@ -21,19 +21,19 @@ By default any DID you purchase on lineblocs will be set to accept voice calls. 
 ![Accept](/img/frontend/docs/fax/accept.png)
 5. click "Save"
 
-# Viewing received Fax 
+## Viewing received Fax 
 
 By default, Lineblocs will store fax items for you as new fax messages are sent to your DID.
 
 To view a list of Fax messages you have received please go to the [Fax](https://app.linelocs.com/#/fax) section in lineblocs.
 
-# Removing fax
+## Removing fax
 
 You can also remove a Fax at any time. 
 
 To remove a Fax message please click the "Delete" icon in the Fax messages list and confirm deleting the fax item.
 
-# Next Steps
+## Next Steps
 
 In this guide we discussed how you can setup a DID to accept fax. for more related articles please see:
 

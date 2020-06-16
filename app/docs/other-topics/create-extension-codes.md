@@ -8,16 +8,16 @@ by default all media service extension codes in lineblocs can be created and cus
 
 this guide will go over how you can use lineblocs to create, manage and maintain extension codes. we will go over the steps required to add new extension codes, which extension codes come out of the box and also how you can manage extension codes using lineblocs flows.
 
-# Default Extension Codes
+## Default Extension Codes
 
 below are a line of lineblocs extension codes that are created based on the template you used to sign up with lineblocs.
 
-## Basic Call System
+### Basic Call System
 - Cold Transfers
 - Warm Transfers
 - Check Voicemail
 
-## Advanced Call System
+### Advanced Call System
 - Cold Transfers
 - Warm Transfers
 - Check Voicemail
@@ -26,10 +26,10 @@ below are a line of lineblocs extension codes that are created based on the temp
 - Speaking Clock
 - Call Monitor
 
-## Single Call System
+### Single Call System
 - Check Voicemail
 
-# Viewing Extension Codes
+## Viewing Extension Codes
 
 to view the extension codes you have setup on your account please access the following page:
 
@@ -37,7 +37,7 @@ to view the extension codes you have setup on your account please access the fol
 2. In the left menu click "Settings"
 3. click tab "Extension Codes"
 
-# Adding an Extension Code
+## Adding an Extension Code
 
 to add a new extension code please click the "Add Code" button in the Extension Codes page. you will need to give your extension code a name, code and flow. for example:
 
@@ -53,15 +53,15 @@ if you have already setup a flow you can use that or you can create a new flow f
 
 once you have added the extension code please click "Save"
 
-# Removing Extension Code
+## Removing Extension Code
 
 to remove an extension code click the "Remove" button next to the extension code and confirm deleting the extension code.
 
-# Testing extension codes
+## Testing extension codes
 
 to test an extension code please login to your extension then dial the extension code.
 
-# troubleshooting
+### Troubleshooting
 
 you can troubleshoot the code for an extension code by going to the lineblocs debugger. to view the latest warning and error logs created from your extension code please use the following steps
 
@@ -72,7 +72,7 @@ you can troubleshoot the code for an extension code by going to the lineblocs de
 
 if you need more info on debugging please have a look at the lineblocs debugging guide. [Debugging Lineblocs flows & Calls](http://linelocs.com/resources/other-topics/debugging-lineblocs)
 
-# Next Steps
+## Next Steps
 
 for related articles be sure to check out:
 

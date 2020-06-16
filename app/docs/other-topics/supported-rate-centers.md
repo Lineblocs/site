@@ -2,7 +2,7 @@
 
 below are the list of rate centers that lineblocs supports. the list below is separated by province.
 
-## British Columbia
+### British Columbia
 
 Victoria
 
@@ -26,7 +26,7 @@ Richmond
 
 West Vancouver
 
-## Alberta
+### Alberta
 
 Lethbridge
 
@@ -38,11 +38,11 @@ Edmonton
 
 Grande Prairie
 
-## Manitoba
+### Manitoba
 
 Winnipeg
 
-## Ontario
+### Ontario
 
 Sarnia
 
@@ -239,7 +239,7 @@ Lively
 Blezard Valley
 
 
-## Quebec
+### Quebec
 
 Quebec
 
@@ -443,6 +443,6 @@ Victoriaville
 
 Ste-Agathe
 
-## Nova Scotia
+### Nova Scotia
 
 Halifax

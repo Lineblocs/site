@@ -43,7 +43,8 @@ var WORDS =
 var SKIP_USERS = //Users that we do not want to unfollow (even if they are not following you back):
 [
 	//Place the user names that you want to skip here (they will not be unfollowed):
-	"mahdiyehashour1"
+	"mahdiyehashour1",
+	"idiseocontent"
 ];
 SKIP_USERS.forEach(function(value, index) { SKIP_USERS[index] = value.toLowerCase(); }); //Transforms all the user names to lower case as it will be case insensitive.
 

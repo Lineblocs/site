@@ -3,7 +3,7 @@
 if you do not want to use a number or be billed for it any longer you can choose to unrent it. lineblocs does not add any constraints for releasing numbers and lets you opt out of a number's billing cycle at any time.
 
 
-# how to unrent a number
+## Unrent A Number
 
 to initiate removal and unrenting of a number please follow steps below:
 
@@ -20,8 +20,8 @@ when you click the trash icon you will be shown a confirmation dialog. please co
 
 once you have unrented the number all of its call records and associated data will also be removed from your account. 
 
-# billing charges on unrented numbers
-
+## Discontinued Number Billing Charge
+s
 please note that billing on your number is only discontinued the 1st of the following month that you initiated the unrenting process. to help understand this concept here is an example:
 
 - unrent number on Jan 15th

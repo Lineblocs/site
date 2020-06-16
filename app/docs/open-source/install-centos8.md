@@ -8,7 +8,7 @@ in this tutorial will be going over how to install lineblocs and its minimum req
 
 by the end of this tutorial you should have a working lineblocs instance running as a linux service.
 
-# Getting Started
+## Getting Started
 
 you will need to first update the centos 8 package manager (yum), install development tools and also disable SELinux. depending on how you installed centos this may or may not have already been done already. 
 
@@ -46,7 +46,7 @@ followed by a system reboot
 reboot
 ```
 
-# installing Lineblocs
+## installing Lineblocs
 
 below we will go over how to install the base dependencies for lineblocs and then how you can run the lineblocs web installer to setup the database and configure lineblocs to work with apache and asterisk.
 
@@ -181,28 +181,28 @@ you will be then given an address to use in your browser. please go to the URL i
 
 ![step-1](/img/frontend/docs/install-centos8/step-1.png)
 
-## step 1 - requirements check
+### step 1 - requirements check
 lineblocs installer will try to check if the requirements for lineblocs are met. you should have a screen as shown below. all the requirements will need to match in order for lineblocs to be installed correctly. 
 
 ![step-2](/img/frontend/docs/install-centos8/step-2.png)
 
 if the requirements look ok please click "Start Installation"
 
-## step 2 - database configuration
+### step 2 - database configuration
 you will need to setup a database for lineblocs to work correctly. at this point in the tutorial we have already installed mariadb server as well as have setup the root account with no password. you can use the root account to create a new database called "lineblocs" with a username/password of your choice. the new database user will be assigned to the lineblocs database and also used in the lineblocs backend.
 
 below is an example of how you might want to setup the database.
 ![step-3](/img/frontend/docs/install-centos8/step-3.png)
 
-## root account configuration
+#### root account configuration
 this sets up the main admin account you will use to login to the Lineblocs portal. this is also the main account or the "super" admin account that is given all permissions in the system.
 ![step-4](/img/frontend/docs/install-centos8/step-4.png)
 
-## step 5 - Config Setup
+### step 5 - Config Setup
 some steps will be required to update the asterisk and Apache config to work with laravel. please follow steps below to complete Asterisk/Apache setup.
 ![step-5](/img/frontend/docs/install-centos8/step-5.png)
 
-## step 6 - install as linux service
+### step 6 - install as linux service
 in order to run the lineblocs backend you will need to install lineblocs as a linux service. please continue to follow steps as they are mentioned.
 ![step-6](/img/frontend/docs/install-centos8/step-6.png)
 
@@ -238,23 +238,15 @@ you can also re-run the web installer by using the shell script included in the 
 ./start_web_installer.sh
 ```
 
-## step 7 - completing installation
+### step 7 - completing installation
 once the installation and configuration is done you should be shown a message as seen below.
 ![step-7](/img/frontend/docs/install-centos8/step-8.png)
 
-# logging in the first time
+## logging in the first time
 be sure to follow the login link given in step 7 to login to lineblocs. you will need to use the account login you setup as the super admin to login.
 ![step-7](/img/frontend/docs/install-centos8/logging-in.png)
 
-
-
-
-
-
-
-
-
-# Next Steps
+## Next Steps
 
 this tutorial went over how to install lineblocs open source edition. for related articles be sure to check out the following.
 

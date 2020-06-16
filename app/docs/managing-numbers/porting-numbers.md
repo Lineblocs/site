@@ -62,7 +62,7 @@ you can also track the status of your Port-In request by accessing the [Create P
 
 ![Port Status](/img/frontend/docs/port-numbers/port-status.png)
 
-# Editing Port Request
+## Editing Port Request
 
 you may be required to edit your port-in request depending on whether more info is required about your port in number or personal information during the port-in process. to update your port-in request please use the following steps:
 
@@ -71,7 +71,7 @@ you may be required to edit your port-in request depending on whether more info 
 3. In the top right click "Port Numbers"
 4. click the pencil icon on the port request you want to edit
 
-# Next Steps
+## Next Steps
 
 in this article we discussed porting numbers. for more info on managing numbers or billing related to numbers be sure to see articles below:
 

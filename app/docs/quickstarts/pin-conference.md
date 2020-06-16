@@ -58,11 +58,11 @@ To use your call flow on a DID Number:
 3. Update the "Attached Flow" field
 4. click "Save"
 
-# Testing the flow
+## Testing the flow
 
 Your team members should now be able to join conference calls using your DID number. To test your conference as a moderator or a user you can call the DID number you setup the conference flow on.
 
-# Next Steps
+## Next Steps
 
 in this guide we discussed setting up pin based conference. for other related quickstart posts please see guides below:
 

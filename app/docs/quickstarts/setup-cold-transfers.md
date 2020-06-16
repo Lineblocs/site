@@ -39,7 +39,7 @@ To create a new lineblocs flow based on your timezone availability:
 
 ![flow select](/img/frontend/docs/macros/flow-select.png)
 
-# Adding a Macro
+## Adding a Macro
 
 To add a new macro please drag the "Macro" widget from the right pane into the flow graph.
 
@@ -49,7 +49,7 @@ To add a new macro please drag the "Macro" widget from the right pane into the f
 
 ![Macro Added](/img/frontend/docs/macros/macro-added.png)
 
-# Updating Macro
+## Updating Macro
 
 To add custom code to our macro please click the "Macro" widget and then click "Create Function" in the right pane.
 
@@ -91,7 +91,7 @@ Voice: en-US-Standard-C
 ```
 
 
-## adding a Switch widget
+## Adding a Switch widget
 
 We will add a "Switch" widget so that we can test for our time condition and go to the correct widget. 
 
@@ -99,7 +99,7 @@ To add a "Switch" widget please drag a new "Switch" widget into the flow graph. 
 
 ![Select Macro](/img/frontend/docs/macros/switch-widget-options.png)
 
-## updating switch links
+## Updating Switch Links
 
 Please go to the "Links" tab of the "HoursSwitch" widget and add the following 2 links
 
@@ -134,7 +134,7 @@ Cell to link: ClosedMessagePlayback
 The "HoursSwitch" link section should now look like the following:
 ![Select Macro](/img/frontend/docs/macros/switch-links.png)
 
-## updating the flow
+## Connecting Flow Links
 
 Next we will need to update the flow to use our widgets.
 
@@ -143,7 +143,7 @@ To make adjustments to your flow so that all of the widgets are working correctl
 Below is an example of how the final flow should look like:
 ![Select Macro](/img/frontend/docs/macros/flow-updated.png)
 
-# Using the flow on a DID number
+## Using the flow on a DID number
 
 To save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
 
@@ -154,11 +154,11 @@ To use your call flow on a DID Number:
 3. Update the "Attached Flow" field
 4. click "Save"
 
-# Testing the flow
+## Testing the flow
 
 You should be able to call your number and see your business hours check working. Your callers will hear a message when you are unavailable and they will be forwarded to you during your business hours.
 
-# Next Steps
+## Next Steps
 
 In this guide we discussed setting up macros on lineblocs. For other related quickstart posts be sure to check out:
 

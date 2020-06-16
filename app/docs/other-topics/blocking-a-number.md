@@ -5,7 +5,7 @@ tool to prevent unwanted callers from calling you.
 
 at any time you can use the blocking number feature in lineblocs to add or remove blocked numbers from your lineblocs account.
 
-# Blocking A Number
+## Blocking A Number
 
 to block a number on lineblocs please use the following steps
 
@@ -16,11 +16,11 @@ to block a number on lineblocs please use the following steps
 5. enter the number you would like to block formatted in [E.164](https://en.wikipedia.org/wiki/E.164)*
 6. click "Submit"
 
-# removing a blocked number
+## Removing a Blocked Number
 
 to remove a blocked number please click the trash icon next to the number in the "Blocked Numbers" screen then confirm deleting the number from your blocked numbers list.
 
-# Next Steps
+## Next Steps
 
 in this article we discussed how you can manage your blocked numbers on lineblocs. for related articles please see the following:
 

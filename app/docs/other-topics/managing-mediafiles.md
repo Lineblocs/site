@@ -6,7 +6,7 @@ Lineblocs media files can be used to host MP3/WAV files that you will need to us
 
 in this guide we will discuss how you can upload as well as manage Media Files in Lineblocs.
 
-# Adding a Media File
+## Adding a Media File
 
 to add a media file to lineblocs please follow steps below.
 
@@ -21,11 +21,11 @@ when you try to upload a file you have two options
 
 please click "Upload From Computer" option.
 
-# Uploading Files
+## Uploading Files
 
 in the upload screen please select a .wav or .mp3 file that is smaller than or equal to the maximum file size of 10MB and then click Upload.
 
-# Using Media File in lineblocs flows
+## Using Media File in lineblocs flows
 
 once you have uploaded a media file in lineblocs you can use it by copying its "URL".
 
@@ -34,11 +34,11 @@ once you have uploaded a media file in lineblocs you can use it by copying its "
 you can then use that URL in the lineblocs editor.
 
 
-# Removing a file
+## Removing a file
 
 to remove a media file from lineblocs please click the Trash icon next to the media file name and then confirm removing the file.
 
-# Next Steps
+## Next Steps
 
 for related articles please see the following:
 

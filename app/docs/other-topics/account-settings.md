@@ -2,7 +2,7 @@
 
 you can update your lineblocs account settings at any time. this includes updating your organization email, password and your personal contact details such as first and last name.
 
-# Update your account settings
+## Update your account settings
 
 to update your account contact and email settings please follow steps below:
 
@@ -12,7 +12,7 @@ to update your account contact and email settings please follow steps below:
 
 if you want to update your password you can do this on the same page by going to tab "Password".
 
-# Next Steps
+## Next Steps
 
 in this article we discussed managing your account settings. for related articles be sure to check out:
 

@@ -3,7 +3,7 @@
 all lineblocs accounts are capped at set usage limits based on their billing plan. usage limits define how many calls you can make/receive, how many numbers you can purchase and the amount of recording space alloted to you.
 in this guide we go over the usage limits per billing type and how you can monitor the usage on your lineblocs account.
 
-# Limits per billing plan
+## Limits per billing plan
 
 below are the usage limits offered per billing plan.
 
@@ -37,7 +37,7 @@ Recording Space: 256GB or higher
 
 Numbers: unlimited
 
-# viewing usage history
+## viewing usage history
 
 to view your current usage history and the amount of percentage you've used up please follow steps below:
 
@@ -47,7 +47,7 @@ to view your current usage history and the amount of percentage you've used up p
 
 your usage limits will be shown here for the current month. the usage limit data is automatically reset at the first of every month.
 
-# setting up usage triggers
+## setting up usage triggers
 
 you can also set up usage triggers if you want to receive an email alert when you have used up X amount of a usage item. to setup a usage trigger please follow steps below:
 
@@ -59,7 +59,7 @@ you can also set up usage triggers if you want to receive an email alert when yo
 6. set a % of the usage trigger to alert based on
 7. click save
 
-# Next Steps
+## Next Steps
 
 in this article we discussed managing your account settings. for related articles be sure to check out:
 

@@ -10,7 +10,7 @@ to access your numbers listing page please follow steps below:
 
 ![info](/img/frontend/docs/manage-numbers/dashboard-nav.png)
 
-# Editing a number
+## Editing a number
 
 you can edit a number by clicking the pencil icon in the "My Numbers" list page.
 

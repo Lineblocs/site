@@ -5,7 +5,7 @@ give them roles to do certain things in your workspace such as add extensions, r
 
 in this guide will go over how to add, update or remove workspace users from your account.
 
-# Adding a workspace member
+## Adding a workspace member
 
 to add a new workspace member to your lineblocs workspace please use the following steps:
 
@@ -14,7 +14,7 @@ to add a new workspace member to your lineblocs workspace please use the followi
 3. click option "Workspace Users"
 4. click "Add User"
 
-# creating user
+## Creating User
 
 in the workspace user create screen you can set your workspace users name, and email as well as set roles they will have in your workspace.
 
@@ -25,7 +25,7 @@ once you have added the user's info and their roles please click "Save"
 
 after you have created the user. the user the user will be sent an email with your invite. they will then need to create a password before they can login to your workspace the first time.
 
-# managing workspace users
+## Managing Workspace Users
 
 you can update or delete users from your workspace at any time. to edit a user please use the following steps:
 
@@ -40,7 +40,7 @@ to remove a user
 2. click the trash icon next to the user you wish to remove
 3. confirm removing the user
 
-# Next Steps
+## Next Steps
 
 in this article we discussed adding and managing workspace users. for related articles be sure to check out:
 
