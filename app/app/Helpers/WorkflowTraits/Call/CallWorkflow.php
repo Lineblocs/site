@@ -60,4 +60,12 @@ trait CallWorkflow {
 
         return $this->sendPaginationResults($request, $results, $paginate, new CallTransformer);
     }
+    public function updateCall(Request $request, $callId)
+    {
+        $call = Call::where('api_id', $callId)->firstOrFail();
+        $data = $request->json()->all();
+        $call->update( $data );
+        return $this->response->noContent();
+    }
+    
 }

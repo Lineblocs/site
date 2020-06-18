@@ -397,6 +397,7 @@ $api->version('v1', function($api) {
   });
   $api->group([ 'prefix' => 'call', 'namespace' => '\App\Http\Controllers\Api\Call'], function($api) {
       $api->get("/callData/{callId}", "CallController@callData");
+      $api->post("/updateCall/{callId}", "CallController@updateCall");
       $api->get("/listCalls", "CallController@listCalls");
       $api->get("/graphData", "CallController@graphData");
   });
