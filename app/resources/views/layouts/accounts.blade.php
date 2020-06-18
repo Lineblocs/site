@@ -44,6 +44,9 @@
   /* fix this i cannot find the CSS property thats changing it */
   background: #FFFFFF;
 }
+.input-box.small {
+  margin-bottom: 0px !important;
+}
   </style>
 
   <div class="login-page">

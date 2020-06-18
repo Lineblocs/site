@@ -520,3 +520,6 @@ table {
 .top-login-btn span {
   font-size: 16px;
 }
+.input-box.small {
+  margin-bottom: 0px;
+}

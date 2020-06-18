@@ -33,7 +33,17 @@ class RegisterController extends ApiAuthController
     {
         // grab credentials from the request
         $data = $request->all();
-        $exists = User::where('email', $data['email'])->first();
+        $email = $data['email'];
+        $valid = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$valid) {
+            return $this->response->array([
+            'success' => FALSE,
+            'message' => 'Email was invalid..'
+          ]);
+
+
+        }
+        $exists = User::where('email', $email)->first();
         if ($exists) {
           return $this->response->array([
             'success' => FALSE,

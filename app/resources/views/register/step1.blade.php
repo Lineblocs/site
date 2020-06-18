@@ -39,7 +39,7 @@
 
                         <!-- <input type="text" placeholder="Company Email Address"> -->
                         <div class="input-field">
-                            <input name="email" id="email" type="text" class="validate" required="">
+                            <input name="email" id="email" type="email" class="validate" required="">
                             <label for="email">Company Email Address</label>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="field-input">
-                    <div class="input-box">
+                    <div class="input-box small">
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23">
                             <g fill="#317780" fill-rule="nonzero">
                                 <circle cx="15.154" cy="15.513" r="1" />
@@ -90,10 +90,15 @@
                 </div>
 
                 <div>
-                    <label>
-                    <input type="checkbox" id="acceptTerms"></input>
+                    <label style="display: none;">
+                    <input type="checkbox" id="acceptTerms" checked="checked"></input>
                         <span>I accept the <a target="_blank" href="https://lineblocs.com/pages/tos">Terms Of Service</a></span>
+                 
                     </label>
+                        <small style="font-size: 10px;">By clicking the button below you agree to our <a target="_blank" href="https://lineblocs.com/pages/tos">ToS (Terms Of Service)</a></small>
+                        <br/>
+                        <br/>
+                 
                 </div>
                 <div class="login-btn">
                             <button>
