@@ -16,7 +16,7 @@ class CreateCallTags extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('call_id')->unsigned();
-            $table->foreign('call_id')->references('id')->on('recordings');
+            $table->foreign('call_id')->references('id')->on('calls');
             $table->string('tag');
         });
     }
