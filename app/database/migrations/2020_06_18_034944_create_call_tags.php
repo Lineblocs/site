@@ -15,8 +15,6 @@ class CreateCallTags extends Migration
         Schema::create('call_tags', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->increments('id');
-            $table->timestamps();
             $table->integer('call_id')->unsigned();
             $table->foreign('call_id')->references('id')->on('recordings');
             $table->string('tag');
