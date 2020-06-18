@@ -14,7 +14,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        \URL::forceSchema('https');
+
+        $k8s = (int) env('APP_ON_K8S');
+        if ( $k8s ) {
+            \URL::forceSchema('https');
+        }
     }
 
     /**

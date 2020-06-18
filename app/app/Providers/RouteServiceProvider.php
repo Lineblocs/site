@@ -6,6 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use \App\User;
 use \App\PortNumber;
+use \App\DIDNumber;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
 
@@ -43,6 +44,7 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot($router);
        \Route::model('user', User::class);
        \Route::model('port', PortNumber::class);
+       \Route::model('did', DIDNumber::class);
        \Route::model('provider', SIPProvider::class);
        \Route::model('host', SIPProviderHost::class);
        \Route::model('ip', SIPProviderWhitelistIp::class);

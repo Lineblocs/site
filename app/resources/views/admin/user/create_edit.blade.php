@@ -7,6 +7,9 @@
             trans("admin/modal.general") }}</a></li>
     <li class=""><a href="#tab-workspaces" data-toggle="tab"> {{
             trans("admin/modal.workspaces") }}</a></li>
+    <li class=""><a href="#tab-dids" data-toggle="tab"> {{
+            trans("admin/modal.dids") }}</a></li>
+
     <li class=""><a href="#tab-billing" data-toggle="tab"> {{
 			trans("admin/modal.billing") }}</a></li>
     <li class=""><a href="#tab-ports" data-toggle="tab"> {{
@@ -176,6 +179,32 @@ true)) !!}
                 <tr>
                     <td>{{$workspace->name}}</td>
                     <td>{{$workspace->creator_email}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <!-- DIDs tab -->
+    <div class="tab-pane" id="tab-dids">
+        <h5>DID Numbesr</h5>
+        <table class="table stripped">
+            <thead>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Active</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                @foreach ($dids as $did)
+                <tr>
+                    <td>{{$did->number}}</td>
+                    <td>{{$did->name}}</td>
+                    <td>{{$did->active}}</td>
+                    <td>{{$did->created_at}}</td>
+                    <td>
+                        <a href="/admin/user/{{$user->id}}/did/{{$did->id}}/edit" class="btn btn-primary">Edit</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

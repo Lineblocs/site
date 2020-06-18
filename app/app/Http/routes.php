@@ -46,11 +46,6 @@ Route::get('/status/{categoryId}', 'HomeController@status_category');
 Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //Route::post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
 
-// Sentry testing
-Route::get('/debug-sentry', function () {
-    throw new Exception('My first Sentry error!');
-});
-
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
@@ -69,8 +64,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::post('user/{user}/send_email', 'Admin\UserController@send_email');
     Route::get('user/{user}/port/{port}/edit', 'Admin\UserController@edit_port_req');
     Route::put('user/{user}/port/{port}/edit', 'Admin\UserController@edit_port_req_do');
+    Route::get('user/{user}/did/{did}/edit', 'Admin\UserController@edit_did');
+    Route::put('user/{user}/did/{did}/edit', 'Admin\UserController@edit_did_do');
     Route::resource('user', 'Admin\UserController');
     Route::resource('port', 'Admin\UserController');
+    Route::resource('did', 'Admin\UserController');
     # SIPProviders
     Route::get('provider/data', 'Admin\SIPProviderController@data');
     Route::get('provider/{provider}/show', 'Admin\SIPProviderController@show');

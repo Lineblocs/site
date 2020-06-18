@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\User;
-use App\DIDNumber;
 use App\Workspace;
 use App\PortNumber;
+use App\DIDNumber;
 use App\Http\Requests\Admin\UserRequest;
 use App\Helpers\MainHelper;
 use App\Helpers\AdminUIHelper;
@@ -78,12 +78,18 @@ class UserController extends AdminController
         $ports->leftJoin('workspaces', 'workspaces.id', '=', 'port_numbers.workspace_id');
         $ports->where('workspaces.creator_id', '=', $user->id);
          $ports = $ports->get();
-         $example = 
+
+        $dids =  DIDNumber::select(DB::raw("did_numbers.*"));
+        $dids->leftJoin('workspaces', 'workspaces.id', '=', 'did_numbers.workspace_id');
+        $dids->where('workspaces.creator_id', '=', $user->id);
+         $dids = $dids->get();
+
+
          $billingHistory = MainHelper::getBillingHistory($user);
          $billingInfo = $user->getBillingInfo();
          $countries = MainHelper::getCountries();
          $cannedEmails = AdminUIHelper::getCannedEmails();
-        return view('admin.user.create_edit', compact('user', 'numbers', 'workspaces', 'billingHistory', 'billingInfo', 'countries', 'ports', 'cannedEmails'));
+        return view('admin.user.create_edit', compact('user', 'numbers', 'workspaces', 'billingHistory', 'billingInfo', 'countries', 'ports', 'cannedEmails', 'dids'));
     }
 
     /**
@@ -207,7 +213,15 @@ class UserController extends AdminController
         }
         $port->update($request->all());
     }
-
+   public function edit_did(User $user, DIDNumber $did)
+    {
+        return view('admin.user.edit_did', compact('user', 'did'));
+    }
+   public function edit_did_do(Request $request, User $user, DIDNumber $did)
+    {
+        $data = $request->all();
+        $did->update($request->all());
+    }
     private function createLBSignature($user) {
 
         $baseURL = Config::get("app.url")."/email-images/signature/";

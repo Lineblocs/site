@@ -14,8 +14,8 @@
         <meta name="description"
               content="Lorem ipsum dolor sit amet, nihil fabulas et sea, nam posse menandri scripserit no, mei."/>
     @show
-    <link href="{{ secure_asset('css/admin.css') }}" rel="stylesheet">
-    <script src="{{ secure_asset('js/admin.js') }}"></script>
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/admin.js') }}"></script>
     @yield('styles')
 </head>
 <body>
