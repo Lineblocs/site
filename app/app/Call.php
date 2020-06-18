@@ -7,7 +7,7 @@ use App\ApiResource;
 use App\Helpers\MainHelper;
 
 class Call extends ApiResource {
-  protected $dates = ['created_at', 'updated_at', 'started_time', 'ended_tiem'];
+  protected $dates = ['created_at', 'updated_at', 'started_at', 'ended_at'];
 
   protected $guarded  = array('id');
   public static $apiPrefix = "call";
