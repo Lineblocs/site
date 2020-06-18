@@ -12,6 +12,8 @@ final class NamecheapHelper {
     $sld = "lineblocs";
     $tld = " com";
     $info = Config::get("namecheap");
+    $dns = Config::get("dns");
+    $ingress = $dns['ingress'];
     $sandbox = FALSE;
     $namecheap = new namecheap([
         'api_user' => $info['api_user'],
@@ -23,38 +25,43 @@ final class NamecheapHelper {
         [
           'host' => '@',
           'type' => 'A',
-          'address' => '45.76.62.46',
+          'address' => $ingress,
           'ttl' => '60'
       ],
 
        [
           'host' => 'app',
           'type' => 'A',
-          'address' => '45.76.62.46',
+          'address' => $ingress,
           'ttl' => '60'
       ],
 
        [
           'host' => 'editor',
           'type' => 'A',
-          'address' => '45.76.62.46',
+          'address' => $ingress,
           'ttl' => '60'
       ],
 
       [
           'host' => 'prv',
           'type' => 'A',
-          'address' => '45.76.62.46',
+          'address' => $ingress,
           'ttl' => '60'
       ],
 
       [
           'host' => 'mediafiles',
           'type' => 'A',
-          'address' => '45.76.62.46',
+          'address' => $ingress,
+          'ttl' => '60'
+      ],
+      [
+          'host' => 'phpmyadmin',
+          'type' => 'A',
+          'address' => $ingress,
           'ttl' => '60'
       ]
-
     ];
     //sendgrid
     $baseRecords[] = [
