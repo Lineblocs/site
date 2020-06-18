@@ -629,4 +629,16 @@ final class MainHelper {
 
     }
   }
+
+  public static function upgradeMembership($user, $workspace, $newMembership='') {
+        $mail = Config::get("mail");
+        $data = [];
+        Mail::send('emails.upgrade_membership', $data, function ($message) use ($user, $workspace, $mail, $newMembership) {
+            $message->to($user->email);
+            $subject = sprintf("Lineblocs Membership upgraded to %s", $update->title);
+            $message->subject($subject);
+            $from = $mail['from'];
+            $message->from($from['address'], $from['name']);
+        });
+  }
 }

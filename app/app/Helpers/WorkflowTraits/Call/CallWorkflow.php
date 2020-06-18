@@ -35,12 +35,29 @@ trait CallWorkflow {
     }
     public function listCalls(Request $request)
     {
+        DB::connection()->enableQueryLog();
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
-        \Log::info('getting calls for user ' . $user->id);
-        $calls = Call::where('user_id', $user->id);
+        $calls = Call::select(DB::raw("DISTINCT(calls.id), calls.*, calls.from AS call_from, calls.to AS call_to, calls.status AS call_status, calls.direction AS call_direction, (SELECT GROUP_CONCAT(call_tags.tag) FROM call_tags WHERE call_tags.call_id = calls.id) AS tags"));
+
+        $calls->leftJoin('calls', 'calls.id', '=', 'calls.call_id');
+        $calls->leftJoin('call_tags', 'call_tags.call_id', '=', 'calls.id');
+        $calls->where('calls.user_id', '=', $user->id);
+        $search = $request->get("tags");
+        if ( $search ) {
+           \Log::info("tags are: " . $search);
+           $splitted = explode(",", $search);
+          $count = count($splitted);
+            foreach ($splitted as $tag) {
+              //$calls->whereRaw("FIND_IN_SET(\"$tag\", \"1000,1001,voicemail\") > 0");
+              //$calls->whereRaw("FIND_IN_SET(\"$tag\", tags) > 0");
+              $calls->whereRaw("FIND_IN_SET(\"$tag\", (SELECT GROUP_CONCAT(call_tags.tag) FROM call_tags WHERE call_tags.call_id = calls.id)) > 0");
+            }
+        }
         MainHelper::addSearch($request, $calls, ['from', 'to', 'status', 'direction']);
-        return $this->sendPaginationResults($request, $calls, $paginate, new CallTransformer);
-        //return $this->response->paginator($calls->paginate($paginate), new CallTransformer);
+        \Log::info("query: " . $calls->toSql());
+        $results = $calls->paginate($paginate);
+
+        return $this->sendPaginationResults($request, $results, $paginate, new CallTransformer);
     }
 }

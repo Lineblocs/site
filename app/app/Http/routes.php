@@ -318,6 +318,7 @@ $api->version('v1', function($api) {
   $api->post('startDeploy', '\App\Http\Controllers\MergedController@startDeploy');
 
   $api->post('deleteAll', '\App\Http\Controllers\MergedController@deleteAll');
+  $api->post('upgradeMembership', '\App\Http\Controllers\MergedController@upgradeMembership');
 
   $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
     $api->post('saveWidget', 'WidgetTemplateController@saveWidget');

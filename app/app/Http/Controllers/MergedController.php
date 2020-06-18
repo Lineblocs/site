@@ -508,6 +508,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->array(Workspace::findOrFail($workspace->id)->toArray());
     }
 
+  public function upgradeMembership(Request $request) {
+      $user = $this->getUser($request);
+      $workspace =$this->getWorkspace($request);
+      $data = $request->json()->all();
+      $membership = $data['new_membership'];
+      MainHelper::upgradeMembership($user, $workspace, $membership);
+  }
 
 
 
