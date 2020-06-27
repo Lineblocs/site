@@ -15,7 +15,7 @@
                         <a href="/resources/">&lt;&lt; Back to resources</a>
                         <h2>Search results for "{{$search}}"</h2>
                         @foreach ($results as $result)
-                            <div class="card horizontal">
+                            <div class="card horizontal-rounded">
                                 <div class="card-stacked">
                                     <div class="card-content">
                                         <h2>

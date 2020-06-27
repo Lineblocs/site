@@ -546,3 +546,13 @@ section.gray {
 .card.rounded {
   border-radius: 12px;
 }
+
+.card.horizontal-rounded {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border: 1px solid #CCCCCC;
+  border-radius: 12px;
+}
+.hide {
+  display: none;
+}

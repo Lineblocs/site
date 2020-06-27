@@ -16,10 +16,13 @@
             </div>
             <div class="col s4 related-bar">
                 <div class="inner">
+                    <div class="side-block hide">
                     <h3>On This Page</h3>
                     <hr/>
                     <ul id="onThisPage" class="related-items">
                     </ul>
+                </div>
+                    <div class="side-block">
                     <h3>Related Items</h3>
                     <hr/>
                     <ul class="related-items">
@@ -29,7 +32,8 @@
                         </li>
                     @endforeach
                     </ul>
-                <div class="card horizontal">
+                </div>
+                <div class="card horizontal-rounded">
                     <div class="card-stacked">
                         <div class="card-content">
                             <h5>

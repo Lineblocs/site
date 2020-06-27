@@ -11,7 +11,7 @@
     </center>
     <div class="row">
       <div class="col s4">
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
               <h3>Fully Featured</h3>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="col s4">
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
               <h3>Reliable</h3>
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="col s4">
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
               <h3>SIP trunking</h3>
