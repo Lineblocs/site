@@ -6,7 +6,7 @@
     <h1>FAQs</h1>
     <ul>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>What does it cost to create a Lineblocs account ?</h2>
@@ -21,7 +21,7 @@
         </div>
       </li>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>Which countries do you offer services for ?</h2>
@@ -34,7 +34,7 @@
         </div>
       </li>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>Is lineblocs a CPaaS ?</h2>
@@ -50,7 +50,7 @@
         </div>
       </li>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>Can I port my phone number to lineblocs ?</h2>
@@ -69,7 +69,7 @@
         </div>
       </li>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>Does lineblocs offer an API like twilio or plivo ?</h2>
@@ -86,7 +86,7 @@
         </div>
       </li>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>Does lineblocs offer toll free numbers ?</h2>
@@ -99,14 +99,14 @@
         </div>
       </li>
       <li>
-        <div class="card horizontal">
+        <div class="card horizontal-rounded">
           <div class="card-stacked">
             <div class="card-content">
               <h2>Does lineblocs offer SMS services ?</h2>
               <p>
                 no we do not currently have any SMS service. our service only supports voice
               </p </div> </div> </div> </li> <li>
-              <div class="card horizontal">
+              <div class="card horizontal-rounded">
                 <div class="card-stacked">
                   <div class="card-content">
                     <h2>Do lineblocs services include fax and IM ?</h2>
