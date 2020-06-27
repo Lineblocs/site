@@ -318,6 +318,15 @@ table {
     padding: 70px 0;
     text-align: center;
     color: #0a1247; }
+  .service .serviceheading2 {
+    padding: 70px 0 0px;
+    text-align: center;
+    color: #0a1247; }
+  .service .serviceinfo {
+    margin: 0;
+    text-align:center;
+  }
+
 
 .btn-custom.service-btn {
   color: #fff;
@@ -522,4 +531,18 @@ table {
 }
 .input-box.small {
   margin-bottom: 0px;
+}
+.per-month {
+  font-size: 10px;
+}
+.dimmed {
+  color: darkGray;
+  text-decoration: line-through;
+}
+section.gray {
+  background: #F5F5F5; 
+  padding-top: 100px;
+}
+.card.rounded {
+  border-radius: 12px;
 }

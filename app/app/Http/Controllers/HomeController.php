@@ -49,6 +49,11 @@ class HomeController extends BaseController {
   }
   public function pricing(Request $request)
   {
+    return view('pages.pricing', []);
+  }
+
+  public function rates(Request $request)
+  {
     $content = [
       'main' => [
         'heading' => 'Voice pricing',
@@ -327,5 +332,4 @@ class HomeController extends BaseController {
     return view('status.update', compact('category', 'update'));
 
   }
-
 }

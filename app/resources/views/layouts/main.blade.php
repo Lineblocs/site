@@ -87,11 +87,14 @@ drift.load('84i5z2ttdxg5');
                     </div>
                     <div class="menu">
    <ul>
-                            <li>
-                                <a href="/resources">Resources</a>
+                          <li>
+                                <a href="/pricing">Pricing</a>
+                            </li>
+                                <li>
+                                <a href="/features">Features</a>
                             </li>
                             <li>
-                                <a href="/features">Features</a>
+                                <a href="/resources">Resources</a>
                             </li>
                             <li>
                               <a href="https://app.lineblocs.com/#/login"><button type="submit" class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>

@@ -10,6 +10,7 @@ Route::get('contact', 'HomeController@contact');
 Route::post('contactSubmit', 'HomeController@contactSubmit');
 Route::get('login', 'HomeController@login');
 Route::get('pricing', 'HomeController@pricing');
+Route::get('rates', 'HomeController@rates');
 Route::get('faqs', 'HomeController@faqs');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
 Route::get('/pages/tos', 'PagesController@termsOfService');
