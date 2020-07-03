@@ -104,7 +104,6 @@ class User extends Model implements AuthenticatableContract,
             ]
 
         ];
-        $info['limits'] = $this->getLimits();
         return $info;
 
 
