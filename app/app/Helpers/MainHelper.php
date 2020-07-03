@@ -52,16 +52,16 @@ final class MainHelper {
   public static function formatNumber($number, $places=2) {
       return number_format((float)$number, $places, '.', '');
   }
-  public static function checkLimit($user, $type) {
-    $limits = $user->getLimits();
+  public static function checkLimit($workspace, $user, $type) {
+    $info =  $workspace->getPlanInfo();
     if ($type == "numbers") {
-        $count = DIDNumber::where('user_id', '=', $user->id)->count();
-        if ($count >= $limits['numbers']) {
-          return TRUE;
-        }
+        $count = DIDNumber::where('workspace_id', '=', $user->id)->count();
+        return FALSE;
+
     } elseif ($type == "extensions") {
         $count = Extension::where('user_id', '=', $user->id)->count();
-        if ($count >= $limits['extensions']) {
+        $limit =  $info['extensions'];
+        if ($count >= $limit) {
           return TRUE;
         }
    }

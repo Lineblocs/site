@@ -34,6 +34,10 @@ class Workspace extends Model {
   public function sipURL() {
     return sprintf("%s.lineblocs.com", $this->name);
   }
+  public function getPlanInfo() {
+    $plans = \Config::get("service_plans");
+    return $plans[ $this->plan ];
+  }
 
 
       

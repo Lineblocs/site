@@ -25,6 +25,7 @@ use App\Workspace;
 use App\WorkspaceUser;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
+use App\PlanUsagePeriod;
 
 class RegisterController extends ApiAuthController
 {
@@ -275,6 +276,11 @@ class RegisterController extends ApiAuthController
         'name' => $name,
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
+        'plan' => 'trial'
+      ]);
+      PlanUsagePeriod::create([
+        'workspace_id' => $workspace->id,
+        'plan' => 'trial'
       ]);
       //create caller id
       VerifiedCallerId::create([

@@ -8,6 +8,7 @@ use App\UserDebit;
 use App\DIDNumber;
 use App\Recording;
 use App\Fax;
+use App\PlanUsagePeriod;
 use DateTime;
 use Config;
 
@@ -66,6 +67,9 @@ class MonthlyBillCommand extends Command
         //$users = User::where('admin', '=', '0')->get();
         $users = User::where('admin', '=', '0')->where('email', '=', 'new-user-100@infinitet3ch.com')->get();
         foreach ($users as $user) {
+          $workspace = Workspace::where('creator_id', $user->id)->firstOrFail();
+          $periods = PlanUsagePeriod::where('workspace_id', $workspace->id)->where('active', '1')->firstOrFail();
+
           //$costs = $this->calculateMonthlyCosts($user);
           $costs = 0;
           $callTolls = 0;

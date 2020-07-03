@@ -113,17 +113,17 @@ class User extends Model implements AuthenticatableContract,
       //return sprintf("%s:%s", $this->ip_address, $this->sip_port);
       return sprintf("%s.lineblocs.com", $this->container_name);
     }
-    public function canBuyNumber($user, $number, $cost) {
-      $limit = MainHelper::checkLimit($user, "numbers");
+    public function canBuyNumber($workspace, $user, $number, $cost) {
+      $limit = MainHelper::checkLimit($workspace, $user, "numbers");
       if ($limit) {
-        if ($this->trial_mode) {
+        if ($workspace->plan == 'trial') {
           return array(FALSE, "Trial accounts cannot buy more than 1 number");
         } else {
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
       $balance = $this->getBillingInfo();
-      if ($balance['remainingBalance']<=$cost && !$this->trial_mode) {
+      if ($balance['remainingBalance']<=$cost && $workspace->plan != 'trial') {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }
       return array(TRUE, "");

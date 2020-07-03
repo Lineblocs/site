@@ -1,27 +1,51 @@
 <?php
 
+use App\Helpers\PlanHelper;
 return [
-  'trial' => [
-    'ports' => 25,
-    'extensions' => 10,
-    'recording_space' => '1024MB',
-    'numbers' => 1,
-    'call_duration' => '10 minutes',
-  ],
-  'standard' => [
-    'ports' => 50,
-    'extensions' => 100,
-    'recording_space' => '10240MB',
-    'numbers' => 25,
-    'call_duration' => 'Unlimited'
-  ],
-  'premium' => [
-    'ports' => 200,
-    'extensions' => 500,
-    'recording_space' => '100000MB',
-    'numbers' => 100,
-    'call_duration' => 'Unlimited'
-  ]
+  'pay-as-you-go' => PlanHelper::create_plan(),
+  'starter' => PlanHelper::create_plan([
+    'minutes_per_month' => 200,
+    'recording_space' => PlanHelper::gb_to_kb( 2 ),
+    'im_integrations' => TRUE,
+    'productivity_integrations' => TRUE,
+  ]),
+  'pro' => PlanHelper::create_plan([
+    'minutes_per_month' => 250,
+    'recording_space' => PlanHelper::gb_to_kb( 32 ),
+    'extensions' => 25,
+    'fax' => NULL,
 
+    'im_integrations' => TRUE,
+    'productivity_integrations' => TRUE,
+    'voice_analytics' => TRUE,
+    'fraud_protection' => TRUE,
+    'crm_integrations' => TRUE,
+    'programmable_toolkit' => TRUE,
+    'sso' => TRUE,
+    'provisioner' => TRUE,
+    'vpn' => TRUE,
+    'multiple_sip_domains' => TRUE,
+    'bring_carrier' => TRUE
+  ]),
+  'ultimate' => PlanHelper::create_plan([
+    'minutes_per_month' => 500,
+    'recording_space' => PlanHelper::gb_to_kb( 128 ),
+    'extensions' => 100,
+    'fax' => NULL,
+    'im_integrations' => TRUE,
+    'productivity_integrations' => TRUE,
+    'voice_analytics' => TRUE,
+    'fraud_protection' => TRUE,
+    'crm_integrations' => TRUE,
+    'programmable_toolkit' => TRUE,
+    'sso' => TRUE,
+    'provisioner' => TRUE,
+    'vpn' => TRUE,
+    'multiple_sip_domains' => TRUE,
+    'bring_carrier' => TRUE,
+    'call_center' => TRUE,
+    '247_support' => TRUE,
+    'ai_calls' => TRUE
+  ])
 
 ];

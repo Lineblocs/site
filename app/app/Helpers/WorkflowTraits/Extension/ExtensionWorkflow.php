@@ -29,7 +29,9 @@ trait ExtensionWorkflow {
         $data = $request->only('username', 'secret', 'caller_id', 'flow_id', 'tags');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
-        if (MainHelper::checkLimit($user, "extensions")) {
+        $info = $workspace->getPlanInfo();
+
+        if (MainHelper::checkLimit($workspace, $user, "extensions")) {
           return $this->response->error('Cannot create extension because you have reached the extensions limit on your plan', 404);
         }
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'create_extension')) {

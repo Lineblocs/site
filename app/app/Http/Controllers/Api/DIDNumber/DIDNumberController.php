@@ -56,7 +56,7 @@ class DIDNumberController extends ApiAuthController {
         if ($type=='local') {
             $region = $data['region'];
         }
-        list($buying, $message) = $user->canBuyNumber($user, $number, $cost);
+        list($buying, $message) = $user->canBuyNumber($workspace, $user, $number, $cost);
         if (!$buying) {
           return $this->response->array(['success' => FALSE, 'message' => "Cannot buy number because: " . $message]);
         }
