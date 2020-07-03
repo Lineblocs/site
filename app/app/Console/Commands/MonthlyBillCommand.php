@@ -67,16 +67,21 @@ class MonthlyBillCommand extends Command
         //$users = User::where('admin', '=', '0')->get();
         $users = User::where('admin', '=', '0')->where('email', '=', 'new-user-100@infinitet3ch.com')->get();
         foreach ($users as $user) {
+
           $workspace = Workspace::where('creator_id', $user->id)->firstOrFail();
           $periods = PlanUsagePeriod::where('workspace_id', $workspace->id)->where('active', '1')->firstOrFail();
+          $plan = $plans[ $workspace->plan ];
 
           //$costs = $this->calculateMonthlyCosts($user);
           $costs = 0;
+          $membershipCosts = 0;
           $callTolls = 0;
           $recordingCosts = 0;
           $faxCosts = 0;
           $monthlyNumberRentals =  0;
           $balance = $user->getBillingInfo();
+          $plans = Config::get("service_plans");
+          $membershipCosts = $plan['per_month'];
           $invoiceDesc=  sprintf("LineBlocs invoice for %s", $balance['thisInvoiceDue']);
           $debits = UserDebit::where('user_id', '=',$user->id)
               ->whereBetween('created_at', [$monthStart->format('Y-m-d H:i:s'), $monthLast->format('Y-m-d H:i:s')])->get();
@@ -85,10 +90,32 @@ class MonthlyBillCommand extends Command
           echo var_dump($balance);
           echo "invoice desc is: " . $invoiceDesc. PHP_EOL;
 
+          $usedMonthlyMinutes = $plan['minutes_per_month'];
           foreach ($debits as $debit) {
             echo var_dump($debit);
             if ($debit->source=="CALL") {
-              $callTolls = $callTolls + $debit->cents;
+              $call = Call::find($debit->module_id);
+              $duration = $call->getDuration();
+              $minutes = $duration / 60;
+              $change = $usedMonthlyMinutes - $minutes;
+              $percentOfDebit = 1.0;
+              //when total goes below 0, only change the amount that went below 0
+              if ($usedMonthlyMinutes > 0 && $change < 0) {
+                //$change =  -5;
+                //$usedMonthlyMinutes =  10;
+                $positive = abs($change);
+
+                $set1 = $usedMonthlyMinutes + $positive;
+                $percentOfDebit = $set1 / $positive;
+                $percentOfDebit = (float)(sprintf(".%d", $percentOfDebit));
+                $centsToCharge = $debit->cents * $percentOfDebit;
+                $callTolls = $callTolls + $centsToCharge;
+              } elseif ($usedMonthlyMinutes <= 0) { 
+                $callTolls = $callTolls + $debit->cents;
+              } elseif ($usedMonthlyMinutes > 0 && $change >= 0) {
+                $callTolls = $callTolls;
+              }
+              $usedMonthlyMinutes = $usedMonthlyMinutes - $minutes;
             }
             if ($debit->source=="NUMBER_RENTAL") {
               $number = DIDNumber::find($debit->module_id);

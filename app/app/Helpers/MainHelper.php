@@ -64,6 +64,7 @@ final class MainHelper {
         if ($count >= $limit) {
           return TRUE;
         }
+      }
    }
    return FALSE;
   }
