@@ -65,9 +65,8 @@ final class MainHelper {
           return TRUE;
         }
       }
+    return FALSE;
    }
-   return FALSE;
-  }
   public static function toE164($number) {
       $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
       $numberProto = $phoneUtil->parse($number, "US");
