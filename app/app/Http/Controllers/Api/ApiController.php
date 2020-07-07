@@ -76,8 +76,8 @@ class ApiController extends Controller {
     }
 
     public function errorInternal(Request $request, $message='') {
-          $user = $this->getUser( $request );
-          $workspace = $this->getWorkspace( $request );
+          $user = $this->getUser( $request, TRUE );
+          $workspace = $this->getWorkspace( $request, TRUE );
           $params = [
                'message' => $message
           ];

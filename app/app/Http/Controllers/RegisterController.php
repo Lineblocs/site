@@ -237,7 +237,6 @@ class RegisterController extends ApiAuthController
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });
-          $workspace = Workspace::where('creator_id', '=', $user->id)->first();
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
         }
       return $this->response->array(['success' => FALSE]);

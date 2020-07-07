@@ -28,18 +28,26 @@ class ApiAuthController extends ApiController {
           }
      }
 
-     public function getWorkspace(Request $request) {
+     public function getWorkspace(Request $request, $soft=FALSE) {
           $id = $request->header('X-Workspace-ID');
-          $workspace = Workspace::findOrFail($id);
+          if ( $soft ) {
+               $workspace = Workspace::find($id);
+          } else {
+               $workspace = Workspace::findOrFail($id);
+          }
           return $workspace;
      }
-    public function getUser(Request $request) {
+    public function getUser(Request $request, $soft=FALSE) {
           $admin = $request->header('X-Admin-Token');
           $workspaceId = $request->header('X-Workspace-ID');
           $adminThings = Config::get("admin");
           if ( !empty( $admin ) && $admin == $adminThings['frontend_token']) {
                $workspace = Workspace::findOrFail($workspaceId);
-               $user = User::findOrFail($workspace->creator_id);
+               if ($soft) {
+                    $user = User::find($workspace->creator_id);
+               } else {
+                    $user = User::findOrFail($workspace->creator_id);
+               }
                return $user;
           }
           $user = NULL;

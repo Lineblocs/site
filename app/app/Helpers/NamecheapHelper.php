@@ -161,7 +161,7 @@ final class NamecheapHelper {
     //echo var_dump($nc);
     $result = $namecheap->dnsSetHosts("lineblocs.com", $nc);
     if (!$result) {
-      Log::error( "error occured: " . $namecheap->Error);
+      Log::error( "NAMECHEAP error occured: " . $namecheap->Error);
       return FALSE;
     }
     return TRUE;
