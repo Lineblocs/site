@@ -176,7 +176,7 @@ class RegisterController extends ApiAuthController
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
         $plans = Config::get("service_plans");
-        $trial = $plans['trial'];
+        $plan = $plans[$data['plan']];
         $region = "ca-central-1";
         if ($user->confirmed) {
           $info = MainHelper::getHostIPForUser($region, $user);
@@ -189,7 +189,7 @@ class RegisterController extends ApiAuthController
           */
 
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
-          $result = PBXServerHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo'], $trial['ports']/** needed ports **/);
+          $result = PBXServerHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo']);
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }

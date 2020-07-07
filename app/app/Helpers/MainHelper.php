@@ -284,7 +284,6 @@ final class MainHelper {
     foreach ($data['extension_codes'] as $extensionCode) {
       $args = array_merge( $baseParams, $extensionCode );
       foreach ($createdFlows as $flow) {
-        echo var_dump($args);
         if ($flow->name == $args['flow_name']) {
           $args['flow_id'] = $flow->id;
           unset($args['flow_name']);

@@ -30,7 +30,7 @@ final class PBXServerHelper {
       return sprintf("http://%s:8080", $ip) . $endpoint;
   }
 
-  public static function create($user,$workspace, $region, $proxyInfo, $hostInfo,  $reservedInfo="", $neededPorts=0)
+  public static function create($user,$workspace, $region, $proxyInfo, $hostInfo,  $reservedInfo="")
   {
     $url = self::serverURL($hostInfo['publicIp'], "/create");
     PBXServerHelper::addUserToProxy($user->toArray(), $workspace->toArray());
