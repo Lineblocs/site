@@ -462,7 +462,7 @@ $api->version('v1', function($api) {
 
       $api->get("/listCards", "CardController@listCards");
       $api->post("/addCard", "CardController@addCard");
-      $api->put("/setPrimary/{cardId}", "CardController@addCard");
+      $api->put("/setPrimary/{cardId}", "CardController@setPrimary");
       $api->delete("/deleteCard/{cardId}", "CardController@deleteCard");
   });
   $api->group([ 'prefix' => 'workspaceUser', 'namespace' => '\App\Http\Controllers\Api\WorkspaceUser'], function($api) {

@@ -40,7 +40,8 @@ class CardController extends HasStripeController {
             'last_4' => $data['last_4'],
             'stripe_id' => $card->id,
             'user_id' => $user->id,
-            'workspace_id' => $workspace->id
+            'workspace_id' => $workspace->id,
+            'issuer' => $card->brand
         ];
         if ( count( $all ) == 0 ) { // set first as primary
             $params['primary']=TRUE;
