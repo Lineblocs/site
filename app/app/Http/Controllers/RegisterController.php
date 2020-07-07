@@ -73,7 +73,8 @@ class RegisterController extends ApiAuthController
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
-            'userId' => $user->id
+            'userId' => $user->id,
+            'workspace' => $workspace->toArrayWithRoles($user)
         ]);
 
     }
