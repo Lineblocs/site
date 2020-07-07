@@ -23,6 +23,7 @@ class CardController extends HasStripeController {
         $this->initStripe();
         $data = $request->all();
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
         try {
             $card = \Stripe\Customer::createSource(
                 $user->stripe_id,
@@ -34,13 +35,33 @@ class CardController extends HasStripeController {
             Log::error("error while processing new user card: " . $ex->getMessage());
             return $this->errorInternal($request, 'Stripe card process error');
         }
-        $card = UserCard::create([
+        $all = UserCard::where('workspace_id', $workspace->id)->get();
+        $params = [
             'last_4' => $data['last_4'],
             'stripe_id' => $card->id,
-            'user_id' => $user->id
-        ]);
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id
+        ];
+        if ( count( $all ) == 0 ) { // set first as primary
+            $params['primary']=TRUE;
+        }
+        $card = UserCard::create($params);
         return $this->response->noContent()->withHeader('X-Card-ID', $card->id);
     }
+    public function setPrimary(Request $request, $cardId)
+    {
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $cards = UserCard::where('workspace_id', $workspace->id)->get();
+        foreach ($cards as $card) {
+            $card->update(['primary' => FALSE]);
+        }
+        $card = UserCard::findOrFail($cardId);
+        $card->update(['primary' => TRUE]);
+        return $this->response->noContent();
+
+    }
+
     public function listCards(Request $request)
     {
         $user = $this->getUser($request);

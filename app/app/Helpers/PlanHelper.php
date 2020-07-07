@@ -46,7 +46,6 @@ public static function create_plan($attrs=[])
     'extensions' => 5,
     'recording_space' => 1024,
     'fax' => 100,
-    'porting' => TRUE,
     'calling_between_ext' => TRUE,
     'standard_call_feat' => TRUE,
     'voicemail_transcriptions' => FALSE,

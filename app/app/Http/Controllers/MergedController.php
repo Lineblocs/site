@@ -157,6 +157,9 @@ class MergedController extends ApiAuthController
       $start->sub(new DateInterval('P' . $dayCount . 'D'));
       $cloned1 = clone $start;
       $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $plans = \Config::get("service_plans");
+      $plan = $plans[ $workspace->plan ];
       while ($currentDay != $dayCount) {
         $labels[] = $cloned1->format("M-d");
         $cloned2 = clone $cloned1;
@@ -204,7 +207,8 @@ class MergedController extends ApiAuthController
         $graph,
         $billing,
         $self->toArray(TRUE),
-        $checklist
+        $checklist,
+        $plan
       ]);
     }
     public function fetchWorkspaceInfo(Request $request)
