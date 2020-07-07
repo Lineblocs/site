@@ -520,6 +520,10 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       MainHelper::upgradeMembership($user, $workspace, $membership);
   }
 
+  public function getConfig(Request $request) {
+        $config = MainHelper::getPublicConfig();
+        return $this->response->array($config);
+  }
 
 
 

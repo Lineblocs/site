@@ -26,6 +26,7 @@ use App\WorkspaceUser;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
+use DateTime;
 
 class RegisterController extends ApiAuthController
 {
@@ -61,7 +62,14 @@ class RegisterController extends ApiAuthController
             // something went wrong whilst attempting to encode the token
             return $this->errorInternal($request, 'Could not create token');
         }
-
+        $unique = uniqid(TRUE);
+        $workspace = Workspace::create([
+        'creator_id' => $user->id,
+        'name' => $unique,
+        'api_token' => MainHelper::createAPIToken(),
+        'api_secret' => MainHelper::createAPISecret(),
+        'plan' => 'trial'
+      ]);
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
@@ -264,6 +272,7 @@ class RegisterController extends ApiAuthController
     public function updateWorkspace(Request $request)
     {
       $data = $request->json()->all();
+      $plan = $data['plan'];
       $count = Workspace::where('name', '=', $data['workspace'])->count();
       if ($count > 0) {
         return $this->response->array(['success' => FALSE, 'workspace name already taken...']);
@@ -271,12 +280,13 @@ class RegisterController extends ApiAuthController
 
       $user = User::findOrFail($data['userId']);
       $name = MainHelper::cleanWorkspaceName($data['workspace']);
-      $workspace = Workspace::create([
-        'creator_id' => $user->id,
+
+      $workspace = Workspace::where('creator_id', $user->id)->firstOrFail();
+      $workspace->update([
         'name' => $name,
-        'api_token' => MainHelper::createAPIToken(),
-        'api_secret' => MainHelper::createAPISecret(),
-        'plan' => 'trial'
+        'plan' => $plan,
+        'trial_mode' => TRUE,
+        'free_trial_started' => new DateTime()
       ]);
       PlanUsagePeriod::create([
         'workspace_id' => $workspace->id,
@@ -292,7 +302,7 @@ class RegisterController extends ApiAuthController
       ]);
       $attrs = [];
       WorkspaceUser::createSuperAdmin($workspace, $user);
-      return $this->response->array(['success' => TRUE]);
+      return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);
     }
     public function forgot(Request $request) {
        $email = $request->get('email');
