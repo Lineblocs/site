@@ -14,7 +14,7 @@ class AddSizeToRecordings extends Migration
     {
         Schema::table('recordings', function (Blueprint $table) {
             //
-            $table->integer('size')->default(0);
+            $table->float('size')->default(0.0);
         });
     }
 
