@@ -19,7 +19,7 @@ class CreateDidNumbersTable extends Migration
             $table->string('country');
             $table->string('region');
             $table->string('name');
-            $table->decimal('monthly_cost',9,3);
+            $table->integer('monthly_cost'); //cents
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
         });

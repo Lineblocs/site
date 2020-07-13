@@ -49,6 +49,7 @@ class DIDNumberController extends ApiAuthController {
         $apiNumber = $data['api_number'];
         $region = '';
         $cost = $data['monthly_cost'];
+        $setup_cost = $data['setup_cost'];
         $provider = $data['provider'];
         $country = $data['country'];
         $features = $data['features'];
@@ -72,7 +73,8 @@ class DIDNumberController extends ApiAuthController {
                 'number' => $number,
                 'api_number' => $apiNumber,
                 'region' => $region,
-                'monthly_cost' => $cost,
+                'monthly_cost' => MainHelper::toCents($cost),
+                'setup_cost' => MainHelper::toCents($setup_cost),
                 'provider' => $provider,
                 'country' => $country,
                 'features' => $features,
