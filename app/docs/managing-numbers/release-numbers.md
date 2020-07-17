@@ -1,20 +1,15 @@
 # Release Numbers
 
-if you do not want to use a number or be billed for it any longer you can choose to unrent it. lineblocs does not add any constraints for releasing numbers and lets you opt out of a number's billing cycle at any time.
-
+You can unrent a Lineblocs number at any time – regardless of your membership plan or account status.
 
 ## Unrent A Number
 
-to initiate removal and unrenting of a number please follow steps below:
+1. Go to [DID Numbers -> My Numbers](https://app.lineblocs.com/#/dashboard/dids/my-numbers)
+4. click the ![info](/img/frontend/docs/shared/trash.png) icon on the number you want to unrent
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left nav click "DID Numbers"
-3. Click "My Numbers"
-4. click the trash icon on the number you want to unrent
+## Confirm Unrent
 
-![info](/img/frontend/docs/unrent-numbers/icon.png)
-
-when you click the trash icon you will be shown a confirmation dialog. please confirm the dialog and follow over the next steps to confirm unrenting.
+You will need to confirm unrenting your number by typing
 
 ![info](/img/frontend/docs/unrent-numbers/unrent.png)
 

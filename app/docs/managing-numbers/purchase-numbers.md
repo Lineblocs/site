@@ -1,41 +1,26 @@
 # Purchase Numbers
 
-lineblocs lets you purchase local or toll-free numbers DID numbers from US/CAN. You can use the lineblocs dashboard to buy new numbers across rate centers, or regions. You can also filter numbers by an area code or your preferred prefix.
-
+Lineblocs currently offers voice numbers that are toll free, local or vanity based. You can use the Lineblocs user dashboard to buy new DID numbers in a supported rate center and region.
 
 ## Searching for numbers
 
-before you can buy a number you will need to search for a number. to access the number search page in lineblocs.com please use the following steps:
-
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left nav click "DID Numbers"
-3. Click "Buy Numbers"
-![info](/img/frontend/docs/purchase-numbers/buy-wizard.png)
-
-once you have filtered your numbers down please click "Search"
-
-## Purchasing Numbers
-
-when you have searched for a number you will be shown a list of available numbers to you. You can review the number's monthly cost, region and prefix. 
+1. In [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click ["DID Numbers" -> "Buy Numbers"](https://app.lineblocs.com/#/dashboard/dids/buy-numbers)
+2. Select Voice Numbers
+3. Search for numbers based on the filters provided. Click "More Options" for advanced filters
+![info](/img/frontend/docs/purchase-numbers/filter-1.png) 
+4. Click Search
 
 ## Buying a number
 
-to buy a number click the Cart icon next to the number. this will lead you to a set of dialogs that will let you confirm whether you want to buy the number.
+To purchase a number click the ![info](/img/frontend/docs/purchase-numbers/buy.png) button next to the number.
 
-![info](/img/frontend/docs/purchase-numbers/number-results.png)
-![info](/img/frontend/docs/purchase-numbers/number-buy-1.png)
+## Setup Number
 
-## Post confirmation
-
-once you have purchased a number you will be shown a dialog that allows you to editing the number or setting up its call flow.
-
-![info](/img/frontend/docs/purchase-numbers/number-buy-1.png)
+Once you have purchased a new number you can change the number's settings according to your needs – including changing its label, call flow, and more. For more info on managing numbers please [click here](https://lineblocs.com/resources/managing-numbers/manage-numbers)
 
 ## Next Steps
 
+For related guides please see the following:
 
-in this guide we showed you how to buy a local or toll free number in lineblocs. below are guides that will help you learn about number management:
-
-[Porting Numbers](http://lineblocs.com/resources/managing-numbers/porting-numbers)
-
-[Releasing Numbers](http://lineblocs.com/resources/managing-numbers/releasing-numbers)
+- [Porting Numbers](http://lineblocs.com/resources/managing-numbers/porting-numbers)
+- [Releasing Numbers](http://lineblocs.com/resources/managing-numbers/releasing-numbers)

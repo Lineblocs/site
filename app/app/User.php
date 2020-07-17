@@ -115,14 +115,14 @@ class User extends Model implements AuthenticatableContract,
     public function canBuyNumber($workspace, $user, $number, $cost) {
       $limit = MainHelper::checkLimit($workspace, $user, "numbers");
       if ($limit) {
-        if ($workspace->plan == 'trial') {
+        if ($workspace->trial_mode) {
           return array(FALSE, "Trial accounts cannot buy more than 1 number");
         } else {
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
       $balance = $this->getBillingInfo();
-      if ($balance['remainingBalance']<=$cost && $workspace->plan != 'trial') {
+      if ($balance['remainingBalance']<=$cost && $workspace->plan == 'pay-as-you-go') {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }
       return array(TRUE, "");
