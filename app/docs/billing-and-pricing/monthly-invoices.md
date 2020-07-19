@@ -7,7 +7,7 @@ In this guide we discuss monthly billing. And the resources you are billed for o
 
 ## Billed Resources
 
-We currently bill based on the dedicated usage of calling, fax, and IM based resources. The costs associated with our billing plans are typically based on carrier call toll, server hosting costs, and the usage of API services.
+We currently bill based on the dedicated usage of calling, fax, and IM based resources. The costs associated with our billing plans are typically based on carrier call toll, server hosting costs, and the usage of third party API services.
 
 #### Usage Billing
 

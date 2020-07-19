@@ -46,10 +46,6 @@ sections:
         description: learn how to use extension codes to make on call transfers between extensions
         link: create-cold-transfer
         tags: lineblocs, cold transfer, cold, transfer, pbx, transfers
-      - name: How to accept Fax
-        description: learn how to accept fax on DIDs in lineblocs
-        link: how-to-accept-fax
-        tags: lineblocs, fax, pbx, accept fax, DIDs, SIP
       - name: Saving widget templates
         description: learn how to save a widget as a template for later use
         link: saving-widget-templates
