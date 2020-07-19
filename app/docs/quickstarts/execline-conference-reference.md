@@ -90,7 +90,7 @@ To add a new macro please drag the "Macro" widget from the right pane into the f
 
 ## Setup Conference Events
 
-Our conference events widget will be setup to track when new members join the conference, as well as to make sure our conference always has at most two participants: the host and one member at a time.
+Our conference events widget will be setup to track when new members join the conference as well as to make sure our conference always has at most two participants – the host and one member, at any given time.
 
 To setup the conferencing events, please click the "ConferenceEvents" widget, then in the right pane under function click ![create](/img/frontend/docs/execline/create.png)
 
@@ -176,7 +176,7 @@ Value: {{SetupVariables.host_number}}
 
 Our conference will atleast require two conferencing roles, the "user", and the "moderator".
 
-to setup the call flow routes, please create two "SetVariable" widgets: "ModeratorRoute" and "UserRoute".
+To setup the call flow routes, please create two "SetVariable" widgets: "ModeratorRoute" and "UserRoute".
 
 Please add the following variables under "ModeratorRoute":
 
@@ -205,15 +205,15 @@ value: user
 
 Our final piece of the flow will be to add a "Conference" widget.
 
-to add a "Conference" widget into the flow, please drag a "Conference" widget from the right pane into the flow.
+To add a "Conference" widget into the flow, please drag a "Conference" widget from the right pane into the flow.
 
 In the "Conference" settings please check "Wait for Moderator", and "End on Moderator leave" settings.
 
 ## Connecting the Flow
 
-to make our flow all work together we will need to add links between the widgets created.
+To make our flow all work together we will need to add links between the widgets created.
 
-please add the following links:
+Please add the following links:
 
 1. SetupVariables to ConferenceEvents
 2. ConferenceEvents to Switch
@@ -227,7 +227,7 @@ please add the following links:
 
 ## Using the flow on a DID number
 
-to save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
+To save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
 
 To use your call flow on a DID Number:
 
@@ -239,14 +239,14 @@ To use your call flow on a DID Number:
 ## Testing the flow
 
 To test as a caller:
-call the conferencing line number
+Call the conferencing line number
 
 To test as a host:
-use the host number to call the conference line
+Use the host number to call into the conferenciing line
 
 ## Next Steps
 
-in this guide we went over a reference conferencing app integration. for more related articles please see:
+In this guide we went over a reference conferencing app integration. For more related articles please see:
 
 [Create a cold transfer](http://lineblocs.com/resources/quickstarts/setup-cold-transfers)
 

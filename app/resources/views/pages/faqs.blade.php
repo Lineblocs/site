@@ -24,7 +24,7 @@
             <div class="card-content">
               <h2>Which countries do you offer services for ?</h2>
 
-              <p>At this time Lineblocs only offers services to valid residents in North America.
+              <p>At this time Lineblocs only offers services to valid residents based in North America.
               </p>
 
             </div>
@@ -89,7 +89,7 @@
             <div class="card-content">
               <h2>Does Lineblocs offer SMS services ?</h2>
               <p>
-                No we do not currently have any SMS service. Lineblocs only supports voice, fax, and IM.
+                No we do not currently have any SMS service. Lineblocs currently only supports voice, fax, and IM.
               </p </div> </div> </div> </li> 
     </ul>
     <p>
