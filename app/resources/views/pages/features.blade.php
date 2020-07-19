@@ -19,13 +19,9 @@
                 </div>
 
                 <div class="content">
-                    <h3 class="content-heading">Call Flow Builder</h3>
+                    <h3 class="content-heading">Low-Code Flow Editor</h3>
 
-                    <p class="content-para">We host a call flow builder that lets you design and test
-                        the most complex call flows and provision them with your
-                        DIDs in seconds. Our call flows enable you to get up and
-                        running in seconds and are built on high security along
-                        with best practice for call routing and failover.</p>
+                    <p class="content-para">Get access to an all-in-one flow editor that allows you to create highly customizable workflows for calls, fax, and IM. Our flow editor can be used to create any calling workflow imaginable.</p>
 
                     <a href="/register" class="btn-custom service-btn margin-auto">
                         <span>Create Account</span>
@@ -41,9 +37,9 @@
                 <div class="content left">
                     <h3 class="content-heading">DID number portal</h3>
 
-                    <p class="content-para">our DID number portal is designed for ease of use and
-                        cloud related needs. easily rent numbers from US or
-                        Canada and assign them to call flows on your account.</p>
+                    <p class="content-para">
+                        Purchase numbers from a DID inventory that includes local, toll free, and vanity based numbers. We offer a full range of DIDs that span across multiple rate centers throughout North America
+                    </p>
 
                     <a href="/register" class="btn-custom service-btn margin-auto">
                         <span>Create Account</span>
@@ -65,12 +61,10 @@
                 </div>
 
                 <div class="content">
-                    <h3 class="content-heading">PoP and availability</h3>
+                    <h3 class="content-heading">PoPs and high availability</h3>
 
-                    <p class="content-para">Our PoP network lets you quickly provision phones
-                        near you and your users. Get up and running with
-                        a PoP nearest to your location and switch among
-                        PoPs most suitable to your needs.</p>
+                    <p class="content-para">
+                        Our network allows you to provision extensions nearest to your location as well as rotate among more than 10+ PoPs across North America.</p>
 
                     <a href="/register" class="btn-custom service-btn margin-auto">
                         <span>Create Account</span>
@@ -84,11 +78,8 @@
         <div class="pbx-section">
             <div class="container">
                 <div class="pbx-content">
-                    <h3 class="pbx-heading">Overcome Challenges with existing on-premise PBX systems</h3>
-                    <p class="pbx-para">designed from bottom up using best technologies our
-                        cloud portal is here to help you make and receive
-                        more calls, manage your number network and quickly
-                        provision softphones / supported hardphones.</p>
+                    <h3 class="pbx-heading">Overcome Challenges with existing on-premise calling solutions</h3>
+                    <p class="pbx-para">Designed using the best technologies, Lineblocs offers features that can help you create a calling, fax, and IM environment that can easily scale.</p>
 
                     <a href="/register" class="btn-custom service-btn margin-auto">
                         <span>Create Account</span>
@@ -103,8 +94,7 @@
             <div class="container">
                 <div class="overview-content">
                     <h3 class="overview-heading">An Overview</h3>
-                    <p class="overview-para">below is a list of key features supported on our cloud to
-                        help you understand why using lineblocs may be of benefit to your needs.</p>
+                    <p class="overview-para"></p>
 
                     <div class="picture">
                         <img src="images/picture.png">
@@ -127,9 +117,7 @@
                             </div>
 
                             <h4 class="feature-heading">High Availability</h4>
-                            <p class="feature-para">our network consist of best practice built from ground up
-                                using secure and up to date technologies. Our network is completel
-                                designed with the idea of never having to miss a call.</p>
+                            <p class="feature-para">Our network is made up of best practices and created using secure technologies.</p>
                         </div>
 
                         <div class="feature">
@@ -152,9 +140,7 @@
                             </div>
 
                             <h4 class="feature-heading">Number Inventory</h4>
-                            <p class="feature-para">our number inventory consists of a farm of numbers
-                                across multiple regions in north america. We also offer
-                                number rental and management in one easy to use number management portal.</p>
+                            <p class="feature-para">Self serve number rental and management in one easy to use number management portal.</p>
                         </div>
 
                     </div>
@@ -174,9 +160,9 @@
                                 </svg>
                             </div>
 
-                            <h4 class="feature-heading">Elastic Services</h4>
-                            <p class="feature-para">our cloud network is built using scale in mind. from our
-                                SIP internal network, user portals and backend services.</p>
+                            <h4 class="feature-heading">Scalable Services</h4>
+                            <p class="feature-para">Our cloud network is built with scale in mind – all of it – including our
+                                software, user portals, and network.</p>
                         </div>
 
                         <div class="feature">
@@ -192,24 +178,20 @@
                                 </svg>
                             </div>
 
-                            <h4 class="feature-heading">Ease of Use</h4>
-                            <p class="feature-para">completely cloud and no need to install third party/open source
-                                software. our cloud portals and backend are designed to work with
-                                your call flow needs in mind and tested to run agaisnt with devices
-                                that you use for making / receiving calls.</p>
+                            <h4 class="feature-heading">Low-Code</h4>
+                            <p class="feature-para">Our solutions are completely based on low-code integrations allowing teams to create high level workflows.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
     <section>
         <div class="learn_more-section">
             <div class="container">
                 <div class="learn_more-content">
                     <h3 class="learn_more-heading">Learn More</h3>
-                    <p class="learn_more-para">have queries regarding our services or offerings? feel free to contact us to learn more about it.</p>
+                    <p class="learn_more-para">Have queries regarding our offerings ? Feel free to contact us.</p>
 
                     <a href="/contact" class="btn-custom service-btn margin-auto">
                         <span>Contact Us</span>
@@ -218,6 +200,8 @@
             </div>
         </div>
     </section>
+
+
 
 @endsection
 @section('scripts')

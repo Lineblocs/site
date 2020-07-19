@@ -8,19 +8,13 @@
         <h2>About Us</h2>
         <hr />
         <p>
-          Lineblocs was created to offer an alternative solution to traditional communications systems and existing
-          cloud based
-          communications systems. Our goal currently is to provide an open solution for calling, IM and video for small
-          to medium sized businesses using the cloud.
+          The Lineblocs project was created as an alternative solution to existing cloud based unified communications. Our goal is to provide a highly customizable solution for calling, fax, IM, and video related needs.
           <br />
           <br />
-          We believe that the communications between workspaces today should be customizable and cloud
-          based. Our solutions focus on the
-          calling system of tommorrow.
+          We believe that the communications solutions used in workplaces today should be completely customizable and cloud based. Our solutions focus on the calling system of tommorrow.
           <br />
           <br />
-          We feel that a modern communications system should include AI, cloud networking, portability, and allow for
-          complete customization.
+          In this modern era, we also strongly believe that a UC solution should include AI, cloud networking, and allow for complete customization.
         </p>
       </div>
     </div>
@@ -34,41 +28,37 @@
             <h2>Our Values</h2>
           </center>
           <div class="col s4">
-            <div class="card horizontal">
+            <div class="card horizontal-rounded">
               <div class="card-stacked min">
                 <div class="card-content">
                   <h3>Focus</h3>
                   <p>
-                    We design solutions for small business teams that prefer the cloud. Our team and tools are developed
-                    to enhance inter team productivity and also offer rich experiences for calling, IM and video
+                    We design solutions for teams that prefer using the cloud. Our solutions are completely developed
+                    to enhance inter-team productivity and offer rich experiences for calling, IM, and video.
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="col s4">
-            <div class="card horizontal">
+            <div class="card horizontal-rounded">
               <div class="card-stacked min">
                 <div class="card-content">
                   <h3>Dedicated</h3>
                   <p>
-                    we are dedicated to offerring the best SLA and uptime with a unique coverage of VoIP networking in
-                    Canada.
-                    our solutions are backed by tier-1 carriers and a reputable partner ecosystem.
+                    We are dedicated to offerring the best low-code solutions that enable teams to quickly create modern UC workflows in the cloud – using cutting edge technologies – in little time.
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="col s4">
-            <div class="card horizontal">
+            <div class="card horizontal-rounded">
               <div class="card-stacked min">
                 <div class="card-content">
                   <h3>Cloud Solutions</h3>
                   <p>
-                    we are creating olutions for the cloud and companies that want to use the cloud. we are focused on
-                    improving
-                    cloud communications by offering an innovative and up to date communications solution
+                   We are focused on improving cloud related unified communications by offering an innovative and up to date solution that can be easily integrated into business workflows of all sizes.
                   </p>
                 </div>
               </div>

@@ -1,48 +1,36 @@
 # Adding Workspace Users
 
-lineblocs lets you add and update team members on your account. you can assign new members to your workspace as well as
-give them roles to do certain things in your workspace such as add extensions, register DIDs or create new call flows. 
+Lineblocs lets you add new team members to your account on demand. You can create new members in your workspace as well as give them roles to perform certain actions in your workspace, such as add extensions, register DIDs or create new call flows. 
 
-in this guide will go over how to add, update or remove workspace users from your account.
+In this guide will go over how to add, update, and remove users from your Lineblocs account.
 
-## Adding a workspace member
+## Add Workspace Member
 
-to add a new workspace member to your lineblocs workspace please use the following steps:
+To add a new workspace member to your Lineblocs account:
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left menu click "Settings"
-3. click option "Workspace Users"
-4. click "Add User"
+1. In Lineblocs dashboard go to  [Settings -> Workspace Users](https://app.lineblocs.com/#/dashboard/settings/workspace-users)
+2. click "Add User"
+3. Enter user details such as email and contact info
+4. Assign user roles
+5. Click "Save"
 
-## Creating User
+Once you have created a new user, they will receive an invite email which they can use to register under your workspace.
 
-in the workspace user create screen you can set your workspace users name, and email as well as set roles they will have in your workspace.
+## Editing Workspace Users
 
-![user](/img/frontend/docs/workspace-users/user.png)
+To edit a user please click the ![Edit](/img/frontend/docs/shared/edit.png) icon next to your user.
 
-once you have added the user's info and their roles please click "Save"
-![user save](/img/frontend/docs/workspace-users/user-save.png)
+## Resend Email Invite
 
-after you have created the user. the user the user will be sent an email with your invite. they will then need to create a password before they can login to your workspace the first time.
+To resend an email invitation you can click the ![Resend Invite](/img/frontend/docs/workspace-users/reinvite.png) button next to your user.
 
-## Managing Workspace Users
+## Remove from workspace
 
-you can update or delete users from your workspace at any time. to edit a user please use the following steps:
-
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left menu click "Settings"
-3. click option "Workspace Users"
-4. click the pencil icon on the user you wish to edit
-
-to remove a user
-
-1. go to "Workspace Users"
-2. click the trash icon next to the user you wish to remove
-3. confirm removing the user
+If you want to remove a user from your workspace please click the ![Trash](/img/frontend/docs/shared/trash.png) button next to your user.
 
 ## Next Steps
 
-in this article we discussed adding and managing workspace users. for related articles be sure to check out:
+For related articles be sure to view:
 
 [Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
 

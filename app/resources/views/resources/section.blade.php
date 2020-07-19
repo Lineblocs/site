@@ -12,7 +12,7 @@
             <div class="col s12">
             <h1>{{$sectionName}}</h1>
             @foreach ($results as $result)
-                <div class="card horizontal">
+                <div class="card horizontal-rounded">
                     <div class="card-stacked">
                         <div class="card-content">
                             <h3>

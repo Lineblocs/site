@@ -130,7 +130,7 @@ class FileController extends ApiAuthController {
           $result['file'] = $file->toArray();
             $results[] = $result;
         } else {
-          $amountfailed ++;
+          $amountFailed ++;
             $results[] = $result;
         }
      }

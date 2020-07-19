@@ -138,7 +138,7 @@ class HomeController extends BaseController {
             }
           }
         }
-    return view('pages.pricing', $vars);
+    return view('pages.rates', $vars);
   }
   public function features(Request $request)
   {

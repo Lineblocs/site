@@ -8,7 +8,7 @@
         </div>
         <div class="hero-text">
             <h1 class="heading">Your Line</h1>
-            <p class="desc">LineBlocs is a fully customizable cloud phone system developed for productive teams.</p>
+            <p class="desc">LineBlocs is a fully customizable cloud phone system for productive teams.</p>
 
             <a href="https://app.lineblocs.com/#/register">
                 <div class="btn-custom">
@@ -39,9 +39,7 @@
             <h2>Explore By Features</h2>
             <div class="feature-detail">
                 <div class="feature-text">
-                    <p class="desc">Rent cloud numbers and use SIP trunks that are fully cloud based. Our cloud has you
-                        covered for building out a PBX suitable and not having to worry about maintenance costs /
-                        failover / hosting space.</p>
+                    <p class="desc">Get call features relevant to your business needs – from basic auto attendants to completely customizable call flows that include video conferencing, CRM integrations, and more.</p>
                     <h3 class="heading">Fully Cloud</h3>
                 </div>
                 <div class="feature-img">
@@ -50,9 +48,9 @@
             </div>
             <div class="feature-detail editor-detail">
                 <div class="feature-text">
-                    <p class="desc">Use a modern flow editor that includes all the kind of inbound calling tools you
-                        need to keep your business's phone system up to date and easy to use.</p>
-                    <h3 class="heading">Modern Visual Editors</h3>
+                    <p class="desc">
+                        Stay up to date with a low-code solution that allows you to create highly customizable calling workflows including automations, and third party integrations at ease.</p>
+                    <h3 class="heading">Modern Low-Code</h3>
                 </div>
                 <div class="feature-img">
                     <img src="images/editors-img.png">
@@ -67,9 +65,8 @@
             <div class="features">
                 <div class="feature-detail support-detail">
                     <div class="feature-text">
-                        <p class="desc">we offer support around the clock to get you / your team up and running and
-                            ensure your phone system is stable, working and monitored</p>
-                        <h3 class="heading">Support</h3>
+                        <p class="desc">Create your team's next calling system without having to manage the underlying platform and infrastructure – we handle that.</p>
+                        <h3 class="heading">Scalable</h3>
                     </div>
                     <div class="feature-img support-img">
                         <img src="images/support-img.png">
@@ -83,9 +80,8 @@
     <div class="comparision-section">
         <div class="container">
             <div class="comparison-content">
-                <h2>Comparison</h2>
-                <p class="desc">Below is a list of features popular alternatives like RingCentral or Nextiva offer and
-                    the ones LineBlocs includes</p>
+                <h2>Feature Comparison</h2>
+                <p class="desc">Below is a list of features offered by alternatives, in comparison to Lineblocs</p>
                 <div class="comparison-table">
                     <table>
                         <thead>

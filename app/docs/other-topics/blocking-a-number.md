@@ -1,28 +1,25 @@
-# Blocking A Number
+# Managing Blocked Numbers
 
-lineblocs currently allows you to block numbers that can make calls to you. the block number feature in lineblocs is a basic yet useful
-tool to prevent unwanted callers from calling you.
+Blocking numbers is a simple and very useful way to prevent call spam.
 
-at any time you can use the blocking number feature in lineblocs to add or remove blocked numbers from your lineblocs account.
+At any time you can block a number in Lineblocs.
 
-## Blocking A Number
+## Block A Number
 
-to block a number on lineblocs please use the following steps
+To block a number on Lineblocs:
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left menu click "Settings"
-3. click option "Blocked Numbers"
-4. click "Block Number"
-5. enter the number you would like to block formatted in [E.164](https://en.wikipedia.org/wiki/E.164)*
-6. click "Submit"
+1. In Lineblocs dashboard go to  [Settings -> Blocked Numbers](https://app.lineblocs.com/#/dashboard/settings/workspace-users)
+2. click "Block Number"
+3. enter the number you would like to block
+4. click "Submit"
 
-## Removing a Blocked Number
+## Removing Blocked Number
 
-to remove a blocked number please click the trash icon next to the number in the "Blocked Numbers" screen then confirm deleting the number from your blocked numbers list.
+To remove a blocked number please click ![Trash](/img/frontend/docs/shared/trash.png) icon next to the number,
 
 ## Next Steps
 
-in this article we discussed how you can manage your blocked numbers on lineblocs. for related articles please see the following:
+For related articles please see the following:
 
 [Managing IP Whitelist](http://lineblocs.com/resources/other-topics/managing-ip-whitelist)
 

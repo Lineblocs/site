@@ -1,71 +1,50 @@
 # Monthly Invoices
 
-lineblocs bills you monthly for the resources you use in numbers, calls, storage space and hosting. Monthly invoices are generated in your lineblocs dashboard and available at any time for download or viewing purposes. in this guide we discuss monthly billing, how you can manage or download your monthly invoices and how to get in touch with us about a monthly invoice.
 
-## What are you billed for
+Monthly invoices are generated in Lineblocs dashboard and available at any time for download.
 
-when you use lineblocs and you have an active subscription with DID numbers and call flows you are billed for the following resources:
+In this guide we discuss monthly billing. And the resources you are billed for on a month-to-month basis.
+
+## Billed Resources
+
+We currently bill based on the dedicated usage of calling, fax, and IM based resources. The costs associated with our billing plans are typically based on carrier call toll, server hosting costs, and the usage of API services.
+
+#### Usage Billing
 
 1. Incoming Call Toll
 2. Outgoing Call Toll
-3. Recording Storage
-4. PBX hosting expenses
-5. DID number renewal
-6. third party API services
+3. Fax related charges
+4. Third party API services
 
-the resources listed above are either billed per usage or a monthly service. 
+#### Per month related
 
-below are a list of services we bill for by the minute:
+1. Recording Storage
+2. PBX hosting expenses
+3. DID number renewal
 
-1. All Call Toll incoming/outging
-2. PBX hosting costs
-3. Recording Storage
-4. API services
+## Downloading an invoice
 
-below are a list of services we bill for as a monthly recurring service:
+To download a monthly invoice:
 
-1. DID numbers
-
-## Managing Invoices
-
-to view your billing invoices on lineblocs you can download monthly copies at any time. to access a monthly invoice please use steps below:
-
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left nav click "Billing"
-3. In the top right click "History" tab
-4. enter a start and end date range for your invoice
+1. In Lineblocs dashboard go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
+2. Click "History" tab
+4. Enter a start and end date range for your invoice
 5. Click "Download"
 
 ## Receiving Invoices By Email
 
-in addition to downloading invoices using the dashboard you can also use the "Invoices By Email" feature which lets you receive an email at the 1st of every month including a PDF attachment of your invoice. to enable this feature please follow steps below:
+You can also choose to receive invoices by email.
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left nav click "Billing"
-3. In the top right click "Settings" tab
-4. check "Receive monthly invoices by email"
-5. click "Save"
+To enable invoices by email:
 
-## Tracking Monthly Invoices
-
-Your lineblocs account keeps an active record of the charges you've accumulated at all times for viewing purposes. to get an idea of your monthly spending for the current month you can always view the 3 metrics we have listed below.
-
-Account Balance: finalized invoices and payments
-
-Charges This Month: invoiced next momth
-
-Estimated balance: balance including charges this month.
-
-you can view these metrics at all times in Billing -> History section in your dashboard.
-
-## Disputing Monthly Invoice
-
-if you have any queries about the amount you've been billed or would like to discuss the charges with the lineblocs team you can reach out to us any time. for more info on our contact details please refer to [Contact Us](http://lineblocs.com/contact) page
-
+1. In Lineblocs dashboard go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
+2. Click the "Settings" tab
+4. Check "Receive monthly invoices by email"
+5. Click "Save"
 
 ## Next Steps
 
-in this article we discussed monthly billing. for more info on billing matters please see articles below:
+For more info on billing please see articles below:
 
 [Payment Options](http://lineblocs.com/resources/billing-and-pricing/payment-options)
 

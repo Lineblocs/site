@@ -8,7 +8,7 @@
                 <h2 class="serviceheading2">
                   Pricing
                 </h2>
-                <h5 class="serviceinfo">Pricing options that can scale as you go</h5>
+                <h5 class="serviceinfo">Pricing options suitable for teams of all sizes</h5>
             </div>
         </div>
     </section>
@@ -35,7 +35,7 @@
 
           <ul class='collection center'>
             <li class='collection-item'>
-              <strong>Metered</strong> minutes outbound free minutes per month in US or Canada
+              <strong>Metered</strong> minutes outbound in US or Canada
             </li>
             <li class='collection-item'>
               <strong>5</strong> Extensions
@@ -460,9 +460,9 @@
                 </div>
 
                 <div class="content">
-                    <h3 class="content-heading">Scalable Pricing</h3>
+                    <h3 class="content-heading">Fully managed solutions, dedicated pricing</h3>
 
-                    <p class="content-para">Scale your UC work environment with competitive pricing, created for SMBs, running UC workflows in the cloud.</p>
+                    <p class="content-para">Get a dedicated pricing solution that allows you to scale your team's UC workflows at ease.</p>
 
                       <!--
                     <a href="/register" class="btn-custom service-btn margin-auto">
@@ -478,11 +478,8 @@
         <div class="pbx-section">
             <div class="container">
                 <div class="pbx-content">
-                    <h3 class="pbx-heading">Overcome Challenges with existing on-premise PBX systems</h3>
-                    <p class="pbx-para">designed from bottom up using best technologies our
-                        cloud portal is here to help you make and receive
-                        more calls, manage your number network and quickly
-                        provision softphones / supported hardphones.</p>
+                    <h3 class="pbx-heading">Competitive UC pricing</h3>
+                    <p class="pbx-para">Never have to worry about spending too much for your team's call system again. Our pricing solutions offer a complete solution for calling, fax, and IM – at a competitive price point.</p>
 
                     <a href="/register" class="btn-custom service-btn margin-auto">
                         <span>Create Account</span>
@@ -497,7 +494,7 @@
             <div class="container">
                 <div class="learn_more-content">
                     <h3 class="learn_more-heading">Learn More</h3>
-                    <p class="learn_more-para">have queries regarding our services or offerings? feel free to contact us to learn more about it.</p>
+                    <p class="learn_more-para">Have queries regarding our offerings ? Feel free to contact us.</p>
 
                     <a href="/contact" class="btn-custom service-btn margin-auto">
                         <span>Contact Us</span>

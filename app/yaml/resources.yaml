@@ -100,14 +100,14 @@ sections:
         description: how to view invoices in your dashboard and manage invoice billing.
         link: monthly-invoices
         tags: invoices, monthly invoices, billing, lineblocs
-      - name: Payment options
+      - name: Adding Credit (Pay As You Go Only)
         description: learn about the payment options available to fund your lineblocs account.
-        link: payment-options
-        tags: payment options, billing, types of payment, paypal, credit card, lineblocs, adding credit
-      - name: Finding your billing plan
-        description: learn where to find your billing plan and/or manage it.
-        link: billing-plans
-        tags: billing plans, manage billing, lineblocs
+        link: adding-credit
+        tags: adding credit, billing, types of payment, paypal, credit card, lineblocs, adding credit
+      - name: Managing Billing Cards
+        description: how to manage billing cards on Lineblocs
+        link: managing-billing-cards
+        tags: managing cards, billing, types of payment, paypal, credit card, lineblocs, adding credit
   - name: Other Topics
     description: get more info on topics on managing lineblocs and getting it to work.
     link: other-topics
@@ -122,10 +122,14 @@ sections:
         description: how to update your account's settings
         link: account-settings
         tags: account settings, edit password, edit email, lineblocs
-      - name: Usage Limits
+      - name: Usage Limits (Pay-as-you-go only)
         description: all about the Lineblocs plans and their usage limits / constraints
         link: usage-limits
         tags: limits, plans, resource limits, usage triggers, usage limits, lineblocs
+      - name: Setup Usage Triggers
+        description: how to setup usage triggers
+        link: setup-usage-triggers
+        tags: usage, triggers, usage triggers, resource limits, lineblocs
       - name: Reporting Call Spam
         description: learn how to file a spam report on lineblocs
         link: report-spam
@@ -153,7 +157,7 @@ sections:
 
   - name: Open Source
     link: open-source
-    description: how to install and configure lineblocs open source edition
+    description: how to install and setup the Lineblocs open source edition.
     size: s12
     show_desc: true
     items:

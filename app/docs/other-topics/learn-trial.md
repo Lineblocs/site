@@ -1,37 +1,34 @@
 # Trial Balance
 
-all newly registered accounts on lineblocs are given a trial balance that they can use towards making / receiving calls and buying a number. we will discuss in this guide what trial balance you are given, what restrictions there are for trials and how to upgrade your account to a non trial account.
-
-## Trial Balance
-
-new accounts on lineblocs.com are given $5.00 they can use towards making/receiving calls and buying upto 1 number. Once you go below this credit you will be required to upgrade to a "Standard User".
+Lineblocs currently offers trial memberships to all new users. In this guide we will go over trial account restrictions and how to upgrade from a trial account.
 
 ## Restrictions
 
-currently all trial accounts can register only 1 number and have restrictions for incoming/outbound call time as well as the amount of recording space they can use up. below is a list of restrictions on trial accounts:
+At this time we enforce restrictions on all Lineblocs trial accounts – these restrictions apply to any account regardless of the Lineblocs membership.
 
-1. 1 number local only
-2. up to 3 minutes of outbound/inbound call time
-3. upto 32MB recording space
+Trial Account Restrictions:
+
+1. 1 Local Number only
+2. Max 3 minutes of outbound/inbound call time
+3. Up to 32MB recording space
 
 ## Upgrading
 
-to upgrade your account and remove the trial account restrictions you simply need to add a valid payment option and an amount of credit. for more info on payment options or adding credit please see [Payment Options](http:///lineblocs.com/resources/billing-and-pricing/payment-options)
+You can upgrade your account to a non trial account. Please note that depending on the type of account you are registered under (Pay as you go or dedicated) the steps may vary.
 
-once you have upgraded your account you can verify you are a "Standard User" by following steps below
+#### Dedicated Membership
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the top menu click the gear icon
-3. click "Settings"
-4. look for label "Membership:"
+To upgrade your account to a dedicated membership please add a valid billing method.
 
-## make calls w/ a trial account
+#### Pay as you go
 
-before you make any calls on a trial account you will need to make sure you have verified the caller ID you are making calls to. this restriction is only only set on trial accounts to avoid call spamming. please see this [link](http://lineblocs.com/resources/other-topics/verify-callerid) for more info on verifying the caller IDs you are calling.
+If you wish to use pay as you go plan you will need to add a valid billing method and an amount of credit. 
+
+To learn how to add credit please view [Add Credit](http:///lineblocs.com/resources/billing-and-pricing/add-credit)
 
 ## Next Steps
 
-in this article we discussed the restrictions on trial accounts and how to upgrade a trial account. for related articles be sure to check out:
+For related articles be sure to view:
 
 [Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
 

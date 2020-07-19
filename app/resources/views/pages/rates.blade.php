@@ -9,7 +9,7 @@
         <h5 class="header col s12 light">{{$content['main']['text']}}</h5>
       </div>
       <div class="row center pricing">
-        <form name="pricing" method="GET" action="/pricing">
+        <form name="pricing" method="GET" action="/rates">
           <h4>Select Calling Country</h4>
           <select name="country" id="countries">
             <option value="" disabled selected>Select Calling Country</option>

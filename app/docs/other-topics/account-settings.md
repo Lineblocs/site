@@ -1,20 +1,18 @@
 # Managing Account Settings
 
-you can update your lineblocs account settings at any time. this includes updating your organization email, password and your personal contact details such as first and last name.
+You can update your Lineblocs account settings at any time. This includes updating your organization's email, password, and your personal contact details.
 
-## Update your account settings
+## View Account settings
 
-to update your account contact and email settings please follow steps below:
+To view your account settings on the Lineblocs dashboard, please click the ![User](/img/frontend/docs/shared/user.png) icon then click [Settings](http://lineblocs.com/#/dashboard/settings)
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the top menu click the gear icon
-3. click "Settings"
+#### Update Password
 
-if you want to update your password you can do this on the same page by going to tab "Password".
+To update your password please click the "Password" tab.
 
 ## Next Steps
 
-in this article we discussed managing your account settings. for related articles be sure to check out:
+For related articles be sure to check out:
 
 [Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
 

@@ -1,34 +1,33 @@
 # Managing IP Whitelist
 
-IP whitelists in lineblocs provide added networking security in addition to the built in security in lineblocs.  
+IP whitelists in Lineblocs allow you to control which IPs are allowed to access your SIP extensions.
 
-you can currently use IP whitelists to set the IPs your  users will be using to access your system as well as block any unwanted users from trying to access your PBX.
+You can use IP whitelists to block any unwanted users from trying to access your extensions.
 
 ## Enabling IP whitelist
 
-by default the IP Whitelist is disabled in lineblocs. to enable the IP Whitelist please use the following steps:
+By default the IP Whitelists are disabled. 
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
-2. In the left menu click "Settings"
-3. click option "IP Whitelist"
-4. click "Enable Whitelist"
+To enable the IP Whitelist:
+
+1. On Lineblocs dashboard go to [Settings -> IP Whitelist](http://app.lineblocs.com/#/settings-ip-whitelist)
+2. Click &nbsp;&nbsp;&nbsp;&nbsp;![Enable Whitelist](/img/frontend/docs/ip-whitelists/enable-whitelist.png)
 
 ## Adding an IP to the whitelist
 
-to add an IP to the whitelist please use the following steps:
+To add an IP to the whitelist:
 
-1. go to "IP Whitelist" section
-2. click "Add IP"
-3. set the IP and subnet mask you wish to add
+1. Click &nbsp;&nbsp;&nbsp;&nbsp;![Add IP](/img/frontend/docs/ip-whitelists/add-ip.png)
+2. Set the IP and subnet mask
 4. click "Submit"
 
 ## Remove an IP
 
-to remove an IP from the whitelist please click the Trash icon next to the IP in the "IP Whitelist" screen then confirm deleting the IP from your whitelist.
+To remove an IP from the whitelist please click the ![Trash](/img/frontend/docs/shared/trash.png) icon next to the IP then confirm deleting the IP.
 
 ## Next Steps
 
-for related articles please see the following:
+For related articles please see the following:
 
 [Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
 
