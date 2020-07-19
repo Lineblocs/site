@@ -17,14 +17,12 @@ To save a widget as a template:
 
 ## Using Widget Template
 
-1. To use the widget template click "Library" tab in the widget main menu.
-![Library](/img/frontend/docs/widget-templates/library-nav.png)
+1. To use the widget template click &nbsp;&nbsp;&nbsp;&nbsp;![Library](/img/frontend/docs/widget-templates/library.png) tab in the widget main menu.
 2. Drag library widget into flow graph                                   
-![Library list](/img/frontend/docs/widget-templates/library-list.png)
 
 ## Next Steps
 
-In this guide we discussed how you can save a widget and reuse it. for more related articles please see:
+In this guide we discussed how you can save a widget as a template. For more related articles please see:
 
 [Create a cold transfer](http://lineblocs.com/resources/quickstarts/setup-cold-transfers)
 
