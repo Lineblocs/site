@@ -54,6 +54,12 @@ final class NamecheapHelper {
           'address' => $ingress,
           'ttl' => '60'
       ],
+      [
+          'host' => 's3fs',
+          'type' => 'A',
+          'address' => $ingress,
+          'ttl' => '60'
+      ],
 
       [
           'host' => 'prv',
