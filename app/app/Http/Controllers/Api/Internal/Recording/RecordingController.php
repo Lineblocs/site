@@ -65,9 +65,10 @@ class RecordingController extends ApiAuthController {
               $name
             );
             */
-            $http = MainHelper::createStorageUrl($filePath);
+            $config = \Config::get("s3fs");
+            $http = sprintf("%s/recordings/%s", $config['url'], $name);
             $size =$file->getSize();
-            $params['uri'] = $http;
+            //$params['uri'] = $http;
             $params['size'] = $size;
       }
       $params['status'] = $data['status'];
