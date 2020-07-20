@@ -30,9 +30,13 @@ class MacroController extends ApiAuthController {
         if ($existing) {
             return $this->errorInternal( $request, 'function already exists..');
         }
-        MainHelper::compileTypescript($data['code'], $output, $return);
-        if ($return != 0) {
-            return $this->errorInternal( $request, 'could not compile code. errors: ' . json_encode($output));
+        $result = MainHelper::compileTypescript($data['code'], $output, $return);
+        if (!$result) {
+            $send = [
+                'success' => FALSE,
+                'info' => $result
+            ];
+            return $this->response->array($send);
           }
 
         $compiled = implode("\n", $output);
@@ -42,7 +46,12 @@ class MacroController extends ApiAuthController {
               'workspace_id' => $workspace->id,
               'compiled_code' => $compiled
           ]));
-        return $this->response->array($function->toArray())->withHeader('X-Function-ID', $function->public_id);
+        $send = [
+                'success' => TRUE,
+                'function' => $function->toArray()
+            ];
+
+        return $this->response->array($send)->withHeader('X-Function-ID', $function->public_id);
     }
     public function updateFunction(Request $request, $functionId)
     {

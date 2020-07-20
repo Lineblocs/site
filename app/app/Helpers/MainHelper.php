@@ -237,16 +237,15 @@ final class MainHelper {
     return ($ip & $mask) == $subnet;
 }
   public static function compileTypescript($content, &$output, &$return) {
-      $compile = file_get_contents(public_path("/typescript/defs.ts"));
-      $compile .= "\r\n" .  $content;
-      \Log::info("compiling: " . $compile);
-       $tmpfname = tempnam("/tmp", "FOO").".ts";
-      
-      $fh = fopen($tmpfname, "w");
-      \Log::info("comping file " . $tmpfname);
-      fwrite($fh, $compile);
-      fclose($fh);
-      exec("/usr/local/bin/tsc $tmpfname --outFile /dev/stdout --lib es2015", $output, $return);
+    $url = "http://lineblocs-tsc-compiler/compile";
+    $data = [
+      'code' => $content
+    ];
+    $result = MainHelper::postJSON($url, $data);
+    if ( $result ) {
+      return $result;
+    }
+    return FALSE;
   }
   public static function makeParamsArray($array) {
      $result = [];
@@ -639,5 +638,26 @@ final class MainHelper {
             $from = $mail['from'];
             $message->from($from['address'], $from['name']);
         });
+  }
+  public static function postJSON($url, $data = [])
+  {
+    $data_string = json_encode($data);                                                                                   
+                                                                                                                        
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+        'Content-Type: application/json',                                                                                
+        'Content-Length: ' . strlen($data_string))                                                                       
+    );                                                                                                                   
+                                                                                                                        
+    $result = curl_exec($ch);
+    $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ( $http_status >= 200 && $http_status <= 299) {
+      return json_decode($result, TRUE);
+    }
+    return FALSE;
   }
 }
