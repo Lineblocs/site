@@ -42,6 +42,18 @@ final class NamecheapHelper {
           'address' => $ingress,
           'ttl' => '60'
       ],
+       [
+          'host' => 'emailer',
+          'type' => 'A',
+          'address' => $ingress,
+          'ttl' => '60'
+      ],
+      [
+          'host' => 'tsc',
+          'type' => 'A',
+          'address' => $ingress,
+          'ttl' => '60'
+      ],
 
       [
           'host' => 'prv',
