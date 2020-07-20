@@ -155,7 +155,14 @@ class FileController extends ApiAuthController {
           return FALSE;
         }
         \Log::info("moving file: " . $title . " to final path..");
-        $file->move(\Config::get("app.file_save_dir"), $path);
+        file_get_contents($file->getRealPath());
+        $s3 = \Storage::disk('s3');
+        $filePath = '/files/' . $path;
+        $result = $s3->put($filePath, file_get_contents($file->getRealPath()), 'public');
+        if (!$result) {
+          return FALSE;
+        }
+        //$file->move(\Config::get("app.file_save_dir"), $path);
         return compact('title', 'path');
    }
    public function checkIfCanUploadFile($title, $extension, $size) {
