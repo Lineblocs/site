@@ -92,9 +92,11 @@ final class PhoneProvisionHelper {
   }
   public function provisionPhone($phone, $file, $xml_data)
   {
-    $provision_path_local = Config::get("provision.path");
-
-    if (file_put_contents(rtrim($provision_path_local,'/').$file, $xml_data) == FALSE) {
+    $s3 = \Storage::disk('s3');
+    $provision_path_local = \Config::get("provision.path");
+    $filePath = '/provisioning/' . $file;
+    $result = $s3->put($filePath, file_get_contents($file), 'public'); 
+    if ($result) {
       $phone->update([
         'needs_provisioning' => TRUE,
         'provision_error' => 'Could not deploy config'
