@@ -15,20 +15,9 @@
           <div class="card-stacked min">
             <div class="card-content">
               <h3>Fully Featured</h3>
-              <p>the lineblocs solution supports all the features of a modern communications system. our supported
-                features include: call transfers, IVRs, find me, voicemail and more..</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col s4">
-        <div class="card horizontal-rounded">
-          <div class="card-stacked min">
-            <div class="card-content">
-              <h3>Reliable</h3>
               <p>
-                get a UCaaS solution that is reliable and stays online 24/7. our solution is fully redundant and tested
-                for mission critical needs
+                Get a highly customizable communications solution that supports all the features of a modern communications system. 
+                Lineblocs make it easy for your team to quickly deploy softphones, IVRs, and much more.
               </p>
             </div>
           </div>
@@ -38,10 +27,22 @@
         <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
-              <h3>SIP trunking</h3>
+              <h3>Integrations</h3>
               <p>
-                use a elastic, scalable and tested SIP trunking cloud with full support for voice calls in US and
-                Canada.
+                Do more in less time using 100+ integrations developed for highly used SaaS apps. Our solution makes it simpler for you to add third party integrations to your phone system – including CRMs, e-commerce sites, and productivity apps.
+
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="card horizontal-rounded">
+          <div class="card-stacked min">
+            <div class="card-content">
+              <h3>Scalable PoPs</h3>
+              <p>
+                Get access to a highly available network, suitable for teams of all sizes. Our PoP network consists of over 30+ locations spread out across multiple regions, allowing small and medium sized team to quickly collaborate and make calls.
               </p>
             </div>
           </div>
@@ -55,13 +56,9 @@
   <div class="container">
     <div class="row">
       <div class="col s8">
-        <h2>Why Lineblocs ?</h2>
+        <h2>UC at work</h2>
         <p>
-          our solution is designed from bottom up using best technologies our cloud portal is here to help you make and
-          receive
-          more calls, manage your number network and quickly provision softphones / supported hardphones. as well as
-          make use of Fax, IM and other
-          PBX related features.
+          Get a solution exclusively designed for modern teams. Our solution allows teams to connect to a fully managed UC service, designed and developed for modern teams.
         </p>
       </div>
       <div class="col s4">
@@ -81,44 +78,38 @@
       </center>
       <div class="col s6 content min">
         <i class="material-icons prefix left h4-icon">event_available</i>
-        <h4 class="left no-margins">High Availability</h4>
+        <h4 class="left no-margins">Low-Code</h4>
         <br />
         <br />
         <p>
-          our network consist of best practice built from ground up using secure and up to date technologies.
-          Our network is completel designed with the idea of never having to miss a call.
+          Design highly customizable workflows for calls, fax, and IM using our modern low-code based solutions.
         </p>
       </div>
       <div class="col s6 content min">
         <i class="material-icons prefix left h4-icon">local_phone</i>
-        <h4 class="left no-margins">Number Inventory</h4>
+        <h4 class="left no-margins">Numbers on Demand</h4>
         <br />
         <br />
         <p>
-          our number inventory consists of a farm of numbers across multiple regions in north america. We also offer
-          number rental and management in one easy to use number management portal.
+          Self serve number rental and management in one easy to use number management portal.
         </p>
       </div>
       <div class="col s6 content min">
         <i class="material-icons prefix left h4-icon">show_chart</i>
-        <h4 class="left no-margins">Elastic Services</h4>
+        <h4 class="left no-margins">High Availability</h4>
         <br />
         <br />
         <p>
-          our cloud network is built using scale in mind. from our SIP internal network, user portals and backend
-          services.
+          Distributed VoIP networking best on practices and created using secure technologies.
         </p>
       </div>
       <div class="col s6">
         <i class="material-icons prefix left h4-icon">update</i>
-        <h4 class="left no-margins">Ease of Use</h4>
+        <h4 class="left no-margins">All-In-One Portal</h4>
         <br />
         <br />
         <p>
-          completely cloud and no need to install third party/open source software. our cloud portals and backend
-          are designed to work
-          with your call flow needs in mind and tested to run agaisnt with devices that you use for making /
-          receiving calls.
+          A fully featured user portal that allows you to quickly provision phones, extensions, call flows, and more.
         </p>
       </div>
     </div>
@@ -150,7 +141,7 @@
       <div class="col s8">
         <h2>Learn More</h2>
         <p>
-          have queries regarding our services or offerings? feel free to contact us to learn more about it.
+          Have queries regarding our offerings ? Feel free to contact us.
         </p>
         <a href="/contact" class="btn-custom service-btn">Learn More</a>
       </div>
