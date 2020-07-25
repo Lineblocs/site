@@ -8,7 +8,9 @@ use App\PortNumber;
 use App\Http\Requests\Admin\SIPProviderRequest;
 use App\Helpers\MainHelper;
 use App\SIPProviderHost;
+use App\SIPProviderRate;
 use App\SIPProviderWhitelistIp;
+use App\CallRate;
 use Datatables;
 use DB;
 use Config;
@@ -87,7 +89,12 @@ class SIPProviderController extends AdminController
             '/24' => '/24',
             '/32' => '/32',
         ];
-        return view('admin.sipprovider.create_edit', compact('provider', 'countries', 'hosts', 'providerTypes', 'ips', 'ranges'));
+        $rates = SIPProviderrate::select(
+            DB::raw('sip_providers_rates.*, call_rates.name')
+        );
+        $rates->join('call_rates', 'call_rates.id', '=', 'sip_providers_rates.rate_ref_id');
+        $rates = $rates->where('provider_id', $provider->id)->get();
+        return view('admin.sipprovider.create_edit', compact('provider', 'countries', 'hosts', 'providerTypes', 'ips', 'ranges', 'rates'));
     }
 
     /**
@@ -158,6 +165,61 @@ class SIPProviderController extends AdminController
     public function del_host(Request $request, SIPProvider $provider, SIPProviderHost $host)
     {
         $host->delete();
+            
+        return response("");
+    }
+
+
+
+    public function add_rate(SIPProvider $provider)
+    {
+        $ratesQuery = CallRate::where('type', 'outbound')->get();
+        $rates = [];
+        foreach ($ratesQuery as $rate) {
+            $rates[ $rate->id ] = $rate->name;
+        }
+        return view('admin.sipprovider.add_rate', compact('provider', 'rates'));
+    }
+
+    public function add_rate_save(Request $request, SIPProvider $provider)
+    {
+        $data = $request->all();
+        $rate = SIPProviderRate::create(array_merge([
+            'provider_id' => $provider->id
+        ], $data));
+        return response("");
+    }
+
+
+    public function edit_rate(SIPProvider $provider, SIPProviderRate $providerRate)
+    {
+        $ratesQuery = CallRate::where('type', 'outbound')->get();
+$rates = [];
+
+        foreach ($ratesQuery as $rate) {
+            $rates[ $rate->id ] = $rate->name;
+        }
+
+        $args = [
+            'provider' => $provider,
+            'rate' => $providerRate,
+            'rates' => $rates
+        ];
+        return view('admin.sipprovider.add_rate', $args);
+    }
+
+    public function edit_rate_save(Request $request, SIPProvider $provider, SIPProviderRate $providerRate)
+    {
+        $data = $request->all();
+        $providerRate->update( $data );
+            
+        return response("");
+    }
+
+
+    public function del_rate(Request $request, SIPProvider $provider, SIPProviderRate $providerRate)
+    {
+        $providerRate->delete();
             
         return response("");
     }

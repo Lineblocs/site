@@ -31,6 +31,13 @@
                 <span class="help-block">{{ $errors->first('ip_address', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('priority_prefixes') ? 'has-error' : '' }}">
+            {!! Form::label('priority_prefixes', trans("admin/siphosts.priority_prefixes"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('priority_prefixes', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('priority_prefixes', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('priority') ? 'has-error' : '' }}">
             {!! Form::label('priority', trans("admin/siphosts.priority"), array('class' => 'control-label')) !!}
             <div class="controls">

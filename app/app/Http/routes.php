@@ -93,6 +93,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::post('provider/{provider}/edit_host/{host}', 'Admin\SIPProviderController@edit_host_save');
     Route::put('provider/{provider}/edit_host/{host}', 'Admin\SIPProviderController@edit_host_save');
     Route::post('provider/{provider}/del_host/{host}', 'Admin\SIPProviderController@del_host');
+
+    Route::get('provider/{provider}/add_rate', 'Admin\SIPProviderController@add_rate');
+    Route::post('provider/{provider}/add_rate', 'Admin\SIPProviderController@add_rate_save');
+    Route::get('provider/{provider}/edit_rate/{providerRate}', 'Admin\SIPProviderController@edit_rate');
+    Route::post('provider/{provider}/edit_rate/{providerRate}', 'Admin\SIPProviderController@edit_rate_save');
+    Route::put('provider/{provider}/edit_rate/{providerRate}', 'Admin\SIPProviderController@edit_rate_save');
+    Route::post('provider/{provider}/del_rate/{providerRate}', 'Admin\SIPProviderController@del_rate');
+
     Route::get('provider/{provider}/add_ip', 'Admin\SIPProviderController@add_ip');
     Route::post('provider/{provider}/add_ip', 'Admin\SIPProviderController@add_ip_save');
     Route::get('provider/{provider}/edit_ip/{ip}', 'Admin\SIPProviderController@edit_ip');

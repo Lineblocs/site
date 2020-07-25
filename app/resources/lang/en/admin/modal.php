@@ -20,4 +20,5 @@ return [
     'servers' => 'Servers',
     'hosts' => 'Hosts',
     'ip_whitelist' => 'IP Whitelist',
+    'rates' => 'Rates'
 ];

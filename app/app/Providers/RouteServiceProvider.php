@@ -9,6 +9,7 @@ use \App\PortNumber;
 use \App\DIDNumber;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
+use \App\SIPProviderRate;
 
 use \App\SIPProviderWhitelistIp;
 use \App\SIPRouter;
@@ -47,6 +48,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('did', DIDNumber::class);
        \Route::model('provider', SIPProvider::class);
        \Route::model('host', SIPProviderHost::class);
+       \Route::model('providerRate', SIPProviderRate::class);
        \Route::model('ip', SIPProviderWhitelistIp::class);
        \Route::model('router', SIPRouter::class);
        \Route::model('routerServer', SIPRouterMediaServer::class);

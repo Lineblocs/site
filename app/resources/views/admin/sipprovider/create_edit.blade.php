@@ -13,6 +13,10 @@
      <li><a href="#tab-ips" data-toggle="tab"> {{
             trans("admin/modal.ip_whitelist") }}</a></li>
             @endif
+            @if (!empty($rates))
+     <li><a href="#tab-rates" data-toggle="tab"> {{
+            trans("admin/modal.rates") }}</a></li>
+            @endif
 
 </ul>
 <!-- ./ tabs -->
@@ -188,6 +192,48 @@
             </div>
          </div>
             @endif
+        @if (isset($provider))
+    <div class="tab-pane" id="tab-rates">
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <br/>
+                    <a href="/admin/provider/{{$provider->id}}/add_rate" class="btn btn-success">Add Rate</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <input type="hidden" id="token" value="{{csrf_token()}}"/>
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Rate Reference</th>
+                        <th>Rate</th>
+                        <th>Priority</th>
+                        <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($rates as $rate)
+                            <tr>
+                                <td>{{$rate->name}}</td>
+                                <td>{{$rate->rate}}</td>
+                                <td>{{$rate->priority}}</td>
+                                <td>
+                                    <a href="/admin/provider/{{$provider->id}}/edit_rate/{{$rate->id}}" class="btn btn-warning">Edit</a>
+                                    <button type="button" class="btn btn-danger del-rate" data-id="{{$rate->id}}">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+         </div>
+            @endif
+
+
 
 
 
@@ -221,6 +267,18 @@
                         };
                         $.post("/admin/provider/" + providerId + "/del_ip/" + id, params, function() {
                             alert("IP deleted..");
+                            window.location.reload();
+                        });
+                    });
+                });
+                $(".del-rate").each(function() {
+                    $( this ).click(function() {
+                        var id = $( this ).attr("data-id");
+                        var params = {
+                            "_token": $("#token").val()
+                        };
+                        $.post("/admin/provider/" + providerId + "/del_rate/" + id, params, function() {
+                            alert("Rate deleted..");
                             window.location.reload();
                         });
                     });
