@@ -579,7 +579,8 @@ final class MainHelper {
     $pass = $d7['pass'];
 
     curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://http-api.d7networks.com/send?username=$user&password=$pass&dlr-method=POST&dlr=no&to=$to&content=$body&from=SMSinfo",
+    //CURLOPT_URL => "https://http-api.d7networks.com/send?username=$user&password=$pass&dlr-method=POST&dlr=no&to=$to&content=$body&from=SMSinfo",
+    CURLOPT_URL => "https://http-api.d7networks.com/send?username=$user&password=$pass&dlr-method=POST&dlr=no&to=$to&content=$body&from=$from",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
