@@ -18,21 +18,21 @@ You will need the following items to begin creating IVRs:
 
 ## Editing the IVR auto attendant
 
-by default the Basic IVR template is configured with an auto attendant, using default settings. You may want to customize your auto attendant options based on your needs.
+By default the Basic IVR template is configured with an auto attendant, using default settings. You may want to customize your auto attendant options based on your needs.
 
-to update your IVR's auto attendant, please click "ProcessInput" widget to bring up its sidebar options.
+To update your IVR's auto attendant, please click "ProcessInput" widget to bring up its sidebar options.
 
-in the settings you have the option to playback text-to-speech or a media file. you can also adjust settings like the maxiumum digits to gather or the terminating digit. 
+In the settings you have the option to playback text-to-speech or a media file. you can also adjust settings like the maxiumum digits to gather or the terminating digit. 
 
-if you need more info on any of these settings you can hover over the info icon to the right of the field.
+If you need more info on any of these settings you can hover over the info icon to the right of the field.
 
 ![process input](/img/frontend/docs/basic-ivr/process-input.png)
 
 ## Routing to departments
 
-the Basic IVR template is setup to route to 3 bridges based on user input. option 1 routing to Support, 2 routes to Sales and 3 will route to an operator. 
+The Basic IVR template is setup to route to 3 bridges based on user input. option 1 routing to Support, 2 routes to Sales and 3 will route to an operator. 
 
-if you want to change the default setup you can update the "Links" tab in your "Switch" cell. To open the "Links" settings please click "Switch" cell then click the "Links" tab.
+If you want to change the default setup you can update the "Links" tab in your "Switch" cell. To open the "Links" settings please click "Switch" cell then click the "Links" tab.
 
 ## Editing the call bridges
 
@@ -47,7 +47,7 @@ Your flow should now look similar to the following image:
 
 ## Using the flow on a DID number
 
-to save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
+To save all your changes please click ![Save](/img/frontend/docs/shared/save.png) in the flow editor.
 
 To use the IVR on one of your DIDs:
 
@@ -62,7 +62,7 @@ You should now be able to hear your IVR in action! When you call your DID number
 
 ## Next Steps
 
-this guide went over how to setup a IVR. for related guides be sure to view the tutorials below:
+In this guide we went over how to setup a IVR. For other related guides be sure to view the following:
 
 [Recordings and Voicemail](http://lineblocs.com/resources/quickstarts/recordings-and-voicemail)
 
