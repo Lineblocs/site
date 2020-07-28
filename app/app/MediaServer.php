@@ -9,6 +9,9 @@ class MediaServer extends Model {
 
   protected $guarded  = array('id');
   protected $table  = "media_servers";
+  protected $casts = array(
+    "webrtc_optimized" => "boolean"
+  );
   public static function asSelect() {
     $all = self::all();
     $results = [];

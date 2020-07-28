@@ -57,6 +57,16 @@
                 </div>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('webrtc_optimized') ? 'has-error' : '' }}">
+            {!! Form::label('webrtc_optimized', trans("admin/users.active_user"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::label('webrtc_optimized', trans("admin/users.yes"), array('class' => 'control-label')) !!}
+                {!! Form::radio('webrtc_optimized', '1', @isset($user)? $user->webrtc_optimized : 'false') !!}
+                {!! Form::label('webrtc_optimized', trans("admin/users.no"), array('class' => 'control-label')) !!}
+                {!! Form::radio('webrtc_optimized', '0', @isset($user)? $user->webrtc_optimized : 'true') !!}
+                <span class="help-block">{{ $errors->first('webrtc_optimized', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group">
         <button type="submit" class="btn btn-sm btn-success">
             <span class="glyphicon glyphicon-ok-circle"></span>
