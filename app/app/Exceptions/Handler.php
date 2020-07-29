@@ -45,10 +45,41 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
+        {
+            //Ajax Requests
+            if($request->ajax() || $request->wantsJson())
+            {
+                $data = [
+                    'error'   => true,
+                    'message' => 'The route is not defined',
+                ];
+                return Response::json($data, '404');
+            }
+            else
+            {
+                //Return view 
+                return response()->view('pages.notfound_404');
+            }
         }
-
+        //Handle HTTP Method Not Allowed
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException)
+        {
+            //Ajax Requests
+            if($request->ajax() || $request->wantsJson())
+            {
+                $data = [
+                    'error'   => true,
+                    'message' => 'The http method not allowed',
+                ];
+                return Response::json($data, '404');
+            }
+            else
+            {
+                //Return view 
+                return response()->view('pages.notfound_404');
+            }
+        }
         return parent::render($request, $e);
     }
 }

@@ -332,4 +332,9 @@ class HomeController extends BaseController {
     return view('status.update', compact('category', 'update'));
 
   }
+  public function notfound_404(Request $request)
+  {
+    return view('pages.notfound_404');
+  }
+
 }

@@ -4,6 +4,7 @@ Route::pattern('id', '[0-9]+');
 Route::pattern('slug', '[0-9a-z-_]+');
 /***************    Site routes  **********************************/
 Route::get('/', 'HomeController@index');
+Route::get('404', 'HomeController@notfound_404')->name('404');
 Route::get('home', 'HomeController@index');
 Route::get('about', 'HomeController@about');
 Route::get('contact', 'HomeController@contact');
