@@ -2,11 +2,11 @@
 
 use App\Helpers\PlanHelper;
 return [
-  'pay-as-you-go' => PlanHelper::create_plan(
+  'pay-as-you-go' => PlanHelper::create_plan([
     'key_name' => 'pay-as-you-go',
     'nice_name' => 'Pay As You Go',
 
-  ),
+  ]),
   'starter' => PlanHelper::create_plan([
     'key_name' => 'starter',
     'nice_name' => 'Starter',
