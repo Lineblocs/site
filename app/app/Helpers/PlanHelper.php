@@ -39,6 +39,8 @@ public static function gb_to_kb($gb) {
 public static function create_plan($attrs=[])
 {
   $defaults = [
+    'key_name' => '',
+    'nice_name' => '',
     'base_costs' => 0.00,
     'minutes_per_month' => 0,
     'extensions' => 5,
