@@ -64,7 +64,8 @@ public static function create_plan($attrs=[])
     'bring_carrier' => FALSE,
     'call_center' => FALSE,
     '247_support' => FALSE,
-    'ai_calls' => FALSE
+    'ai_calls' => FALSE,
+    'benefits' => []
   ];
   $result = [];
   foreach ($defaults as $key => $item) {

@@ -5,6 +5,7 @@ return [
   'pay-as-you-go' => PlanHelper::create_plan([
     'key_name' => 'pay-as-you-go',
     'nice_name' => 'Pay As You Go',
+    'benefits' => []
 
   ]),
   'starter' => PlanHelper::create_plan([
@@ -16,6 +17,10 @@ return [
     'recording_space' => PlanHelper::gb_to_kb( 2 ),
     'im_integrations' => TRUE,
     'productivity_integrations' => TRUE,
+    'benefits' => [
+        'IM Integrations',
+        'Productivity Integrations'
+    ]
   ]),
   'pro' => PlanHelper::create_plan([
     'key_name' => 'pro',
@@ -37,7 +42,18 @@ return [
     'provisioner' => TRUE,
     'vpn' => TRUE,
     'multiple_sip_domains' => TRUE,
-    'bring_carrier' => TRUE
+    'bring_carrier' => TRUE,
+    'benefits' => [
+        'IM Integrations',
+        'Productivity Integrations',
+        'Fraud Protection',
+        'CRM Integrations (salesforce, zoho, zendesk)',
+        'Phone Provisioner',
+        'Lineblocs VPN',
+        'Bring Your Own Carrier',
+        'Multiple SIP Domains'
+    ]
+
   ]),
   'ultimate' => PlanHelper::create_plan([
     'key_name' => 'ultimate',
@@ -61,7 +77,16 @@ return [
     'bring_carrier' => TRUE,
     'call_center' => TRUE,
     '247_support' => TRUE,
-    'ai_calls' => TRUE
+    'ai_calls' => TRUE,
+    'benefits' => [
+
+ 'Call Center Apps',
+ '24 / 7 Support',
+ 'AI Based call routing',
+ 'Custom Branded SIP Apps',
+ 'Branded Softphone Apps',
+ 'Dedicated Lineblocs Representitive'
+    ]
   ])
 
 ];
