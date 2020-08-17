@@ -311,6 +311,7 @@ $api->version('v1', function($api) {
   $api->get('refreshWorkspaceTokens', '\App\Http\Controllers\MergedController@refreshWorkspaceTokens');
   $api->get('getConfig', '\App\Http\Controllers\ConfigController@getConfig');
   $api->get('dashboard', '\App\Http\Controllers\MergedController@dashboard');
+  $api->post('upgradePlan', '\App\Http\Controllers\MergedController@upgradePlan');
   $api->get('billing', '\App\Http\Controllers\MergedController@billing');
   $api->post('saveWidget', '\App\Http\Controllers\MergedController@saveWidget');
   $api->post('submitJoinWorkspace', '\App\Http\Controllers\MergedController@submitJoinWorkspace');

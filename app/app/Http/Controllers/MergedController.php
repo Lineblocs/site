@@ -14,7 +14,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\PhoneDefault;
 use App\Fax;
-
+use App\PlanUsagePeriod;
 use App\Extension;
 use App\File;
 use App\Flow;
@@ -143,6 +143,31 @@ class MergedController extends ApiAuthController
                             ->where('direction', '=', $direction);
       return $calls->count();
     }
+    public function upgradePlan(Request $request)
+    {
+      $json = $request->json()->all();
+      $plans = Config::get("service_plans");
+      $plan = $json['plan'];
+      $selected = $plans[$plan];
+      $workspace = $this->getWorkspace($request);
+      $user = $this->getUser($request);
+      $period = PlanUsagePeriod::where('workspace_id', $workspace->id)->where('active', '1')->firstOrFail();
+      $now = new DateTime();
+
+      $period->update([
+        'ended_at' => $now
+      ]);
+      $period = PlanUsagePeriod::create([
+        'workspace_id' => $workspace->id,
+        'started_at' => $now,
+        'plan' => $plan
+      ]);
+      $workspace->update([
+        'plan' => $selected['key_name']
+      ]);
+        return $this->response->noContent();
+    }
+
     public function dashboard(Request $request)
     {
       $dayCount = 7;
