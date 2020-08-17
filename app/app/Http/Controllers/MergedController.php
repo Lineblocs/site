@@ -143,6 +143,12 @@ class MergedController extends ApiAuthController
                             ->where('direction', '=', $direction);
       return $calls->count();
     }
+    public function plans(Request $request)
+    {
+
+      $plans = Config::get("service_plans");
+      return $this->response->array($plans);
+    }
     public function upgradePlan(Request $request)
     {
       $json = $request->json()->all();
