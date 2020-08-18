@@ -239,7 +239,8 @@ class MergedController extends ApiAuthController
         $billing,
         $self->toArray(TRUE),
         $checklist,
-        $plan
+        $plan,
+        $workspace->toArray()
       ]);
     }
     public function fetchWorkspaceInfo(Request $request)
