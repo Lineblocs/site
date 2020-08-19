@@ -79,6 +79,12 @@ final class NamecheapHelper {
           'type' => 'A',
           'address' => $ingress,
           'ttl' => '60'
+      ],
+      [
+          'host' => 'pbx',
+          'type' => 'A',
+          'address' => '155.138.159.234',
+          'ttl' => '60'
       ]
     ];
     //sendgrid
