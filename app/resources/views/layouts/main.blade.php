@@ -7,7 +7,7 @@
   @if (isset($title))
     <title>LineBlocs.com - {{$title}}</title>
   @else
-    <title>LineBlocs.com - Your line your way</title>
+    <title>LineBlocs.com - The Customizable Phone</title>
   @endif
   @if (isset($description))
     <meta name="description" content="{{$description}}">
