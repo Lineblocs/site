@@ -76,6 +76,20 @@ drift.load('84i5z2ttdxg5');
 </script>
 @endif
 <!-- End of Async Drift Code -->
+<!-- Global site tag (gtag.js) - Google Ads: 965741552 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-965741552"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-965741552');
+</script>
+<!-- Event snippet for Website traffic conversion page -->
+<script>
+  gtag('event', 'conversion', {'send_to': 'AW-965741552/FF6wCNC0gN4BEPCXwMwD'});
+</script>
+
 </head>
 
 <body>
