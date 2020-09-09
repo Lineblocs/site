@@ -96,6 +96,10 @@ sections:
         description: how to view invoices in your dashboard and manage invoice billing.
         link: monthly-invoices
         tags: invoices, monthly invoices, billing, lineblocs
+      - name: Upgrading Plan
+        description: how to upgrade your Lineblocs membership
+        link: upgrading-plan
+        tags: upgrade plan, upgrade, lineblocs, membership, change
       - name: Adding Credit (Pay As You Go Only)
         description: learn about the payment options available to fund your lineblocs account.
         link: adding-credit
