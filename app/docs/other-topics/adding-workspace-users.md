@@ -1,8 +1,6 @@
 # Adding Workspace Users
 
-Lineblocs lets you add new team members to your account on demand. You can create new members in your workspace as well as give them roles to perform certain actions in your workspace, such as add extensions, register DIDs or create new call flows. 
-
-In this guide will go over how to add, update, and remove users from your Lineblocs account.
+Lineblocs lets you add new team members to your account on demand. You can create new members in your workspace, as well as give them roles to perform actions in your workspace, such as adding extensions, registering DIDs, or creating new call flows. 
 
 ## Add Workspace Member
 
@@ -14,11 +12,13 @@ To add a new workspace member to your Lineblocs account:
 4. Assign user roles
 5. Click "Save"
 
-Once you have created a new user, they will receive an invite email which they can use to register under your workspace.
+Once you have created a new user, the user will receive an invite email that includes a registration link.
+
+> Note: All new invitations expire in 7 days after they are sent
 
 ## Editing Workspace Users
 
-To edit a user please click the ![Edit](/img/frontend/docs/shared/edit.png) icon next to your user.
+To edit a user please click the ![Edit](/img/frontend/docs/shared/edit.png) button next to your user.
 
 ## Resend Email Invite
 
