@@ -36,7 +36,7 @@ final class MainHelper {
             '/32' => '/32',
         ];
     public static $regions = [
-      'ca-central-1'
+      'ca-central-1' => 'ca-central-1' 
     ];
   public static function createApiId($prefix="") {
     $uuid4 = Uuid::uuid4(); 
