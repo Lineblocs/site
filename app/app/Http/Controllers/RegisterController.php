@@ -63,12 +63,19 @@ class RegisterController extends ApiAuthController
             return $this->errorInternal($request, 'Could not create token');
         }
         $unique = uniqid(TRUE);
+        $plan = 'pay-as-you-go';
+        if ( !empty($data['plan'] )) {
+          $plan = $data['plan'];
+        }
+        $trialMode =TRUE; 
+
         $workspace = Workspace::create([
         'creator_id' => $user->id,
         'name' => $unique,
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
-        'plan' => 'trial'
+        'plan' => $plan,
+        'trial_mode' => $trialMode
       ]);
         return $this->response->array([
             'success' => TRUE,
