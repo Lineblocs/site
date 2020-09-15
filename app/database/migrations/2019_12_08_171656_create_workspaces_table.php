@@ -17,7 +17,7 @@ class CreateWorkspacesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->integer('creator_id')->unsigned();
-            $table->foreign('creator_id')->references('id')->on('users');
+            $table->foreign('creator_id')->references('id')->on('users')->onDelete('CASCADE');
         });
     }
 
