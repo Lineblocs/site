@@ -77,6 +77,7 @@ class RegisterController extends ApiAuthController
         'plan' => $plan,
         'trial_mode' => $trialMode
       ]);
+      WorkspaceUser::createSuperAdmin($workspace, $user);
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
@@ -308,7 +309,6 @@ class RegisterController extends ApiAuthController
           'number' => $user->mobile_number
       ]);
       $attrs = [];
-      WorkspaceUser::createSuperAdmin($workspace, $user);
       return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);
     }
     public function forgot(Request $request) {
