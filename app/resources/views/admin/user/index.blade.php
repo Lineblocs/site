@@ -38,6 +38,7 @@
 
 {{-- Scripts --}}
 @section('scripts')
+<script>
 	var oTableColumns = [
 		{
 			"data": "first_name",
@@ -70,4 +71,5 @@
 		},
 
 ];
+	</script>
 @endsection

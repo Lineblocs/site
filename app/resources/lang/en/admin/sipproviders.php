@@ -9,5 +9,6 @@ return [
     'priority' => 'Priority',
     'host' => 'Host',
     'type_of_provider' => 'Type of provider',
+   'api_name' => 'API Name', 
     'active' => 'Active'
 ];

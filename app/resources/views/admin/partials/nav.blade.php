@@ -6,7 +6,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">Lineblocs Admin</a>
+        <a class="navbar-brand" href="index.html">
+                <img src="/images/logo-white.png" height="42"/>
+        </a>
     </div>
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">

@@ -1,0 +1,9 @@
+{
+  "name": "min-img",
+  "version": "v0.0.1",
+  "dependencies": {
+    "imagemin": "^7.0.1",
+    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-pngquant": "^8.0.0"
+  }
+}

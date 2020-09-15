@@ -1,0 +1,234 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}
+.resource-search {
+  margin-top: 9.3px;
+}
+.white-bg {
+  background: #FFFFFF;
+}
+.contrast-bg-1 {
+  background: #F5F5F5;
+}
+.contrast-bg-2 {
+  background: #0A1247;
+}
+.dark-text {
+  color: #3D3D3D !important;
+}
+.contrast-bg-2 h1 {
+  color: #FFFFFF;
+}
+.contrast-bg-2 h2 {
+  color: #FFFFFF;
+}
+.contrast-bg-2 h3 {
+  color: #FFFFFF;
+}
+.contrast-bg-2 h4 {
+  color: #FFFFFF;
+}
+.contrast-bg-2 h5 {
+  color: #FFFFFF;
+}
+.contrast-bg-2 p {
+  color: #FFFFFF;
+}
+.contrast-bg-2 span {
+  color: #FFFFFF;
+}
+.contrast-bg-2 strong {
+  color: #FFFFFF;
+}
+.section.no-bottom-margin .row {
+  margin-bottom: 0;
+}
+.more-padding {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.alot-padding {
+  padding-top: 12rem;
+  padding-bottom: 12rem;
+}
+.card-stacked.min {
+  min-height: 350px;
+}
+.content.min {
+  min-height: 256px;
+}
+.no-margins {
+  margin: 0px;
+}
+.h4-icon {
+  margin-top: 6.8px;
+}
+.container {
+}
+.nav-bg {
+  background-color: #395373 !important;
+}
+.blue-btn {
+  background-color: #2979ff;
+}
+.blue-btn:hover {
+  background-color: #2979ff;
+}
+.btn:hover, .btn-large:hover, .btn-small:hover {
+}
+.my-blue-text {
+  color: #2979ff;
+}
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+  color: #2979ff;
+}
+.my-footer {
+  background: #395373 !important;
+}
+.dropdown-content li > a, .dropdown-content li > span {
+  color: #2979ff;
+}
+input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly])
+{
+    border-bottom: 1px solid #e3e3e3;
+    -webkit-box-shadow: 0 1px 0 0 #e3e3e3;
+    box-shadow: 0 1px 0 0 #e3e3e3;
+}
+input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-default):focus:not([readonly]) + label, input[type=password]:not(.browser-default):focus:not([readonly]) + label, input[type=email]:not(.browser-default):focus:not([readonly]) + label, input[type=url]:not(.browser-default):focus:not([readonly]) + label, input[type=time]:not(.browser-default):focus:not([readonly]) + label, input[type=date]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label, input[type=number]:not(.browser-default):focus:not([readonly]) + label, input[type=search]:not(.browser-default):focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label {
+  color: #E3E3E3;
+}
+.input-field .prefix.active {
+  color: #E3E3E3;
+}
+.container {
+  width: 1280px;
+}
+.max {
+  width: 100%;
+  max-width: 100%;
+}
+/* On screens that are 992px or less, set the background color to blue */
+@media screen and (max-width: 1024px) {
+.container {
+  width: 1024px;
+}
+}
+.markdown img {
+  max-width: 937px;
+}
+
+a {
+  color: #0A1247;
+}
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+      #contents {
+        margin: 6px;
+      }
+
+      .dash {
+        padding: 0 6px;
+      }
+      tr {
+          border-bottom: none;
+      }
+      h2.resource-hdg {
+  line-height: 110%;
+  margin: 2.3733333333rem 0 1.424rem 0;
+}
+.resources {
+  margin-top: 20px;
+}
+.pricing-hdg {
+  margin: 35px 0 0px;
+}
+.related-bar  {
+}
+.related-bar .inner {
+  margin-left: 70px;
+  position: relative;
+}
+
+.related-bar ul {
+  margin: 25px 0 10px;
+}
+.related-bar ul li {
+  margin-bottom: 15px;
+  padding-left: 30px;
+}
+
+.related-bar ul li a {
+  position: relative;
+  top: -5px;
+}
+.related-bar ul li:before {
+    background-color: #0052CC;
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 8px;
+    width: 8px;
+    border-radius: 5px;
+    background-color: #A5ADBA;
+}
+.markdown img {
+  max-width: 100%;
+}
+.social-media a {
+  z-index: 2147483648;
+}
+#drift-widget {
+}
+.card.horizontal {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  border: 1px solid #CCCCCC;
+  border-radius: 3px;
+
+}
+footer .footer.no-margin {
+  margin-top: 0px;
+}
+.clearfix {
+  margin: 0;
+}
+.clearfix:after {
+  clear: both;
+  content: '';
+  display: block;
+  margin: 0;
+}
+ul.grid-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul.grid-list li {
+  margin-bottom: 25px;
+}
+.btn-custom {
+  border: 0px;
+}
+
+.container.with-margin {
+  margin-bottom: 125px;
+}
+.resource-sections {
+
+}

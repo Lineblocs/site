@@ -101,7 +101,8 @@ class User extends Model implements AuthenticatableContract,
               'auto_recharge_top_up_dollars' => MainHelper::toDollars($this->auto_recharge_top_up),
               'invoices_by_email' => $this->invoices_by_email,
               'billing_package' => $this->billing_package
-            ]
+            ],
+            'limits' => $this->getLimits()
 
         ];
         return $info;
@@ -170,14 +171,15 @@ class User extends Model implements AuthenticatableContract,
     }
 
     public function getLimits() {
-           $limits = Config::get("service_plans")['trial'];
-if ($this->plan == 'trial') {
-           $limits = Config::get("service_plans")['trial'];
-    
-        } elseif ($this->plan == 'standard') {
-           $limits = Config::get("service_plans")['standard'];
-        }
-      return $limits;
+      $work = \App\Workspace::where('creator_id', $this->id)->first();
+      if ( $work ) {
+        $limits = Config::get("service_plans")[$work->plan];
+      } else {
+        return [
+          'call_duration' => 'N/A',
+          'recording_space' => 'N/A',
+        ];
+      }
     }
     public function getName() {
       return sprintf("%s %s", $this->first_name, $this->last_name);

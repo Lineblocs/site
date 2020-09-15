@@ -20,5 +20,7 @@ return [
     'servers' => 'Servers',
     'hosts' => 'Hosts',
     'ip_whitelist' => 'IP Whitelist',
-    'rates' => 'Rates'
+    'rates' => 'Rates',
+    'dids' => 'DID Numbers',
+    'prefixes' => 'Prefixes'
 ];

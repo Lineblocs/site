@@ -15,6 +15,8 @@
               content="Lorem ipsum dolor sit amet, nihil fabulas et sea, nam posse menandri scripserit no, mei."/>
     @show
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom-backend.css') }}" rel="stylesheet">
     <script src="{{ asset('js/admin.js') }}"></script>
     @yield('styles')
 </head>
@@ -31,6 +33,7 @@
     var oTable;
     $(document).ready(function () {
         oTable = $('#table').DataTable({
+            "pageLength": 20,
             "ordering": false,
             "oLanguage": {
                 "sProcessing": "{{ trans('table.processing') }}",

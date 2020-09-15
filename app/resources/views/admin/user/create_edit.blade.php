@@ -186,7 +186,7 @@ true)) !!}
     </div>
     <!-- DIDs tab -->
     <div class="tab-pane" id="tab-dids">
-        <h5>DID Numbesr</h5>
+        <h5>DID Numbers</h5>
         <table class="table stripped">
             <thead>
                 <th>Number</th>
