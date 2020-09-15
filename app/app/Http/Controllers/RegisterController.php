@@ -119,6 +119,10 @@ class RegisterController extends ApiAuthController
               return $this->response->array(['valid' => FALSE, 'message' => 'Number is already registered..']);
         }
       }
+      $current = $user->where('mobile_number', $number)->first();
+      if ( $current ) {
+          return $this->response->array(['valid' => FALSE, 'error' => 'User with mobile number already exists.']);
+      }
       $user->update([
         'mobile_number' => $number,
         'call_code' => $code
