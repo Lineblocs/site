@@ -13,7 +13,6 @@ foreach (RegionDataHelper::$areas as $iso =>  $area) {
         'name' => $area['name']
     ]);
     foreach ($area['regions'] as $code => $regionArea) {
-      echo var_dump($regionArea);
       $region = SIPregion::create([
         'code' => $code,
         'name' =>  $regionArea['name'],

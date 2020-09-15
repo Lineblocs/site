@@ -20,7 +20,7 @@ class CreateDebuggerTable extends Migration
             $table->string('title');
             $table->string('report');
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
             $table->integer('flow_id')->unsigned()->nullable();
             $table->foreign('flow_id')->references('id')->on('flows');
 

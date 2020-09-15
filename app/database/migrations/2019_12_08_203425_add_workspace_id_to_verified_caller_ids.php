@@ -15,7 +15,7 @@ class AddWorkspaceIdToVerifiedCallerIds extends Migration
         Schema::table('verified_callerids', function (Blueprint $table) {
             //
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
         });
     }
 

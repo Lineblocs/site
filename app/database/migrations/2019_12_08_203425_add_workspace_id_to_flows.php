@@ -15,7 +15,7 @@ class AddWorkspaceIdToFlows extends Migration
         Schema::table('flows', function (Blueprint $table) {
             //
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
         });
     }
 

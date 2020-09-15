@@ -15,7 +15,7 @@ class AddWorkspaceIdToBlockedNumbers extends Migration
         Schema::table('blocked_numbers', function (Blueprint $table) {
             //
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
         });
     }
 

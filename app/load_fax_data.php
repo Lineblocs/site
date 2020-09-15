@@ -33,7 +33,6 @@ foreach ($countries as $country) {
         //echo var_dump($region);
         //$faxCenters = $test->clazz->getFaxRateCentersUSA($region['code']);
         $faxCenters = $test->clazz->getFaxRateCentersUSA('AL');
-        echo var_dump($faxCenters);
         if ($faxCenters['status'] != 'invalid_state') {
         foreach ($faxCenters['ratecenters'] as $fCenter) {
             if ($fCenter['available']=='yes') {

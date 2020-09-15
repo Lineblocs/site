@@ -19,7 +19,7 @@ class CreateFilesTable extends Migration
             $table->string('path');
             $table->string('api_id')->unique();
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
         });
 
     }

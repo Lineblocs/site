@@ -16,7 +16,7 @@ class CreateExtensionCodesNew extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
             $table->integer('flow_id')->unsigned();
             $table->foreign('flow_id')->references('id')->on('flows')->onDelete('CASCADE');
             $table->string('name');

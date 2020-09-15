@@ -17,9 +17,9 @@ class CreateErrorUserTrace extends Migration
             $table->timestamps();
             $table->string('message');
             $table->integer('workspace_id')->unsigned()->nullable();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->string('full_url');
         });
     }

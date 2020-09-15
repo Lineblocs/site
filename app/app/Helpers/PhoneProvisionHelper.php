@@ -227,8 +227,8 @@ final class PhoneProvisionHelper {
         foreach ($defs as $def) {
            $category = $def['category']; 
           foreach ($def['options'] as $option) {
-            echo "adding option: ".PHP_EOL;
-            echo var_dump($option);
+            //echo "adding option: ".PHP_EOL;
+            //echo var_dump($option);
             $variable = $option['name'];
             if (!empty($option['variable_name'])) {
               $variable = $option['variable_name'];

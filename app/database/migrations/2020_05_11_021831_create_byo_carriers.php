@@ -16,8 +16,8 @@ class CreateByoCarriers extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('public_id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->integer('workspace_id')->unsigned();
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
             $table->string('name');

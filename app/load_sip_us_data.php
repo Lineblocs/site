@@ -47,7 +47,6 @@ foreach ($states as $state) {
   $item = [];
   $item['rate_centers'] = [];
   $centers = $instance->clazz->getRateCentersUSA($state['iso']);
-  echo var_dump($centers);
   if ($centers['status'] == 'success') {
     foreach ( $centers['ratecenters'] as $center ) {
         if ($center['available']== 'yes') {
@@ -57,5 +56,3 @@ foreach ($states as $state) {
   }
   $map[$state['iso']][] = $item;
 }
-echo var_dump($map);
-

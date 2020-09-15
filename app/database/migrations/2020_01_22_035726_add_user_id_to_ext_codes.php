@@ -14,8 +14,8 @@ class AddUserIdToExtCodes extends Migration
     {
         Schema::table('extension_codes', function (Blueprint $table) {
             //
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
         });
     }

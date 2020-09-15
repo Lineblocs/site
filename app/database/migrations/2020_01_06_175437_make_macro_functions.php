@@ -19,9 +19,9 @@ class MakeMacroFunctions extends Migration
             $table->text('code');
             $table->string('public_id')->unique();
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
         });
     }

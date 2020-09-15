@@ -20,8 +20,8 @@ class CreatePhonesGlobalSettingsTable extends Migration
             $table->foreign('phone_group')->references('id')->on('phones_groups')->onDelete('CASCADE');
             $table->string('setting_variable_name');
             $table->string('setting_option_1');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->integer('workspace_id')->unsigned();
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
 

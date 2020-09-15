@@ -16,7 +16,7 @@ class CreateWorkspaceParams extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
             $table->string('key');
             $table->string('value');
         });

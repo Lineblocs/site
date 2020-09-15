@@ -46,13 +46,13 @@ $provinces = [
 foreach ($provinces as $province) {
   $item = [];
   $item['rate_centers'] = [];
+  echo "Loading Canada data for ". $province['iso']. PHP_EOL;
   $region = SIPRegion::create([
       'country_id' => $canada->id,
       'name' => $province['name'],
       'code' => $province['iso']
     ]);
   $centers = $instance->clazz->getRateCentersCAN($province['iso']);
-  echo var_dump($centers);
   if ($centers['status'] == 'success') {
     foreach ( $centers['ratecenters'] as $center ) {
           $attrs = [
@@ -69,6 +69,8 @@ foreach ($provinces as $province) {
             'center_id' => $rCenter->id
         ]);
     }
+  } else {
+    echo "Could not get data for ". $province['iso']. PHP_EOL;
   }
 }
 
@@ -120,10 +122,12 @@ $states = [
         'iso' => 'NV',
           'name' => 'Nevada'
       ],
+      /*
       [
         'iso' => 'MC',
         'name' =>  'Michigan'
       ],
+      */
       [
         'iso' => 'PA',
         'name' => 'Pennsylvania'
@@ -140,13 +144,13 @@ $states = [
 foreach ($states as $state) {
   $item = [];
   $item['rate_centers'] = [];
+  echo "Loading USA data for ". $state['iso']. PHP_EOL;
   $region = SIPRegion::create([
       'country_id' => $us->id,
       'name' => $state['name'],
       'code' => $state['iso']
     ]);
   $centers = $instance->clazz->getRateCentersUSA($state['iso']);
-  echo var_dump($centers);
   if ($centers['status'] == 'success') {
     foreach ( $centers['ratecenters'] as $center ) {
           $attrs = [
@@ -164,6 +168,8 @@ foreach ($states as $state) {
         ]);
 
     }
+  } else {
+    echo "Could not get data for ". $state['iso']. PHP_EOL;
   }
 }
 

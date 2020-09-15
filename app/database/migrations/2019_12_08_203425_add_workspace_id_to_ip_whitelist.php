@@ -15,7 +15,7 @@ class AddWorkspaceIdToIpWhitelist extends Migration
         Schema::table('ip_whitelist', function (Blueprint $table) {
             //
             $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
         });
     }
 

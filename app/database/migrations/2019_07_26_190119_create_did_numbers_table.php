@@ -20,8 +20,8 @@ class CreateDidNumbersTable extends Migration
             $table->string('region');
             $table->string('name');
             $table->integer('monthly_cost'); //cents
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
