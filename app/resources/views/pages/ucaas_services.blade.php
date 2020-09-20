@@ -1,7 +1,7 @@
 @extends('layouts.main', ['footer_cls' => 'no-margin'])
 @section('title') Home :: @parent @endsection
 @section('content')
-<div class="section no-bottom-margin more-padding" id="index-banner">
+<div class="section no-bottom-margin more-padding region-landing-heading" id="index-banner">
   <div class="container">
     <center>
       <h2>Calling, IM and Fax Services for {{$region['name']}}, {{$country['name']}}</h2>
@@ -10,7 +10,7 @@
       </p>
     </center>
     <div class="row">
-      <div class="col s4">
+      <div class="col s12 l6 xl4">
         <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div class="col s4">
+      <div class="col s12 l6 xl4">
         <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
@@ -36,7 +36,7 @@
           </div>
         </div>
       </div>
-      <div class="col s4">
+      <div class="col s12 l6 xl4">
         <div class="card horizontal-rounded">
           <div class="card-stacked min">
             <div class="card-content">
@@ -52,23 +52,23 @@
     </div>
   </div>
 </div>
-<div class="section no-bottom-margin more-padding contrast-bg-1" id="index-banner">
+<div class="region-landing-work section no-bottom-margin more-padding contrast-bg-1" id="index-banner">
   <div class="container">
     <div class="row">
-      <div class="col s8">
+      <div class="col s12 l8">
         <h2>UC at work</h2>
         <p>
           Get a solution exclusively designed for modern teams. Our solution allows teams to connect to a fully managed UC service, designed and developed for modern teams.
         </p>
       </div>
-      <div class="col s4">
+      <div class="col s12 l4">
         <img width="100%" src="/img/frontend/ucaas-1.jpeg"></img>
       </div>
     </div>
   </div>
 </div>
 
-<div class="section no-bottom-margin more-padding white-bg" id="index-banner">
+<div class="region-landing-features section no-bottom-margin more-padding white-bg" id="index-banner">
   <div class="container">
     <div class="row">
       <center>
@@ -76,7 +76,7 @@
         <br />
         <br />
       </center>
-      <div class="col s6 content min">
+      <div class="col s12 l6 content min">
         <i class="material-icons prefix left h4-icon">event_available</i>
         <h4 class="left no-margins">Low-Code</h4>
         <br />
@@ -85,7 +85,7 @@
           Design highly customizable workflows for calls, fax, and IM using our modern low-code based solutions.
         </p>
       </div>
-      <div class="col s6 content min">
+      <div class="col s12 l6 content min">
         <i class="material-icons prefix left h4-icon">local_phone</i>
         <h4 class="left no-margins">Numbers on Demand</h4>
         <br />
@@ -94,7 +94,7 @@
           Self serve number rental and management in one easy to use number management portal.
         </p>
       </div>
-      <div class="col s6 content min">
+      <div class="col s12 l6 content min">
         <i class="material-icons prefix left h4-icon">show_chart</i>
         <h4 class="left no-margins">High Availability</h4>
         <br />
@@ -103,7 +103,7 @@
           Distributed VoIP networking best on practices and created using secure technologies.
         </p>
       </div>
-      <div class="col s6">
+      <div class="col s12 l6 content min">
         <i class="material-icons prefix left h4-icon">update</i>
         <h4 class="left no-margins">All-In-One Portal</h4>
         <br />
@@ -135,17 +135,17 @@
   </div>
 </div>
 -->
-<div class="section no-bottom-margin more-padding contrast-bg-1" id="index-banner">
+<div class="region-landing-learn section no-bottom-margin more-padding contrast-bg-1" id="index-banner">
   <div class="container">
     <div class="row">
-      <div class="col s8">
+      <div class="col s12 l8">
         <h2>Learn More</h2>
         <p>
           Have queries regarding our offerings ? Feel free to contact us.
         </p>
         <a href="/contact" class="btn-custom service-btn">Learn More</a>
       </div>
-      <div class="col s4">
+      <div class="col s12 l4">
         <img width="100%" src="/img/frontend/ucaas-4.jpeg"></img>
       </div>
 

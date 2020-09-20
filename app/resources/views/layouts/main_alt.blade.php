@@ -102,6 +102,7 @@ drift.load('84i5z2ttdxg5');
       <link rel="stylesheet" href="/css/contact.css">
         <link rel="stylesheet" href="/css/resources-page/resources.css" />
             <link rel="stylesheet" href="/css/resources-section.css">
+            <link rel="stylesheet" href="/css/region_landing.css">
 </head>
 
 <body>

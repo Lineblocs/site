@@ -47,16 +47,17 @@
   <link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="/css/style-frontend.css" type="text/css" rel="stylesheet" media="screen,projection"/>
       <!-- responsive css -->
-    <link rel="stylesheet" href="./css/shared/navbar.css">
-    <link rel="stylesheet" href="./css/homepage/hero.css">
-    <link rel="stylesheet" href="./css/homepage/features.css">
-    <link rel="stylesheet" href="./css/homepage/support.css">
-    <link rel="stylesheet" href="./css/homepage/comparison.css">
-    <link rel="stylesheet" href="./css/shared/footer.css">
-    <link rel="stylesheet" href="./css/faq-page.css">
-      <link rel="stylesheet" href="./css/about/about.css">
+    <link rel="stylesheet" href="/css/shared/navbar.css">
+    <link rel="stylesheet" href="/css/homepage/hero.css">
+    <link rel="stylesheet" href="/css/homepage/features.css">
+    <link rel="stylesheet" href="/css/homepage/support.css">
+    <link rel="stylesheet" href="/css/homepage/comparison.css">
+    <link rel="stylesheet" href="/css/shared/footer.css">
+    <link rel="stylesheet" href="/css/faq-page.css">
+      <link rel="stylesheet" href="/css/about/about.css">
         <link rel="stylesheet" href="/css/contact.css">
-          <link rel="stylesheet" href="./css/resources-page/resources.css" />
+          <link rel="stylesheet" href="/css/resources-page/resources.css" />
+            <link rel="stylesheet" href="/css/region_landing.css">
     <title>Home</title>
     <!-- Start of Async Drift Code -->
 
