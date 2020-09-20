@@ -1,0 +1,36 @@
+.hero-content {
+  flex-wrap: wrap;
+}
+
+.hero-content .hero-img img {
+  width: 100%;
+}
+
+.hero-content .hero-text {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-content .hero-text .desc {
+  order: 3;
+}
+
+.hero-content .hero-text a {
+  margin-top: 50px;
+  order: 2;
+}
+
+@media (min-width: 768px) {
+  .hero-content .hero-img img {
+    width: initial;
+  }
+
+}
+
+@media (min-width: 1189px) {
+  .hero-content .hero-text {
+    padding: initial;
+    display: block;
+  }
+}

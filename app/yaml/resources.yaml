@@ -2,7 +2,7 @@ sections:
   - name: Quickstarts
     link: quickstarts
     description: learn how to use Lineblocs to make / receive calls
-    size: s6
+    size: s12 l6
     show_desc: false
     items:
       - name: Create a call forwarding
@@ -63,7 +63,7 @@ sections:
 
     description: how to manage lineblocs DIDs on your account
     link: managing-numbers
-    size: s6
+    size: col s12 l6
     show_desc: false
     items:
       - name: Purchasing new numbers
@@ -85,7 +85,7 @@ sections:
   - name: Billing & Pricing
     description: all about your account's billing and pricing.
     link: billing-and-pricing
-    size: s6
+    size: col s12 l6
     show_desc: false
     items:
       - name: Call pricing
@@ -111,7 +111,7 @@ sections:
   - name: Other Topics
     description: get more info on topics on managing lineblocs and getting it to work.
     link: other-topics
-    size: s6
+    size: col s12 l6
     show_desc: false
     items:
       - name: Learn about trial balance

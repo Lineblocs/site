@@ -1,0 +1,30 @@
+.about .container {
+  width: 100%;
+}
+
+.about .with-container {
+  margin-bottom: 100px;
+}
+
+.about-section-top {
+  padding: 50px;
+}
+
+.about-section-grid {
+  padding: 50px;
+  padding-bottom: 100px;
+}
+
+@media (min-width: 1024px) {
+
+  .about .container,
+  .about .with-container,
+  .about .more-padding {
+    width: initial;
+  }
+
+  .about-section-grid,
+  .about-section-top {
+    padding: initial;
+  }
+}

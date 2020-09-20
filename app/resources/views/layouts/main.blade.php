@@ -43,8 +43,20 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" href="/css/custom.css" rel="stylesheet" />
+
   <link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="/css/style-frontend.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <!-- responsive css -->
+    <link rel="stylesheet" href="./css/shared/navbar.css">
+    <link rel="stylesheet" href="./css/homepage/hero.css">
+    <link rel="stylesheet" href="./css/homepage/features.css">
+    <link rel="stylesheet" href="./css/homepage/support.css">
+    <link rel="stylesheet" href="./css/homepage/comparison.css">
+    <link rel="stylesheet" href="./css/shared/footer.css">
+    <link rel="stylesheet" href="./css/faq-page.css">
+      <link rel="stylesheet" href="./css/about/about.css">
+        <link rel="stylesheet" href="/css/contact.css">
+          <link rel="stylesheet" href="./css/resources-page/resources.css" />
     <title>Home</title>
     <!-- Start of Async Drift Code -->
 
@@ -88,24 +100,60 @@ drift.load('84i5z2ttdxg5');
                 <div class="logo">
                         <a href="/"><img src="/images/logo-blue-gimp.png"></a>
                     </div>
-                    <div class="menu">
-   <ul>
-                          <li>
-                                <a href="/pricing">Pricing</a>
-                            </li>
-                                <li>
-                                <a href="/features">Features</a>
-                            </li>
-                            <li>
-                                <a href="/resources">Resources</a>
-                            </li>
-                            <li>
-                              <a href="https://app.lineblocs.com/#/login"><button type="submit" class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
-                            </li>
-                        </ul>
-                    </div>
+
+                <div class="burger">
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                </div>
+                <div class="burger-drawer-close hide">
+                    x
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li>
+                            <a href="/pricing">Pricing</a>
+                        </li>
+                        <li>
+                            <a href="/features">Features</a>
+                        </li>
+                        <li>
+                            <a href="/resources">Resources</a>
+                        </li>
+                        <li>
+                            <a href="https://app.lineblocs.com/#/login"><button type="submit"
+                                        class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
+                        </li>
+                    </ul>
+                </div>
         </div>
     </header>
+    <div class="burger-drawer hide-drawer">
+        <div class="burger-drawer-container">
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="/pricing">Pricing</a>
+                    </li>
+                    <li>
+                        <a href="/features">Features</a>
+                    </li>
+                    <li>
+                        <a href="/resources">Resources</a>
+                    </li>
+                    <br>
+                    <hr>
+                    <br>
+                    <li>
+                        <a href="https://app.lineblocs.com/#/register"><button type="submit"
+                                    class="btn-custom service-btn top-login-btn"><span>get started</span></button></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
   @yield('content')
 
 
@@ -159,6 +207,9 @@ drift.load('84i5z2ttdxg5');
     <script src="/js/jquery.min.js"></script>                            
   <script src="/js/materialize.min.js"></script>
     <script id="s1"></script>
+    <script src="./js/components/Navbar.js"></script>
+
+
     @yield('scripts')
 <script type="text/javascript">
 var s1 = document.getElementById("s1");

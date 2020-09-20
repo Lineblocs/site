@@ -1,0 +1,17 @@
+  .resources .container {
+    width: 100%;
+  }
+
+  .resources .resource-search {
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1024px) {
+    .resources .container {
+      width: 100%;
+    }
+
+    .resources .resource-search {
+      margin: initial;
+    }
+  }

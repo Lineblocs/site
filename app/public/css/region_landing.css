@@ -1,0 +1,37 @@
+.region-landing-heading,
+.region-landing-work,
+.region-landing-features,
+.region-landing-learn {
+  padding: 50px;
+}
+
+.region-landing-heading .container,
+.region-landing-work .container,
+.region-landing-features .container,
+.region-landing-learn .container {
+  width: 100%;
+}
+
+.region-landing-learn .btn-custom {
+  margin-bottom: 50px;
+}
+
+@media (min-width: 1024px) {
+
+  .region-landing-heading,
+  .region-landing-work,
+  .region-landing-features,
+  .region-landing-learn {
+    padding: initial;
+  }
+
+  .region-landing-heading .container,
+  .region-landing-work .container,
+  .region-landing-learn .container {
+    width: initial;
+  }
+
+  .region-landing-learn .btn-custom {
+    margin-bottom: initial;
+  }
+}

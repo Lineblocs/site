@@ -1,0 +1,54 @@
+.comparision-section .comparison-table table {
+  display: none;
+}
+
+.comparision-section .comparison-table-dropdown {
+  width: 300px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.comparision-section .comparison-table-dropdown li {
+  margin-bottom: 10px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+}
+
+.comparision-section .container {
+  width: 100%;
+}
+
+.hide-list {
+  display: none;
+}
+
+.comparison-table-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comparison-table-title svg {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.rotate-arrow {
+ transform: rotate(180deg) !important;
+  transform-origin: center;
+}
+
+@media (min-width: 1251px) {
+  .comparision-section .comparison-table table {
+    display: table;
+  }
+
+  .comparision-section .comparison-table .comparison-table-mobile {
+    display: none;
+  }
+
+  .comparision-section .container {
+    width: initial;
+  }
+}

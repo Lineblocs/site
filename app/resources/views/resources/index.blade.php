@@ -1,7 +1,7 @@
 @extends('layouts.main_alt')
 @section('title') About :: @parent @endsection
 @section('content')
-  <section>
+  <section class="resources">
     <div class="container">
         <div class="resources">
             <div class="row">
@@ -30,7 +30,7 @@
                 @else
                     <form name="search_frm" method="GET" action="" novalidate>
                         <div class="relative">
-                        <div class="input-field col s10">
+                        <div class="input-field col s12 l10">
                             <i class="material-icons prefix">search</i>
                             <!--<input name="search" id="icon_prefix" type="text" class="validate autocomplete" required="">-->
                                       <input name="search" type="search" id="autocomplete-input" class="autocomplete" />
@@ -38,7 +38,7 @@
                             <a href="#" class="clear-search">X</a>
                         </div>
                     </div>
-                        <div class="col s2">
+                        <div class="col s12 l2">
                             <div id="search" class="btn-custom service-btn resource-search"><span>Search</span></div>
                         </div>
                     </form>

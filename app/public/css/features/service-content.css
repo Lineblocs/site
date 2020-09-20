@@ -1,0 +1,30 @@
+.service-container .container,
+.service-content .service-img img {
+  width: 100%;
+}
+
+.service-content {
+  flex-wrap: wrap;
+}
+
+.service-content .service-img,
+.service-content .content {
+  flex-basis: 100%;
+}
+
+@media (min-width: 1024px) {
+
+  .service-container .container,
+  .service-content .service-img img {
+    width: initial;
+  }
+
+  .service-content {
+    flex-wrap: initial;
+  }
+
+  .service-content .service-img,
+  .service-content .content {
+    flex-basis: 50%;
+  }
+}

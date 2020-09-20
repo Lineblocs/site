@@ -121,7 +121,7 @@ section {
 body {
   font-family: 'Poppins', sans-serif;
   color: #0A1247; 
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 a {

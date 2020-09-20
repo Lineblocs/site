@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <section>
+    <section class="service-container">
         <div class="container">
             <div class="service">
                 <h2 class="serviceheading">Features</h2>
@@ -11,7 +11,7 @@
         </div>
     </section>
 
-    <section>
+    <section class="service-container">
         <div class="container">
             <div class="service-content">
                 <div class="service-img">
@@ -31,7 +31,7 @@
         </div>
     </section>
 
-    <section>
+    <section class="service-container">
         <div class="container">
             <div class="service-content">
                 <div class="content left">
@@ -53,7 +53,7 @@
         </div>
     </section>
 
-    <section>
+    <section class="service-container">
         <div class="container">
             <div class="service-content">
                 <div class="service-img">
@@ -74,7 +74,7 @@
         </div>
     </section>
 
-    <section>
+    <section class="service-container">
         <div class="pbx-section">
             <div class="container">
                 <div class="pbx-content">
@@ -89,7 +89,7 @@
         </div>
     </section>
 
-    <section>
+    <section class="service-container">
         <div class="overview-section">
             <div class="container">
                 <div class="overview-content">
@@ -186,7 +186,7 @@
             </div>
         </div>
     </section>
-    <section>
+    <section class="service-container">
         <div class="learn_more-section">
             <div class="container">
                 <div class="learn_more-content">

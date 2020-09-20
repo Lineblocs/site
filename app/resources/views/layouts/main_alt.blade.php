@@ -45,7 +45,6 @@
     <link type="text/css" href="/css/custom.css" rel="stylesheet" />
   <link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="/css/style-frontend.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <title>Home</title>
     <!-- Start of Async Drift Code -->
   @if (!isset($show_drift) || (isset($show_drift) && $show_drift))
 <script>
@@ -92,6 +91,17 @@ drift.load('84i5z2ttdxg5');
 </script>
 
 <!-- Facebook Pixel Code --><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '316654979401125'); fbq('track', 'PageView');</script><noscript> <img height="1" width="1" src="https://www.facebook.com/tr?id=316654979401125&ev=PageView&noscript=1"/></noscript><!-- End Facebook Pixel Code -->
+
+  <!-- responsive css -->
+  <link rel="stylesheet" href="/css/shared/navbar.css">
+  <link rel="stylesheet" href="/css/shared/footer.css">
+  <link rel="stylesheet" href="/css/features/service-content.css">
+  <link rel="stylesheet" href="/css/features/overview-section.css">
+  <link rel="stylesheet" href="/css/faq-page.css">
+    <link rel="stylesheet" href="/css/about/about.css">
+      <link rel="stylesheet" href="/css/contact.css">
+        <link rel="stylesheet" href="/css/resources-page/resources.css" />
+            <link rel="stylesheet" href="/css/resources-section.css">
 </head>
 
 <body>
@@ -100,27 +110,60 @@ drift.load('84i5z2ttdxg5');
                 <div class="logo">
                         <a href="/"><img src="/images/logo-blue-gimp.png"></a>
                     </div>
-                    <div class="menu">
-   <ul>
-<li>
-                                <a href="/pricing">Pricing</a>
-                            </li>
 
-
-                            <li>
-                                <a href="/features">Features</a>
-                            </li>
-
-                            <li>
-                                <a href="/resources">Resources</a>
-                            </li>
-                            <li>
-                              <a href="https://app.lineblocs.com/#/login"><button type="submit" class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="burger">
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                </div>
+                <div class="burger-drawer-close hide">
+                    x
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li>
+                            <a href="/pricing">Pricing</a>
+                        </li>
+                        <li>
+                            <a href="/features">Features</a>
+                        </li>
+                        <li>
+                            <a href="/resources">Resources</a>
+                        </li>
+                        <li>
+                            <a href="https://app.lineblocs.com/#/login"><button type="submit"
+                                        class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
+                        </li>
+                    </ul>
+                </div>
         </div>
     </header>
+    <div class="burger-drawer hide-drawer">
+        <div class="burger-drawer-container">
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="/pricing">Pricing</a>
+                    </li>
+                    <li>
+                        <a href="/features">Features</a>
+                    </li>
+                    <li>
+                        <a href="/resources">Resources</a>
+                    </li>
+                    <br>
+                    <hr>
+                    <br>
+                    <li>
+                        <a href="https://app.lineblocs.com/#/register"><button type="submit"
+                                    class="btn-custom service-btn top-login-btn"><span>get started</span></button></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
   @yield('content')
 
 <footer id="footer">

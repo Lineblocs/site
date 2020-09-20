@@ -1,0 +1,9 @@
+.faq .container {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .faq .container {
+    width: initial;
+  }
+}

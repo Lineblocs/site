@@ -1,7 +1,7 @@
 @extends('layouts.main_alt')
 @section('title') About :: @parent @endsection
 @section('content')
-  <div class="section no-pad-bot" id="index-banner">
+  <div class="resources-section section no-pad-bot" id="index-banner">
     <div class="container">
         <div class="row">
             <div class="col s12">

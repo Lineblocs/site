@@ -1,0 +1,17 @@
+.contact {
+  padding: 50px;
+}
+
+.contact .container {
+  width: 100%;
+}
+
+@media (min-width:1024px) {
+  .contact {
+    padding: initial;
+  }
+
+  .contact .container {
+    width: initial;
+  }
+}

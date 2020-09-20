@@ -2,7 +2,7 @@
 @extends('layouts.main_alt')
 @section('title') Home :: @parent @endsection
 @section('content')
-  <div class="section no-pad-bot" id="index-banner">
+  <div class="contact section no-pad-bot" id="index-banner">
     <div class="container">
       <div class="row">
         <div class="col s12">
@@ -16,27 +16,27 @@
             @endif
             <form method="POST" action="/contactSubmit">
                 <div class="row">
-                    <div class="input-field col s4">
+                    <div class="input-field col s12 l4">
                         <input name="first_name" id="first_name" type="text" class="validate no-special-chars" minlength="1" maxlength="24" required="">
                         <label for="first_name">First Name</label>
                     </div>
                   </div>
                 <div class="row">
-                    <div class="input-field col s4">
+                    <div class="input-field col s12 l4">
                         <input name="last_name" id="last_name" type="text" class="validate no-special-chars" minlength="1" maxlength="24" required="">
 
                         <label for="last_name">Last Name</label>
                     </div>
                   </div>
                 <div class="row">
-                    <div class="input-field col s4">
+                    <div class="input-field col s12 l4">
                         <input name="email" id="email" type="email" class="validate" minlength="1" maxlength="128" required="">
 
                         <label for="email">Email</label>
                     </div>
                   </div>
                 <div class="row">
-                    <div class="input-field col s4">
+                    <div class="input-field col s12 l4">
                         <textarea name="comments" id="comments" class="materialize-textarea" minlength="1" maxlength="1028" required=""></textarea>
                         <label for="comments">Comments</label>
                     </div>

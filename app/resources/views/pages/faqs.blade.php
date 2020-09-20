@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('title') Home :: @parent @endsection
 @section('content')
-<div class="section no-bottom-margin more-padding" id="index-banner">
+<div class="faq section no-bottom-margin more-padding" id="index-banner">
   <div class="container">
     <h1>FAQs</h1>
     <ul>

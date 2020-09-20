@@ -1,0 +1,74 @@
+.resources-section .container {
+  width: 100%;
+}
+
+.resources-item .inner {
+  margin-left: 0px;
+  margin-top: 80px;
+}
+
+.resources-item .support-btn {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  z-index: 5;
+  background: #1abc9c;
+  padding: 8px;
+  border-radius: 7px;
+  display: block;
+  box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.2);
+}
+
+.resources-item .support-btn img {
+  width: 36px;
+  height: 36px;
+}
+
+.resources-item .support-card-desktop {
+  display: none;
+}
+
+.resources-item .support-card {
+  margin: 0px 10px;
+  position: fixed;
+  bottom: 79px;
+  left: 0px;
+  z-index: 100;
+}
+
+.resources-item .support-card-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 5px;
+  background-color: white;
+  border: none;
+}
+
+.resources-item .hide-widget {
+  pointer-events: none;
+  opacity: 0;
+}
+
+@media (min-width: 1024px) {
+  .resources-section .container {
+    width: initial;
+  }
+
+  .resources-item .inner {
+    margin-top: initial;
+    margin-left: initial;
+  }
+
+  .resources-item .support-card-desktop {
+    display: block;
+  }
+
+  .resources-item .support-btn {
+    display: none;
+  }
+
+  .resources-item .support-card-close {
+    display: none;
+  }
+}

@@ -1,0 +1,17 @@
+.support-section .support-detail .support-img img {
+  width: 100%;
+}
+
+.support-section .container {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .support-section .support-detail .support-img img {
+    width: initial;
+  }
+
+  .support-section .container {
+    width: initial;
+  }
+}

@@ -1,7 +1,7 @@
 @extends('layouts.main', ['footer_cls' => 'no-margin'])
 @section('title') Home :: @parent @endsection
 @section('content')
-<div class="section no-pad-bot" id="index-banner">
+<div class="about-section-top section no-pad-bot about" id="index-banner">
   <div class="container">
     <div class="row">
       <div class="col s12">
@@ -20,14 +20,14 @@
     </div>
   </div>
 </div>
-    <div class="section no-bottom-margin more-padding contrast-bg-1">
-      <div class="container with-margin">
+    <div class="about-section-grid section no-bottom-margin more-padding contrast-bg-1">
+      <div class="with-margin">
         <div class="row">
           <br />
           <center>
             <h2>Our Values</h2>
           </center>
-          <div class="col s4">
+          <div class="col s12 l6 xl4">
             <div class="card horizontal-rounded">
               <div class="card-stacked min">
                 <div class="card-content">
@@ -40,7 +40,7 @@
               </div>
             </div>
           </div>
-          <div class="col s4">
+          <div class="col s12 l6 xl4">
             <div class="card horizontal-rounded">
               <div class="card-stacked min">
                 <div class="card-content">
@@ -52,7 +52,7 @@
               </div>
             </div>
           </div>
-          <div class="col s4">
+          <div class="col s12 l6 xl4">
             <div class="card horizontal-rounded">
               <div class="card-stacked min">
                 <div class="card-content">
