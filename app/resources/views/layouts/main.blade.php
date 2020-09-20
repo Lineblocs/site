@@ -207,7 +207,7 @@ drift.load('84i5z2ttdxg5');
     <script src="/js/jquery.min.js"></script>                            
   <script src="/js/materialize.min.js"></script>
     <script id="s1"></script>
-    <script src="./js/components/Navbar.js"></script>
+    <script src="/js/components/Navbar.js"></script>
 
 
     @yield('scripts')

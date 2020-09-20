@@ -1,747 +1,178 @@
-@extends('layouts.main_alt')
+@extends('layouts.main_alt', ['show_drift' => FALSE])
 @section('title') About :: @parent @endsection
 @section('content')
-<div class="section no-pad-bot pages" id="index-banner">
-    <div class="container">
-        <div class="row">
-            <div class="page-header">
-                <div id="contents">
-                    <style type="text/css">
-                        @import url('https://themes.googleusercontent.com/fonts/css?kit=soa_V42eXREs8LDkwBiWS36Y0zlZjWzuC89-Ii8qbS1bpjdwEzlXNgaHgynMCYRU5Y4ks7hRHI7Iqe6YzXXJxQ');
-
-                        .lst-kix_list_1-3>li:before {
-                            content: "\0025cf  "
-                        }
-
-                        .lst-kix_list_1-4>li:before {
-                            content: "o  "
-                        }
-
-                        ul.lst-kix_list_1-0 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-7>li:before {
-                            content: "o  "
-                        }
-
-                        .lst-kix_list_1-5>li:before {
-                            content: "\0025aa  "
-                        }
-
-                        .lst-kix_list_1-6>li:before {
-                            content: "\0025cf  "
-                        }
-
-                        ul.lst-kix_list_1-3 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-0>li:before {
-                            content: "\0025cf  "
-                        }
-
-                        ul.lst-kix_list_1-4 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-8>li:before {
-                            content: "\0025aa  "
-                        }
-
-                        ul.lst-kix_list_1-1 {
-                            list-style-type: none
-                        }
-
-                        ul.lst-kix_list_1-2 {
-                            list-style-type: none
-                        }
-
-                        ul.lst-kix_list_1-7 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-1>li:before {
-                            content: "o  "
-                        }
-
-                        .lst-kix_list_1-2>li:before {
-                            content: "\0025aa  "
-                        }
-
-                        ul.lst-kix_list_1-8 {
-                            list-style-type: none
-                        }
-
-                        ul.lst-kix_list_1-5 {
-                            list-style-type: none
-                        }
-
-                        ul.lst-kix_list_1-6 {
-                            list-style-type: none
-                        }
-
-                        ol {
-                            margin: 0;
-                            padding: 0
-                        }
-
-                        table td,
-                        table th {
-                            padding: 0
-                        }
-
-                        .c5 {
-                            border-right-style: solid;
-                            padding: 0pt 5.4pt 0pt 5.4pt;
-                            border-bottom-color: #000000;
-                            border-top-width: 0pt;
-                            border-right-width: 0pt;
-                            border-left-color: #000000;
-                            vertical-align: top;
-                            border-right-color: #000000;
-                            border-left-width: 0pt;
-                            border-top-style: solid;
-                            border-left-style: solid;
-                            border-bottom-width: 0pt;
-                            width: 496.5pt;
-                            border-top-color: #000000;
-                            border-bottom-style: solid
-                        }
-
-                        .c26 {
-                            padding-top: 1pt;
-                            border-top-width: 0.5pt;
-                            border-top-color: #000000;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            border-top-style: solid;
-                            widows: 2;
-                            text-align: center
-                        }
-
-                        .c19 {
-                            color: #4f81bd;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c10 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Arial";
-                            font-style: normal
-                        }
-
-                        .c11 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Arial Narrow";
-                            font-style: normal
-                        }
-
-                        .c17 {
-                            padding-top: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: center
-                        }
-
-                        .c25 {
-                            padding-top: 0pt;
-                            padding-bottom: 10pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c8 {
-                            padding-top: 0pt;
-                            padding-bottom: 6pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c0 {
-                            padding-top: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c14 {
-                            padding-top: 0pt;
-                            padding-bottom: 3pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c28 {
-                            padding-top: 0pt;
-                            padding-bottom: 8pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: center
-                        }
-
-                        .c22 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-family: "Arial Narrow";
-                            font-style: normal
-                        }
-
-                        .c3 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c6 {
-                            text-decoration-skip-ink: none;
-                            -webkit-text-decoration-skip: none;
-                            color: #0000ff;
-                            text-decoration: underline
-                        }
-
-                        .c18 {
-                            padding-top: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.1500000000000001;
-                            text-align: left
-                        }
-
-                        .c12 {
-                            margin-left: -5.4pt;
-                            border-spacing: 0;
-                            border-collapse: collapse;
-                            margin-right: auto
-                        }
-
-                        .c30 {
-                            background-color: #ffffff;
-                            max-width: 504pt;
-                            padding: 36pt 54pt 36pt 54pt
-                        }
-
-                        .c21 {
-                            background-color: #ccecff;
-                            margin-left: 36pt;
-                            padding-left: 0pt
-                        }
-
-                        .c20 {
-                            color: inherit;
-                            text-decoration: inherit
-                        }
-
-                        .c31 {
-                            padding: 0;
-                            margin: 0
-                        }
-
-                        .c13 {
-                            color: #4f81bd;
-                            font-weight: 700
-                        }
-
-                        .c9 {
-                            margin-left: 18pt;
-                            text-indent: -18pt
-                        }
-
-                        .c23 {
-                            font-size: 14pt;
-                            font-weight: 700
-                        }
-
-                        .c7 {
-                            font-size: 6pt
-                        }
-
-                        .c27 {
-                            font-size: 14pt
-                        }
-
-                        .c15 {
-                            font-style: italic
-                        }
-
-                        .c16 {
-                            font-size: 8pt
-                        }
-
-                        .c32 {
-                            font-size: 11pt
-                        }
-
-                        .c1 {
-                            height: 0pt
-                        }
-
-                        .c29 {
-                            font-size: 12pt
-                        }
-
-                        .c4 {
-                            height: 11pt
-                        }
-
-                        .c2 {
-                            font-size: 10.5pt
-                        }
-
-                        .c24 {
-                            height: 60pt
-                        }
-
-                        .c33 {
-                            margin-right: 126pt
-                        }
-
-                        .title {
-                            padding-top: 24pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 36pt;
-                            padding-bottom: 6pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .subtitle {
-                            padding-top: 18pt;
-                            color: #666666;
-                            font-size: 24pt;
-                            padding-bottom: 4pt;
-                            font-family: "Georgia";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            font-style: italic;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        li {
-                            color: #000000;
-                            font-size: 11pt;
-                            font-family: "Calibri"
-                        }
-
-                        p {
-                            margin: 0;
-                            color: #000000;
-                            font-size: 11pt;
-                            font-family: "Calibri"
-                        }
-
-                        h1 {
-                            padding-top: 24pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 24pt;
-                            padding-bottom: 6pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h2 {
-                            padding-top: 18pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 18pt;
-                            padding-bottom: 4pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h3 {
-                            padding-top: 10pt;
-                            color: #4f81bd;
-                            font-weight: 700;
-                            font-size: 11pt;
-                            padding-bottom: 0pt;
-                            font-family: "Cambria";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h4 {
-                            padding-top: 12pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 12pt;
-                            padding-bottom: 2pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h5 {
-                            padding-top: 11pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 11pt;
-                            padding-bottom: 2pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h6 {
-                            padding-top: 10pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 10pt;
-                            padding-bottom: 2pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-                    </style>
-                    <div>
-                        <p class="c17"><span class="c23">Personal Information Protection Policy</span></p>
-                        <p class="c4 c26"><span class="c3 c29"></span></p>
-                    </div>
-                    <p class="c4 c18"><span class="c10"></span></p><a
-                        id="t.3816a939849e143cc1011ecf16621321c73ea12b"></a><a id="t.0"></a>
-                    <table class="c12">
-                        <tbody>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c25"><span class="c2">Lineblocs is committed to safeguarding the personal
-                                            information entrusted to us by our customers. We manage your personal
-                                            information in accordance with Alberta’s </span><span
-                                            class="c15 c2">Personal Information Protection Act</span><span
-                                            class="c3 c2">&nbsp;and other applicable laws. This policy outlines the
-                                            principles and practices we follow in protecting your personal
-                                            information.</span></p>
-                                    <p class="c0"><span class="c3 c2">This policy applies to Lineblocs and to any person
-                                            providing services on our behalf. A copy of this policy is provided to any
-                                            customer on request.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">What is personal information?</span></p>
-                                    <p class="c0"><span class="c3 c2">Personal information means information about an
-                                            identifiable individual. This includes an individual’s name, home address
-                                            and phone number, age, sex, marital or family status, an identifying number,
-                                            financial information, educational history, etc.</span></p>
-                                    <p class="c0 c4"><span class="c2 c22"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">What personal information do we collect?</span></p>
-                                    <p class="c14"><span class="c3 c2">We collect only the personal information that we
-                                            need for the purposes of providing services to our clients, including
-                                            personal information needed to:</span></p>
-                                    <ul class="c31 lst-kix_list_1-0 start">
-                                        <li class="c0 c21"><span class="c3 c2">deliver requested products and
-                                                services</span></li>
-                                        <li class="c0 c21"><span class="c3 c2">provide product or service quotes</span>
-                                        </li>
-                                        <li class="c8 c21"><span class="c3 c2">send out association membership
-                                                information</span></li>
-                                    </ul>
-                                    <p class="c0"><span class="c3 c2">We normally collect client personal information
-                                            directly from our clients. We may collect your information from other
-                                            persons with your consent or as authorized by law.</span></p>
-                                    <p class="c0 c4 c33"><span class="c11"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We inform our clients, before or at the time of
-                                            collecting personal information, of the purposes for which we are collecting
-                                            the information. The only time we don’t provide this notification is when a
-                                            client volunteers information for an obvious purpose (for example, producing
-                                            a credit card to pay a fee when the information will be used only to process
-                                            the payment).</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">Consent</span></p>
-                                    <p class="c25"><span class="c3 c2">We ask for consent to collect, use or disclose
-                                            client personal information, except in specific circumstances where
-                                            collection, use or disclosure without consent is authorized or required by
-                                            law. We may assume your consent in cases where you volunteer information for
-                                            an obvious purpose. </span></p>
-                                    <p class="c8"><span class="c3 c2">We assume your consent to continue to use and,
-                                            where applicable, disclose personal information that we have already
-                                            collected, for the purpose for which the information was collected.</span>
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c8 c4"><span class="c3 c7"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We ask for your express consent for some purposes
-                                            and may not be able to provide certain services if you are unwilling to
-                                            provide consent to the collection, use or disclosure of certain personal
-                                            information. Where express consent is needed, we will normally ask clients
-                                            to provide their consent orally (by telephone), or in writing (by signing a
-                                            consent form).</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">In cases that do not involve sensitive personal
-                                            information, we may rely on “opt-out” consent. For example, we may disclose
-                                            your contact information to other organizations that we believe may be of
-                                            interest to you, unless you request that we do not disclose your
-                                            information. You can do this by checking the appropriate box on our
-                                            application form or by telephoning our local number/toll-free number.</span>
-                                    </p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">A client may withdraw consent to the use and
-                                            disclosure of personal information at any time, unless the personal
-                                            information is necessary for us to fulfil our legal obligations. We will
-                                            respect your decision, but we may not be able to provide you with certain
-                                            products and services if we do not have the necessary personal
-                                            information.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We may collect, use or disclose client personal
-                                            information without consent only as authorized by law. For example, we may
-                                            not request consent when the collection, use or disclosure is to determine
-                                            suitability for an honour or award, or in an emergency that threatens life,
-                                            health or safety.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c24">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">How do we use and disclose personal
-                                            information?</span></p>
-                                    <p class="c0"><span class="c3 c2">We use and disclose client personal information
-                                            only for the purpose, for which the information was collected, except as
-                                            authorized by law. For example, we may use client contact information to
-                                            deliver services.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c2">If we wish to use or disclose your personal
-                                            information for any new business purpose, we will ask for your consent. We
-                                            may not seek consent if the law allows this (e.g. the law allows
-                                            organizations to use personal information without consent for the purpose of
-                                            collecting a debt).</span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">How do we safeguard personal information? </span>
-                                    </p>
-                                    <p class="c0"><span class="c3 c2">We make every reasonable effort to ensure that
-                                            personal information is accurate and complete. We rely on individuals to
-                                            notify us if there is a change to their personal information that may affect
-                                            their relationship with our organization. If you are aware of an error in
-                                            our information about you, please let us know and we will correct it on
-                                            request wherever possible. In some cases we may ask for a written request
-                                            for correction.</span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We protect personal information in a manner
-                                            appropriate for the sensitivity of the information. We make every reasonable
-                                            effort to prevent any loss, misuse, disclosure or modification of personal
-                                            information, as well as any unauthorized access to personal
-                                            information.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We use appropriate security measures when
-                                            destroying personal information, including shredding paper records and
-                                            permanently deleting electronic records.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We retain personal information only as long as is
-                                            reasonable to fulfil the purposes for which the information was collected or
-                                            for legal or business purposes.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">Access to records containing personal
-                                            information</span></p>
-                                    <p class="c0"><span class="c2">Individuals have a right to access their own personal
-                                            information in a record that is in the custody or under the control of
-                                            Lineblocs, subject to some exceptions. For example, organizations are
-                                            required under the </span><span class="c2 c15">Personal Information
-                                            Protection Act</span><span class="c3 c2">&nbsp;to refuse to provide access
-                                            to information that would reveal personal information about another
-                                            individual. </span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">If we refuse a request in whole or in part, we
-                                            will provide the reasons for the refusal. In some cases where exceptions to
-                                            access apply, we may withhold that information and provide you with the
-                                            remainder of the record.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">You may make a request for access to your personal
-                                            information by writing to Lineblocs. You must provide sufficient information
-                                            in your request to allow us to identify the information you are
-                                            seeking.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">You may also request information about our use of
-                                            your personal information and any disclosure of that information to persons
-                                            outside our organization. In addition, you may request a correction of an
-                                            error or omission in your personal information.</span></p>
-                                    <p class="c0 c4"><span class="c2 c3"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c3 c2">We will respond to your request within 45 calendar
-                                            days, unless an extension is granted. We may charge a reasonable fee to
-                                            provide information, but not to make a correction. We do not charge fees
-                                            when the request is for personal employee information. We will advise you of
-                                            any fees that may apply before beginning to process your request.</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c0"><span class="c13">Questions and complaints</span></p>
-                                    <p class="c0"><span class="c3 c2">If you have a question or concern about any
-                                            collection, use or disclosure of personal information by Lineblocs, or about
-                                            a request for access to your own personal information, please contact Nadir
-                                            Hamid, Developer..</span></p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                            <tr class="c1">
-                                <td class="c5" colspan="1" rowspan="1">
-                                    <p class="c8"><span class="c3 c2">If you are not satisfied with the response you
-                                            receive, you should contact the Information and Privacy Commissioner of
-                                            Alberta:</span></p>
-                                    <p class="c0 c9"><span class="c3 c2">Office of the Information and Privacy
-                                            Commissioner of Alberta</span></p>
-                                    <p class="c0 c9"><span class="c3 c2">Suite 2460, 801 - 6 Avenue, SW </span></p>
-                                    <p class="c0 c9"><span class="c3 c2">Calgary, Alberta &nbsp;T2P 3W2</span></p>
-                                    <p class="c0 c9"><span
-                                            class="c3 c2">Phone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;403-297-2728
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Toll
-                                            Free:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-888-878-4044</span>
-                                    </p>
-                                    <p class="c0 c9"><span
-                                            class="c2">Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
-                                            class="c6 c2"><a class="c20"
-                                                href="mailto:generalinfo@oipc.ab.ca">generalinfo@oipc.ab.ca</a></span><span
-                                            class="c2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Website:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </span><span class="c2 c6"><a class="c20"
-                                                href="https://www.google.com/url?q=http://www.oipc.ab.ca&amp;sa=D&amp;ust=1574745297306000">www.oipc.ab.ca</a></span>
-                                    </p>
-                                    <p class="c0 c4"><span class="c3 c2"></span></p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p class="c0 c4"><span class="c10"></span></p>
-                    <div>
-                        <p class="c4 c28"><span class="c3 c32"></span></p>
-                        <p class="c0 c4"><span class="c3 c16"></span></p>
-                    </div>
-                </div>
-            </div>
+            <link rel="stylesheet" href="/css/legal.css">
+<body>
+     <div class="mobile-navbar">
+      <select class="browser-default" id="selectbox">
+        <option value="/pages/privacy-policy" selected>PRIVACY POLICY</option>
+        <option value="/pages/tos">TERMS OF SERVICE</option>
+      </select>
+     </div>    
+     <div class="container legal">
+        <div class="effective-date">
+          <i>Last Updated: September 15, 2020</i>
         </div>
-    </div>
-</div>
+        <div class="inner">
+          <div class="sidebar">
+        <p><a href="/pages/privacy-policy" class="active">PRIVACY POLICY</a></p>
+        <p><a href="/pages/tos">TERMS OF SERVICE</a></p>
+          </div>
+          <div class="content privacy-page"> 
+            <h2>LINEBLOCS PRIVACY POLICY</h2>           
+            <div class="block">
+              Lineblocs Ltd. and its affiliates (referred to collectively as “<strong>Lineblocs</strong>”, “<strong>we</strong>”, “<strong>us</strong>” and terms of similar meaning) respect your privacy and is committed to protecting it by complying with the terms outlined in this Lineblocs Privacy Policy (“<strong>Privacy Policy</strong>”). This Privacy Policy describes how we collect, use, share and protect personal information from our users and contractors (“<strong>you</strong>”) through providing the Lineblocs unified communications platform (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) (the “<strong>Services</strong>”).
+            </div>
+            <div>
+              We will only use your personal information in accordance with this Privacy Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes. By accessing the Services, you confirm that you have read and understand our Terms and Conditions (“<strong>Terms</strong>”), found <a href="./terms.html">here</a> , and this Privacy Policy before using the Services.
+            </div>
+            
+            <div class="parent-group">
+              <h1>1.	Personal Information We Collect</h1>
+              <div class="block">
+                <i>Directly.</i> We collect and use your personal information to provide you with a secure and safe experience when accessing and using the Services. Our collection and use of your personal information will be limited to that which is necessary to provide you with a tailored experience. For that reason, through the course of using the Services, you may be prompted to provide us with personal information, which may include your first name, last name, proof of identification, company name, title, email, business address, phone number, password, authentication information and payment information.
+              </div>
+              <div class="block">
+                We may also collect from you, when necessary, files and communications sent through the Services. For example, if you upload video or audio files to the Services and send them, we will collect them from you for their use in the Services. Other content we may collect include messages, voice recordings and other documents uploaded to and sent through the Services that may contain personal information.
+              </div>
+              <div class="block">
+                <i>How Your Information is Collected.</i> We collect personal information form you when you sign up for an account, communicate with others through the Services and when you update your account’s information. We may collect your personal information from other users on the Services or through third-party service providers that integrate with the Services. 
+              </div>
+              <div class="block">
+                <i>User Reviews.</i> You may be provided with surveys through your use of the Services that request feedback on your experience with the Services, contractors or our commercial partners. The information from these surveys may be linked with your user account.
+              </div>
+            </div>
+  
+            <div class="parent-group">
+              <h1>2.	Information We Collect Through Cookies and Other Automatic Data Collection Technologies</h1>
+              <div class="block">
+                <i>Indirectly.</i> As you use the Services, we may use cookies or other automatic data collection technologies to collect personal information and information about your equipment, browsing actions, and patterns from the use of the Services. Lineblocs uses reputable automated technologies and third-party service providers to perform these functions. Any information that is derived through our use of cookies and other tracking technologies is used to provide us with analytics, Site, Application and other Services improvements. Information collected may include:
+              </div>
+              <ul class="block">
+                <li class="list-margin">details of your usage of the Services, including traffic data, location data, regional settings, logs, other communication data and the resources that you access and use; and</li>
+                <li>information about your computer and internet connection, including your IP address, operating system, and browser type.</li>
+              </ul>
+              <div class="block">
+                <i>Data Collection Technologies.</i> The information and data that we automatically collect may include personal information, and we may maintain or associate it with the other personal information that you provide to us or that we receive from third-parties. This is done to improve our Services and to deliver a more personalized service to you. The technologies we use for this automatic data collection may include:
+              </div>
+              <ol class="block lower-roman">
+                <li class="list-margin"><i>Cookies:</i> A “cookie” is a small file placed on the hard drive of your computer. You may refuse to accept browser cookies by activating the appropriate setting on your browser. However, if you select this setting you may be unable to access certain parts of our Services. Unless you have adjusted your browser setting so that it will refuse cookies, our system will issue cookies when you direct your browser to our Services.</li>
+                <li><i>Web Beacons.</i> Pages of our Services may contain small electronic files known as web beacons that permit us, for example, to count users who have visited the Services and for other related Site statistics (for example, recording the popularity of certain content on the Services and verifying system and server integrity).</li>
+              </ol>
+            </div>
+  
+            <div class="parent-group">
+              <h1>3.	Third-Party Use of Cookies and Other Tracking Technologies</h1>
+              <div>
+                Some content or applications on the Services, including advertisements, are served by third-parties, including advertisers, ad networks and servers, content providers, and application providers. These third-parties may use cookies alone or in conjunction with web beacons or other tracking technologies to collect information about you when you use our Services. The information they collect may be associated with your personal information or they may collect information, including personal information, about your online activities over time and across different websites and other online services. We do not control these third-parties' tracking technologies or how they are used. If you have any questions about an advertisement or other targeted content, you should contact the responsible provider directly.
+              </div>
+            </div>
+            
+            <div class="parent-group">
+              <h1>4.	How We Use Your Information</h1>
+              <div class="block">
+                We use the information that we collect about you or that you provide to us to provide the Services. We may use your information:
+              </div>
+              <ul>
+                <li class="list-margin">To operate the Services and makes its contents available to you. We will not monitor or disclose any calls, conversations, messages, or other communications that are transmitted through the Services, except as required by applicable law;</li>
+                <li class="list-margin">To provide you with information, products or services that you request from us. We use your information to (i) provide you with personalized communications services; (ii) facilitate payments on the Services; and (iii) communicate with you via email, text message, push notification, or otherwise;</li>
+                <li class="list-margin">To contact you via email, SMS, push notifications, or otherwise to provide administrative notices, marketing notifications, promotional offers and other communications relevant to your use of our Services under applicable laws;</li>
+                <li class="list-margin">To provide you with customer support and assist with the provision of the Services, or to assist in resolving complaints or disputes relating to the Services;</li>
+                <li class="list-margin">To improve our Services, marketing, customer relationships and experiences;</li>
+                <li class="list-margin">To notify you about changes to our Services or any products or services we offer or provide though it;</li>
+                <li class="list-margin">To enforce our Terms and other agreements, including for billing or notifying you about changes to our Services or any products or services that we offer;</li>
+                <li class="list-margin">To fulfill the purposes for which you provided the information or that were described when it was collected or for any other purpose for which you provide it;</li>
+                <li class="list-margin">To carry out our obligations and comply with applicable law; and</li>
+                <li>For any other purpose with your consent and as otherwise outlined in our Terms.</li>
+              </ul>
+            </div>
+  
+            <div class="parent-group">
+              <h1>5.	Disclosure of Your Information</h1>
+              <div class="block">
+                We may disclose the information that we collect about you or that you provide via Services, in accordance with this Privacy Policy. We may share your personal information with third-parties for the following reasons:
+              </div>
+              <ol class="lower-roman">
+                <li class="list-margin"><i>Affiliated Companies:</i> We may share your information with our subsidiaries, parent company and other affiliated entities to effectively provide you with the Services.</li>
+                <li class="list-margin"><i>Third-Party Service Providers:</i> We may share your information with service providers, contractors, the organizations they act on behalf of, and other third-parties (such as cloud hosting, analytics and search engine providers) we use to support our business. For these third-party service providers to perform or facilitates these functions, they may require us to provide them with your information. If we provide them with your information, we will contractually obligate them to keep your information confidential, use it only for the purposes for which we disclose it to them, and to process the personal information with the same standards set out in this policy.</li>
+                <li class="list-margin"><i>Payment Processors:</i> Users may be able to submit credit card or other payment information into the Services to pay for a requested project. Lineblocs utilizes third-party payment processers to facilitate payments. We do not receive nor store any payment information on our servers. All payment transactions are encrypted when communicated through our third-party payment processor.</li>
+                <li class="list-margin"><i>Storage Providers:</i> We may process, store, and transfer your personal information in and to a foreign country, with different privacy laws that may or may not be as comprehensive as Canadian law. Whenever we engage a service provider, we require that its privacy and security standards adhere to this policy and applicable Canadian privacy legislation.</li>
+                <li class="list-margin"><i>Legal Requirements:</i> We may share your information to comply with any court order, law, or legal process, including to respond to any government or regulatory request, under applicable law.</li>
+                <li><i>Business Transactions:</i> Lineblocs reserves the right to share your information in connection with any proposed or realized merger, divestiture, consolidation, restructuring, purchase, sale or any other type of business combination that requires its disclosure.</li>
+              </ol>
+            </div>
+  
+            <div class="parent-group">
+              <h1>6.	Security of Collected Information</h1>
+              <div class="block">
+                Lineblocs uses physical, electronic, technical and administrative safeguards designed to secure your personal information from accidental loss and unauthorized access, use, modification, and disclosure. We store all of the information you provide to us on secure servers. Although we implement measures to protect your personal information, we cannot guarantee the security of your personal information transmitted to the Services. Any transmission of personal information to the Services is done is at your own risk. We are not responsible for the circumvention of any privacy settings or security measures contained on the Services.
+              </div>
+              <div>
+                The safety and security of your personal information also depends on you. User accounts on the Services are password-protected, and if you have a user account are solely responsible for keeping your password confidential. We ask that you (a) do not share your password with anyone; (b) do not post your password in any public areas online (d) do not use your password on any public devices that you might forget to log-out of.
+              </div>
+            </div>
+  
+            <div class="parent-group">
+              <h1>7.	Data Retention</h1>
+              <div class="block">
+                We will only retain your personal information for as long as you are a user of our Services, and as otherwise permitted or required to retain it to comply with our legal requirements. To improve the Services, we may aggregate information from users after removing information that can allow them to be identified. You acknowledge and agree that we may use anonymized personal information for legitimate business purposes that cannot be associated with you. We reserve the right to use such anonymized information without further notice.
+              </div>
+              <div>
+                We may collect and maintain information related to your usage of the Services. For example, communications over the Services may be stored for up to sixty (60) days. We reserve the right to use and retain this information in order to ensure the proper functioning of the Services and to investigate and help prevent fraud, unlawful activities and violations of our Terms that may harm us or our affiliates.
+              </div>
+            </div>
+  
+            <div class="parent-group">
+              <h1>8.	User Rights</h1>
+              <div class="block">
+                If you would like to exercise any of the following rights, please contact us at our email below:
+              </div>
+              <ol class="lower-alpha">
+                <li class="list-margin"><i>Accessing, Correcting or Updating Your Information:</i> You may request for us at any time to correct your information or to provide you with a copy of your personal information that we maintain in electronic format. </li>
+                <li class="list-margin"><i>Deleting Your Information:</i> You may request for us at any time to have your personal information that we maintain deleted. We will comply with your request unless there are legitimate business or legal grounds for the continued retention of your personal information.</li>
+                <li class="list-margin"><i>Object to our Processing:</i> You may request for us to restrict or cease the processing of your personal information if you believe it has been processed (i) in a manner contrary to applicable law; (ii) in a manner outside of the consent you provided; or (iii) after your consent has been withdrawn. We will comply with your request unless there are legitimate business or legal grounds for the continued processing of your personal information.</li>
+                <li><i>Withdrawing Consent:</i> You may withdraw your consent for our collection, use and disclosure of your personal information at any time. We will comply with your request unless it conflicts with our legal obligations or an established standard of practice. Please be aware that if you withdraw your consent, we may be unable to provide you with the Services.</li>
+              </ol>
+            </div>
+  
+            <div class="parent-group">
+              <h1>9.	Children’s Privacy</h1>
+              <div>
+                The Services are intended for use by individuals above the age of majority and is not intended for children under the age of children under eighteen (18) years of age. We do not knowingly collect personal information from children under eighteen (18) years of age. If we learn we have collected or received personal information from a child without verification of parental consent, we will delete that information. If you believe we might have any information from or about a child, please contact us at the email address below.
+              </div>
+            </div>
+  
+            <div class="parent-group">
+              <h1>10.	Changes to our Privacy Policy</h1>
+              <div class="block">
+                We may make changes to our Privacy Policy from time to time. It is our policy to post any changes we make on this page. If we make any material changes to how we treat your personal information, we will notify you by emailing the email address specified in your account or by posting a notice about the changes on a conspicuous area of the Services. 
+              </div>
+              <div>
+                We include the date the privacy policy was last revised at the top of the page. You are responsible for ensuring we have an up-to-date, active, and deliverable email address for you, and for periodically visiting our Services and this Privacy Policy to check for any changes.
+              </div>
+            </div>
+  
+            <div class="parent-group">
+              <h1>11.	Contact</h1>
+              <div class="block">
+                If you have any questions, comments, or requests regarding this Privacy Policy or our privacy practices, please contact us at:
+              </div>
+            </div>
+                          
+            <h1>Privacy Officer</h1>
+            <a href="contact@lineblocs.com">contact@lineblocs.com</a>
+          </div>
+        </div>
+     </div>
+     @section('scripts')
+     <script>
+       jQuery(function () {
+          jQuery("#selectbox").change(function () {
+              location.href = jQuery(this).val();
+          })
+      })
+     </script>
+     @endsection
+</body>
+
 @endsection

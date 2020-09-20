@@ -218,6 +218,8 @@ drift.load('84i5z2ttdxg5');
   <!--<script src="/js/materialize.js"></script>-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
   <script src="/js/script-frontend.js"></script>
+
+    <script src="/js/components/Navbar.js"></script>
     @yield('scripts')
 </body>
 

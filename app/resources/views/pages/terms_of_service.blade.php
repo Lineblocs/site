@@ -1,1360 +1,186 @@
-@extends('layouts.main_alt')
+@extends('layouts.main_alt', ['show_drift' => FALSE])
 @section('title') About :: @parent @endsection
 @section('content')
-<div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-        <div class="row">
-            <div class="page-header">
-                <div id="contents">
-                    <style type="text/css">
-                        @import url('https://themes.googleusercontent.com/fonts/css?kit=soa_V42eXREs8LDkwBiWS36Y0zlZjWzuC89-Ii8qbS1bpjdwEzlXNgaHgynMCYRUOepmWPH_d25mRxwoXFchsyJvIx7i6R-8--l9gSqQgxY');
 
-                        .lst-kix_list_4-1>li {
-                            counter-increment: lst-ctn-kix_list_4-1
-                        }
-
-                        ol.lst-kix_list_3-1 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_3-2 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_3-1>li {
-                            counter-increment: lst-ctn-kix_list_3-1
-                        }
-
-                        ol.lst-kix_list_3-3 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_3-4.start {
-                            counter-reset: lst-ctn-kix_list_3-4 0
-                        }
-
-                        .lst-kix_list_5-1>li {
-                            counter-increment: lst-ctn-kix_list_5-1
-                        }
-
-                        ol.lst-kix_list_3-4 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_2-1>li {
-                            counter-increment: lst-ctn-kix_list_2-1
-                        }
-
-                        ol.lst-kix_list_3-0 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-1>li {
-                            counter-increment: lst-ctn-kix_list_1-1
-                        }
-
-                        ol.lst-kix_list_2-6.start {
-                            counter-reset: lst-ctn-kix_list_2-6 0
-                        }
-
-                        .lst-kix_list_3-0>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-0, decimal) ". "
-                        }
-
-                        ol.lst-kix_list_3-1.start {
-                            counter-reset: lst-ctn-kix_list_3-1 0
-                        }
-
-                        .lst-kix_list_3-1>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-1, lower-latin) ". "
-                        }
-
-                        .lst-kix_list_3-2>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-2, lower-roman) ". "
-                        }
-
-                        ol.lst-kix_list_1-8.start {
-                            counter-reset: lst-ctn-kix_list_1-8 0
-                        }
-
-                        .lst-kix_list_4-0>li {
-                            counter-increment: lst-ctn-kix_list_4-0
-                        }
-
-                        .lst-kix_list_5-0>li {
-                            counter-increment: lst-ctn-kix_list_5-0
-                        }
-
-                        ol.lst-kix_list_2-3.start {
-                            counter-reset: lst-ctn-kix_list_2-3 0
-                        }
-
-                        .lst-kix_list_3-5>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-5, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_3-4>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-4, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_1-5.start {
-                            counter-reset: lst-ctn-kix_list_1-5 0
-                        }
-
-                        .lst-kix_list_3-3>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-3, decimal) ". "
-                        }
-
-                        ol.lst-kix_list_3-5 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_3-6 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_3-7 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_3-8 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_3-8>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-8, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_2-0>li {
-                            counter-increment: lst-ctn-kix_list_2-0
-                        }
-
-                        ol.lst-kix_list_5-3.start {
-                            counter-reset: lst-ctn-kix_list_5-3 0
-                        }
-
-                        .lst-kix_list_2-3>li {
-                            counter-increment: lst-ctn-kix_list_2-3
-                        }
-
-                        .lst-kix_list_3-6>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-6, decimal) ". "
-                        }
-
-                        .lst-kix_list_4-3>li {
-                            counter-increment: lst-ctn-kix_list_4-3
-                        }
-
-                        .lst-kix_list_3-7>li:before {
-                            content: ""counter(lst-ctn-kix_list_3-7, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_4-5.start {
-                            counter-reset: lst-ctn-kix_list_4-5 0
-                        }
-
-                        ol.lst-kix_list_5-0.start {
-                            counter-reset: lst-ctn-kix_list_5-0 1
-                        }
-
-                        .lst-kix_list_1-2>li {
-                            counter-increment: lst-ctn-kix_list_1-2
-                        }
-
-                        ol.lst-kix_list_3-7.start {
-                            counter-reset: lst-ctn-kix_list_3-7 0
-                        }
-
-                        .lst-kix_list_5-2>li {
-                            counter-increment: lst-ctn-kix_list_5-2
-                        }
-
-                        ol.lst-kix_list_4-2.start {
-                            counter-reset: lst-ctn-kix_list_4-2 0
-                        }
-
-                        .lst-kix_list_3-2>li {
-                            counter-increment: lst-ctn-kix_list_3-2
-                        }
-
-                        ol.lst-kix_list_2-2 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_2-3 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_5-0>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-0, decimal) ". "
-                        }
-
-                        ol.lst-kix_list_2-4 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_2-5 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_5-4>li {
-                            counter-increment: lst-ctn-kix_list_5-4
-                        }
-
-                        .lst-kix_list_1-4>li {
-                            counter-increment: lst-ctn-kix_list_1-4
-                        }
-
-                        .lst-kix_list_4-4>li {
-                            counter-increment: lst-ctn-kix_list_4-4
-                        }
-
-                        ol.lst-kix_list_2-0 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-6.start {
-                            counter-reset: lst-ctn-kix_list_1-6 0
-                        }
-
-                        ol.lst-kix_list_2-1 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_4-8>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-8, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_5-3>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-3, decimal) ". "
-                        }
-
-                        .lst-kix_list_4-7>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-7, lower-latin) ". "
-                        }
-
-                        .lst-kix_list_5-2>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-2, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_5-1>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-1, decimal) ". "
-                        }
-
-                        .lst-kix_list_5-7>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-7, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_5-6.start {
-                            counter-reset: lst-ctn-kix_list_5-6 0
-                        }
-
-                        .lst-kix_list_5-6>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-6, decimal) ". "
-                        }
-
-                        .lst-kix_list_5-8>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-8, lower-roman) ". "
-                        }
-
-                        ol.lst-kix_list_4-1.start {
-                            counter-reset: lst-ctn-kix_list_4-1 0
-                        }
-
-                        ol.lst-kix_list_4-8.start {
-                            counter-reset: lst-ctn-kix_list_4-8 0
-                        }
-
-                        ol.lst-kix_list_3-3.start {
-                            counter-reset: lst-ctn-kix_list_3-3 0
-                        }
-
-                        .lst-kix_list_5-4>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-4, lower-latin) ". "
-                        }
-
-                        .lst-kix_list_5-5>li:before {
-                            content: ""counter(lst-ctn-kix_list_5-5, lower-roman) ". "
-                        }
-
-                        ol.lst-kix_list_2-6 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_2-7 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_2-8 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-0.start {
-                            counter-reset: lst-ctn-kix_list_1-0 0
-                        }
-
-                        .lst-kix_list_3-0>li {
-                            counter-increment: lst-ctn-kix_list_3-0
-                        }
-
-                        .lst-kix_list_3-3>li {
-                            counter-increment: lst-ctn-kix_list_3-3
-                        }
-
-                        ol.lst-kix_list_4-0.start {
-                            counter-reset: lst-ctn-kix_list_4-0 0
-                        }
-
-                        .lst-kix_list_3-6>li {
-                            counter-increment: lst-ctn-kix_list_3-6
-                        }
-
-                        .lst-kix_list_2-5>li {
-                            counter-increment: lst-ctn-kix_list_2-5
-                        }
-
-                        .lst-kix_list_2-8>li {
-                            counter-increment: lst-ctn-kix_list_2-8
-                        }
-
-                        ol.lst-kix_list_3-2.start {
-                            counter-reset: lst-ctn-kix_list_3-2 0
-                        }
-
-                        ol.lst-kix_list_5-5.start {
-                            counter-reset: lst-ctn-kix_list_5-5 0
-                        }
-
-                        .lst-kix_list_2-2>li {
-                            counter-increment: lst-ctn-kix_list_2-2
-                        }
-
-                        ol.lst-kix_list_2-4.start {
-                            counter-reset: lst-ctn-kix_list_2-4 0
-                        }
-
-                        ol.lst-kix_list_4-7.start {
-                            counter-reset: lst-ctn-kix_list_4-7 0
-                        }
-
-                        ol.lst-kix_list_1-3 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_5-0 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-4 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_2-6>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-6, decimal) ". "
-                        }
-
-                        .lst-kix_list_2-7>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-7, lower-latin) ". "
-                        }
-
-                        .lst-kix_list_2-7>li {
-                            counter-increment: lst-ctn-kix_list_2-7
-                        }
-
-                        .lst-kix_list_3-7>li {
-                            counter-increment: lst-ctn-kix_list_3-7
-                        }
-
-                        ol.lst-kix_list_5-1 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-5 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_5-2 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-6 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-0 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_2-4>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-4, lower-latin) ". "
-                        }
-
-                        .lst-kix_list_2-5>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-5, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_2-8>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-8, lower-roman) ". "
-                        }
-
-                        ol.lst-kix_list_1-1 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-2 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_5-4.start {
-                            counter-reset: lst-ctn-kix_list_5-4 0
-                        }
-
-                        ol.lst-kix_list_4-6.start {
-                            counter-reset: lst-ctn-kix_list_4-6 0
-                        }
-
-                        ol.lst-kix_list_5-1.start {
-                            counter-reset: lst-ctn-kix_list_5-1 0
-                        }
-
-                        ol.lst-kix_list_3-0.start {
-                            counter-reset: lst-ctn-kix_list_3-0 0
-                        }
-
-                        ol.lst-kix_list_5-7 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_5-8 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_5-7>li {
-                            counter-increment: lst-ctn-kix_list_5-7
-                        }
-
-                        ol.lst-kix_list_4-3.start {
-                            counter-reset: lst-ctn-kix_list_4-3 0
-                        }
-
-                        ol.lst-kix_list_5-3 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_1-7 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_4-7>li {
-                            counter-increment: lst-ctn-kix_list_4-7
-                        }
-
-                        ol.lst-kix_list_5-4 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-7>li {
-                            counter-increment: lst-ctn-kix_list_1-7
-                        }
-
-                        ol.lst-kix_list_1-8 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_3-8.start {
-                            counter-reset: lst-ctn-kix_list_3-8 0
-                        }
-
-                        ol.lst-kix_list_5-5 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_5-6 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_2-5.start {
-                            counter-reset: lst-ctn-kix_list_2-5 0
-                        }
-
-                        .lst-kix_list_5-8>li {
-                            counter-increment: lst-ctn-kix_list_5-8
-                        }
-
-                        .lst-kix_list_4-0>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-0, decimal) ". "
-                        }
-
-                        .lst-kix_list_2-6>li {
-                            counter-increment: lst-ctn-kix_list_2-6
-                        }
-
-                        .lst-kix_list_3-8>li {
-                            counter-increment: lst-ctn-kix_list_3-8
-                        }
-
-                        .lst-kix_list_4-1>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-1, decimal) ". "
-                        }
-
-                        .lst-kix_list_4-6>li {
-                            counter-increment: lst-ctn-kix_list_4-6
-                        }
-
-                        ol.lst-kix_list_1-7.start {
-                            counter-reset: lst-ctn-kix_list_1-7 0
-                        }
-
-                        .lst-kix_list_4-4>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-4, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_2-2.start {
-                            counter-reset: lst-ctn-kix_list_2-2 0
-                        }
-
-                        .lst-kix_list_1-5>li {
-                            counter-increment: lst-ctn-kix_list_1-5
-                        }
-
-                        .lst-kix_list_4-3>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-3, decimal) ". "
-                        }
-
-                        .lst-kix_list_4-5>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-5, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_4-2>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-2, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_4-6>li:before {
-                            content: ""counter(lst-ctn-kix_list_4-6, decimal) ". "
-                        }
-
-                        ol.lst-kix_list_5-7.start {
-                            counter-reset: lst-ctn-kix_list_5-7 0
-                        }
-
-                        .lst-kix_list_1-8>li {
-                            counter-increment: lst-ctn-kix_list_1-8
-                        }
-
-                        ol.lst-kix_list_1-4.start {
-                            counter-reset: lst-ctn-kix_list_1-4 0
-                        }
-
-                        .lst-kix_list_5-5>li {
-                            counter-increment: lst-ctn-kix_list_5-5
-                        }
-
-                        .lst-kix_list_3-5>li {
-                            counter-increment: lst-ctn-kix_list_3-5
-                        }
-
-                        ol.lst-kix_list_1-1.start {
-                            counter-reset: lst-ctn-kix_list_1-1 0
-                        }
-
-                        ol.lst-kix_list_4-0 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_3-4>li {
-                            counter-increment: lst-ctn-kix_list_3-4
-                        }
-
-                        ol.lst-kix_list_4-1 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_4-4.start {
-                            counter-reset: lst-ctn-kix_list_4-4 0
-                        }
-
-                        ol.lst-kix_list_4-2 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_4-3 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_2-4>li {
-                            counter-increment: lst-ctn-kix_list_2-4
-                        }
-
-                        ol.lst-kix_list_3-6.start {
-                            counter-reset: lst-ctn-kix_list_3-6 0
-                        }
-
-                        .lst-kix_list_5-3>li {
-                            counter-increment: lst-ctn-kix_list_5-3
-                        }
-
-                        ol.lst-kix_list_1-3.start {
-                            counter-reset: lst-ctn-kix_list_1-3 0
-                        }
-
-                        ol.lst-kix_list_2-8.start {
-                            counter-reset: lst-ctn-kix_list_2-8 0
-                        }
-
-                        ol.lst-kix_list_1-2.start {
-                            counter-reset: lst-ctn-kix_list_1-2 0
-                        }
-
-                        ol.lst-kix_list_4-8 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-0>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-0, decimal) ". "
-                        }
-
-                        ol.lst-kix_list_4-4 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_4-5 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-1>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-1, lower-latin) ". "
-                        }
-
-                        .lst-kix_list_1-2>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-2, lower-roman) ". "
-                        }
-
-                        ol.lst-kix_list_2-0.start {
-                            counter-reset: lst-ctn-kix_list_2-0 0
-                        }
-
-                        ol.lst-kix_list_4-6 {
-                            list-style-type: none
-                        }
-
-                        ol.lst-kix_list_4-7 {
-                            list-style-type: none
-                        }
-
-                        .lst-kix_list_1-3>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-3, decimal) ". "
-                        }
-
-                        .lst-kix_list_1-4>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-4, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_3-5.start {
-                            counter-reset: lst-ctn-kix_list_3-5 0
-                        }
-
-                        .lst-kix_list_1-0>li {
-                            counter-increment: lst-ctn-kix_list_1-0
-                        }
-
-                        .lst-kix_list_4-8>li {
-                            counter-increment: lst-ctn-kix_list_4-8
-                        }
-
-                        .lst-kix_list_1-6>li {
-                            counter-increment: lst-ctn-kix_list_1-6
-                        }
-
-                        .lst-kix_list_1-7>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-7, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_5-8.start {
-                            counter-reset: lst-ctn-kix_list_5-8 0
-                        }
-
-                        ol.lst-kix_list_2-7.start {
-                            counter-reset: lst-ctn-kix_list_2-7 0
-                        }
-
-                        .lst-kix_list_1-3>li {
-                            counter-increment: lst-ctn-kix_list_1-3
-                        }
-
-                        .lst-kix_list_1-5>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-5, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_1-6>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-6, decimal) ". "
-                        }
-
-                        .lst-kix_list_5-6>li {
-                            counter-increment: lst-ctn-kix_list_5-6
-                        }
-
-                        .lst-kix_list_2-0>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-0, decimal) ". "
-                        }
-
-                        .lst-kix_list_2-1>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-1, lower-latin) ". "
-                        }
-
-                        ol.lst-kix_list_2-1.start {
-                            counter-reset: lst-ctn-kix_list_2-1 0
-                        }
-
-                        .lst-kix_list_4-5>li {
-                            counter-increment: lst-ctn-kix_list_4-5
-                        }
-
-                        .lst-kix_list_1-8>li:before {
-                            content: ""counter(lst-ctn-kix_list_1-8, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_2-2>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-2, lower-roman) ". "
-                        }
-
-                        .lst-kix_list_2-3>li:before {
-                            content: ""counter(lst-ctn-kix_list_2-3, decimal) ". "
-                        }
-
-                        .lst-kix_list_4-2>li {
-                            counter-increment: lst-ctn-kix_list_4-2
-                        }
-
-                        ol.lst-kix_list_5-2.start {
-                            counter-reset: lst-ctn-kix_list_5-2 0
-                        }
-
-                        ol {
-                            margin: 0;
-                            padding: 0
-                        }
-
-                        table td,
-                        table th {
-                            padding: 0
-                        }
-
-                        .c2 {
-                            border-right-style: solid;
-                            padding: 0pt 5.4pt 0pt 5.4pt;
-                            border-bottom-color: #000000;
-                            border-top-width: 0pt;
-                            border-right-width: 0pt;
-                            border-left-color: #000000;
-                            vertical-align: top;
-                            border-right-color: #000000;
-                            border-left-width: 0pt;
-                            border-top-style: solid;
-                            border-left-style: solid;
-                            border-bottom-width: 0pt;
-                            width: 496.5pt;
-                            border-top-color: #000000;
-                            border-bottom-style: solid
-                        }
-
-                        .c17 {
-                            padding-top: 1pt;
-                            border-top-width: 0.5pt;
-                            border-top-color: #000000;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            border-top-style: solid;
-                            widows: 2;
-                            text-align: center;
-                            height: 11pt
-                        }
-
-                        .c29 {
-                            background-color: #ccffcc;
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Arial Narrow";
-                            font-style: normal
-                        }
-
-                        .c3 {
-                            margin-left: 36pt;
-                            padding-top: 0pt;
-                            padding-left: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c6 {
-                            margin-left: 72pt;
-                            padding-top: 0pt;
-                            padding-left: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c23 {
-                            background-color: #99ccff;
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 14pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c18 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 10.5pt;
-                            font-family: "Arial Narrow";
-                            font-style: normal
-                        }
-
-                        .c10 {
-                            color: #4f81bd;
-                            font-weight: 700;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c20 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Arial";
-                            font-style: normal
-                        }
-
-                        .c13 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11.5pt;
-                            font-family: "Roboto";
-                            font-style: normal
-                        }
-
-                        .c0 {
-                            padding-top: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left;
-                            height: 11pt
-                        }
-
-                        .c27 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 14pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c28 {
-                            padding-top: 0pt;
-                            padding-bottom: 8pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: center;
-                            height: 11pt
-                        }
-
-                        .c22 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 12pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c5 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 6pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c25 {
-                            padding-top: 0pt;
-                            padding-bottom: 6pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left;
-                            height: 11pt
-                        }
-
-                        .c1 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 10.5pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c4 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 11pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c12 {
-                            color: #000000;
-                            font-weight: 400;
-                            text-decoration: none;
-                            vertical-align: baseline;
-                            font-size: 8pt;
-                            font-family: "Calibri";
-                            font-style: normal
-                        }
-
-                        .c21 {
-                            padding-top: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: center
-                        }
-
-                        .c7 {
-                            padding-top: 0pt;
-                            padding-bottom: 0pt;
-                            line-height: 1.0;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .c15 {
-                            margin-left: -5.4pt;
-                            border-spacing: 0;
-                            border-collapse: collapse;
-                            margin-right: auto
-                        }
-
-                        .c24 {
-                            background-color: #ffffff;
-                            max-width: 504pt;
-                            padding: 36pt 54pt 36pt 54pt
-                        }
-
-                        .c31 {
-                            font-size: 14pt;
-                            font-weight: 700
-                        }
-
-                        .c9 {
-                            padding: 0;
-                            margin: 0
-                        }
-
-                        .c16 {
-                            color: inherit;
-                            text-decoration: inherit
-                        }
-
-                        .c14 {
-                            color: #1155cc
-                        }
-
-                        .c26 {
-                            color: #039be5
-                        }
-
-                        .c8 {
-                            height: 0pt
-                        }
-
-                        .c19 {
-                            margin-right: 126pt
-                        }
-
-                        .c30 {
-                            background-color: #ccffcc
-                        }
-
-                        .c11 {
-                            height: 60pt
-                        }
-
-                        .title {
-                            padding-top: 24pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 36pt;
-                            padding-bottom: 6pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        .subtitle {
-                            padding-top: 18pt;
-                            color: #666666;
-                            font-size: 24pt;
-                            padding-bottom: 4pt;
-                            font-family: "Georgia";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            font-style: italic;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        li {
-                            color: #000000;
-                            font-size: 11pt;
-                            font-family: "Calibri"
-                        }
-
-                        p {
-                            margin: 0;
-                            color: #000000;
-                            font-size: 11pt;
-                            font-family: "Calibri"
-                        }
-
-                        h1 {
-                            padding-top: 24pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 24pt;
-                            padding-bottom: 6pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h2 {
-                            padding-top: 18pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 18pt;
-                            padding-bottom: 4pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h3 {
-                            padding-top: 10pt;
-                            color: #4f81bd;
-                            font-weight: 700;
-                            font-size: 11pt;
-                            padding-bottom: 0pt;
-                            font-family: "Cambria";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h4 {
-                            padding-top: 12pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 12pt;
-                            padding-bottom: 2pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h5 {
-                            padding-top: 11pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 11pt;
-                            padding-bottom: 2pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-
-                        h6 {
-                            padding-top: 10pt;
-                            color: #000000;
-                            font-weight: 700;
-                            font-size: 10pt;
-                            padding-bottom: 2pt;
-                            font-family: "Calibri";
-                            line-height: 1.0;
-                            page-break-after: avoid;
-                            orphans: 2;
-                            widows: 2;
-                            text-align: left
-                        }
-                    </style>
-                    <div>
-                        <p class="c21"><span class="c31">Terms Of Service</span></p>
-                        <p class="c17"><span class="c22"></span></p>
-                    </div>
-                    <p class="c25"><span class="c20"></span></p><a
-                        id="t.0c17bc51f566b91548dff186201a3f4fa446fd4d"></a><a id="t.0"></a>
-                    <table class="c15">
-                        <tbody>
-                            <tr class="c8">
-                                <td class="c2" colspan="1" rowspan="1">
-                                    <p class="c7"><span class="c4">These terms and conditions outline the rules and
-                                            regulations for the use of Lineblocs's Website.</span></p>
-                                    <p class="c25"><span class="c13"></span></p>
-                                    <p class="c7"><span class="c4">By accessing this website we assume you accept these
-                                            terms and conditions in full. Do not continue to use Lineblocs's website if
-                                            you do not accept all of the terms and conditions stated on this
-                                            page.</span></p>
-                                    <p class="c7"><span class="c4">The following terminology applies to these Terms and
-                                            Conditions, Privacy Statement and Disclaimer Notice and any or all
-                                            Agreements: "Client", "You" and "Your" refers to you, the person accessing
-                                            this website and accepting the Company's terms and conditions. "The
-                                            Company", "Ourselves", "We", "Our" and "Us", refers to our Company. "Party",
-                                            "Parties", or "Us", refers to both the Client and ourselves, or either the
-                                            Client or ourselves. All terms refer to the offer, acceptance and
-                                            consideration of payment necessary to undertake the process of our
-                                            assistance to the Client in the most appropriate manner, whether by formal
-                                            meetings of a fixed duration, or any other means, for the express purpose of
-                                            meeting the Client's needs in respect of provision of the Company's stated
-                                            services/products, in accordance with and subject to, prevailing law of
-                                            Canada. Any use of the above terminology or other words in the singular,
-                                            plural, capitalisation and/or he/she or they, are taken as interchangeable
-                                            and therefore as referring to same.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Cookies</span></p>
-                                    <p class="c7"><span class="c4">We employ the use of cookies. By using Lineblocs's
-                                            website you consent to the use of cookies in accordance with Lineblocs's
-                                            privacy policy.</span></p>
-                                    <p class="c7"><span class="c4">Most of the modern day interactive web sites use
-                                            cookies to enable us to retrieve user details for each visit. Cookies are
-                                            used in some areas of our site to enable the functionality of this area and
-                                            ease of use for those people visiting. Some of our affiliate / advertising
-                                            partners may also use cookies.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">License</span></p>
-                                    <p class="c7"><span class="c4">Unless otherwise stated, Lineblocs and/or it's
-                                            licensors own the intellectual property rights for all material on
-                                            Lineblocs. All intellectual property rights are reserved. You may view
-                                            and/or print pages from http://lineblocs.com for your own personal use
-                                            subject to restrictions set in these terms and conditions.</span></p>
-                                    <p class="c7"><span class="c4">You must not:</span></p>
-                                    <ol class="c9 lst-kix_list_3-0 start" start="1">
-                                        <li class="c3"><span>Republish material from http://lineblocs.com</span></li>
-                                        <li class="c3"><span>Sell, rent or sub-license material from
-                                                http://lineblocs.com</span></li>
-                                        <li class="c3"><span>Reproduce, duplicate or copy material from
-                                                http://lineblocs.com</span></li>
-                                    </ol>
-                                    <p class="c7"><span class="c4">Redistribute content from Lineblocs (unless content
-                                            is specifically made for redistribution).</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Hyperlinking to our Content</span></p>
-                                    <ol class="c9 lst-kix_list_4-0 start" start="1">
-                                        <li class="c3"><span>The following organizations may link to our Web site
-                                                without prior written approval:</span></li>
-                                    </ol>
-                                    <ol class="c9 lst-kix_list_4-1 start" start="1">
-                                        <li class="c6"><span class="c4">Government agencies;</span></li>
-                                        <li class="c6"><span class="c4">Search engines;</span></li>
-                                        <li class="c6"><span class="c4">News organizations;</span></li>
-                                        <li class="c6"><span class="c4">Online directory distributors when they list us
-                                                in the directory may link to our Web site in the same manner as they
-                                                hyperlink to the Web sites of other listed businesses; and</span></li>
-                                        <li class="c6"><span class="c4">Systemwide Accredited Businesses except
-                                                soliciting non-profit organizations, charity shopping malls, and charity
-                                                fundraising groups which may not hyperlink to our Web site.</span></li>
-                                    </ol>
-                                    <ol class="c9 lst-kix_list_5-0 start" start="2">
-                                        <li class="c3"><span>These organizations may link to our home page, to
-                                                publications or to other Web site information so long as the link: (a)
-                                                is not in any way misleading; (b) does not falsely imply sponsorship,
-                                                endorsement or approval of the linking party and its products or
-                                                services; and (c) fits within the context of the linking party's
-                                                site.</span></li>
-                                        <li class="c3"><span>We may consider and approve in our sole discretion other
-                                                link requests from the following types of organizations:</span></li>
-                                    </ol>
-                                    <ol class="c9 lst-kix_list_5-1 start" start="1">
-                                        <li class="c6"><span class="c4">commonly-known consumer and/or business
-                                                information sources such as Chambers of Commerce, American Automobile
-                                                Association, AARP and Consumers Union;</span></li>
-                                        <li class="c6"><span class="c4">dot.com community sites;</span></li>
-                                        <li class="c6"><span class="c4">associations or other groups representing
-                                                charities, including charity giving sites,</span></li>
-                                        <li class="c6"><span class="c4">online directory distributors;</span></li>
-                                        <li class="c6"><span class="c4">internet portals;</span></li>
-                                        <li class="c6"><span class="c4">accounting, law and consulting firms whose
-                                                primary clients are businesses; and</span></li>
-                                        <li class="c6"><span class="c4">educational institutions and trade
-                                                associations.</span></li>
-                                    </ol>
-                                    <p class="c7"><span class="c4">We will approve link requests from these
-                                            organizations if we determine that: (a) the link would not reflect
-                                            unfavorably on us or our accredited businesses (for example, trade
-                                            associations or other organizations representing inherently suspect types of
-                                            business, such as work-at-home opportunities, shall not be allowed to link);
-                                            (b)the organization does not have an unsatisfactory record with us; (c) the
-                                            benefit to us from the visibility associated with the hyperlink outweighs
-                                            the absence of Lineblocs; and (d) where the link is in the context of
-                                            general resource information or is otherwise consistent with editorial
-                                            content in a newsletter or similar product furthering the mission of the
-                                            organization.</span></p>
-                                    <p class="c7"><span class="c4">These organizations may link to our home page, to
-                                            publications or to other Web site information so long as the link: (a) is
-                                            not in any way misleading; (b) does not falsely imply sponsorship,
-                                            endorsement or approval of the linking party and it products or services;
-                                            and (c) fits within the context of the linking party's site.</span></p>
-                                    <p class="c7"><span>If you are among the organizations listed in paragraph 2 above
-                                            and are interested in linking to our website, you must notify us by sending
-                                            an e-mail to </span><span class="c26">contact@lineblocs.com</span><span
-                                            class="c4">. Please include your name, your organization name, contact
-                                            information (such as a phone number and/or e-mail address) as well as the
-                                            URL of your site, a list of any URLs from which you intend to link to our
-                                            Web site, and a list of the URL(s) on our site to which you would like to
-                                            link. Allow 2-3 weeks for a response.</span></p>
-                                    <p class="c7"><span class="c4">Approved organizations may hyperlink to our Web site
-                                            as follows:</span></p>
-                                    <ol class="c9 lst-kix_list_1-0 start" start="1">
-                                        <li class="c3"><span>By use of our corporate name; or</span></li>
-                                        <li class="c3"><span>By use of the uniform resource locator (Web address) being
-                                                linked to; or</span></li>
-                                        <li class="c3"><span>By use of any other description of our Web site or material
-                                                being linked to that makes sense within the context and format of
-                                                content on the linking party's site.</span></li>
-                                    </ol>
-                                    <p class="c7"><span class="c4">No use of Lineblocs's logo or other artwork will be
-                                            allowed for linking absent a trademark license agreement.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Iframes</span></p>
-                                    <p class="c7"><span class="c4">Without prior approval and express written
-                                            permission, you may not create frames around our Web pages or use other
-                                            techniques that alter in any way the visual presentation or appearance of
-                                            our Web site.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Reservation of Rights</span></p>
-                                    <p class="c7"><span class="c4">We reserve the right at any time and in its sole
-                                            discretion to request that you remove all links or any particular link to
-                                            our Web site. You agree to immediately remove all links to our Web site upon
-                                            such request. We also reserve the right to amend these terms and conditions
-                                            and its linking policy at any time. By continuing to link to our Web site,
-                                            you agree to be bound to and abide by these linking terms and
-                                            conditions.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Removal of links from our website</span></p>
-                                    <p class="c7"><span class="c4">If you find any link on our Web site or any linked
-                                            web site objectionable for any reason, you may contact us about this. We
-                                            will consider requests to remove links but will have no obligation to do so
-                                            or to respond directly to you.</span></p>
-                                    <p class="c7"><span class="c4">Whilst we endeavour to ensure that the information on
-                                            this website is correct, we do not warrant its completeness or accuracy; nor
-                                            do we commit to ensuring that the website remains available or that the
-                                            material on the website is kept up to date.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Content Liability</span></p>
-                                    <p class="c7"><span class="c4">We shall have no responsibility or liability for any
-                                            content appearing on your Web site. You agree to indemnify and defend us
-                                            against all claims arising out of or based upon your Website. No link(s) may
-                                            appear on any page on your Web site or within any context containing content
-                                            or materials that may be interpreted as libelous, obscene or criminal, or
-                                            which infringes, otherwise violates, or advocates the infringement or other
-                                            violation of, any third party rights.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Disclaimer</span></p>
-                                    <p class="c7"><span class="c4">To the maximum extent permitted by applicable law, we
-                                            exclude all representations, warranties and conditions relating to our
-                                            website and the use of this website (including, without limitation, any
-                                            warranties implied by law in respect of satisfactory quality, fitness for
-                                            purpose and/or the use of reasonable care and skill). Nothing in this
-                                            disclaimer will:</span></p>
-                                    <ol class="c9 lst-kix_list_2-0 start" start="1">
-                                        <li class="c3"><span>limit or exclude our or your liability for death or
-                                                personal injury resulting from negligence;</span></li>
-                                        <li class="c3"><span>limit or exclude our or your liability for fraud or
-                                                fraudulent misrepresentation;</span></li>
-                                        <li class="c3"><span>limit any of our or your liabilities in any way that is not
-                                                permitted under applicable law; or</span></li>
-                                        <li class="c3"><span>exclude any of our or your liabilities that may not be
-                                                excluded under applicable law.</span></li>
-                                    </ol>
-                                    <p class="c7"><span class="c4">The limitations and exclusions of liability set out
-                                            in this Section and elsewhere in this disclaimer: (a) are subject to the
-                                            preceding paragraph; and (b) govern all liabilities arising under the
-                                            disclaimer or in relation to the subject matter of this disclaimer,
-                                            including liabilities arising in contract, in tort (including negligence)
-                                            and for breach of statutory duty.</span></p>
-                                    <p class="c7"><span class="c4">To the extent that the website and the information
-                                            and services on the website are provided free of charge, we will not be
-                                            liable for any loss or damage of any nature.</span></p>
-                                    <p class="c0"><span class="c4"></span></p>
-                                    <p class="c7"><span class="c10">Credit &amp; Contact Information</span></p>
-                                    <p class="c7"><span>This Terms and conditions page was created at </span><span
-                                            class="c14"><a class="c16"
-                                                href="https://www.google.com/url?q=https://termsandconditionstemplate.com/&amp;sa=D&amp;ust=1574745493109000">termsandconditionstemplate.com</a></span><span>&nbsp;generator.
-                                            If you have any queries regarding any of our terms, please contact us</span>
-                                    </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p class="c0"><span class="c20"></span></p>
-                    <div>
-                        <p class="c28"><span class="c4"></span></p>
-                        <p class="c0"><span class="c12"></span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <link rel="stylesheet" href="/css/legal.css">
+
+<body>
+  <div class="mobile-navbar">
+    <select class="browser-default" id="selectbox">
+      <option value="/pages/privacy-policy">PRIVACY POLICY</option>
+      <option value="/pages/tos" selected="">TERMS OF SERVICE</option>
+    </select>
+  </div>
+	<div class="container legal">
+    <div class="effective-date">
+      <i>Last Updated: September 15, 2020</i>
     </div>
-</div>
+    <div class="inner">
+      <div class="sidebar">
+        <p><a href="/pages/privacy-policy">PRIVACY POLICY</a></p>
+        <p><a href="/pages/tos" class="active">TERMS OF SERVICE</a></p>
+      </div>
+      <div class="content terms-page">
+        <h2>LINEBLOCS TERMS OF SERVICE</h2>      
+        <div class="block"> <strong>This Software As A Service (Saas) Terms Of Service</strong> (these “<strong>Terms</strong>” or this “<strong>Agreement</strong>”) govern the purchase of the license to the Software and access to Services (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) by the Customer and its Users (“<strong>you</strong>”, “<strong>your</strong>”, and terms of similar meaning) made available by Lineblocs Ltd. (“<strong>we</strong>”, “<strong>us</strong>”, and “<strong>Provider</strong>”, together with the Customer, the "<strong>Parties</strong>", and each, a "<strong>Party</strong>"), made pursuant to an Order Form. </div>
+        <div class="block"> By executing an Order Form, or by accessing or using the Services, you agree to be bound by these Terms, and all terms, policies and guidelines incorporated by reference in these Terms. By accessing or using the Services, you, or the entity on behalf of whom you are acting, agree to be legally bound by these Terms and all terms, policies and guidelines incorporated by reference in these Terms. If you do not agree with these Terms, you may not access or use the Services. </div>
+        <div class="parent-group">
+          <h1>1.	CHANGES TO THE TERMS OF SERVICE AND POLICIES</h1>
+          <div> The Provider reserves the right, in its sole discretion to change, modify, replace, add or suspend portions of these Terms, the Privacy Policy and any other relevant policies at any time by posting the amended terms on the Services and emailing you at the address provided when registering for a user account. If you continue to access the Services after the amended terms are posted, you will be deemed to have accepted such changes through your continued use. If at any point you do not agree with our Terms, Privacy Policy, or any other policy, code of conduct or rules the Provider may have at that time, your licence to use the Services shall immediately terminate and you must immediately stop accessing or using the Services. </div>
+        </div>
+        <div class="parent-group">
+          <h1>2.	DESCRIPTION OF SERVICES</h1>
+          <div class="block"> <strong>2.1 Services.</strong> The Lineblocs Platform is a low-code, cloud-based unified communications platform that provides teams with enterprise calling, instant messaging, VoIP hosting, team workflows and other functionalities. </div>
+        </div>
+        <div class="parent-group">
+          <h1>3.	DEFINITIONS</h1>
+          <div class="block"> <strong>3.1 “Administrator”</strong> means a person or persons assigned by the Customer to have authority to act as an administrator of the subscription on behalf of the Customer, through which the Administrator shall (i) have the authority to configure User permissions and the Customer’s settings on the Services; and (ii) authorize the creation and deactivation of User accounts. </div>
+          <div class="block"> <strong>3.2 “Applicable Law”</strong> means all relevant requirements, laws, statutes, codes, acts, orders, by-laws, rules, regulations, permits, licenses, authorizations, directions and agreements with all relevant government authorities, agencies, commissions, bodies or departments, having jurisdiction over this Agreement or the supply, provision or use of the Services. </div>
+          <div class="block"> <strong>3.3 “Customer”</strong> shall mean a natural person or legal entity who is bound by the terms of the Order Form and these Terms of Service. </div>
+          <div class="block"> <strong>3.4 “Customer Data”</strong> means any information, data or content entered and uploaded into the Software by the Customer or any of its Users through using the Services. This includes trademarks, trade names, designs, logos and other indicia of origin that are owned or licensed by the Customer and approved by the Customer for use in connection with the Services. </div>
+          <div class="block"> <strong>3.5 “Fees”</strong> means the fees and charges to be paid by the Customer pursuant to the Order Form and these Terms. </div>
+          <div class="block"> <strong>3.6 “Personal Information”</strong> means any identifiable information relating to individuals, where the collection, use or disclosure of which is regulated by applicable privacy laws. </div>
+          <div class="block"> <strong>3.7 “Services”</strong> means the use of the Software and other related services to be provided by the Provider to the Customer pursuant to the Order Form. </div>
+          <div class="block"> <strong>3.8 “Software”</strong> means the Lineblocs Platform and any data or content made available through the Software by the Provider or its licensors that is licensed to the Customer and its authorized Users pursuant to the terms of the Order Form and this Agreement. </div>
+          <div class="block"> <strong>3.9 “Order Form”</strong> means (i) the Lineblocs Order Form; (ii) an online order specifying the Services to be provided hereunder, that is entered into between the Customer and the Provider. </div>
+          <div class="block"> <strong>3.10 “Term”</strong> shall have the meaning given in Section &lrm;15.1. </div>
+          <div class="block"> <strong>3.11 “User”</strong> means an individual who agrees to these Terms and is authorized by the Customer to use the Software. </div>
+        </div>
+        <div class="parent-group">
+          <h1>4.	PRIVACY POLICY</h1>
+          <div class="block"> <strong>4.1</strong> By accessing the Services and submitting your Personal Information, you consent to the collection, use, transmission and disclosure of your Personal Information in accordance with our privacy policy (<strong>“Privacy Policy”</strong>), found <a href="./privacy.html">here</a>. </div>
+        </div>
+        <div class="parent-group">
+          <h1>5.	USER ACCOUNTS</h1>
+          <div class="block"> <strong>5.1 User Accounts.</strong> Upon submitting an Order Form and agreeing to these Terms, the initial Administrator of the Customer will be permitted to register for a User account. The initial Administrator may add other Administrators, authorize other User accounts and deactivate any User if the Administrator wishes to terminate access to the Service for any User. Specific features on the services may be restricted to Administrators. The Customer is solely responsible for deleting User accounts and ensuring that only authorized Users have access to the Services. </div>
+          <div class="block"> <strong>5.2 Registration.</strong> The initial Administrator and other Users will be prompted to register for User accounts. Users agree to (a) provide and maintain accurate, full and complete information on their accounts when prompted by any requests or forms on the Software; (b) maintain the security of their password; and (c) accept all risk of unauthorized access to the information or data uploaded or inputted onto the Software. The Provider reserves the right to refuse registration of, or to cancel, User accounts that it reasonably believes violates the terms and conditions in this Agreement. </div>
+          <div class="block"> <strong>5.3 Social Media Registration.</strong> If registration for a User account on the Services is performed through a social media account or any Third-Party Services (as defined below), the User acknowledges and agrees that (i) the Provider may access, store and use content from the social media account or Third-Party Services in accordance with the permissions granted to the Provider; and (ii) that all or parts of the content may be visible to other Users of the Services. </div>
+        </div>
+        <div class="parent-group">
+          <h1>6.	SOFTWARE LICENSE AND RESTRICTIONS</h1>
+          <div class="block"> <strong>6.1 License to the Software.</strong> Subject to these Terms and the Order Form, the Provider hereby grants to the Customer and its Users a non-exclusive, non-transferable, revocable license to use the Software and solely permit the Customer and its Users to use the functionality contained within the Software for legitimate commercial purposes during the Term. </div>
+          <div class="block"> <strong>6.2 Restrictions.</strong> Except as set forth in this Agreement, the Order Form and to the extent contrary by Applicable Law: the Customer and its Users may not (a) copy, distribute, modify, create derivative works or adapt the Software or the Services except as permitted under this agreement; (b) use the Software or Services in manner that violates any Applicable Law or breaches the rights of any third-party (including intellectual property rights); (c) reverse engineer, disassemble, decompile or decode the Software or otherwise attempt to derive or gain access to the source code of the Software, in whole or in part; (d) rent, lease, lend, sell, sublicense, assign, distribute, publish, transfer or otherwise make available the Software to any person, including on or in connection with the internet or any subscription service, time-sharing, software as a service, cloud or other technology or service; (e) bypass or breach any security device, mechanism or protection used for or contained in the Services or Software; (f) replicate or recreate any part, design, function, feature or tool on the Software or the Services; (g) use, or access the Service for the purpose of building a competitive product or service or for any other competitive purposes; or (h) use the Software or Services other than for their permitted and intended uses, or in any manner not expressly permitted by the Provider’s third-party licensors. </div>
+        </div>
+        <div class="parent-group">
+          <h1>7.	CUSTOMER RESPONSIBILITIES, REPRESENTATIONS AND WARRANTIES</h1>
+          <div class="block"> <strong>7.1 Customer Eligibility.</strong> In order to use the Services, the Customer and its Users must be at least eighteen (18) years of age. </div>
+          <div class="block"> <strong>7.2 Customer Representations and Warranties.</strong> The Customer represents and warrants that its use of the Services and the use of the Services by its Users will be consistent with this Agreement and comply with Applicable Law. The Customer shall be liable for the acts and omissions of any of its Users, directors, officers, employees, contractors, representatives or agents as if such act or omission were an act or omission of the Customer. The Customer represents and warrants that it has the right to enter into this Agreement and to allow the Provider to perform the Services. </div>
+          <div class="block"> <strong>7.3 Customer Responsibilities.</strong> The Customer acknowledges and agrees that it shall be responsible for the acts and omissions of its Users on the Software. This includes (a) ensuring that Users comply with this Agreement and maintain the confidentiality of their passwords; and (b) ensuring that only authorized Users access and use the Services. The Customer accepts full liability and responsibility for the actions of anyone who uses the Services via its account with or without its permission, including activity performed on the Software through any of its Users’ accounts by an agent, representative, employee (including former employees who maintained access to the Services), or any other person acting on behalf of such User. </div>
+          <div class="block"> <strong>7.4 Restriction on Uses.</strong> The Services are provided to the Customer for its internal business purposes. The Provider reserves the right to terminate the Customer’s licence to use the Services if the Provider determines, in its sole discretion, that the Customer or its Users engaged in reselling, transferring or redistributing the Services, or are using the Services for non-commercial purposes. The Customer and its Users may not: </div>
+          <ol class="block lower-alpha">
+            <li class="list-margin">post any information via the Services that is defamatory, libelous, hateful, violent, obscene, pornographic, unlawful, or otherwise offensive, as determined by The Provider in its sole discretion, whether or not such information may be protected by law;</li>
+            <li class="list-margin">submit via the Services any data, software or other materials that contain any malicious code, viruses, worms, Trojan horses, defects, date bombs, time bombs or other items of a destructive nature;</li>
+            <li class="list-margin">take any actions that impose an unreasonable burden on the Services’ technological infrastructure;</li>
+            <li class="list-margin">submit inaccurate, false, or misleading information to the Services;</li>
+            <li class="list-margin">distribute, publish, send or facilitate the sending of unsolicited mass e-mail or other messages, promotions, advertising or solicitations, including commercial advertising and informational announcements;</li>
+            <li class="list-margin">remove any legal, copyright, trademark or other proprietary rights notices contained in or on materials the Customer receives or accesses pursuant to this Agreement;</li>
+            <li class="list-margin">use the Services to violate the security or integrity of any network, computer or communications system, software application, or network or computing device; and/or</li>
+            <li>attempt to gain unauthorized access to the Software, the server on which the Software is stored, or any server, computer or database connected to the Services.</li>
+          </ol>
+          <div> <strong>7.5 Privacy Laws.</strong> The Customer and its Users represent that (a) they will comply with all applicable privacy laws in connection with the collection, use and disclosure of Personal Information, and the provision of such Personal Information to the Provider complies with all applicable privacy laws; and (b) all individuals to whom such Personal Information relates have consented to the Provider’s collection, use and disclosure of such Personal Information for the purposes disclosed in this Agreement or the Privacy Policy. </div>
+        </div>
+        <div class="parent-group">
+          <h1>8.	FEES</h1>
+          <div class="block"> <strong>8.1 Fees.</strong> Fees to access and use the Services will be published on the Services and may change from time to time. By submitting an Order Form, the Client agrees to pay the Fees relevant to its selection of offerings in the Services. Unless otherwise specified, payment obligations are non-cancelable and Fees paid are non-refundable and payable in advance. One-time activation fees, installation fees, and usage-based Fees that may apply will be specified on the Services or any relevant Order Form. </div>
+          <div class="block"> <strong>8.2 Taxes.</strong> The Customer is responsible for all applicable federal, state, municipal, sales, goods and services, harmonized sales, value added, use, excise, other similar taxes, levies and charges not otherwise included in the Fees imposed by applicable tax authorities on the provision of Services hereunder. Those amounts are in addition to the Fees charged to access and use the Services. The Customer shall pay to the Provider such amounts which the Provider is registered to charge and collect. </div>
+        </div>
+        <div class="parent-group">
+          <h1>9.	INVOICES AND PAYMENT</h1>
+          <div class="block"> <strong>9.1 Invoices and Payments.</strong> The Provider shall invoice the Customer, in advance, for the Services in accordance with the terms of the Order Form. Unless otherwise indicated in the Order Form, the Customer shall pay such invoices within five (5) calendar days of receipt. Taxes shall be identified and shown as separate items on each invoice. Any amounts arising in relation to this Agreement not paid when due will be subject to a late charge of two (2%) per cent per month on the unpaid balance or the maximum rate allowed by law, whichever is less. The Provider may invoice for purchases of the Services upon delivery. </div>
+          <div class="block"> <strong>9.2 Payment Authorization and Obligation.</strong> When the Customer submits an Order Form, it authorizes the Provider to collect from it through the Customer’s selected payment method. The Customer’s authorization shall remain in force until thirty (30) days after it terminates the Provider’s authority to charge the selected payment method. If the Customer’s use of the Services is terminated in accordance with this Agreement, any unpaid Fee obligations shall be accelerated and become due and payable immediately. The Provider reserves the right to suspend the Customer’s access to the Services until such amounts are paid in full. </div>
+          <div class="block"> The Customer must advise us immediately if payment method expires, it closes its account, its billing information changes, or its payment method is cancelled and replaced. Except for usage-based Fees, the Provider will bill in advance to the Customer’s payment method all Fees, taxes, charges and surcharges for the Term. The Provider reserves the right to charge all Fees to the Customer’s selected payment method. </div>
+          <div class="block"> <strong>9.3 Changes to Pricing.</strong> From time to time the Provider may revise the pricing terms for the use of the Services. Notices of the changes shall be communicated to the Customer through the provided Registration Data and shall be deemed effective on the specified date. If the Customer does not agree to the changes, the Customer must terminate its use of the Services immediately. By continuing to use the Services after the specified date the Customer accepts and agree to the revised pricing terms. </div>
+          <div class="block"> <strong>9.4 Fee Disputes.</strong> The Customer must notify the Provider in writing within thirty (30) days after receiving an invoice if it wish to dispute any of the Fees on that invoice, otherwise such dispute shall be deemed waived. </div>
+        </div>
+        <div class="parent-group">
+          <h1>10.	INTELLECTUAL PROPERTY</h1>
+          <div class="block"> <strong>10.1 Ownership of the Software and Services.</strong> Except for the rights and licenses granted in this Agreement, the Provider and its licensors, as applicable, shall retain all rights, title, interests, copyright, patent rights, trade secret rights, trademarks and other proprietary rights or interests (“Intellectual Property Rights”) in the Software and the Services. Nothing in this Agreement or the Order Form shall be deemed to transfer or convey ownership of any Intellectual Property Rights from one Party to the other, or to provide either Party with a right to use the other Party’s trade names, logos, or trademarks. </div>
+          <div class="block"> <strong>10.2 Ownership of Customer Data.</strong> The Provider acknowledges and agrees that, as between the Parties, the Customer or its licensors are the sole and exclusive owner of the Customer Data, and that it has no right or interest in the Customer Data. The Customer Data will be collected, handled and used by the Provider only in compliance with the terms of this Agreement. The Customer grants to the Provider a non-exclusive, royalty-free, non-transferable license during the Term to use, reproduce, modify, adapt, create and otherwise exploit the Customer Data, solely for, and in connection with, its provision of the Services. The Customer represents and warrants that it has the right to provide a sublicensable license to the Provider covering any Customer Data that is obtained from third-parties. </div>
+          <div class="block"> <strong>10.3 Customer Feedback and Reviews.</strong> The Customer grants the Provider a worldwide, perpetual, irrevocable, royalty-free license to use and incorporate into its services any suggestions, reviews, enhancement requests, recommendations, corrections or other feedback provided by the Customer or its Users relating to the operation of the Software or the Services. </div>
+        </div>
+        <div class="parent-group">
+          <h1>11.	THIRD-PARTY SERVICES</h1>
+          <div class="block"> <strong>11.1 Third-Party Software and Licenses.</strong> The Services contain third-party software that may be subject to their own licences. These licences may contain additional terms and conditions. The Customer understands and acknowledges that such software is not licensed to it pursuant to the provisions of these Terms and that these Terms may not be construed to grant any such right and/or licence. The third-party software licences are incorporated into these Terms. By accepting these Terms and accessing and using the Services, the Customer also accepts these licences. To access any third-party licenses, please contact us at <a href="contact@lineblocs.com">contact@lineblocs.com</a>. </div>
+          <div class="block"> <strong>11.2 Hosting.</strong> The Provider will cause the Software and accounts on the Services to be hosted on third-party servers maintained and operated by one or more reputable third-party service providers. The Provider will be responsible for contracting with the third-party service providers, and for paying all fees and charges of the third-party service providers. All Customer Data stored on the Services is located on servers operated by the third-party service providers based on their hosting policies. </div>
+          <div class="block"> <strong>11.3 Third-Party Services.</strong> The Services may provide links to third-party sites and content that are not owned or monitored by the Provider (<strong>“Third-Party Services”</strong>). The Provider makes no representations about any Third-Party Services that may be accessed from the Services. The Provider does not endorse, approve or guarantee the accuracy of any content on the Third-Party Services, and when visiting them the Customer will no longer be governed by these Terms and our Privacy Policy. The Customer and its Users should familiarize themselves with and are responsible for reading and understanding the terms and conditions, privacy policies and data security practices of the Third-Party Services accessed. Those are the policies and practices that will apply to the use of the Third-Party Services. If the Customer or its Users choose to access any Third-Party Services, it is done at their own risk. The Provider has no control over the contents of any Third-Party Services and accept no responsibility for such services or for any loss or damage that may arise from the use of them. </div>
+          <div class="block"> Links to Third-Party Services from the Services may include links to social media features that may enable Users to link, transmit or display on its own or using Third-Party Services, certain content from the Services. Users may only use these features when they are provided by the Provider and solely with respect to the content identified by the Provider. </div>
+        </div>
+        <div class="parent-group">
+          <h1>12.	DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY</h1>
+          <div class="block"> <strong>12.1 DISCLAIMER OF WARRANTIES.</strong> THE SERVICES, THE SOFTWARE, AND ANY FEATURES OR INFORMATION FOUND THROUGH THE SERVICES ARE PROVIDED ON AN "AS IS" BASIS, WITHOUT ANY WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. YOU UNDERSTAND AND AGREE THAT YOUR USE OF THE SERVICES AND ITS CONTENTS IS DONE SO AT YOUR OWN RISK. </div>
+          <div class="block"> NEITHER THE PROVIDER NOR ITS SUBSIDIARIES, AFFILIATES, OR THEIR RESPECTIVE AGENTS OR REPRESENTATIVES MAKE ANY WARRANTY, REPRESENTATION, OR ENDORSEMENT WITH RESPECT TO THE COMPLETENESS, SECURITY, RELIABILITY, SUITABILITY, ACCURACY, CURRENCY, OR AVAILABILITY OF THE SERVICES OR ITS CONTENTS. WITHOUT LIMITING THE FOREGOING, NEITHER THE PROVIDER NOR ITS SUBSIDIARIES, AFFILIATES OR THEIR AGENTS REPRESENT NOR WARRANT THAT THE SERVICES, ITS CONTENTS, OR ANY FEATURES OR INFORMATION FOUND OR ATTAINED THROUGH THE SERVICES WILL BE ACCURATE, RELIABLE, ERROR-FREE, WITHOUT DELAY, WITHOUT LOSS OF DATE, WITHOUT DEGRADATION OF AUDIO QUALITY OR UNINTERRUPTED, THAT DEFECTS WILL BE CORRECTED, OR THAT OUR TECHNOLOGICAL INFRASTRUCTURE THAT MAKES THE SERVICES AVAILABLE TO YOU IS FREE OF VIRUSES, MALICIOUS CODE OR OTHER TECHNOLOGICALLY HARMFUL COMPONENTS. </div>
+          <div class="block"> <strong>12.2 Limitation of Liability.</strong> Except where such exclusions are prohibited by Applicable Law, under no circumstance will the Provider nor its subsidiaries, affiliates or their respective directors, officers, employees, agents, service providers, contractors, licensors, licensees, suppliers, or successors be liable for negligence, gross negligence, negligent misrepresentation, fundamental breach, damages of any kind, under any legal theory, including any direct, indirect, special, incidental, consequential, or punitive damages. This includes any of the foregoing resulting from, but not being limited to, intellectual property infringement, inaccuracy of the content provided by the Services, emotional distress, loss of revenue, loss of profits, loss of business or anticipated savings, loss of use, loss of goodwill, loss of data, and whether caused by tort (including negligence), breach of contract, breach of privacy, or otherwise, even if the Customer were allegedly advised or had reason to know. The Provider will also not be liable for any damages arising out of or in connection with the use, or inability to use, or reliance on the Services, its content, or any linked websites or such other Third-Party Services, materials, postings, or information thereon even if it were allegedly advised or had reason to know. </div>
+          <div class="block"> In no event shall the aggregate liability of the Provider, whether in contract, warranty, tort, product liability, or any other legal theory, arising out of or relating to the use of the Services exceed any amount paid by the Customer during the three (3) months prior to the date of any claim. </div>
+        </div>
+        <div class="parent-group">
+          <h1>13.	INDEMNIFICATION</h1>
+          <div class="block"> <strong>13.1 Indemnity by Customer.</strong> The Customer agrees to defend, indemnify and hold the Provider, its directors, officers, employees, agents, contractors and affiliates, harmless from any claims losses, damages or liability for personal injury, death, fines, penalties, costs, expenses, lost profit, lost revenue, property damage, legal fees, and any and all other damages of whatever kind and nature relating to, resulting from, or arising out of (i) the use of the Services; (ii) any content or Customer Data inputted or uploaded to the Services by a User; (iii) the use of or inability to use the Services; (iv) the absence, failure or outage of the Services; and (v) a failure to comply with this Agreement, including any obligation to comply with Applicable Law, unless the claims or cause of action arise from the Provider’s gross negligence or wilful misconduct. </div>
+          <div class="block"> <strong>13.2 Indemnity by Provider.</strong> The Provider agrees to defend, indemnify and hold the Customer, its directors, officers, employees, agents, contractors and affiliates, harmless from any loss, damage or liability, including all reasonable legal costs, that the Customer may incur as a result of or in connection with (a) any valid claim that the Customer’s use of the Software or any portion of it, in accordance with this Agreement, infringes, violates or misappropriates such third party’s patent, copyright, trademark or other intellectual property rights; or (b) any third-party claim relating to or resulting from any breach by the Provider of the Provider’s obligations under this Agreement, including its obligation to comply with all Applicable Law. </div>
+        </div>
+        <div class="parent-group">
+          <h1>14.		SECURITY OF THE SERVICES</h1>
+          <div class="block"> <strong>14.1 Security.</strong> The Provider implements appropriate administrative, physical and technical security measures designed to protect the security and confidentiality of the Customer Data against any accidental or unauthorized destruction, alteration, access or disclosure to third parties. Although measures are taken to protect the Customer Data, the security of the Customer Data via the Services cannot be guaranteed. Any transmission of Customer Data via the Services is done so at the Customer’s own risk. </div>
+        </div>
+        <div class="parent-group">
+          <h1>15.	TERM AND TERMINATION</h1>
+          <div class="block"> <strong>15.1 Term.</strong> The term of this Agreement (<strong>“Term”</strong>) shall commence on the date the Order Form is submitted (<strong>“Entry Date”</strong>) by the Customer and shall continue until either Party terminates the Agreement in accordance with this Section. </div>
+          <ol class="block lower-alpha">
+            <li class="list-margin"><strong>“Pay As You Go” Term.</strong> If the Customer submits an Order Form for the “Pay As You Go” Services, the Term shall continue until either Party terminates this Agreement in accordance with this Section.</li>
+            <li><strong>Monthly Term.</strong> If the Customer submits an Order Form for the Services on a month-to-month term, the Services shall continue for the period of time as described in the Order Form  <strong>“Initial Term”</strong> ) and will automatically renew for successive monthly terms (<strong>“Renewal Terms”</strong>), unless terminated in accordance with this Agreement.</li>
+          </ol>
+          <div class="block"> <strong>15.2 Termination.</strong> </div>
+          <ol class="block lower-alpha">
+            <li class="list-margin"><strong>Termination for Convenience.</strong> Except in the case of a month-to-month term, either Party may terminate this Agreement, for any reason, by providing at least fifteen (15) days prior written notice to the other Party. For month-to-month terms, the Customer may provide thirty (30) days prior written notice to terminate this Agreement. For clarity, if the Provider terminates the Agreement, it will refund the Customer the fees paid to it for the pro-rated unused portion of the Initial Term or the Renewal Term. However, if the Customer terminates this Agreement, it shall not be entitled to any refund.</li>
+            <li><strong>Termination for Cause.</strong> Either Party may terminate this Agreement immediately upon notice to the other Party, if the other Party (i) materially breaches this Agreement and fails to remedy such breach within thirty (30) days after receiving written notice of the breach from the other Party; or (ii) commences bankruptcy or dissolution proceedings, has a receiver appointed for a substantial part of its assets, or ceases to operate in the ordinary course of business. In addition, a Party may terminate this Agreement, in whole or in part, or cease provision of the Services if required to comply with Applicable Law or regulation, and such termination will not constitute a breach of this Agreement by the terminating Party.</li>
+          </ol>
+          <div class="block"> <strong>15.3 Termination and Suspension of Users.</strong> Notwithstanding any provision of these Terms, the Provider reserves the right, in its sole discretion, without any notice or liability to the Customer or any User, to (a) terminate a User’s license to use the Software, or any portion thereof; (b) block or prevent a User’s future access to and use of all or any portion of the Software; (c) change, suspend, or discontinue any aspect of the Software; and (d) impose limits on the Software. </div>
+          <div class="block"> <strong>15.4 Effect of Termination.</strong> Upon termination of this Agreement in accordance with Section &lrm;15.2, the Customer will have no further right to access or use the Services, and each Party shall within sixty (60) days after written request return or destroy any tangible Confidential Information of the other Party within its possession or control that is not contained on the Services. Any Customer Data contained on the Services will be deleted within sixty (60) days of termination of the Term. The Customer acknowledges that it is responsible for exporting any Customer Data to which Customer desires continued access after termination, and the Provider shall have no liability for any failure of Customer to retrieve such Customer Data and no obligation to store or retain any such Customer Data after such sixty (60) day period. Following termination of the Term, the Provider may immediately deactivate the Customer’s accounts. </div>
+        </div>
+        <div class="parent-group">
+          <h1>16.	CONFIDENTIAL INFORMATION</h1>
+          <div class="block"> <strong>16.1 Confidential Information. “Confidential Information”</strong> means information in any form or medium (whether oral, written, electronic or other), acquired by a Party (<strong>“Receiving Party”</strong>) through the performance or receipt of the Services, that is reasonably considered confidential by the other Party (<strong>“Disclosing Party”</strong>), including, without limitation, trade secrets, inventions, software, designs, technologies, databases, information pertaining to business operations, strategies, pricing, and marketing, whether or not marked, designated or otherwise identified as being "confidential". Customer’s Confidential Information includes Customer Data. The Provider’s Confidential Information includes the Software and the Services. However, Confidential Information does not include any information that (a) is or becomes generally known to the public without breach of any obligation owed to the Disclosing Party; (b) was in the lawful possession of or was known to the Receiving Party prior to its disclosure by the Disclosing Party without breach of any obligation owed to the Disclosing Party; (c) is received from a third party without breach of any obligation owed to the Disclosing Party; or (d) is independently developed by the Receiving Party, which independent development can be shown by written evidence. </div>
+          <div class="block"> <strong>16.2 Receiving Party Obligations.</strong> The Receiving Party agrees that it shall (a) not disclose or otherwise make available Confidential Information of the Disclosing Party to any third party without the prior written consent of the Disclosing Party; provided, however, that the Receiving Party may disclose the Confidential Information of the Disclosing Party to its partners, representatives, affiliates, subcontractors and associates on a “need to know” basis, who have been apprised of this restriction and who are themselves bound by nondisclosure obligations at least as restrictive as those set forth in this Agreement; (b) use the Confidential Information of the Disclosing Party only for the purposes of performing its obligations under the Agreement, exercising its rights under this Agreement or, in the case of the Customer, to make use of the Services and Software; and (c) promptly notify the Disclosing Party in the event it becomes aware of any loss or disclosure of any of the Confidential Information of Disclosing Party. </div>
+          <div class="block"> <strong>16.3 Compelled Disclosure.</strong> If the Receiving Party becomes legally compelled by Applicable Law to disclose any Confidential Information, the Receiving Party shall provide: (a) prompt written notice of such requirement so that the Disclosing Party may seek, at its sole cost and expense, a protective order or other remedy; and (b) reasonable assistance, at the Disclosing Party's sole cost and expense, in opposing such disclosure or seeking a protective order or other limitations on disclosure. If a protective order cannot be obtained, the Party compelled to disclose will only disclose the portion of the Confidential Information that it is legally required to. </div>
+          <div class="block"> <strong>16.4 Destruction.</strong> Upon the Termination of this Agreement, each Party shall comply with the other Party’s reasonable instructions regarding the destruction or return of both Party’s Confidential Information. If either Party does not provide instructions to the other, the other Party must destroy or return all Confidential Information and its copies within sixty (60) days after the Termination of this Agreement. </div>
+          <div class="block"> <strong>16.5 Indemnity.</strong> Each Party agrees to indemnify and hold the other Party harmless from and against all loss or damage or any kind suffered by the other Party as a result of any breach of its obligations under this Section. </div>
+        </div>
+        <div class="parent-group">
+          <h1>17.	GENERAL</h1>
+          <div class="block"> <strong>17.1 Governing Law.</strong> This Agreement shall be governed by and construed in accordance with the laws of the Province of Alberta and the laws of Canada applicable therein, without giving effect to any choice or conflict of law provision, principle, or rule (whether of the laws of the Province of Alberta or any other jurisdiction) and notwithstanding your domicile, residence, or physical location. </div>
+          <div class="block"> <strong>17.2 Waiver of Class Proceedings.</strong> The Customer waives any right it may have to commence or participate in any class action against the Provider related to any Disputes (as defined below) and, where applicable, the Customer also agrees to opt out of any class proceedings and expressly waive any rights to file a class action or seek relief on a class basis against the Provider. The Customer also waives any and all objections to the exercise of jurisdiction over it by such courts and to the venue of such courts. </div>
+          <div class="block"> Any action or proceeding arising out of or relating to the Services and under these Terms shall be pursued through arbitration. If arbitration is prohibited by Applicable Law, then any action or claim shall be instituted in the courts of the Province of Alberta and/or the Federal Courts of Canada, and each party irrevocably submits to the exclusive jurisdiction of such courts in any such action or proceeding. </div>
+          <div class="block"> <strong>17.3 Survival.</strong> The provisions of this Agreement relating to indemnification, limitations on liability, and which by their nature extend beyond the termination of this Agreement shall survive such termination. This includes, without limitation Section &lrm;9 (Invoices and Payment), Section &lrm;10 (Intellectual Property), Section &lrm;12 (Disclaimer of Warranties and Limitation of Liability), Section &lrm;13 (Indemnification), Section &lrm;15.4 (Termination), Section &lrm;16 (Confidential Information) and relevant provisions of Section &lrm;17 (General). </div>
+          <div class="block"> <strong>17.4 Dispute Resolution.</strong> All controversies or claims (<strong>“Disputes”</strong>) arising out of these Terms shall first be negotiated in good faith by non-lawyer representatives from both parties. All Disputes that are not resolved within thirty (30) days of the initial notice to the other party shall be submitted to final and binding arbitration administered by an arbitrator with no right of appeal. The place of the arbitration shall be in the City of Calgary, in the Province of Alberta (Canada). The language of the arbitration shall be English. The arbitrator's award shall be final, and judgment may be entered upon it by any court having jurisdiction thereof. </div>
+          <div class="block"> <strong>17.5 Independent Contractors.</strong> Nothing in this Agreement will be construed to imply a joint venture, partnership or principal-agent relationship between the Provider and the Customer, and neither Party will have the right, power or authority to obligate or bind the other in any manner whatsoever. </div>
+          <div class="block"> <strong>17.6 Force Majeure.</strong> Neither Party will be liable to the other Party for any delay or failure to perform (except for any payment obligation) which is due to acts of God, acts of government, war, civil or military unrest, pandemic, virus, epidemic, riots, terrorism, fire, unavailability of communications or electrical power service provided by third parties, travel advisories as to health, security, flood, lockout, transportation delay, strikes or other labor difficulties, or other causes beyond its reasonable control. The parties agree that an event shall not be considered to beyond reasonable control if a reasonable business person applying due diligence in the same or similar circumstances under the same or similar obligations as the provisions of the Order Form would have put in place contingency plans to either materially mitigate or negate the effects of such event. However, in such event, both Parties will resume performance promptly after the cause of such delay or failure has been removed. </div>
+          <div class="block"> <strong>17.7 Currency.</strong> Unless otherwise specified in the Order Form, all references to amounts of money in this Agreement refer to United States (USD) currency. </div>
+          <div class="block"> <strong>17.8 Notices.</strong> Notices that the Provider gives to the Customer (other than notice of amendment of this Agreement), may be provided in any of the following ways. First, the Provider may email an Administrator at the contact information provided in the Order Form or any registration data. Second, the Provider may post a notice on the its website. It is the Customer’s responsibility to periodically review the Provider’s website for notices. The Customer may provide notice to the Provider by (a) submitting a ticket through the helpdesk; or (b) emailing the Provider at the address below. </div>
+          <div class="block"> <strong>17.9 Successors and Assigns.</strong> This Agreement shall enure to the benefit of, and be binding on, the parties and their respective successors and permitted assigns. The Provider may assign all or part of its rights or duties under this Agreement. The Customer may not assign this Agreement, or its rights or obligations hereunder, without the Provider’s prior written consent. </div>
+          <div class="block"> <strong>17.10 Severability and Waiver.</strong> This Agreement shall be deemed severable, and the invalidity or unenforceability of any term or provision and shall not affect the validity or enforceability of this Agreement or of any other term or provision in this Agreement. Should any term or provision of this Agreement be declared void or unenforceable by any court of competent jurisdiction, the Parties intend that a substitute provision will be added to this Agreement so that, to the greatest extent possible, the substitute provision achieves the intended commercial outcome of the original provision. Any failure of either Party to enforce any rights granted to it hereunder or to take action against the other Party in the event of any breach hereunder will not be deemed a waiver by that Party as to subsequent enforcement of rights or subsequent actions in the event of future breaches. </div>
+          <div class="block"> <strong>17.11 Entire Agreement.</strong> This Agreement and the Order Form supersedes all prior agreements, negotiations and representations between the Parties regarding the subject matter of this Agreement. </div>
+          <div class="block"> <strong>17.12 Export Controls.</strong> The Services and all related software and technical information may be subject to the United States of America’s export laws, restrictions and regulations. The Customer and its Users agree to not export, transfer, distribute, transmit or allow for the export, transfer, distribution or transmission of the Services and all related content, software and technical information, except in compliance with any and all relevant export laws, regulations and restrictions. The export, transfer, distribution or transmission of the Software and all related content, software and technical information, directly or indirectly to an embargoed or sanctions region/country is in violation of these Terms. </div>
+          <div class="block"> <strong>17.13 Geographic Restrictions.</strong> The Provider does not provide the Services to certain countries outside of Canada and the United States of America. If the Client is using the Services in a country not support by the Provider and in violation of Applicable Law, the Client is solely liable for any violations and agree to indemnify the Provider for any and all claims, damages or losses. </div>
+          <div class="block"> <strong>17.14 Modification of Terms.</strong> The Provider may modify this Agreement at any time by (a) posting a notice on the Provider’s website or the Services; or (b) by e-mailing the Users of the Customer. The Customer is responsible for checking the Terms whenever it accesses or use the Services. By continuing to access or use the Services, you are indicating that you agree to be bound by the modified terms. If the modified terms are not acceptable to you, you must stop accessing and using the Services. </div>
+        </div>
+        <div class="parent-group">
+          <h1>18.	QUESTIONS</h1>
+          <div class="block"> <strong>18.1</strong> If you have any questions regarding these Terms or your use of the Services, please contact us here:
+            <p><a href="contact@lineblocs.com">contact@lineblocs.com</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+     @section('scripts')
+     <script>
+       jQuery(function () {
+          jQuery("#selectbox").change(function () {
+              location.href = jQuery(this).val();
+          })
+      })
+     </script>
+     @endsection
+
+
+</body>
 @endsection
