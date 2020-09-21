@@ -3,6 +3,7 @@ const burger = document.querySelector(".burger");
 const drawer = document.querySelector(".burger-drawer");
 const mainBody = document.querySelector("body");
 const closeIcon = document.querySelector(".burger-drawer-close");
+const burgerItems = Array.from(document.querySelectorAll(".menu ul li"));
 
 // control navbar on mobile version
 // the methods display the drawer and hide it.
