@@ -64,7 +64,7 @@
                     <h3 class="content-heading">PoPs and high availability</h3>
 
                     <p class="content-para">
-                        Our network allows you to provision extensions nearest to your location as well as rotate among more than 10+ PoPs across North America.</p>
+                        Our network allows you to provision extensions nearest to your location as well as rotate from more than 10+ PoPs across North America.</p>
 
                     <a href="/register" class="btn-custom service-btn margin-auto">
                         <span>Create Account</span>
@@ -179,7 +179,7 @@
                             </div>
 
                             <h4 class="feature-heading">Low-Code</h4>
-                            <p class="feature-para">Our solutions are completely based on low-code integrations allowing teams to create high level workflows.</p>
+                            <p class="feature-para">Our solutions are completely based on low-code integrations, allowing teams to create high level workflows.</p>
                         </div>
                     </div>
                 </div>
