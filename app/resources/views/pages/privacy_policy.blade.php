@@ -9,9 +9,9 @@
         <option value="/pages/tos">TERMS OF SERVICE</option>
       </select>
      </div>    
-     <div class="container legal">
+       <div class="container legal">
         <div class="effective-date">
-          <i>Last Updated: September 15, 2020</i>
+          <i>Last Updated: September 20, 2020</i>
         </div>
         <div class="inner">
           <div class="sidebar">
@@ -21,10 +21,10 @@
           <div class="content privacy-page"> 
             <h2>LINEBLOCS PRIVACY POLICY</h2>           
             <div class="block">
-              Lineblocs Ltd. and its affiliates (referred to collectively as “<strong>Lineblocs</strong>”, “<strong>we</strong>”, “<strong>us</strong>” and terms of similar meaning) respect your privacy and is committed to protecting it by complying with the terms outlined in this Lineblocs Privacy Policy (“<strong>Privacy Policy</strong>”). This Privacy Policy describes how we collect, use, share and protect personal information from our users and contractors (“<strong>you</strong>”) through providing the Lineblocs unified communications platform (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) (the “<strong>Services</strong>”).
+              Lineblocs Ltd. and its affiliates (referred to collectively as “<b>Lineblocs</b>”, “<b>we</b>”, “<b>us</b>” and terms of similar meaning) respect your privacy and is committed to protecting it by complying with the terms outlined in this Lineblocs Privacy Policy (“<b>Privacy Policy</b>”). This Privacy Policy describes how we collect, use, share and protect personal information from our users and contractors (“<b>you</b>”) through providing the Lineblocs unified communications platform (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) (the “<b>Services</b>”).
             </div>
             <div>
-              We will only use your personal information in accordance with this Privacy Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes. By accessing the Services, you confirm that you have read and understand our Terms and Conditions (“<strong>Terms</strong>”), found <a href="./terms.html">here</a> , and this Privacy Policy before using the Services.
+              We will only use your personal information in accordance with this Privacy Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes. By accessing the Services, you confirm that you have read and understand our Terms and Conditions (“<b>Terms</b>”), found <a href="./terms.html">here</a>, and this Privacy Policy before using the Services.
             </div>
             
             <div class="parent-group">
@@ -36,7 +36,7 @@
                 We may also collect from you, when necessary, files and communications sent through the Services. For example, if you upload video or audio files to the Services and send them, we will collect them from you for their use in the Services. Other content we may collect include messages, voice recordings and other documents uploaded to and sent through the Services that may contain personal information.
               </div>
               <div class="block">
-                <i>How Your Information is Collected.</i> We collect personal information form you when you sign up for an account, communicate with others through the Services and when you update your account’s information. We may collect your personal information from other users on the Services or through third-party service providers that integrate with the Services. 
+                <i>How Your Information is Collected.</i>  We collect personal information form you when you sign up for an account, communicate with others through the Services and when you update your account’s information. We may collect your personal information from other users on the Services or through third-party service providers that integrate with the Services.
               </div>
               <div class="block">
                 <i>User Reviews.</i> You may be provided with surveys through your use of the Services that request feedback on your experience with the Services, contractors or our commercial partners. The information from these surveys may be linked with your user account.
@@ -128,7 +128,7 @@
                 If you would like to exercise any of the following rights, please contact us at our email below:
               </div>
               <ol class="lower-alpha">
-                <li class="list-margin"><i>Accessing, Correcting or Updating Your Information:</i> You may request for us at any time to correct your information or to provide you with a copy of your personal information that we maintain in electronic format. </li>
+                <li class="list-margin"><i>Accessing, Correcting or Updating Your Information:</i> You may request for us at any time to correct your information or to provide you with a copy of your personal information that we maintain in electronic format.</li>
                 <li class="list-margin"><i>Deleting Your Information:</i> You may request for us at any time to have your personal information that we maintain deleted. We will comply with your request unless there are legitimate business or legal grounds for the continued retention of your personal information.</li>
                 <li class="list-margin"><i>Object to our Processing:</i> You may request for us to restrict or cease the processing of your personal information if you believe it has been processed (i) in a manner contrary to applicable law; (ii) in a manner outside of the consent you provided; or (iii) after your consent has been withdrawn. We will comply with your request unless there are legitimate business or legal grounds for the continued processing of your personal information.</li>
                 <li><i>Withdrawing Consent:</i> You may withdraw your consent for our collection, use and disclosure of your personal information at any time. We will comply with your request unless it conflicts with our legal obligations or an established standard of practice. Please be aware that if you withdraw your consent, we may be unable to provide you with the Services.</li>
@@ -145,7 +145,7 @@
             <div class="parent-group">
               <h1>10.	Changes to our Privacy Policy</h1>
               <div class="block">
-                We may make changes to our Privacy Policy from time to time. It is our policy to post any changes we make on this page. If we make any material changes to how we treat your personal information, we will notify you by emailing the email address specified in your account or by posting a notice about the changes on a conspicuous area of the Services. 
+                We may make changes to our Privacy Policy from time to time. It is our policy to post any changes we make on this page. If we make any material changes to how we treat your personal information, we will notify you by emailing the email address specified in your account or by posting a notice about the changes on a conspicuous area of the Services.
               </div>
               <div>
                 We include the date the privacy policy was last revised at the top of the page. You are responsible for ensuring we have an up-to-date, active, and deliverable email address for you, and for periodically visiting our Services and this Privacy Policy to check for any changes.
@@ -164,6 +164,7 @@
           </div>
         </div>
      </div>
+
      @section('scripts')
      <script>
        jQuery(function () {
