@@ -25,13 +25,18 @@ header {
 #header {
   position: sticky;
   top: 0px;
-  z-index: 2;
+  z-index: 5;
 }
 
 /* burger menu */
 .header-content .burger {
   width: 32px;
   margin-top: 5px;
+  display: none;
+}
+
+.header-content .show-burger {
+  display: block;
 }
 
 .header-content .burger .burger-line {
@@ -54,6 +59,8 @@ header {
   height: 50vh;
   z-index: 1;
   padding-top: 100px;
+  opacity: 0px;
+  pointer-events: none;
   /* display: none; */
   transition: all 0.4s ease-in-out;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1)
@@ -93,19 +100,22 @@ header {
 
 .show-drawer {
   top: 0%;
+  opacity: 1;
+  pointer-events: all;
 }
 
 .burger-drawer-close {
   color: gray;
   height: 17px;
   width: 32px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  /* position: absolute;
-  top: 23px;
-  right: 50px;*/
   font-size: 28px;
+  display: none;
+}
+
+.show-burger-drawer-close {
+  display: flex;
 }
 
 .no-scroll {
@@ -135,18 +145,14 @@ body {
     display: block;
   }
 
-  .hide {
+  .hide-burger-menu {
     opacity: 0;
     pointer-events: none;
   }
 
-  .show {
+  .show-burger-menu {
     opacity: 1;
     pointer-events: all;
-  }
-
-  .header-content .burger {
-    display: none
   }
 
   .header-content,
@@ -164,5 +170,13 @@ body {
 
   .header-content .menu ul li:last-of-type a {
     margin: initial;
+  }
+
+  .header-content .show-burger {
+    display: none !important;
+  }
+
+  .heder-content .show-drawer {
+    display: none !important;
   }
 }

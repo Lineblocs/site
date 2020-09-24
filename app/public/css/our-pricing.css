@@ -1,0 +1,322 @@
+.our-pricing header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.our-pricing header.container {
+  width: 100%;
+}
+
+.our-pricing header h1 {
+  font-size: 32px;
+  margin: 60px 0px 30px 0px;
+}
+
+.our-pricing .our-pricing-header-description {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 70px;
+}
+
+.our-pricing .our-pricing-select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.our-pricing .our-pricing-select-input button {
+  background-color: transparent;
+  text-transform: capitalize !important;
+  border: none;
+  display: block;
+  font-size: 18px;
+  color: #317780;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.our-pricing-select-list {
+  display: block;
+  text-transform: capitalize;
+  position: absolute;
+  top: 26px;
+  font-size: 18px;
+  opacity: 0;
+  background-color: white;
+  pointer-events: none;
+  padding: 10px !important;
+  border-radius: 5px;
+  text-align: left;
+  margin-right: 8px;
+  transition: all 0.5 ease-in-out;
+  width: calc(100% - 36px);
+  position: relative;
+}
+
+.our-pricing-select-list::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 100%;
+  top: -6px;
+  transform: translateX(-148%) rotate(45deg);
+  background-color: #EEEEEE;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+.our-pricing-select-list-elements {
+  cursor: pointer;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  position: absolute;
+  border-radius: 5px;
+  background-color: #EEEEEE;
+  box-shadow: 0 12px 8px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  z-index: 3;
+}
+
+.our-pricing-select-list li:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.show-country-selection-list {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.our-pricing .our-pricing-select-input button img {
+  margin-left: 25px;
+  margin-right: 0px;
+}
+
+.rotate-country-selection-arrow {
+  transform: rotate(180deg);
+  transform-origin: center;
+}
+
+.our-pricing .our-pricing-select-separator {
+  height: 70px;
+  width: 5px;
+  background-color: #0A1247;
+  border-radius: 100px;
+  margin-right: 25px;
+}
+
+.our-pricing .our-pricing-calling-country {
+  font-size: 16px;
+  text-align: left;
+}
+
+
+.our-pricing .our-pricing-table-heading {
+  font-size: 18px;
+  font-weight: 300 !important;
+  color: #666666;
+  border-bottom: 1px solid #F4F2F2;
+}
+
+.our-pricing-row-title {
+  width: 32%;
+}
+
+.our-pricing-row-title h4 {
+  color: #317780;
+  line-height: 34px;
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.our-pricing-row-title-border {
+  width: 120px;
+  height: 5px;
+  background-color: #317780;
+  margin-top: 20px;
+  border-radius: 30px;
+}
+
+.our-pricing-row-uppertext {
+  color: #0A1247;
+  font-size: 20px;
+}
+
+.our-pricing-row-description {
+  color: #999999;
+  font-size: 16px;
+}
+
+.our-pricing-table tr td {
+  padding: 0px;
+  padding-left: 57px !important;
+}
+
+.our-pricing-table-section {
+  margin-bottom: 100px
+}
+
+.our-pricing-table-section {
+  overflow-x: scroll;
+}
+
+/* contact section styles */
+.our-pricing-contact {
+  overflow-x: hidden;
+}
+
+.our-pricing-contact .container {
+  width: 100%;
+}
+
+.our-pricing-contact .container {
+  position: relative;
+}
+
+.our-pricing-contact img {
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  transform: translateX(20vw);
+  transform: translateX(0vw) translateY(-112px)
+}
+
+.our-pricing-contact-banner {
+  display: flex;
+  font-size: 13px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 2;
+  background: white;
+  align-items: center;
+  padding: 0px;
+  border-radius: 10px;
+  width: 100%;
+  flex-direction: column;
+  text-align: center;
+  box-shadow: 1px 1px 14px rgba(0, 0, 0, 0.2);
+}
+
+.our-pricing-contact-banner p {
+  margin-right: 0px;
+  color: #0A1247;
+  width: 100%;
+  padding: 0px 50px;
+}
+
+.our-pricing-contact-banner button {
+  background-color: #317780;
+  font-size: 16px;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  text-align: center;
+  font-weight: 300;
+  padding: 0px 20px;
+  height: 40px;
+}
+
+.our-pricing-download-buttons .container {
+  width: 100%;
+}
+
+.our-pricing-download-buttons .our-pricing-download-buttons-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.our-pricing-download-buttons .our-pricing-download-buttons-container a {
+  display: block;
+  background-color: teal;
+  color: white;
+  font-size: 18px;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  text-transform: capitalize;
+}
+
+@media (min-width: 1024px) {
+
+  .our-pricing header h1 {
+    font-size: 60px;
+  }
+
+  .our-pricing header.container {
+    width: initial;
+  }
+
+  .our-pricing .our-pricing-header-description {
+    font-size: 18px;
+  }
+
+  .our-pricing .our-pricing-select-input {
+    width: 200px;
+    height: auto;
+    text-transform: capitalize;
+    position: relative;
+    font-size: 26px;
+    margin-right: -22px;
+  }
+
+  .our-pricing-contact-banner {
+    display: flex;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    right: initial;
+    bottom: initial;
+    transform: translateY(-81%);
+    z-index: 2;
+    background: white;
+    align-items: center;
+    flex-direction: row;
+    text-align: left;
+    padding: 40px 80px;
+    width: auto;
+    border-radius: 10px;
+    box-shadow: 1px 1px 14px rgba(0, 0, 0, 0.2);
+  }
+
+  .our-pricing-contact-banner button {
+    padding: 0px 49px;
+    height: 70px;
+    font-size: 22px;
+  }
+
+  .our-pricing-contact-banner p {
+    margin-right: 50px;
+    width: 511px;
+    padding: 0px;
+  }
+
+  .our-pricing-contact .container {
+    width: initial;
+  }
+
+  .our-pricing-contact img {
+    width: initial;
+    transform: translateX();
+    transform: translateX(20vw) translateY(0px)
+  }
+
+  .our-pricing-download-buttons .container {
+    width: initial;
+  }
+
+  .our-pricing-download-buttons .our-pricing-download-buttons-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+  }
+}

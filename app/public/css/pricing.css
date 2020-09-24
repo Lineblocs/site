@@ -5,6 +5,7 @@
 .pricing .container {
   /* width: 100%; */
   width: 1062px;
+  padding: 0px;
 }
 
 .pricing .serviceheading2 {
@@ -17,9 +18,8 @@
   font-weight: 400;
 }
 
-
 .pricing .card {
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
   border-radius: 20px;
   box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
@@ -30,13 +30,13 @@
 }
 
 .pricing .card-popular {
-  border: 4px solid #FF655D;
+  border: 4px solid #ff655d;
   position: relative;
 }
 
 .pricing .card-popular-corner {
   position: absolute;
-  background: #FF655D;
+  background: #ff655d;
   top: 0px;
   right: 0px;
   width: 150px;
@@ -70,7 +70,7 @@
   height: 120px;
   font-weight: 600;
   font-size: 66px;
-  color: #0A1247;
+  color: #0a1247;
 }
 
 .pricing .pricing-price {
@@ -118,7 +118,7 @@
   top: 18px;
   width: 5px;
   height: 5px;
-  background-color: #6AD7FA;
+  background-color: #6ad7fa;
   border-radius: 50%;
 }
 
@@ -137,11 +137,10 @@
   padding: 3px 10px;
 
   margin-right: 10px;
-  background: #6AD7FA;
+  background: #6ad7fa;
   text-transform: uppercase;
   border-radius: 30px;
 }
-
 
 .pricing .card-button {
   margin-top: auto;
@@ -150,8 +149,8 @@
 
 .pricing .card-button button {
   background: white;
-  color: #0A1247;
-  border: 2px solid #0A1247;
+  color: #0a1247;
+  border: 2px solid #0a1247;
   font-weight: 500;
   font-size: 18px;
   padding: 13px 29px;
@@ -160,40 +159,40 @@
 
 .pricing .card-button button:hover,
 .pricing .card-button button:active {
-  background: #0A1247;
+  background: #0a1247;
   color: white;
 }
 
 .pricing-comparison {
   padding: 100px 0px;
-  margin-top: 100px;
   overflow-x: scroll;
 }
 
-.pricing-comparison h2 {
+.pricing-comparison-title h2 {
+  margin-top: 70px;
   text-transform: capitalize;
   font-weight: 300;
-  font-size: 40px;
+  font-size: 28px;
   line-height: 48px;
-  text-align: center;
-  margin-bottom: 70px;
+  padding-left: 27px;
 }
 
 .pricing-table {
   background: white;
   font-weight: 300;
-  font-size: 20px;
+  font-size: 13px;
 }
 
 .pricing-table tr {
   position: relative;
 }
+
 .pricing-table tr:nth-child(even) {
   background: white;
 }
 
 .pricing-table tr:nth-child(odd) {
-  background: #EEFCFC;
+  background: #eefcfc;
 }
 
 .pricing-table tr:nth-of-type(1) {
@@ -207,19 +206,23 @@
 
 .pricing-comparison table tr td:nth-child(1) {
   position: sticky;
-  left: 0px; 
+  left: 0px;
   z-index: 2;
-  width: 300px;
+  width: 150px;
 }
 
 .pricing-comparison table tr:nth-child(odd) td:nth-child(1) {
-  background: #EEFCFC;
+  background: #eefcfc;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 .pricing-comparison table tr:nth-child(even) td:nth-child(1) {
   background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 .pricing-table tr:nth-of-type(1) td:nth-child(1) {
-  background-color: white;
+  background-color: white !important;
 }
 
 @media (min-width: 768px) {
@@ -232,10 +235,35 @@
   .pricing .row {
     display: flex;
   }
+
 }
 
 @media (min-width: 1062px) {
   .pricing .container {
     width: initial;
+  }
+
+  .pricing-table {
+    font-size: 20px;
+  }
+
+  .pricing-comparison-title {
+    text-align: center;
+    font-size: 40px;
+  }
+
+  .pricing-comparison table tr td:nth-child(1) {
+    position: relative;
+    left: 0px;
+    z-index: 1;
+    width: auto;
+  }
+
+  .pricing-comparison table tr:nth-child(odd) td:nth-child(1) {
+    box-shadow: none;
+  }
+
+  .pricing-comparison table tr:nth-child(even) td:nth-child(1) {
+    box-shadow: none;
   }
 }
