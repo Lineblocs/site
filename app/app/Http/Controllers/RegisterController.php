@@ -94,8 +94,11 @@ class RegisterController extends ApiAuthController
       $code = $data['confirmation_code'];
       $bypass = "BYPASS-0uu5hIw0CL";
       if ($user->call_code == $code || $code == $bypass) {
+
+        $number = $user->pending_number;
         $user->update([
-          'confirmed' => TRUE
+          'confirmed' => TRUE,
+          'mobile_number' => $number
         ]);
         return $this->response->array(['isValid' => TRUE]);
       }
@@ -119,12 +122,17 @@ class RegisterController extends ApiAuthController
               return $this->response->array(['valid' => FALSE, 'message' => 'Number is already registered..']);
         }
       }
+      $isTest = FALSE;
+      if ($this->isTestNumber($number)) {
+        $number = $number . "-" . uniqid(TRUE);
+        $isTest = TRUE;
+      }
       $current = $user->where('mobile_number', $number)->first();
       if ( $current ) {
           return $this->response->array(['valid' => FALSE, 'error' => 'User with mobile number already exists.']);
       }
       $user->update([
-        'mobile_number' => $number,
+        'pending_number' => $number,
         'call_code' => $code
       ]);
       try {
@@ -133,23 +141,13 @@ class RegisterController extends ApiAuthController
             return $this->response->array(['valid' => FALSE]);
           }
           $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
-          //send code through call
-          $twilio= Config::get('twilio');
           $d7= Config::get('d7');
-          $client = new Client($twilio['account_sid'], $twilio['auth_token']);
-          /*
-          $client->account->calls->create(  
-              $number,
-              $twilio['verification_number'],
-              array(
-                  "url" => url("/api/registerVerifyHook?userId=" . $user->id)
-              )
-          );
-          */
         $message = sprintf("Your Lineblocs verification code is %s", $code);
-        $sent = MainHelper::sendSMS( $d7['verification_number'], $number, $message );
-        if (!$sent) {
-          return $this->response->array(['valid' => FALSE, 'error' => 'could not send SMS']);
+        if (!$isTest) {
+          $sent = MainHelper::sendSMS( $d7['verification_number'], $number, $message );
+          if (!$sent) {
+            return $this->response->array(['valid' => FALSE, 'error' => 'could not send SMS']);
+          }
         }
           return $this->response->array(['valid' => TRUE]);
       } catch (\libphonenumber\NumberParseException $e) {
@@ -473,6 +471,14 @@ class RegisterController extends ApiAuthController
           'found' => FALSE
         ]);
 
+  }
+
+  public function isTestNumber($number) {
+      $tag = "TEST\\-0uu5hIw0CL";
+      if (preg_match("/^" . $tag . "/", $number, $matches)) {
+        return TRUE; 
+      }
+      return FALSE;
   }
 
 }
