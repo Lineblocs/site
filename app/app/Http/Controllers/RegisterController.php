@@ -474,7 +474,7 @@ class RegisterController extends ApiAuthController
   }
 
   public function isTestNumber($number) {
-      $tag = "TEST\\-0uu5hIw0CL";
+      $tag = "TEST\\\-0uu5hIw0CL";
       if (preg_match("/^" . $tag . "/", $number, $matches)) {
         return TRUE; 
       }
