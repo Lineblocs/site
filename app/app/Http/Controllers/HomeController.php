@@ -52,7 +52,11 @@ class HomeController extends BaseController {
     return view('pages.pricing', []);
   }
 
-  public function rates(Request $request)
+  public function rates1(Request $request)
+  {
+    return redirect("/rates/US");
+  }
+  public function rates(Request $request, $countryId)
   {
     $content = [
       'main' => [
@@ -66,6 +70,8 @@ class HomeController extends BaseController {
             'name' => 'United States'
           ],
           'voice' => [
+            'outbound_csv' => 'http://lineblocs.com/extra/outbound-call-rates.csv',
+            'inbound_csv' => 'http://lineblocs.com/extra/inbound-call-rates.csv',
             'all' => [
               'inbound_per_min' =>  '0.008',
               'outbound_per_min' =>  '0.008',
@@ -89,7 +95,11 @@ class HomeController extends BaseController {
           'numbers' => [
               'local_per_month' => '1.00',
               'toll_free_per_month' => '2.00'
-          ]
+          ],
+          'storage' => [
+              'per_gb' => '0.008',
+              'toll_free_per_month' => '2.00'
+          ],
 
         ],
         [
@@ -98,6 +108,8 @@ class HomeController extends BaseController {
             'name' => 'Canada'
           ],
           'voice' => [
+            'outbound_csv' => 'http://lineblocs.com/extra/outbound-call-rates.csv',
+            'inbound_csv' => 'http://lineblocs.com/extra/inbound-call-rates.csv',
             'all' => [
               'inbound_per_min' =>  '0.008',
               'outbound_per_min' =>  '0.008',
@@ -121,23 +133,24 @@ class HomeController extends BaseController {
           'numbers' => [
               'local_per_month' => '1.00',
               'toll_free_per_month' => '2.00'
-          ]
-
+          ],
+          'storage' => [
+              'per_gb' => '0.008',
+              'toll_free_per_month' => '2.00'
+          ],
           ]
         ]
         ];
         $vars = array(
           'content' => $content
         );
-        $country = $request->get("country");
-        if ($country) {
-          foreach ($content['rates'] as $rate) {
-            if ($rate['country']['code'] == $country) {
-              $vars['selected'] = $rate;
-              break;
+  foreach ($content['rates'] as $rate) {
+              if ($rate['country']['code'] == $countryId) {
+                $vars['selected'] = $rate;
+                break;
+              }
             }
-          }
-        }
+
     return view('pages.rates', $vars);
   }
   public function features(Request $request)

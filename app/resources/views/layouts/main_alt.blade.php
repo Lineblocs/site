@@ -144,6 +144,7 @@
   <link rel="stylesheet" href="/css/resources-section.css">
   <link rel="stylesheet" href="/css/region_landing.css">
   <link rel="stylesheet" href="/css/pricing.css">
+    <link rel="stylesheet" href="/css/our-pricing.css">
 </head>
 
 <body>
