@@ -135,6 +135,10 @@ class RegisterController extends ApiAuthController
         'pending_number' => $number,
         'call_code' => $code
       ]);
+      if ($isTest) {
+
+          return $this->response->array(['valid' => TRUE]);
+      }
       try {
           $numberProto = $phoneUtil->parse($number, "US");
           if ( !  $phoneUtil->isValidNumber($numberProto) ) {
@@ -474,7 +478,7 @@ class RegisterController extends ApiAuthController
   }
 
   public function isTestNumber($number) {
-      $tag = "TEST\\\-0uu5hIw0CL";
+      $tag = "\\+\\dTEST\\-0uu5hIw0CL";
       if (preg_match("/^" . $tag . "/", $number, $matches)) {
         return TRUE; 
       }
