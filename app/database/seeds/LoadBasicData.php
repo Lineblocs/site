@@ -35,6 +35,8 @@ class LoadBasicData extends Seeder
         require_once($dir2."load_sip_routers.php");
         echo "loading System statuses.." .PHP_EOL;
         require_once($dir2."load_system_statuses.php");
+        echo "loading call rates.." .PHP_EOL;
+        require_once($dir2."load_call_rates.php");
 
     }
 }
