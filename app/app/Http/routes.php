@@ -335,6 +335,8 @@ $api->version('v1', function($api) {
 
   $api->get('getFlowPresets', '\App\Http\Controllers\MergedController@getFlowPresets');
 
+  $api->post('saveUpdatedPresets', '\App\Http\Controllers\MergedController@saveUpdatedPresets');
+
   $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
     $api->post('saveWidget', 'WidgetTemplateController@saveWidget');
     $api->get('listWidgets', 'WidgetTemplateController@listWidgets');

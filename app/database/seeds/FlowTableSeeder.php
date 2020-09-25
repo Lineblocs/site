@@ -38,7 +38,9 @@ class FlowTableSeeder extends Seeder
         'variable_type' => 'basic',
         'data_type' => 'select',
         'extras' => $options,
-        'default' => 'Phone Number'
+        'default' => 'Phone Number',
+        'widget' => 'ForwardBridge',
+        'widget_key' => 'call_type'
         ]);
 
         FlowTemplatePreset::create([
@@ -49,6 +51,9 @@ class FlowTableSeeder extends Seeder
         'variable_type' => 'basic',
         'data_type' => 'text',
         'default' => '',
+        'widget' => 'ForwardBridge',
+        'widget_key' => 'number_to_call'
+
         ]);
 
         FlowTemplatePreset::create([
@@ -59,7 +64,9 @@ class FlowTableSeeder extends Seeder
         'depends_on_field' => 'TypeOfCall',
         'depends_on_value' => 'Extension',
         'variable_type' => 'workspace_lookup',
-        'data_type' => 'select'
+        'widget' => 'ForwardBridge',
+        'widget_key' => 'extension'
+
         ]);
     }
     private function setupBasicIVRDefaults() {
@@ -76,7 +83,9 @@ FlowTemplatePreset::create([
   'variable_type' => 'basic',
   'data_type' => 'select',
   'extras' => $options,
-  'default' => 'Phone Number'
+  'default' => 'Phone Number',
+  'widget' => 'SupportBridge',
+  'widget_key' => 'call_type',
 ]);
 
 FlowTemplatePreset::create([
@@ -87,6 +96,9 @@ FlowTemplatePreset::create([
   'variable_type' => 'basic',
   'data_type' => 'text',
   'default' => '',
+    'widget' => 'SupportBridge',
+  'widget_key' => 'number_to_call'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -97,7 +109,10 @@ FlowTemplatePreset::create([
   'depends_on_field' => 'TypeOfCall1',
   'depends_on_value' => 'Extension',
   'variable_type' => 'workspace_lookup',
-  'data_type' => 'select'
+  'data_type' => 'select',
+'widget' => 'SupportBridge',
+  'widget_key' => 'extension',
+
 ]);
 
 
@@ -114,7 +129,10 @@ FlowTemplatePreset::create([
   'variable_type' => 'basic',
   'data_type' => 'select',
   'extras' => $options,
-  'default' => 'Phone Number'
+  'default' => 'Phone Number',
+    'widget' => 'SalesBridge',
+  'widget_key' => 'call_type'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -125,6 +143,9 @@ FlowTemplatePreset::create([
   'variable_type' => 'basic',
   'data_type' => 'text',
   'default' => '',
+'widget' => 'SalesBridge',
+  'widget_key' => 'number_to_call'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -135,7 +156,10 @@ FlowTemplatePreset::create([
   'depends_on_field' => 'TypeOfCall2',
   'depends_on_value' => 'Extension',
   'variable_type' => 'workspace_lookup',
-  'data_type' => 'select'
+  'data_type' => 'select',
+'widget' => 'SalesBridge',
+  'widget_key' => 'extension'
+
 ]);
 
 $options = [
@@ -150,7 +174,10 @@ FlowTemplatePreset::create([
   'variable_type' => 'basic',
   'data_type' => 'select',
   'extras' => $options,
-  'default' => 'Phone Number'
+  'default' => 'Phone Number',
+'widget' => 'OperatorBridge',
+  'widget_key' => 'call_typr'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -161,6 +188,9 @@ FlowTemplatePreset::create([
   'variable_type' => 'basic',
   'data_type' => 'text',
   'default' => '',
+'widget' => 'OperatorBridge',
+  'widget_key' => 'number_to_call'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -171,7 +201,10 @@ FlowTemplatePreset::create([
   'depends_on_field' => 'TypeOfCall3',
   'depends_on_value' => 'Extension',
   'variable_type' => 'workspace_lookup',
-  'data_type' => 'select'
+  'data_type' => 'select',
+'widget' => 'OperatorBridge',
+  'widget_key' => 'extension'
+
 ]);
 
     }
@@ -184,7 +217,10 @@ FlowTemplatePreset::create([
   'screen_name' => 'Extension To Call',
   'description' => 'The extension to forward to',
   'variable_type' => 'workspace_lookup',
-  'data_type' => 'select'
+  'data_type' => 'select',
+  'widget' => 'ForwardBridge',
+  'widget_key' => 'extension'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -194,7 +230,10 @@ FlowTemplatePreset::create([
   'description' => 'Call timeout',
   'variable_type' => 'basic',
   'data_type' => 'number',
-  'default' => '30'
+  'default' => '30',
+    'widget' => 'ForwardBridge',
+  'widget_key' => 'timeout'
+
 ]);
 
 
@@ -210,7 +249,10 @@ FlowTemplatePreset::create([
   'screen_name' => 'Queue Extensions',
   'description' => 'Extensions in the queue',
   'variable_type' => 'workspace_lookup',
-  'data_type' => 'multi_select'
+  'data_type' => 'multi_select',
+'widget' => 'SupportQueue',
+  'widget_key' => 'queue_extensions'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -220,7 +262,10 @@ FlowTemplatePreset::create([
   'description' => 'Total time for caller to wait in queue',
   'variable_type' => 'basic',
   'data_type' => 'number',
-  'default' => '60'
+  'default' => '60',
+'widget' => 'SupportQueue',
+  'widget_key' => 'max_wait_time'
+
 ]);
 
 FlowTemplatePreset::create([
@@ -230,7 +275,10 @@ FlowTemplatePreset::create([
   'description' => 'Total time call time per extension',
   'variable_type' => 'basic',
   'data_type' => 'number',
-  'default' => '60'
+  'default' => '60',
+'widget' => 'SupportQueue',
+  'widget_key' => 'max_extension_timeout'
+
 ]);
 
 

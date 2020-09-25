@@ -592,7 +592,38 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $result = ['has_presets' => FALSE];
         return $this->response->array($result);
   }
-
+  public function saveUpdatedPresets(Request $request) {
+        $config = MainHelper::getPublicConfig();
+        $templateId = $request->get("templateId");
+        $flowId = $request->get("flowId");
+        $values = $request->json()->all();
+        $flow = Flow::findOrFail($flowId);
+        $json = json_decode($flow->flow_json, TRUE);
+        $updated_models = [];
+        foreach ($json['models'] as $model) {
+          foreach ( $values as $value ) {
+              if ( $model['name'] == $value['preset']['widget_name'] ) {
+                  $copy = $model;
+                  $params = [];
+                  foreach ( $model['data']['params'] as $key => $param ) {
+                      if ( $param['name'] == $value['preset']['widget_key'] ) {
+                          $param['value'] = $value['value'];
+                      }
+                      $params[] = $param;
+                  }
+                  $copy['params'] = $params;
+                  $updated_models[] = $copy;
+              } else {
+                  $updated_models[] = $model;
+              }
+        }
+      }
+      $json['models'] = $updated_models;
+      $flow->update([
+        'flow_json' => json_encode( $json )
+      ]);
+      return $this->response->noContent();
+  }
 
 
 }
