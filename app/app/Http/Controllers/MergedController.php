@@ -611,7 +611,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
                       }
                       $params[] = $param;
                   }
-                  $copy['params'] = $params;
+                  $copy['data']['params'] = $params;
                   $updated_models[] = $copy;
               } else {
                   $updated_models[] = $model;
