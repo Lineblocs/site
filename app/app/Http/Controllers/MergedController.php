@@ -39,6 +39,8 @@ use App\PhoneGlobalSetting;
 use App\PhoneGlobalSettingValue;
 use App\PhoneIndividualSetting;
 use App\PhoneIndividualSettingValue;
+use App\FlowTemplate;
+use App\FlowTemplatePreset;
 
 use \Config;
 use Twilio\Rest\Client;
@@ -557,6 +559,39 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         return $this->response->array($config);
   }
 
+  public function getFlowPresets(Request $request) {
+        $config = MainHelper::getPublicConfig();
+        $templateId = $request->get("templateId");
+        $workspace = $this->getWorkspace($request);
+        $cursor = FlowTemplatePreset::where("template_id", $templateId);
+        $count = $cursor->count();
+        if ( $count > 0 ) {
+          $options = $cursor->get()->toArray();
+          $results = [];
+          foreach ($options as $option) {
+            $result = $option;
+            if ($option['var_type'] == 'basic') {
+              if ( $option['data_type'] == 'select' ) {
+                $result['options'] = json_decode($option['extras'], TRUE);
+              }
+            } elseif ( $option['var_type'] == 'workspace_lookup') {
+              if ( $option['data_type'] == 'select' ) {
+                $table_results = \DB::table( $option['lookup_table'] )->where('workspace_id', $workspace->id)->get();
+                $opts = [];
+                foreach ($table_results as $table_result) {
+                  $opts[] = $table_result[$option['lookup_key']];
+                }
+                $result['options'] = $opts;
+              }
+            }
+            $results[] = $result;
+          }
+          $result = ['has_presets' => TRUE, 'presets' => $results];
+          return $this->response->array($result);
+        }
+        $result = ['has_presets' => FALSE];
+        return $this->response->array($result);
+  }
 
 
 

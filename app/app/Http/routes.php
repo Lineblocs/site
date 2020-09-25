@@ -278,6 +278,7 @@ $api->version('v1', function($api) {
       $api->post("/createAPIUsageDebit", "DebitController@createAPIUsageDebit");
       });
   });
+
   $api->get('admin/getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');
   $api->post('internalAppRedirect', '\App\Http\Controllers\MergedController@internalAppRedirect');
   $api->post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
@@ -330,6 +331,9 @@ $api->version('v1', function($api) {
 
   $api->post('deleteAll', '\App\Http\Controllers\MergedController@deleteAll');
   $api->post('upgradeMembership', '\App\Http\Controllers\MergedController@upgradeMembership');
+
+
+  $api->get('getFlowPresets', '\App\Http\Controllers\MergedController@getFlowPresets');
 
   $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
     $api->post('saveWidget', 'WidgetTemplateController@saveWidget');
