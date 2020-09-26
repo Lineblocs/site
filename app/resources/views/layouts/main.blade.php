@@ -109,7 +109,7 @@ drift.load('84i5z2ttdxg5');
                     <div class="burger-line"></div>
                     <div class="burger-line"></div>
                 </div>
-                <div class="burger-drawer-close hide">
+                <div class="burger-drawer-close">
                     x
                 </div>
                 <div class="menu">
