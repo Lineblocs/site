@@ -27,7 +27,7 @@ class FlowController extends ApiAuthController {
             $category = $data['category'];
         }
         if ($data['template_id']) {
-          $flow = Flow::createFromTemplate( $data['name'], $user, $workspace, FlowTemplate::findOrFail($data['template_id'] ));
+          $flow = Flow::createFromTemplate( $data['name'], $category, $user, $workspace, FlowTemplate::findOrFail($data['template_id'] ));
         } else {
           $flow = Flow::create([
               'user_id' => $user->id,

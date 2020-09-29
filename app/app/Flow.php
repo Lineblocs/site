@@ -11,7 +11,7 @@ class Flow extends PublicResource {
   protected $casts = array(
     "started" => "boolean"
   );
-  public static function createFromTemplate($name, $user, $workspace, $template) {
+  public static function createFromTemplate($name, $category, $user, $workspace, $template) {
           $json = $template->flow_json;
           //process extra data
           if (!empty($template->extra_data)) {
@@ -40,7 +40,8 @@ class Flow extends PublicResource {
             'workspace_id' => $workspace->id,
             'name' => $name,
             'flow_json' => $json,
-            'started' => TRUE
+            'started' => TRUE,
+            'category' => $category
         ]);
        
       return $flow;
