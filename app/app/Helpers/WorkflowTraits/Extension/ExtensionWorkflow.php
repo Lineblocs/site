@@ -32,7 +32,7 @@ trait ExtensionWorkflow {
         $info = $workspace->getPlanInfo();
 
         if (MainHelper::checkLimit($workspace, $user, "extensions")) {
-          return $this->response->error('Cannot create extension because you have reached the extensions limit on your plan', 404);
+          return $this->response->error('Cannot create extension because you have reached the extensions limit on your plan', 500);
         }
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'create_extension')) {
           return $this->errorPerformingAction();
