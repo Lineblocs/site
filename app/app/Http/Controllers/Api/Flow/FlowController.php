@@ -20,7 +20,12 @@ class FlowController extends ApiAuthController {
         $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+        $category = 'extension';
         $json = $data['flow_json'];
+
+        if (!empty($data['category'])) {
+            $category = $data['category'];
+        }
         if ($data['template_id']) {
           $flow = Flow::createFromTemplate( $data['name'], $user, $workspace, FlowTemplate::findOrFail($data['template_id'] ));
         } else {
@@ -29,6 +34,7 @@ class FlowController extends ApiAuthController {
               'workspace_id' => $workspace->id,
               'name' => $data['name'],
               'flow_json' => $json,
+              'category' => $category,
               'started' => TRUE
           ]);
         }
