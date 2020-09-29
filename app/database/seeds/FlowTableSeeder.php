@@ -59,14 +59,16 @@ class FlowTableSeeder extends Seeder
         FlowTemplatePreset::create([
         'template_id' => $template->id,
         'var_name' => 'Extension',
-        'screen_name' => 'Extesion',
+        'screen_name' => 'Extension',
         'description' => 'The extension to forward to',
         'depends_on_field' => 'TypeOfCall',
         'depends_on_value' => 'Extension',
+        'data_type' => 'select',
         'variable_type' => 'workspace_lookup',
         'widget' => 'ForwardBridge',
-        'widget_key' => 'extension'
-
+        'widget_key' => 'extension',
+          'lookup_table' => 'extensions',
+          'lookup_key' => 'username',
         ]);
     }
     private function setupBasicIVRDefaults() {
@@ -112,6 +114,8 @@ FlowTemplatePreset::create([
   'data_type' => 'select',
 'widget' => 'SupportBridge',
   'widget_key' => 'extension',
+'lookup_table' => 'extensions',
+          'lookup_key' => 'username',
 
 ]);
 
@@ -158,7 +162,9 @@ FlowTemplatePreset::create([
   'variable_type' => 'workspace_lookup',
   'data_type' => 'select',
 'widget' => 'SalesBridge',
-  'widget_key' => 'extension'
+  'widget_key' => 'extension',
+'lookup_table' => 'extensions',
+          'lookup_key' => 'username',
 
 ]);
 
@@ -176,7 +182,9 @@ FlowTemplatePreset::create([
   'extras' => $options,
   'default' => 'Phone Number',
 'widget' => 'OperatorBridge',
-  'widget_key' => 'call_typr'
+  'widget_key' => 'call_typr',
+'lookup_table' => 'extensions',
+          'lookup_key' => 'username',
 
 ]);
 
@@ -203,8 +211,9 @@ FlowTemplatePreset::create([
   'variable_type' => 'workspace_lookup',
   'data_type' => 'select',
 'widget' => 'OperatorBridge',
-  'widget_key' => 'extension'
-
+  'widget_key' => 'extension',
+'lookup_table' => 'extensions',
+          'lookup_key' => 'username'
 ]);
 
     }

@@ -570,16 +570,16 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           $results = [];
           foreach ($options as $option) {
             $result = $option;
-            if ($option['var_type'] == 'basic') {
+            if ($option['variable_type'] == 'basic') {
               if ( $option['data_type'] == 'select' ) {
                 $result['options'] = json_decode($option['extras'], TRUE);
               }
-            } elseif ( $option['var_type'] == 'workspace_lookup') {
+            } elseif ( $option['variable_type'] == 'workspace_lookup') {
               if ( $option['data_type'] == 'select' ) {
                 $table_results = \DB::table( $option['lookup_table'] )->where('workspace_id', $workspace->id)->get();
                 $opts = [];
                 foreach ($table_results as $table_result) {
-                  $opts[] = $table_result[$option['lookup_key']];
+                  $opts[] = $table_result->{$option['lookup_key']};
                 }
                 $result['options'] = $opts;
               }
@@ -593,30 +593,27 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         return $this->response->array($result);
   }
   public function saveUpdatedPresets(Request $request) {
-        $config = MainHelper::getPublicConfig();
+            $config = MainHelper::getPublicConfig();
         $templateId = $request->get("templateId");
         $flowId = $request->get("flowId");
         $values = $request->json()->all();
-        $flow = Flow::findOrFail($flowId);
+        $flow = Flow::where('public_id', $flowId)->firstOrFail();
         $json = json_decode($flow->flow_json, TRUE);
         $updated_models = [];
         foreach ($json['models'] as $model) {
+          $copy = $model;
+          $params = $model['data'];
           foreach ( $values as $value ) {
-              if ( $model['name'] == $value['preset']['widget_name'] ) {
-                  $copy = $model;
-                  $params = [];
-                  foreach ( $model['data']['params'] as $key => $param ) {
-                      if ( $param['name'] == $value['preset']['widget_key'] ) {
-                          $param['value'] = $value['value'];
+              if ( $model['name'] == $value['widget'] ) {
+                  foreach ( $params as $key => $currentVal) {
+                      if ( $key == $value['widget_key'] ) {
+                           $params[$key] = $value['value'];
                       }
-                      $params[] = $param;
                   }
-                  $copy['data']['params'] = $params;
-                  $updated_models[] = $copy;
-              } else {
-                  $updated_models[] = $model;
               }
         }
+        $copy['data'] = $params;
+        $updated_models[] = $copy;
       }
       $json['models'] = $updated_models;
       $flow->update([
