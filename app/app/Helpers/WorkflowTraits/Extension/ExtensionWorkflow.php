@@ -169,9 +169,14 @@ trait ExtensionWorkflow {
     public function listExtensions(Request $request)
     {
         $paginate = $this->getPaginate( $request );
+        $all = $request->get("all");
         $user = $this->getUser($request);
-        $extensions = Extension::where('user_id', $user->id);
+        $workspace = $this->getWorkspace($request);
+        $extensions = Extension::where('workspace_id', $workspace->id);
         MainHelper::addSearch($request, $extensions, ['username']);
+        if (!empty($all)) {
+            return $this->response->collection($extensions->get(), new ExtensionTransformer);
+        }
         return $this->response->paginator($extensions->paginate($paginate), new ExtensionTransformer);
     }
 }
