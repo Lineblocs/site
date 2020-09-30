@@ -64,8 +64,15 @@ trait UserWorkflow {
         if (!$this->hasPermissions($request, $workspaceUser, 'manage_users')) {
             return $this->response->errorForbidden();
         }
-        $attrs = $data['roles'];
-        $workspaceUser->update($attrs);
+        if (!empty($data['roles'])) {
+                $attrs = $data['roles'];
+                $workspaceUser->update($attrs);
+        }
+        if (!empty($data['assign'])) {
+                $attrs = $data['assign'];
+                $workspaceUser->update($attrs);
+        }
+
     }
     public function userData(Request $request, $userId)
     {
