@@ -99,7 +99,9 @@ FlowTemplatePreset::create([
   'data_type' => 'text',
   'default' => '',
     'widget' => 'SupportBridge',
-  'widget_key' => 'number_to_call'
+  'widget_key' => 'number_to_call',
+'depends_on_field' => 'TypeOfCall1',
+  'depends_on_value' => 'Phone Number',
 
 ]);
 
@@ -148,7 +150,9 @@ FlowTemplatePreset::create([
   'data_type' => 'text',
   'default' => '',
 'widget' => 'SalesBridge',
-  'widget_key' => 'number_to_call'
+  'widget_key' => 'number_to_call',
+'depends_on_field' => 'TypeOfCall2',
+  'depends_on_value' => 'Phone Number',
 
 ]);
 
@@ -197,7 +201,9 @@ FlowTemplatePreset::create([
   'data_type' => 'text',
   'default' => '',
 'widget' => 'OperatorBridge',
-  'widget_key' => 'number_to_call'
+  'widget_key' => 'number_to_call',
+'depends_on_field' => 'TypeOfCall3',
+  'depends_on_value' => 'Phone Number',
 
 ]);
 
