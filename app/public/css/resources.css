@@ -1,0 +1,222 @@
+.resources .container {
+  width: 100%;
+}
+
+.resources-section .container {
+  width: 100%;
+}
+
+.resources-item .inner {
+  margin-left: 0px;
+  margin-top: 80px;
+}
+
+.resources__heading {
+  text-align: center;
+}
+
+.resources__heading h1 {
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 36px;
+  margin-top: 30px;
+}
+
+.resources__heading p {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18.2px;
+}
+
+/* input field */
+
+.resources .input-field {
+  margin-bottom: 30px;
+}
+
+.resources .input-field input[type="search"],
+.resources .input-field input[type="search"]:focus:not(.browser-default) {
+  height: auto;
+  padding: 17px 20px;
+  border: 1px solid #d7d8e1;
+  box-sizing: border-box;
+  filter: drop-shadow(0px 20px 100px rgba(10, 18, 71, 0.05));
+  border-radius: 10px;
+}
+
+/* search label */
+.resources .input-field > label:not(.label-icon).active {
+  transform: translateY(0px) scale(0.8);
+}
+
+.resources .input-field.col label {
+  font-size: 16px;
+  font-weight: 300;
+  left: 30px;
+  transform: translateY(20px);
+}
+
+/* search button */
+
+.resources #search {
+  top: 0px;
+  right: 0px;
+  position: absolute;
+  padding: 10px 11px;
+  transform: translate(-24px, 0px);
+}
+
+.resources #search .material-icons {
+  width: 18px;
+  height: 18px;
+}
+
+.resources #search span {
+  display: none;
+}
+
+/* card styles */
+.resources .resource-card {
+  padding: 30px 20px;
+  background: #ffffff;
+  margin-bottom: 10px;
+  box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
+  border-radius: 20px;
+
+  display: flex;
+  align-items: baseline;
+}
+
+.resources .resource-card svg {
+  width: 35px;
+  height: 35px;
+  transform: translateY(13px);
+}
+
+.resources .resource-card__title-column {
+  margin-right: 28px;
+}
+
+.resources .resource-card__title-column h2,
+.resources .resource-card__title-column p {
+  display: none;
+}
+
+.resources .resource-card__description-column li {
+  margin-bottom: 10px;
+}
+
+.resources .resource-card__view-all {
+  color: #6ad7fa;
+}
+
+.resources .resource-card__description-column li,
+.resources .resource-card__description-column a {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.resources .resource-card__description-column h2,
+.resource-card__title-column h2 {
+  margin: 0px;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 31.2px;
+  margin-bottom: 10px;
+}
+
+/* .resources .autocomplete-content {
+  height: auto;
+  padding-bottom: 100px;
+} */
+
+.resources .dropdown-content li > a,
+.resources .dropdown-content li > span {
+  color: #828495;
+}
+
+.resources .dropdown-content li .highlight {
+  color: #2c2c2c;
+  font-weight: 600;
+}
+
+@media (min-width: 1024px) {
+  .resources .container {
+    width: 100%;
+  }
+
+  .resources .resource-search {
+    margin: initial;
+  }
+
+  .resources-section .container {
+    width: initial;
+  }
+
+  .resources-item .inner {
+    margin-top: initial;
+    margin-left: initial;
+  }
+
+  .resources__heading h1 {
+    margin-top: 98px;
+  }
+
+  /* input field */
+  .resources .input-field {
+    margin-bottom: 60px;
+  }
+
+  /* search button */
+
+  .resources #search {
+    padding: 10px 47px;
+    transform: translate(-24px, 6px);
+  }
+
+  .resources #search .material-icons {
+    display: none;
+  }
+
+  .resources #search span {
+    display: inline-block;
+  }
+
+  /* card styles */
+  .resources .resource-card {
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .resources .resource-card__title-column h2,
+  .resources .resource-card__title-column p {
+    display: block;
+  }
+
+  .resources .resource-card__description-column h2 {
+    display: none;
+  }
+
+  .resources .resource-card svg {
+    margin-bottom: 22px;
+    transform: translateY(6px);
+  }
+
+  .resources .resource-card__description-column li {
+    margin-bottom: 18px;
+  }
+
+  .resources .resource-card__view-all {
+    display: inline-block;
+    margin-top: 33px;
+  }
+
+  .resources .resource-card__title-column p {
+    width: 213px;
+  }
+
+  .resources .resource-card__description-column {
+    width: 220px;
+  }
+}

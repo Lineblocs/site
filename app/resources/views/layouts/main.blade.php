@@ -54,12 +54,12 @@
     <link rel="stylesheet" href="/css/homepage/comparison.css">
     <link rel="stylesheet" href="/css/shared/footer.css">
     <link rel="stylesheet" href="/css/faq-page.css">
-      <link rel="stylesheet" href="/css/about/about.css">
         <link rel="stylesheet" href="/css/contact.css">
           <link rel="stylesheet" href="/css/resources-page/resources.css" />
             <link rel="stylesheet" href="/css/region_landing.css">
             <link rel="stylesheet" href="/css/pricing.css">
               <link rel="stylesheet" href="/css/our-pricing.css">
+  <link rel="stylesheet" href="./css/about/about-new.css">
     <title>Home</title>
     <!-- Start of Async Drift Code -->
 

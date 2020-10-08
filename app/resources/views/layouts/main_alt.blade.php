@@ -145,6 +145,9 @@
   <link rel="stylesheet" href="/css/region_landing.css">
   <link rel="stylesheet" href="/css/pricing.css">
     <link rel="stylesheet" href="/css/our-pricing.css">
+
+  <link rel="stylesheet" href="./css/about/about.css">
+    <link rel="stylesheet" href="/css/resources.css" />
 </head>
 
 <body>

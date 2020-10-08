@@ -1,0 +1,150 @@
+.about .container {
+  width: 100%;
+}
+
+.about .with-container {
+  margin-bottom: 100px;
+}
+
+.about-section-top {
+  position: relative;
+  padding: 50px;
+  background: #eefcfc;
+}
+
+.about-section-middle__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-section-middle__img-container {
+  flex-basis: 100%;
+  position: relative;
+}
+
+.about-section-top__img-container {
+  padding-top: 573px;
+}
+
+.about-section-middle__bg-img {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.about-section-middle__description-container {
+  position: relative;
+  flex-basis: 100%;
+  padding-bottom: 743px !important;
+}
+
+.about-section-middle__description {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.about-section-middle__user {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform: translate(-37px, 187px);
+
+  width: 217px;
+  padding: 20px 40px;
+
+  background: white;
+  box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.1);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+}
+
+.about-section-middle__user svg {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform: translate(-43px, -36px);
+}
+
+.about-section-middle__user p {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15.6px;
+}
+
+.about-section-middle__dot-pattern {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  transform: translate(0px, 228px);
+}
+
+.about-section-grid {
+  padding: 50px;
+  padding-bottom: 100px;
+}
+
+.about-section-grid h2 {
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+
+.about-section-grid h2 {
+  font-size: 26px;
+}
+
+.about-section-grid .container .row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.about__card {
+  background: #ffffff;
+  box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
+  border-radius: 20px;
+  padding: 46px 34px;
+}
+
+.about__card h3 {
+  margin-bottom: 15px;
+}
+
+.about__card svg {
+  margin-bottom: 34px;
+}
+
+@media (min-width: 1024px) {
+  .about .container,
+  .about .with-container,
+  .about .more-padding {
+    width: initial;
+  }
+
+  .about-section-top {
+    padding: initial;
+  }
+
+  .about-section-top__container {
+    padding-top: 157px !important;
+  }
+
+  .about-section-top__description {
+    width: 407px;
+  }
+
+  .about-section-middle__container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .about-section-middle__description-container,
+  .about-section-middle__img-container {
+    flex-basis: 50%;
+  }
+
+  .about-section-middle__description {
+    width: 410px;
+  }
+}
