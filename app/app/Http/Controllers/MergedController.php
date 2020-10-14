@@ -622,5 +622,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
   }
 
+  public function getPOPs(Request $request) {
+        $config = \Config::get("mothernodes");
+        $options = [];
+        foreach ($config['regions'] as $code => $region) {
+          $options[] = [
+            'name' => $region['proxy']['name'],
+            'code' => $code
+          ];
+
+        }
+        return $this->response->array($options);
+      }
 
 }
