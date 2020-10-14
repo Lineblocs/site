@@ -661,4 +661,22 @@ final class MainHelper {
     }
     return FALSE;
   }
+  public static function getRegions() {
+    $nodes = \Config::get("mothernodes");
+    $results = [];
+    foreach ($nodes['regions'] as $code => $item) {
+      $resulgs[] = [
+        'name' => $item['proxy']['name'],
+        'internal_code' => $item['internal_code'],
+        'aws_code' => $code
+      ];
+    }
+    return $results;
+  }
+  public static function makeDomainName($name, $region='') {
+    if (!empty($region)) {
+         return sprintf("%s.%s.lineblocs.com", $name, $region);
+    }
+    return sprintf("%s.lineblocs.com", $name);
+  }
 }

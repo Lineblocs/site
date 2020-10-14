@@ -4,6 +4,7 @@ return [
   'containers_per_host' => 4,
   'regions' => [
     'ca-central-1' => [
+      'internal_code' => 'ca1',
       'name' => 'Canada Central',
       'proxy' => [
           'id' => 'proxy1',

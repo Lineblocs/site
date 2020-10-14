@@ -1,10 +1,13 @@
 <?php
 
 namespace App;
+
+use App\Helpers\MainHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
 use App\WorkspaceUser;
+use App\Helpers\MainHelper;
 class Workspace extends Model {
   protected $dates = ['created_at', 'updated_at'];
 
@@ -15,11 +18,11 @@ class Workspace extends Model {
     );
   public function toArray() {
         $array = parent::toArray();
-        $array['domain'] = sprintf("%s.lineblocs.com", $array['name']);
+        $array['domain'] = MainHelper::makeDomainName($this->name);
       return $array;
       }
-  public function makeDomainName() {
-         return sprintf("%s.lineblocs.com", $this->name);
+  public function makeDomainName($region='') {
+    return sprintf("%s.lineblocs.com", $this->name);
   }
 
   public function toArrayWithRoles(User $user) {

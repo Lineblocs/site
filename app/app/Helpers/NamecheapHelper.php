@@ -7,6 +7,8 @@ use Config;
 use Log;
 final class NamecheapHelper {
   public static function refreshIPs() {
+    $regions = MainHelper::getRegions();
+
     $data = MainHelper::reservedIPsForHost();
     $nc = array();
     $sld = "lineblocs";
@@ -177,10 +179,23 @@ final class NamecheapHelper {
       $user = $info['user'];
       $ip = $info['proxy_ip'];
       $number = $cnt + $increment;
+      //main PoP
       $nc['HostName'.$number] = $info['workspace']['name'];
       $nc['RecordType'.$number] = 'A';
       $nc['Address'.$number] = $ip;
       $nc['TTL'.$number] = '60';
+
+      foreach ( $regions as $code => $region ) {
+        // best way to make increment also increase ? look into better solution when possible
+        $increment = $increment + 1;
+        $number = $cnt + $increment;
+        //region PoP
+        $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+        $nc['HostName'.$number] = $value;
+        $nc['RecordType'.$number] = 'A';
+        $nc['Address'.$number] = $region['proxy']['publicIp'];
+        $nc['TTL'.$number] = '60';
+      }
     }
     //echo var_dump($nc);
     $result = $namecheap->dnsSetHosts("lineblocs.com", $nc);

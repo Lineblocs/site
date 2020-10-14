@@ -3,6 +3,7 @@ namespace App\Helpers;
 use \Config;
 use \Log;
 use \DB;
+use App\Helpers\MainHelper;
 final class PBXServerHelper {
   public static function request($url, $body) 
   {
@@ -84,14 +85,24 @@ final class PBXServerHelper {
   }
 
   public static function addUserToProxy($user, $workspace) {
-    DB::connection('mysql-opensips')->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$workspace['domain']]);
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$workspace['domain']]);
+    //add all possible regions
+    $regions = MainHelper::getRegions();
+    //create domain per region
+    foreach ( $regions as $region ) {
+      $domain = MainHelper::makeDomainName($workspace->name, $region['internal_code']);
+      $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
+    }
   }
-  public static function updateProxySIPUsers($user, $workspace, $extensions) 
+
+
+  public static function processSIPProxyDomain($user, $workspace, $domain, $extensions) 
   {
         $sipPort = $user['sip_port'];
         $pbxIP = $user['reserved_private_ip'] . ":" . $sipPort;
         $mainIP = $user['ip_private'];
-        $domain = $workspace['domain'];
+        //$domain = $workspace['domain'];
         $conn = DB::connection('mysql-opensips');
         $results = $conn->select('SELECT * FROM `subscriber` WHERE `domain` = ?', [$domain]);
         //$conn->enableQueryLog();
@@ -175,6 +186,18 @@ final class PBXServerHelper {
 
         
               
+  }
+
+  public static function updateProxySIPUsers($user, $workspace, $extensions) 
+  {
+    //main domain
+    self::processSIPProxyDomain($user, $workspace, $workspace['domain'], $extensions) 
+    $regions = MainHelper::getRegions();
+    //create user per region
+    foreach ( $regions as $region ) {
+      $domain = MainHelper::makeDomainName($workspace->name, $region['internal_code']);
+      self::processSIPProxyDomain($user, $workspace, $domain, $extensions) 
+    }
   }
 
 }
