@@ -91,7 +91,7 @@ final class PBXServerHelper {
     $regions = MainHelper::getRegions();
     //create domain per region
     foreach ( $regions as $region ) {
-      $domain = MainHelper::makeDomainName($workspace->name, $region['internal_code']);
+      $domain = MainHelper::makeDomainName($workspace['name'], $region['internal_code']);
       $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
     }
   }
@@ -191,11 +191,11 @@ final class PBXServerHelper {
   public static function updateProxySIPUsers($user, $workspace, $extensions) 
   {
     //main domain
-    self::processSIPProxyDomain($user, $workspace, $workspace['domain'], $extensions) 
+    self::processSIPProxyDomain($user, $workspace, $workspace['domain'], $extensions);
     $regions = MainHelper::getRegions();
     //create user per region
     foreach ( $regions as $region ) {
-      $domain = MainHelper::makeDomainName($workspace->name, $region['internal_code']);
+      $domain = MainHelper::makeDomainName($workspace['name'], $region['internal_code']);
       self::processSIPProxyDomain($user, $workspace, $domain, $extensions) 
     }
   }
