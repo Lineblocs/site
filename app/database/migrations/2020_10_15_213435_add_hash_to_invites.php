@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPreferredPopToUsers extends Migration
+class AddHashToInvites extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,9 @@ class AddPreferredPopToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('workspaces_invites', function (Blueprint $table) {
             //
-            $table->string("preferred_pop")->default("ca-central-1");
+            $table->string('hash');
         });
     }
 
@@ -25,7 +25,7 @@ class AddPreferredPopToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('workspaces_invites', function (Blueprint $table) {
             //
         });
     }

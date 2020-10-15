@@ -13,9 +13,11 @@ use \App\Transformers\FlowTemplateTransformer;
 use \App\Helpers\MainHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
 use App\WorkspaceUser;
+use App\WorkspaceInvite;
 use DB;
 use Mail;
 use Config;
+use DateTime;
 
 
 
@@ -26,11 +28,26 @@ trait UserWorkflow {
         $newUser = MainHelper::createUserWithoutStripe($user, TRUE);
         return $newUser;
     }
-    private function sendInvite($newUser, $workspaceUser, $workspace) {
+
+    public function createInvite($workspaceUser) {
+        $date = new DateTime(date("Y-m-d"));
+        $date->modify('+7 day');
+        $hash = MainHelper::createJoinHash();
+        $item = WorkspaceInvite::create([
+            'workspace_id' => $workspaceUser->workspace_id,
+            'workspace_user_id' => $workspaceUser->id,
+            'expires_on' => $date,
+            'valid' => TRUE,
+            'hash' => $hash
+        ]);
+        return $item;
+    }
+    private function sendInvite($invite, $newUser, $workspaceUser, $workspace) {
         $mail = Config::get("mail");
         $mailData = compact('newUser', 'workspace');
-        $hash = $workspaceUser->createJoinHash();
-        $link = Config::get("app.portal_url")."/#/join-workspace/". $hash;
+        $invite = $this->createInvite($workspaceUser);
+        //$hash = $workspaceUser->createJoinHash();
+        $link = Config::get("app.portal_url")."/#/join-workspace/". $invite->hash;
         $mailData['link'] =  $link;
           Mail::send('emails.invited_to_workspace', $mailData, function ($message) use ($newUser, $mail, $workspace) {
             $message->to($newUser->email);
@@ -54,7 +71,8 @@ trait UserWorkflow {
         $attrs['user_id'] = $reqUser->id;
         $attrs['workspace_id'] = $workspace->id;
         $resource = WorkspaceUser::create($attrs);
-        $this->sendInvite($reqUser,$resource, $workspace);
+        $invite = $this->createInvite($resource);
+        $this->sendInvite($invite, $reqUser,$resource, $workspace);
         return $this->response->array($resource->toArray())->withHeader('X-WorkspaceUser-ID', $resource->public_id);
     }
     public function updateUser(Request $request, $userId)
@@ -104,6 +122,24 @@ trait UserWorkflow {
             return $this->response->errorForbidden();
         }
         $user->delete();
+        return $this->response->noContent();
+    }
+
+    public function resendInvite(Request $request, $userId)
+    {
+        $data = $request->json()->all();
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $resource= WorkspaceUser::findOrFail($userId);
+        if (!$this->hasPermissions($request, $user, 'manage_users')) {
+            return $this->response->errorForbidden();
+        }
+        $reqUser = User::findOrFail($user->user_id);
+
+        WorkspaceInvite::where("workspace_user_id", $resource->id)->update(['valid' => FALSE]);
+        $invite = $this->createInvite($resource);
+        //invalidate current invite if needed
+        $this->sendInvite($invite, $reqUser,$resource, $workspace);
         return $this->response->noContent();
     }
 }

@@ -679,4 +679,10 @@ final class MainHelper {
     }
     return sprintf("%s.lineblocs.com", $name);
   }
+  public static function createJoinHash() {
+    $hash = bin2hex(random_bytes(16));
+    return $hash;
+  }
+
+
 }
