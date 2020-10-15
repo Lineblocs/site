@@ -130,11 +130,11 @@ trait UserWorkflow {
         $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
-        $resource= WorkspaceUser::findOrFail($userId);
-        if (!$this->hasPermissions($request, $user, 'manage_users')) {
+        $resource= WorkspaceUser::where('public_id', $userId)->firstOrFail();
+        if (!WorkspaceHelper::canPerformAction($workspace, $user, 'manage_users')) {
             return $this->response->errorForbidden();
         }
-        $reqUser = User::findOrFail($user->user_id);
+        $reqUser = User::findOrFail($resource->user_id);
 
         WorkspaceInvite::where("workspace_user_id", $resource->id)->update(['valid' => FALSE]);
         $invite = $this->createInvite($resource);

@@ -492,7 +492,7 @@ $api->version('v1', function($api) {
       $api->delete("/deleteUser/{userId}", "WorkspaceUserController@deleteUser");
       $api->post("/updateUser/{userId}", "WorkspaceUserController@updateUser");
       $api->get("/userData/{userId}", "WorkspaceUserController@userData");
-      $api->get("/resendInvite/{userId}", "WorkspaceUserController@resendInvite");
+      $api->post("/resendInvite/{userId}", "WorkspaceUserController@resendInvite");
   });
     $api->group([ 'prefix' => 'workspaceParam', 'namespace' => '\App\Http\Controllers\Api\WorkspaceParam'], function($api) {
 
