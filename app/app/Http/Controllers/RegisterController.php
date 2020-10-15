@@ -77,7 +77,7 @@ class RegisterController extends ApiAuthController
         'plan' => $plan,
         'trial_mode' => $trialMode
       ]);
-      WorkspaceUser::createSuperAdmin($workspace, $user);
+      WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),

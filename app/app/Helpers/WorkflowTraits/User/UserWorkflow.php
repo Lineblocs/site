@@ -11,6 +11,7 @@ use \App\FlowTemplate;
 use \App\Transformers\FlowTransformer;
 use \App\Transformers\FlowTemplateTransformer;
 use \App\Helpers\MainHelper;
+use \App\Helpers\WorkspaceHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
 use App\WorkspaceUser;
 use App\WorkspaceInvite;

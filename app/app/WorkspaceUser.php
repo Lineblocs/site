@@ -80,13 +80,14 @@ class WorkspaceUser extends PublicResource {
       'manage_byo_did_numbers',
       'create_byo_did_number'
   ];
-  public static function createSuperAdmin($workspace, $user) {
+  public static function createSuperAdmin($workspace, $user, $extras=[]) {
       $attrs = [];
       foreach (WorkspaceUser::$permissions as $perm) {
         $attrs[$perm] = TRUE;
       }
       $attrs['user_id'] = $user->id;
       $attrs['workspace_id'] = $workspace->id;
+      $attrs = array_merge( $attrs, $extras );
       return WorkspaceUser::create($attrs);
   }
   public static function updateSuperAdmin($workspace, $user) {
