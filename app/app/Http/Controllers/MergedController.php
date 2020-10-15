@@ -41,6 +41,7 @@ use App\PhoneIndividualSetting;
 use App\PhoneIndividualSettingValue;
 use App\FlowTemplate;
 use App\FlowTemplatePreset;
+use App\WorkspaceInvite;
 
 use \Config;
 use Twilio\Rest\Client;
@@ -483,6 +484,15 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
    public function submitJoinWorkspace(Request $request) {
       $data =$request->json()->all();
+      $invite = WorkspaceInvite::where('hash', $data['hash'])->firstOrFail();
+      $now = new DateTime();
+      if (!$invite->valid) {
+        return $this->response->errorInternal('Invite expired..');
+      }
+      if ($now->getTimestamp() > $invite->expires_on->getTimestamp()) {
+        return $this->response->errorInternal('Invite expired..');
+      }
+
       $workspaceUser = WorkspaceUser::where('hash', $data['hash'])->firstOrFail();
       $user = User::findOrFail($workspaceUser->user_id);
       $workspace = Workspace::findOrFail($workspaceUser->workspace_id);
@@ -495,6 +505,9 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $workspaceUser->update([
         'accepted' => TRUE,
         'hash_expired' => TRUE
+      ]);
+      $invite->update([
+        'valid' => FALSE
       ]);
 
       try {
