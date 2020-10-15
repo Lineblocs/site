@@ -666,7 +666,7 @@ final class MainHelper {
     $results = [];
     foreach ($nodes['regions'] as $code => $item) {
       $resulgs[] = [
-        'name' => $item['proxy']['name'],
+        'name' => $item['proxy']['id'],
         'internal_code' => $item['internal_code'],
         'aws_code' => $code
       ];

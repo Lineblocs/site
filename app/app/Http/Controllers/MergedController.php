@@ -627,7 +627,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $options = [];
         foreach ($config['regions'] as $code => $region) {
           $options[] = [
-            'name' => $region['proxy']['name'],
+            'name' => $region['proxy']['id'],
             'code' => $code
           ];
 
