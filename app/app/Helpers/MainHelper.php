@@ -665,7 +665,7 @@ final class MainHelper {
     $nodes = \Config::get("mothernodes");
     $results = [];
     foreach ($nodes['regions'] as $code => $item) {
-      $resulgs[] = [
+      $results[] = [
         'name' => $item['proxy']['id'],
         'internal_code' => $item['internal_code'],
         'aws_code' => $code
