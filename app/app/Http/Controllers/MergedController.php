@@ -243,7 +243,7 @@ class MergedController extends ApiAuthController
         $self->toArray(TRUE),
         $checklist,
         $plan,
-        $workspace->toArray()
+        $workspace->toArrayWithRoles($user)
       ]);
     }
     public function fetchWorkspaceInfo(Request $request)

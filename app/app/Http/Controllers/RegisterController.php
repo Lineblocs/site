@@ -485,4 +485,13 @@ class RegisterController extends ApiAuthController
       return FALSE;
   }
 
+  public function addCard(Request $request)
+  {
+    $user = User::findOrFail($request->get("user_id"));
+    $workspace = Workspace::findOrFail($request->get("workspace_id"));
+    $data = $request->json()->all();
+    MainHelper::addCard($data, $user, $workspace);
+    return $this->response->noContent();
+  }
+
 }

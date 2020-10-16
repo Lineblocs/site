@@ -38,6 +38,11 @@ final class MainHelper {
     public static $regions = [
       'ca-central-1' => 'ca-central-1' 
     ];
+
+    public function initStripe() {
+        $stripe = \Config::get("stripe");
+        \Stripe\Stripe::setApiKey($stripe['secret_key']);
+    }
   public static function createApiId($prefix="") {
     $uuid4 = Uuid::uuid4(); 
     return sprintf("%s-%s",$prefix, $uuid4->toString());
@@ -683,6 +688,30 @@ final class MainHelper {
     $hash = bin2hex(random_bytes(16));
     return $hash;
   }
+  public static function addCard($data, $user, $workspace)
+  {
+    MainHelper::initStripe();
+          $card = \Stripe\Customer::createSource(
+              $user->stripe_id,
+              [
+                  'source' => $data['stripe_token']
+              ]
+          );
+        $all = UserCard::where('workspace_id', $workspace->id)->get();
+        $params = [
+            'last_4' => $data['last_4'],
+            'stripe_id' => $card->id,
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
+            'issuer' => $card->brand
+        ];
+        return UserCard::create($params);
+      }
+  public static function makeCardPrimary($card, $user, $workspace)
+  {
+        $all = UserCard::where('workspace_id', $workspace->id)->update(['primary' => FALSE]);
+        $card->update(['primary' => TRUE]);
 
+      }
 
 }

@@ -293,6 +293,7 @@ $api->version('v1', function($api) {
   $api->post('userSpinup', '\App\Http\Controllers\RegisterController@userSpinup');
   $api->post('provisionCallSystem', '\App\Http\Controllers\RegisterController@provisionCallSystem');
   $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
+  $api->post('addCard', '\App\Http\Controllers\RegisterController@addCard');
   $api->get('self', '\App\Http\Controllers\RegisterController@getSelf');
   $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');
   $api->get('getUserInfo', '\App\Http\Controllers\RegisterController@getUserInfo');
