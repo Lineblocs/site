@@ -674,7 +674,8 @@ final class MainHelper {
       $results[] = [
         'name' => $item['name'],
         'internal_code' => $item['internal_code'],
-        'aws_code' => $code
+        'aws_code' => $code,
+        'proxy' => $item['proxy']
       ];
     }
     return $results;
