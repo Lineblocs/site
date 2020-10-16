@@ -8,6 +8,7 @@ use App\Workspace;
 use App\Flow;
 use App\FlowTemplate;
 use App\ExtensionCode;
+use App\UserCard;
 use Config;
 use Auth;
 use DB;
@@ -39,7 +40,7 @@ final class MainHelper {
       'ca-central-1' => 'ca-central-1' 
     ];
 
-    public function initStripe() {
+    public static function initStripe() {
         $stripe = \Config::get("stripe");
         \Stripe\Stripe::setApiKey($stripe['secret_key']);
     }

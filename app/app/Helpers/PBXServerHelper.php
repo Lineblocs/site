@@ -196,7 +196,7 @@ final class PBXServerHelper {
     //create user per region
     foreach ( $regions as $region ) {
       $domain = MainHelper::makeDomainName($workspace['name'], $region['internal_code']);
-      self::processSIPProxyDomain($user, $workspace, $domain, $extensions) 
+      self::processSIPProxyDomain($user, $workspace, $domain, $extensions);
     }
   }
 

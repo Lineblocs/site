@@ -11,7 +11,7 @@ class Flow extends PublicResource {
   protected $casts = array(
     "started" => "boolean"
   );
-  public static function createFromTemplate($name, $category, $user, $workspace, $template) {
+  public static function createFromTemplate($name, $user, $workspace, $template, $category='phone') {
           $json = $template->flow_json;
           //process extra data
           if (!empty($template->extra_data)) {
