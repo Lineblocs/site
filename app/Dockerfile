@@ -63,7 +63,7 @@ COPY apache.conf /etc/apache2/apache2.conf
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # copy php.ini
-RUN mv php.ini-production "$PHP_INI_DIR/php.ini"
+RUN mv php.ini "$PHP_INI_DIR/php.ini"
 RUN mv .env.k8s .env
 
 # Change current user to www
