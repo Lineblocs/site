@@ -83,6 +83,12 @@ final class NamecheapHelper {
           'ttl' => '60'
       ],
       [
+          'host' => 'internals',
+          'type' => 'A',
+          'address' => $ingress,
+          'ttl' => '60'
+      ],
+      [
           'host' => 'pbx',
           'type' => 'A',
           'address' => '155.138.159.234',
