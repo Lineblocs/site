@@ -23,8 +23,7 @@ class SIPProviderRequest extends FormRequest {
 			{
 				return [
 					'name' => 'required|min:1',
-					'priority' => 'required|min:1',
-					'dial_prefix' => 'required|min:1'
+					'priority' => 'required|min:1'
 				];
 			}
 			case 'PUT':
@@ -32,8 +31,7 @@ class SIPProviderRequest extends FormRequest {
 			{
 				return [
 					'name' => 'required|min:1',
-					'priority' => 'required|min:1',
-					'dial_prefix' => 'required|min:1'
+					'priority' => 'required|min:1'
 				];
 			}
 			default:break;
