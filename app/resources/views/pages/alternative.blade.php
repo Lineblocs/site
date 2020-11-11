@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col s6">
         <h2>Best alternative to RingCentral</h2>
-        <p>Many customers rely on Lineblocs for high quality Voice, IM, and video related integrations.</p>
+        <p>Many customers rely on Lineblocs to make high quality voice calls, integrate IM solutions, and connect via video</p>
         <a class="left" style="margin-right: 7px; " href="https://app.lineblocs.com/#/login"><button type="submit"
             class="btn-custom service-btn top-login-btn"><span>Get Started Now</span></button></a>
         <a class="left" href="https://app.lineblocs.com/#/login"><button type="submit"
@@ -181,8 +181,7 @@
           <div class="col s12 l8">
             <h2>Talk to us</h2>
             <p>
-              Still interested ? Learn more about our solutions by calling us today. We can help you find a calling
-              solutions relevant to your requirements.
+              If you would like to learn more about Lineblocs, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and end needs.
             </p>
             <a href="/contact" class="btn-custom service-btn">Learn More</a>
           </div>
