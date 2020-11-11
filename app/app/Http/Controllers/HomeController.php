@@ -247,13 +247,9 @@ class HomeController extends BaseController {
     ]) ;
     return redirect("http://app.lineblocs.com/#/login?result=email-verified");
   }
-  public function ringcentral_alternative(Request $request)
+  public function alternative_ringcentral(Request $request)
   {
-    return view('pages.ringcentral_alternative');
-  }
-  public function grasshopper_alternative(Request $request)
-  {
-    return view('pages.grasshopper_alternative');
+    return view('pages.alternative');
   }
   public function flowbuilder_features(Request $request)
   {
