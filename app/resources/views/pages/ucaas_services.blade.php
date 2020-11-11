@@ -133,5 +133,5 @@
 <script>
 </script>
 <script src="/js/components/landingData.js"></script>
-<script src="/js/components/landing.js"></script>
+<script src="/js/components/Landing.js"></script>
 @endsection
