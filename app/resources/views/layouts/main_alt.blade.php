@@ -148,6 +148,7 @@
 
   <link rel="stylesheet" href="./css/about/about.css">
     <link rel="stylesheet" href="/css/resources.css" />
+    <link rel="stylesheet" href="/css/landing.css" />
 </head>
 
 <body>

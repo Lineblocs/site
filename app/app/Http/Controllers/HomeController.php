@@ -181,9 +181,18 @@ class HomeController extends BaseController {
       $request->session()->flash('status', 'Please fill in email..');
       return view('pages.contact', $vars);
     }
-    if (empty($data['comments'])) {
+    if (empty($data['comments']) && empty($data['comments_not_required'])) {
       $request->session()->flash('status', 'Please fill in comments..');
       return view('pages.contact', $vars);
+    }
+    if (empty($data['region'])) {
+      $region = $data['region'];
+    }
+    if (empty($data['country'])) {
+      $region = $data['country'];
+    }
+    if (empty($data['contact_reason'])) {
+      $reason = $data['contact_reason'];
     }
 
 

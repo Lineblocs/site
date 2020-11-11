@@ -1,3 +1,7 @@
+.trunking-networks.container {
+  width: 100%;
+}
+
 .trunking-networks {
   padding-top: 98px;
   padding-bottom: 100px;
@@ -5,6 +9,7 @@
 }
 
 .trunking-networks__back-btn {
+  display: none;
   position: absolute;
   left: 0px;
   top: 120px;
@@ -20,20 +25,20 @@
 .trunking-networks header {
   text-align: center;
   margin-bottom: 37px;
-  color: #0A1247;
+  color: #0a1247;
 }
 
 .trunking-networks header h1 {
-  font-size: 52px;
+  font-size: 36px;
 }
 
 .trunking-networks header p {
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #0A1247;
+  color: #0a1247;
 }
 
 .trunking-networks__content {
@@ -43,17 +48,17 @@
 .trunking-networks__network {
   display: flex;
 
-  font-size: 16px;
-  padding: 22px 31px;
-  background: #FFFFFF;
+  font-size: 14px;
+  padding: 16px 10px;
+  background: #ffffff;
   box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
   border-radius: 20px;
   margin-bottom: 10px;
-  color: #0A1247;
+  color: #0a1247;
 }
 
 .trunking-networks__network-date {
-  width: calc(127px + 78px);
+  width: calc(127px + 10px);
 }
 
 .trunking-networks__network p {
@@ -66,7 +71,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .trunking-networks__network-link {
@@ -79,6 +84,10 @@
   align-items: center;
 }
 
+.trunking-networks__network-link span {
+  display: none;
+}
+
 .trunking-networks__network-link img {
   margin-left: 10px;
 }
@@ -88,8 +97,8 @@
   align-items: center;
   margin: 0 auto;
   background: transparent;
-  color: #6AD7FA;
-  font-size: 18px;
+  color: #6ad7fa;
+  font-size: 14px;
   border: none;
   outline: none;
   cursor: pointer;
@@ -103,4 +112,46 @@
 .trunking-networks__see-all-btn:hover svg {
   transform: rotate(360deg);
   transform-origin: center;
+}
+
+@media (min-width: 1280px) {
+  .trunking-networks.container {
+    width: 1280px;
+  }
+
+  .trunking-networks__back-btn {
+    display: block;
+  }
+
+  .trunking-networks header h1 {
+    font-size: 52px;
+  }
+
+  .trunking-networks header p {
+    font-size: 16px;
+  }
+
+  .trunking-networks__network {
+    font-size: 16px;
+  }
+
+  .trunking-networks__network-status {
+    font-weight: 600;
+  }
+
+  .trunking-networks__network-date {
+    width: calc(127px + 78px);
+  }
+
+  .trunking-networks__network-link span {
+    display: inline-block;
+  }
+
+  .trunking-networks__network {
+    padding: 22px 31px;
+  }
+
+  .trunking-networks__see-all-btn {
+    font-size: 18px;
+  }
 }

@@ -60,6 +60,7 @@
             <link rel="stylesheet" href="/css/pricing.css">
               <link rel="stylesheet" href="/css/our-pricing.css">
   <link rel="stylesheet" href="./css/about/about-new.css">
+    <link rel="stylesheet" href="/css/landing.css" />
     <title>Home</title>
     <!-- Start of Async Drift Code -->
 
