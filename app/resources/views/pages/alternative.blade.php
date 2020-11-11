@@ -8,9 +8,9 @@
         <h2>Best alternative to RingCentral</h2>
         <p>Many customers rely on Lineblocs to make high quality voice calls, integrate IM solutions, and connect via video</p>
         <a class="left" style="margin-right: 7px; " href="https://app.lineblocs.com/#/login"><button type="submit"
-            class="btn-custom service-btn top-login-btn"><span>Get Started Now</span></button></a>
+            class="btn-custom service-btn top-login-btn btn-lg"><span>Get Started Now</span></button></a>
         <a class="left" href="https://app.lineblocs.com/#/login"><button type="submit"
-            class="btn-custom service-btn top-login-btn"><span>Talk To Our Sales Team</span></button></a>
+            class="btn-custom service-btn top-login-btn btn-lg"><span>Talk To Our Sales Team</span></button></a>
       </div>
       <div class="col s6">
         <img height="356"
@@ -27,6 +27,34 @@
             </div>
             <div class="space--21"></div>
             <ul class="partners">
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
+              <li class="left"><img
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
+                  alt="Lifesize" title="Lifesize"></li>
               <li class="left"><img
                   src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/95965191-fd9b-43bd-b32a-1a00e55b0e02/d2pgs6a-8006bf26-2f11-4158-b9a1-d024688b8433.jpg"
                   alt="Lifesize" title="Lifesize"></li>
@@ -181,7 +209,7 @@
           <div class="col s12 l8">
             <h2>Talk to us</h2>
             <p>
-              If you would like to learn more about Lineblocs, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and end needs.
+              If you would like to learn more about Lineblocs, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and specific needs.
             </p>
             <a href="/contact" class="btn-custom service-btn">Learn More</a>
           </div>
@@ -289,6 +317,38 @@
       </div>
     </div>
   </div>
+  <div class="region-landing-learn section no-bottom-margin more-padding" id="index-banner">
+    <div class="container">
+      <center>
+        <h2>Public Reviews</h2>
+      </center>
+      <div class="row">
+        <center>
+          <img src="/img/frontend/reviews.png"/>
+        </center>
+      </div>
+    </div>
+  </div>
+  <div class="region-landing-learn section no-bottom-margin more-padding" id="index-banner">
+    <div class="container">
+      <center>
+        <h2>Get Started</h2>
+        <p>
+          Get up and going with one of our calling solutions today -- it's easy.
+        </p>
+      </center>
+      <div class="row">
+      <div style="display: flex; justify-content: space-between; max-width: 330px; margin: 0 auto;">
+        <a class="left" style="margin-right: 7px;" href="https://app.lineblocs.com/#/login"><button type="submit"
+            class="btn-custom service-btn top-login-btn btn-lg"><span>Get Started</span></button></a>
+        <a class="right" href="https://app.lineblocs.com/#/login"><button type="submit"
+            class="btn-custom service-btn top-login-btn btn-lg"><span>Request A Quote</span></button></a>
+      </div
+      </div>
+    </div>
+  </div>
+
+
 
 
 </div>

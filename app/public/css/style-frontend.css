@@ -236,3 +236,6 @@ ul.grid-list li {
   width: 100px;
   height: 100px;
 }
+.btn-lg span {
+  font-size: 28px !important;
+}
