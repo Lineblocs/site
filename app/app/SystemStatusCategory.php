@@ -96,7 +96,7 @@ class SystemStatusCategory extends Model {
             "day_after" => date($format, mktime(0,0,0,$m,($de-$dayafter),$y))
           );
       }
-      return array_reverse($dateArray);
+      return $dateArray;
   }
 
 }
