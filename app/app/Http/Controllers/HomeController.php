@@ -323,16 +323,28 @@ class HomeController extends BaseController {
   }
   public function status(Request $request)
   {
-    $categories = SystemStatusCategory::all();
+    $data = SystemStatusCategory::all();
+    $categories = [];
+    foreach ($data as $category) {
+      $array = $category->toArray();
+      $array['current_status'] = $category->checkStatus();
+      $array['partial_degradation'] = $category->getPartialDegradation();
+      $array['downtime'] = $category->getDowntime();
+      $categories[] = $array;
+    }
+
     View::share("title", "Status");
     View::share("description", "Status updates for Lineblocs DID availability, media storage, PoP network and more..");
     View::share("tags", "system status, status, alerts");
-    return view('status.main', compact('categories'));
+    $date = new \DateTime();
+    $date = $date->format("d F Y h:i A");
+    return view('status.main', compact('categories', 'date'));
   }
   public function status_category(Request $request, $categoryId)
   {
     $category = SystemStatusCategory::findOrFail($categoryId);
-    $updates = SystemStatusUpdate::where('category_id', $category->id)->get();
+    //$updates = SystemStatusUpdate::where('category_id', $category->id)->get();
+    $updates = $category->getUpdates();
     View::share("title", $category->name . " Status");
     View::share("description", "Status updates for Lineblocs " . $category->name);
     View::share("tags", "system status, status, alerts");
@@ -342,9 +354,11 @@ class HomeController extends BaseController {
   public function status_update(Request $request, $categoryId, $updateId)
   {
     $category = SystemStatusCategory::findOrFail($categoryId);
-    $update = SystemStatusUpdate::findOrFail($updateId);
-    View::share("title", $update->title);
-    View::share("description", "Status update " . $update->title);
+    $updateObj = SystemStatusUpdate::findOrFail($updateId);
+    $update = $updateObj->toArray();
+    $update['date_friendly'] = $updateObj->created_at->format("d F Y");
+    View::share("title", $updateObj->title);
+    View::share("description", "Status update " . $updateObj->title);
     View::share("tags", "system status, status, alerts");
 
     return view('status.update', compact('category', 'update'));

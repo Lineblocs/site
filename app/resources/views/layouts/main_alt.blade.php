@@ -149,6 +149,9 @@
   <link rel="stylesheet" href="./css/about/about.css">
     <link rel="stylesheet" href="/css/resources.css" />
     <link rel="stylesheet" href="/css/landing.css" />
+      <link rel="stylesheet" href="/css/system-status.css">
+        <link rel="stylesheet" href="/css/sip-trunking-networks.css">
+            <link rel="stylesheet" href="/css/sip-trunking-networks-detail.css" /
 </head>
 
 <body>

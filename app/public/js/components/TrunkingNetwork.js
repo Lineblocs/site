@@ -20,7 +20,7 @@
       const chevronRight = document.createElement("IMG");
 
       // add attributes
-      seeDetailsLink.href = `/sip-trunking-networks/${network.id}`;
+      seeDetailsLink.href = `${category.id}/${network.id}`;
       seeDetailsLink.target = "_blank";
       chevronRight.src = "/img/chevron-right.svg";
       chevronRight.alt = "chevron right";
@@ -49,7 +49,9 @@
       status.prepend(dot);
       container.appendChild(date);
       container.appendChild(status);
-      container.appendChild(seeDetailsLink);
+      if ( status.id ) {
+        container.appendChild(seeDetailsLink);
+      }
       content.appendChild(container);
     });
   }

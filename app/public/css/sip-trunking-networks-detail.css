@@ -187,3 +187,7 @@
     padding: 35px 110px 35px 46px;
   }
 }
+.trunking-networks-detail__description p {
+  margin: 0;
+  padding: 0;
+}

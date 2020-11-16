@@ -20,6 +20,7 @@
       let statusContent = document.createElement("DIV");
       let statusHeader = document.createElement("DIV");
       let h3 = document.createElement("H3");
+      let a = document.createElement("a");
       let p = document.createElement("P");
       let statusPoint = document.createElement("SPAN");
       let barContainer = document.createElement("DIV");
@@ -39,7 +40,9 @@
       }
 
       // populate data
-      h3.textContent = status.title;
+      a.textContent = status.title;
+      a.href = "/status/" + status.id;
+      h3.appendChild(a);
       p.textContent = status.description;
 
       // create 100 bars to display the different status

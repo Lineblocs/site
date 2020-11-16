@@ -21,7 +21,7 @@
     // populate element data
     date.textContent = trunkingNetworkDetail.date;
     title.textContent = trunkingNetworkDetail.title;
-    description.textContent = trunkingNetworkDetail.description;
+    description.innerHTML = trunkingNetworkDetail.description;
     console.log(title);
 
     // add attributes
