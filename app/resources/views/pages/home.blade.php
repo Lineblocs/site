@@ -1,255 +1,245 @@
-@extends('layouts.main', ['show_drift' => FALSE])
-@section('title') Home :: @parent @endsection
-@section('content')
-<section id="hero">
-    <div class="hero-content">
-        <div class="hero-img">
-            <img src="images/hero-img.png">
-        </div>
-        <div class="hero-text">
-            <h1 class="heading">Your Line</h1>
-            <p class="desc">LineBlocs is a fully customizable cloud phone system for productive teams.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Lineblocs is a fully custimizable cloud phone system for productive teams.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="./css/style_home.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://kit.fontawesome.com/cbbc235e67.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Lineblocs</title>
 
+</head>
+<body>
+    <header class="header">
+        <a href="" class="logo">
+            <span class="logo__img"></span>
+        </a>
+        <nav id="desktop__nav">
+            <ul class="nav">
+                <li><a href="/pricing">Pricing</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/resources">Resources</a></li>
+                <li><a href="https://app.lineblocs.com/#/login"><button type="button" class="nav__btn">Login</button></a></li>
+            </ul>
+        </nav>
+        <nav id="mobile__nav">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </nav>
+    </header>
+    <div class="hero__container">
+        
+        <div class='styling__white'></div>
+        <div class='styling__blue'></div>
+        <div class="hero__titleWrapper">
+            <h1>Your Lineblocs</h1>
+            <h2>LineBlocs is a fully custimizable cloud phone system for productive teams.</h2>
             <a href="https://app.lineblocs.com/#/register">
-                <div class="btn-custom">
-                    <span>Get started in 30 seconds</span>
-                    <svg width="20px" height="20px" viewBox="0 0 30 20" version="1.1">
-                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <g id="home-page" transform="translate(-662.000000, -557.000000)" stroke="#0A1247"
-                                stroke-width="3">
-                                <g id="bnt" transform="translate(458.000000, 536.000000)">
-                                    <g id="arrow" transform="translate(206.000000, 23.000000)">
-                                        <path d="M-2.27373675e-13,7.5 L25.9289867,7.5" id="Path-2"></path>
-                                        <polyline id="Path-3" points="17.9289867 0 25.9289867 7.40389204 17.9289867 16">
-                                        </polyline>
-                                    </g>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                </div>
+                <button>Get started in 30 seconds</button>
             </a>
         </div>
+        <div class="hero__img"></div>
+               
     </div>
-</section>
-<section class="features-section">
-
-    <div class="container">
-        <div class="features">
+    <main>
+        <section class="features__desktop">
             <h2>Explore By Features</h2>
-            <div class="feature-detail">
-                <div class="feature-text">
-                    <p class="desc">Get call features relevant to your business needs – from basic auto attendants to completely customizable call flows that include video conferencing, CRM integrations, and more.</p>
-                    <h3 class="heading">Fully Cloud</h3>
+            <div class="features__wrapper">
+                <div class="features__info">
+                    <h3>Fully Cloud</h3>
+                    <p>Get call features relevant to your business needs – from basic auto attendants to completely customizable call flows that include video conferencing, CRM integrations, and more.</p>
                 </div>
-                <div class="feature-img">
-                    <img src="images/cloud-img.png">
+                <div class="features__imgCloud"></div>
+                <div class="features__imgMod"></div>
+                <div class="features__info">
+                    <h3>Modern Low-Code</h3>
+                    <p>Stay up to date with a low-code solution that allows you to create highly customizable calling workflows including automations, and third party integrations at ease.</p>
                 </div>
-            </div>
-            <div class="feature-detail editor-detail">
-                <div class="feature-text">
-                    <p class="desc">
-                        Stay up to date with a low-code solution that allows you to create highly customizable calling workflows including automations, and third party integrations at ease.</p>
-                    <h3 class="heading">Modern Low-Code</h3>
+                <div class="features__info">
+                    <h3>Scalable</h3>
+                    <p>Get call features relevant to your business needs – from basic auto attendants to completely customizable call flows that include video conferencing, CRM integrations, and more.</p>
                 </div>
-                <div class="feature-img">
-                    <img src="images/editors-img.png">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-    <section>
-        <div class="support-section">
-            <div class="container">
-                <div class="features">
-                    <div class="feature-detail support-detail">
-                        <div class="feature-text">
-                            <p class="desc">Create your team's next calling system without having to manage the
-                                underlying platform and infrastructure – we handle that.</p>
-                            <h3 class="heading">Scalable</h3>
-                        </div>
-                        <div class="feature-img support-img">
-                            <img src="images/support-img.png">
-                        </div>
-                    </div>
-                </div>
+                <div class="features__imgScale"></div>
+                
+            
             </div>
         </div>
-    </section>
-    <section>
-        <div class="comparision-section">
-            <div class="container">
-                <div class="comparison-content">
-                    <h2>Feature Comparison</h2>
-                    <p class="desc">Below is a list of features offered by alternatives, in comparison to Lineblocs</p>
-                    <div class="comparison-table">
-                        <!-- mobile display only -->
-                        <div class="comparison-table-mobile">
-                            <hr>
-                            <ul class="comparison-table-dropdown" data-list="comparison-drop-1">
-                                <h5 class="comparison-table-title">Nextiva
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         aria-hidden="true" focusable="false" width="1em" height="1em"
-                                         style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
-                                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 1200 1200">
-                                        <path d="M600.006 989.352l178.709-178.709L1200 389.357l-178.732-178.709L600.006 631.91L178.721 210.648L0 389.369l421.262 421.262l178.721 178.721h.023z"
-                                              fill="#626262" /></svg>
-                                </h5>
-                                <div>
-                                    <li>Unlimited Calls (between extensions): <span>Not Supported</span></li>
-                                    <li>Unlimited Concurrent Calling: <img src="images/verified.png"></li>
-                                    <li>Cloud Web Portal: <img src="images/verified.png"></li>
-                                    <li>Cloud Drag and Drop editor: <span>Not Supported</span></li>
-                                    <li>Inbound Call Blocking: <img src="images/verified.png"></li>
-                                    <li>Voicemail to email: <img src="images/verified.png"></li>
-                                    <li>IVR: <span>Not Supported</span></li>
-                                    <li>Recordings: <img src="images/verified.png"></li>
-                                    <li>Call Reporting: <img src="images/verified.png"></li>
-                                </div>
-                            </ul>
-                            <hr>
-                            <ul class="comparison-table-dropdown" data-list="comparison-drop-2">
-                                <h5 class="comparison-table-title">RingCentral
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         aria-hidden="true" focusable="false" width="1em" height="1em"
-                                         style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
-                                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 1200 1200">
-                                        <path d="M600.006 989.352l178.709-178.709L1200 389.357l-178.732-178.709L600.006 631.91L178.721 210.648L0 389.369l421.262 421.262l178.721 178.721h.023z"
-                                              fill="#626262" /></svg>
+        
+        </section>
+        <section class="features__mobile">
+            <h2>Explore By Features</h2>
+            <div class="features__wrapper">
+                <div class="features__imgCloud"></div>
+                <div class="features__info">
+                    <h3>Fully Cloud</h3>
+                    <p>Get call features relevant to your business needs – from basic auto attendants to completely customizable call flows that include video conferencing, CRM integrations, and more.</p>
+                </div>
+                
+                <div class="features__imgMod"></div>
+                <div class="features__info">
+                    <h3>Modern Low-Code</h3>
+                    <p>Stay up to date with a low-code solution that allows you to create highly customizable calling workflows including automations, and third party integrations at ease.</p>
+                </div>
+                <div class="features__imgScale"></div>
+                <div class="features__info">
+                    <h3>Scalable</h3>
+                    <p>Get call features relevant to your business needs – from basic auto attendants to completely customizable call flows that include video conferencing, CRM integrations, and more.</p>
+                </div>
+                
+                
+            
+            </div>
 
-                                </h5>
-                                <div>
-                                    <li>Unlimited Calls (between extensions): <span>Not Supported</span></li>
-                                    <li>Unlimited Concurrent Calling: <img src="images/verified.png"></li>
-                                    <li>Cloud Web Portal: <img src="images/verified.png"></li>
-                                    <li>Cloud Drag and Drop editor: <span>Not Supported</span></li>
-                                    <li>Inbound Call Blocking: <img src="images/verified.png"></li>
-                                    <li>Voicemail to email: <img src="images/verified.png"></li>
-                                    <li>IVR: <img src="images/verified.png"></li>
-                                    <li>Recordings: <img src="images/verified.png"></li>
-                                    <li>Call Reporting: <img src="images/verified.png"></li>
-                                </div>
-                            </ul>
-                            <hr>
-                            <ul class="comparison-table-dropdown" data-list="comparison-drop-3">
-                                <h5 class="comparison-table-title">LineBlocs
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         aria-hidden="true" focusable="false" width="1em" height="1em"
-                                         style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
-                                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 1200 1200">
-                                        <path d="M600.006 989.352l178.709-178.709L1200 389.357l-178.732-178.709L600.006 631.91L178.721 210.648L0 389.369l421.262 421.262l178.721 178.721h.023z"
-                                              fill="#626262" /></svg>
-                                </h5>
-                                <div>
-                                    <li>Unlimited Calls (between extensions): <img src="images/verified.png"></li>
-                                    <li>Unlimited Concurrent Calling: <img src="images/verified.png"></li>
-                                    <li>Cloud Web Portal: <img src="images/verified.png"></li>
-                                    <li>Cloud Drag and Drop editor: <img src="images/verified.png"></li>
-                                    <li>Inbound Call Blocking: <img src="images/verified.png"></li>
-                                    <li>Voicemail to email: <img src="images/verified.png"></li>
-                                    <li>IVR: <img src="images/verified.png"></li>
-                                    <li>Recordings: <img src="images/verified.png"></li>
-                                    <li>Call Reporting: <img src="images/verified.png"></li>
-                                </div>
-                            </ul>
-                            <hr>
-                        </div>
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td></td>
-                                    <td>Nextiva</td>
-                                    <td>RingCentral</td>
-                                    <td>LineBlocs</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Unlimited Calls (between extensions)</td>
-                                    <td>Not Supported</td>
-                                    <td>Not Supported</td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Unlimited Concurrent Calling</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Cloud Web Portal</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Cloud Drag and Drop editor</td>
-                                    <td>Not Supported</td>
-                                    <td>Not Supported</td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Inbound Call Blocking</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Voicemail to email</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>IVR</td>
-                                    <td>Not Supported</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Recordings</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                                <tr>
-                                    <td>Call Reporting</td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                    <td><img src="images/verified.png"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        </section>
+        <section class="comparison">
+            <table>
+                <caption>Feature Comparison</caption>
+                <thead>
+                    <th class="title">Compare Plans</th>
+                    <th>LineBlocs</th>
+                    <th>Nextiva</th>
+                    <th>RingCentral</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Unlimited Calls (between extensions)</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/ex.png"/></td>
+                        <td><img src="images/ex.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Unlimited Concurrent Calling</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Web Portal</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Drag and Drop Editor</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/ex.png"/></td>
+                        <td><img src="images/ex.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Inbound Call Blocking</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Voicemail to email</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>IVR</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/ex.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Recordings</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    <tr>
+                        <td>Call Reporting</td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                        <td><img src="images/Check.png"/></td>
+                    </tr>
+                    </tbody>
+            </table>
+        </section>
+        <section class="serviceAreas">
+            <div class="places">
+                <h2>Calling, IM and Fax services in</h2>
+                <div class="service__areas">
+                    <h3>Canada:</h3>
+                <ul class="statesAndProvinces">
+                    <li><a href="/ucaas/ca/ab">Alberta</a></li>
+                    <li><a href="/ucaas/ca/bc">British Columbia</a></li>
+                    <li><a href="/ucaas/ca/mb">Manitoba</a></li>
+                    <li><a href="/ucaas/ca/ns">Nova Scotia</a></li>
+                    <li><a href="/ucaas/ca/on">Ontario</a></li>
+                    <li><a href="/ucaas/ca/qc">Quebec</a></li>
+                </ul>
             </div>
-        </div>
-    </section>
-<section>
-    <div class="comparision-section">
-        <div class="container">
-            <h2>Calling, IM and Fax services in</h2>
-            <br/>
-                @foreach ($countries as $country)
-                    <div class="row">
-                        <h4>{{$country->name}}</h4>
-                        <ul class="grid-list">
-                            @foreach ($country->getRegions() as $region)
-                                <li class="col s12 l4">
-                                    <div>
-                                        <h3><a href="/ucaas/{{strtolower($country->iso)}}/{{strtolower($region->code)}}">{{$region['name']}}</a></h3>
-                                    </div>
-                                </li>
-                            @endforeach
-                            </ul>
-                    </ul>
-                </div>
-                @endforeach
+            <!--
+            <div class="service__areas">
+                <h3>United States:</h3>
+                <ul class="statesAndProvinces">
+                    <li>California</li>
+                    <li>Colorado</li>
+                    <li>Florida</li>
+                    <li>Illinois</li>
+                    <li>Massachusetts</li>
+                    <li>Minnesota</li>
+                    <li>Nevada</li>
+                    <li>New York</li>
+                    <li>North Carolina</li>
+                    <li>Pennsylvania</li>
+                    <li>South Carolina</li>
+                    <li>Texas</li>
+                    <li>Washington</li>
+                </ul>
             </div>
+        -->
         </div>
+        <div class="serviceAreas__img"></div>
+        </section>
+            </main>
+    <footer class="footer">
+        <div class="footer__linkWrapper">
+        <ul class="footer__nav">
+            <li>
+               <a href="/status/">
+                Status
+               </a>
+            </li>
+            <li>
+               <a href="/pages/tos">
+                Terms of Service
+               </a>
+            </li>
+            <li>
+               <a href="/faq">
+                FAQs
+               </a>
+            </li>
+            <li>
+               <a href="/pages/privacy-policy">
+                Privacy Policy
+               </a>
+            </li>
+            <li>
+               <a href="/about">
+                About
+               </a>
+            </li>
+            <li>
+               <a href="/contact">
+                Contact
+               </a>
+            </li>
+        </ul>
+        <ul class="social__links">
+            <a href="https://www.facebook.com/lineblocs/"><li class="socials__facebook"></li></a>
+            <a href="https://twitter.com/lineblocs?lang=en"><li class="socials__twitter"></li></a>
+        </ul>
     </div>
-</section>
-@endsection
+        <p>© 2020 LineBlocs.com. All rights reserved. </p>
+        
+    </footer>    
+</body>
+</html>
