@@ -1,4 +1,4 @@
-@extends('layouts.main_alt', ['show_drift' => FALSE])
+@extends('layouts.app_new', ['show_drift' => FALSE])
 @section('title') About :: @parent @endsection
 @section('content')
 

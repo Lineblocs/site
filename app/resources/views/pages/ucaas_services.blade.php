@@ -1,4 +1,4 @@
-@extends('layouts.main', ['footer_cls' => 'no-margin'])
+@extends('layouts.app_new', ['footer_cls' => 'no-margin'])
 @section('title') Home :: @parent @endsection
 @section('content')
     <!-- main -->
@@ -78,55 +78,51 @@
         <div class="landing__features-row"></div>
       </section>
 
-      <section class="landing__contact container">
-        <div class="row">
-          <div class="col s12 l6">
-            <h2>Learn More</h2>
-            <p class="landing__contact-description">
-              Have queries regarding our offerings? feel free to contact us.
-            </p>
-            <form class="landing__form" action="/contactSubmit" method="POST">
-              <div class="row">
-                <div class="col s12 l6">
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    name="first_name"
-                    minlength="2"
-                    required
-                  />
+      <section class="contact-form">
+            <div class="inner-holder">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                           
+                                <h2>Learn More</h2>
+                                <p>Have queries regarding our offerings? Feel free to contact us.</p>
+
+                                <form>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                          <input type="text" class="form-control" placeholder="Name">
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                          <input type="email" class="form-control" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <textarea class="form-control" id="textArea" placeholder="Message" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <button class="btn button" type="submit">Send message</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <small id="ppInfo" class="text-muted">
+                                                By clicking the button, you agree to Line block   
+                                            </small>
+                                        </div>
+                                    </div>      
+                                </form>
+                            
+                        </div>
+                        <div class="col-12 col-md-6 mobile-hidden my-auto">
+                            <img src="/images/cf-img.png" alt="Man" class="img-fluid">
+                        </div>
+                    </div>
                 </div>
-                <div class="col s12 l6">
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    name="last_name"
-                    minlength="2"
-                    required
-                  />
-                </div>
-                <div class="col s12 l12">
-                  <input type="email" placeholder="E-mail" name="email" required />
-                </div>
-                  <input type="hidden" name="_token" value="{{csrf_token()}}"/>
-                  <input type="hidden" name="comments" value=""/>
-                  <input type="hidden" name="region" value="{{$region['name']}}"/>
-                  <input type="hidden" name="country" value="{{$region['country']}}"/>
-                  <input type="hidden" name="contact_reason" value="region_lead"/>
-                  <input type="hidden" name="comments_not_required" value="1"/>
-              </div>
-              <textarea placeholder="Message"></textarea>
-              <button type="submit">Send message</button>
-              <p>
-                <small>By clicking the button you agree to line block</small>
-              </p>
-            </form>
-          </div>
-          <div class="col s12 l6">
-            <img src="/img/landing/learn-more.svg" alt="learn more image" />
-          </div>
-        </div>
-      </section>
+            </div>
+        </section>
     </main>
 @endsection
 @section('scripts')

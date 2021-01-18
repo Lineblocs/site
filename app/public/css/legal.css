@@ -1,7 +1,3 @@
-body {
-  font-family: 'Roboto', sans-serif;
-}
-
 h1 {
   font-size: 20px;
 }
@@ -98,9 +94,6 @@ i {
     margin: 50px 20px 0 0;
   }
 
-  .container {
-    padding: 30px 0;
-  }
   
   .mobile-navbar {
     display: none;
@@ -108,11 +101,6 @@ i {
 }
 
 @media screen and (max-width: 480px) {
-  .container {
-    padding-top: 70px;
-    padding-bottom: 30px;
-  }
-
   .sidebar {
     display: none;
   }
@@ -133,8 +121,10 @@ i {
 }
 .container.legal {
   margin: 0 auto;
-  max-width: 1280px;
-  width: 90%;
   padding-left: 0px;
   padding-right: 0px;
+}
+
+.container.legal h1 {
+  text-align: left;
 }

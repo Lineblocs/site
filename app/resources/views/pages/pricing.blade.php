@@ -1,4 +1,4 @@
-@extends('layouts.main_alt')
+@extends('layouts.app_new')
 @section('title') Home :: @parent @endsection
 @section('content')
 
@@ -22,10 +22,10 @@
       <section class="cards-section">
         <div class="container">
 
-          <div class="row">
+          <div class="row no-margin">
 
-            <div class=" col s12 l3">
-              <div class="card rounded">
+            <div class=" col-s12 col-md-3">
+              <div class="card">
 
                 <div class="card-content center">
                   <h5 class="">Pay As You Go</h5>
@@ -73,7 +73,7 @@
 
                 <div class="card-content center card-button">
                   <div>
-                    <div class="col s12">
+                    <div class="col-s12">
                       <a href="https://app.lineblocs.com/#/register?plan=go"><button>Get
                           Started</button></a>
                     </div>
@@ -83,8 +83,8 @@
               </div>
             </div>
 
-            <div class=" col s12 l3">
-              <div class="card rounded">
+            <div class=" col-s12 col-md-3">
+              <div class="card">
 
                 <div class="card-content center">
                   <h5 class="">Starter</h5>
@@ -129,7 +129,7 @@
 
                 <div class="card-content center card-button">
                   <div>
-                    <div class="col s12">
+                    <div class="col-s12">
                       <a href="https://app.lineblocs.com/#/register?plan=starter"><button>Get
                           Started</button></a>
                     </div>
@@ -139,8 +139,8 @@
               </div>
             </div>
 
-            <div class=" col s12 l3">
-              <div class="card rounded card-popular">
+            <div class=" col-s12 col-md-3">
+              <div class="card card-popular">
                 <div class="card-popular-corner">
 
                   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -218,7 +218,7 @@
                 </ul>
                 <div class="card-content center card-button">
                   <div>
-                    <div class="col s12">
+                    <div class="col-s12">
                       <a href="https://app.lineblocs.com/#/register?plan=pro"><button>Get
                           Started</button></a>
                     </div>
@@ -228,8 +228,8 @@
               </div>
             </div>
 
-            <div class=" col s12 l3">
-              <div class="card rounded">
+            <div class=" col-s12 col-md-3">
+              <div class="card">
 
                 <div class="card-content center">
                   <h5 class="">Ultimate</h5>
@@ -276,7 +276,7 @@
 
                 <div class="card-content center card-button">
                   <div class="">
-                    <div class="col s12">
+                    <div class="col-s12">
                       <a href="https://app.lineblocs.com/#/register?plan=ultimate"><button>Get
                           Started</button></a>
                     </div>
@@ -294,7 +294,7 @@
     <section class="pricing-comparison">
       <div class="container">
         <header>
-          <h2>Full plan comparison</h2>
+          <h3 class="hdg">Full plan comparison</h3>
         </header>
 
         <table class="pricing-table">

@@ -182,7 +182,7 @@
           </li>
           <li>
             <a href="https://app.lineblocs.com/#/login"><button type="submit"
-                class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
+                class="btn-custom service-btn top-login-btn btn-top"><span>Login</span></button></a>
           </li>
         </ul>
       </div>

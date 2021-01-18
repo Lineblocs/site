@@ -65,6 +65,7 @@
 
       // add classess
       container.className = "landing__features-content";
+      colImg.className = "margin-none";
 
       // populate elements with data
       if (feature.img !== null) {

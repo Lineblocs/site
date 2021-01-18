@@ -172,3 +172,6 @@
     margin-right: 10px;
   }
 }
+.system-status__states p {
+  margin-left: 0;
+}

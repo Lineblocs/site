@@ -1,4 +1,4 @@
-@extends('layouts.main_alt')
+@extends('layouts.app_new')
 @section('title') Home :: @parent @endsection
 @section('content')
 
