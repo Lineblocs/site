@@ -16,7 +16,7 @@
                         <div class="col-12 col-md-5 my-auto">
                             <h2 class="text-left">Low-Code Flow Editor</h2>
                             <p>Get access to an all-in-one flow editor that allows you to create highly customizable workflows for calls, fax, and IM. Our flow editor can be used to create any calling workflow imaginable.</p>
-                            <a href="#create-account" class="button btn primary-button">Create account</a>
+                            <a href="https://app.lineblocs.com/#/register" class="button btn primary-button">Create account</a>
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                         <div class="col-12 col-md-5 my-auto">
                             <h2 class="text-left">DID number portal</h2>
                             <p>Purchase numbers from a DID inventory that includes local, toll free, and vanity based numbers. We offer a full range of DIDs that span across multiple rate centers throughout North America</p>
-                            <a href="#create-account" class="button btn primary-button">Create account</a>
+                            <a href="https://app.lineblocs.com/#/register" class="button btn primary-button">Create account</a>
                         </div>
                         <div class="col-12 col-md-6 my-auto text-center">
                             <img src="./images/two-phones.png" alt="" class="img-fluid">
@@ -52,7 +52,7 @@
                         <div class="col-12 col-md-5 my-auto">
                             <h2 class="text-left">PoPs and high availability</h2>
                             <p>Our network allows you to provision extensions nearest to your location as well as rotate from more than 10+ PoPs across North America.</p>
-                            <a href="#create-account" class="button btn primary-button">Create account</a>
+                            <a href="https://app.lineblocs.com/#/register" class="button btn primary-button">Create account</a>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                         <div class="col-12 col-lg-6 my-auto">
                             <h2 class="text-left">Overcome Challenges with existing on-premise calling solutions</h2>
                             <p>Designed using the best technologies, Lineblocs offers features that can help you create a calling, fax, and IM environment that can easily scale.</p>
-                            <a href="#create-account" class="button btn primary-button bg-blue">Create account</a>
+                            <a href="https://app.lineblocs.com/#/register" class="button btn primary-button bg-blue">Create account</a>
                         </div>
                         <div class="col-12 col-lg-6 my-auto desktop-images">
                             <div class="row">
