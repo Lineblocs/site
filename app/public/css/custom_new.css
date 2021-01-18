@@ -155,7 +155,8 @@ table {
       font-size: 32px;
       font-weight: 500;
       color: #0a1247;
-      padding-bottom: 30px; }
+      padding-bottom: 30px;
+    text-align: center; }
     .learn_more-section .learn_more-content .learn_more-para {
       padding-bottom: 40px;
       font-size: 18px;
