@@ -63,7 +63,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/resources">Resources</a>
                             </li>
-                            <li class="nav-item"><a href="https://app.lineblocs.com/#/login"><button type="button" class="nav__btn">Login</button></a></li>
+                            <li class="nav-item"><a href="https://app.lineblocs.com/#/register"><button type="button" class="nav__btn">Try Free</button></a></li>
                         </ul>
                         <div class="mob-menu">
                             <div class="row socials mx-auto">
