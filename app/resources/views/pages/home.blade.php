@@ -123,7 +123,7 @@
                         <div class="col-12 col-lg-6">
                             <h2>Calling, IM<br /> and Fax services in</h2>
                             <div class="row place">
-                                <div class="col-3">
+                                <div class="col-md-3 col-sm-12">
                                     <h3>Canada:</h3>
                                 </div>
                                 <div class="col-9">

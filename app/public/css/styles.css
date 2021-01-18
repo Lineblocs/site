@@ -738,3 +738,15 @@ footer > p {
 .margin-none {
   margin: 0 0 0 0;
 }
+.hero__titleWrapper .primary-button {
+    background-color: #0a1247;
+    width: 328.95px;
+    height: 50px;
+    margin-top: 20px;
+    margin-left: 15px;
+    color: #fff;
+    font-weight: 400;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+}
