@@ -8,7 +8,9 @@
             <div class="hero__titleWrapper">
                     <h1>Your Lineblocs</h1>
                     <h2>LineBlocs is a fully custimizable cloud phone system for productive teams.</h2>
+                    <a href="https://app.lineblocs.com/#/register">
                     <button class="primary-button bg-blue">Get started in 30 seconds</button>
+                    </a>
             </div>
             <div class="hero__img"></div>
 

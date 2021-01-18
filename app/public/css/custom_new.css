@@ -321,3 +321,7 @@ ul:not(.browser-default) {
 .faq .card-stacked {
   margin: 0;
 }
+.mobile-navbar select {
+  width: 100%;
+  margin-bottom: 50px;
+}
