@@ -69,8 +69,8 @@
                             <div class="row socials mx-auto">
                                 <div class="col">
                                     <ul class="social__links">
-                                        <li class="socials facebook"></li>
-                                        <li class="socials twitter"></li>
+                                        <a target="_blank" href="https://www.facebook.com/lineblocs/"><li class="socials facebook"></li></a>
+                                        <a target="_blank" href="https://twitter.com/lineblocs?lang=en"><li class="socials twitter"></li></a>
                                     </ul>
                                 </div>
 
@@ -104,8 +104,12 @@
                     </div>
                     <div class="col-12 col-lg-2 my-auto">
                         <ul class="social__links">
+                            <a target="_blank" href="https://www.facebook.com/lineblocs/">
                             <li class="socials facebook"></li>
+                            </a>
+                            <a target="_blank" href="https://twitter.com/lineblocs?lang=en">
                             <li class="socials twitter"></li>
+                            </a>
                         </ul>
                     </div>
                 </div>
