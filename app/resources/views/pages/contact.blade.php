@@ -1,74 +1,86 @@
-
-@extends('layouts.main_alt')
+@extends('layouts.app_new')
 @section('title') Home :: @parent @endsection
 @section('content')
-  <div class="contact section no-pad-bot" id="index-banner">
-    <div class="container">
-      <div class="row">
-        <div class="col s12">
-            <h2>Contact Us</h2>
+    <div class="contact-page">
+        <section class="heading">
+            <h1>Contacts</h1>
             @if (Session::has('status'))
                 <div class="card blue-grey darken-1">
-                  <div class="card-content white-text">
-                    <span class="card-title">{{Session::get('status')}}</span>
-                  </div>
+                    <div class="card-content white-text">
+                        <span class="card-title">{{Session::get('status')}}</span>
+                    </div>
                 </div>
             @endif
-            <form method="POST" action="/contactSubmit">
+        </section>
+        <section class="content">
+            <div class="container">
                 <div class="row">
-                    <div class="input-field col s12 l4">
-                        <input name="first_name" id="first_name" type="text" class="validate no-special-chars" minlength="1" maxlength="24" required="">
-                        <label for="first_name">First Name</label>
-                    </div>
-                  </div>
-                <div class="row">
-                    <div class="input-field col s12 l4">
-                        <input name="last_name" id="last_name" type="text" class="validate no-special-chars" minlength="1" maxlength="24" required="">
+                    <div class="col-12 col-lg-6 column">
+                        <div class="phone">
+                            <p>The Telnyx Team is here to help answer any questions you may have. Fill out the form or call us at:</p>
+                            <a href="tel:+1 888 980 9750">+1 888 980 9750</a>
+                        </div>
 
-                        <label for="last_name">Last Name</label>
+                        <div class="address">
+                            <span>Address</span>
+                            <p>228 Hamilton Ave 3rd Floor<br />Palo Alto, CA 94301</p>
+                        </div>
+                        <div class="email">
+                            <span>E-mail</span>
+                            <a href="mailto:sales@lineblocs.com">sales@lineblocs.com</a>
+                        </div>
                     </div>
-                  </div>
-                <div class="row">
-                    <div class="input-field col s12 l4">
-                        <input name="email" id="email" type="email" class="validate" minlength="1" maxlength="128" required="">
+                    <div class="col-12 col-lg-6 contact-form column">
+                        <p>Have queries regarding our offerings? Feel free to contact us.</p>
+                        <form method="POST" action="/contactSubmit">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="wrapper">
+                                        <input name="first_name" id="first_name" type="text" class="validate no-special-chars form-control" minlength="1" maxlength="24" required="">
+                                        <span class="placeholder">Name</span>
+                                    </div>
 
-                        <label for="email">Email</label>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="wrapper">
+                                        <input name="email" id="email" type="email" class="validate form-control" minlength="1" maxlength="128" required="" >
+                                        <span class="placeholder">Email</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="wrapper">
+                                        <textarea name="comments" id="comments" class="materialize-textarea form-control" minlength="1" maxlength="1028" required="" rows="5"></textarea>
+                                        <span class="placeholder">Message</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                                    <button class="btn button" type="submit">Send message</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <small id="ppInfo" class="text-muted">
+                                        By clicking the button, you agree to Line block
+                                    </small>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                  </div>
-                <div class="row">
-                    <div class="input-field col s12 l4">
-                        <textarea name="comments" id="comments" class="materialize-textarea" minlength="1" maxlength="1028" required=""></textarea>
-                        <label for="comments">Comments</label>
-                    </div>
-                  </div>
-                <div class="row relative">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                    <div class="col s12">
-                      <div class="left margin-right-10">
-                          <button type="submit" class="btn-custom service-btn"><span>Send</span></button>
-                      </div>
-                      <div class="left">
-                          <a href="#" id="resetBtn">Reset</a>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </section>
     </div>
-  </div>
+
 @endsection
 @section('scripts')
 <script>
   $('input.no-special-chars').on('input', function() {
   $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
-});
-$("#resetBtn").click(function() {
-  $("#first_name").val("");
-  $("#last_name").val("");
-  $("#email").val("");
-  $("#comments").val("");
-
 });
 </script>
 @endsection

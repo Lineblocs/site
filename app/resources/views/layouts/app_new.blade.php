@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="/css/system-status.css">
   <link rel="stylesheet" href="/css/sip-trunking-networks.css">
   <link rel="stylesheet" href="/css/sip-trunking-networks-detail.css" />
+  <link rel="stylesheet" href="/css/dl_styles.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <script src="https://kit.fontawesome.com/cbbc235e67.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -49,7 +50,6 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <!--<span class="navbar-toggler-icon"></span>-->
                     </button>
 
                     <div class="collapse navbar-collapse" id="navbarsExample07">
@@ -114,7 +114,7 @@
                     </div>
                 </div>
             </div>
-           <p>© 1999-2020 LineBlocs.com. All rights reserved. </p>
+           <p>© 1999-2021 LineBlocs.com. All rights reserved. </p>
         </footer>
         @yield('scripts')
 
