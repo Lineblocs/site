@@ -163,6 +163,11 @@ class HomeController extends BaseController {
     $vars = [];
     return view('pages.contact', $vars);
   }
+  public function alternative(Request $request)
+  {
+    $vars = [];
+    return view('pages.alternative', $vars);
+  }
   public function contactSubmit(Request $request)
   {
     $data = $request->all();

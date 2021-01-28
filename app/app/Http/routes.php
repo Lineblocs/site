@@ -38,6 +38,7 @@ Route::post('/register/5', 'HomeController@register5Submit');
 Route::get('/back-to-billing', 'HomeController@backToBilling');
 Route::get('/back-to-billing-cancel', 'HomeController@backToBillingCancel');
 Route::get('/email-verify', 'HomeController@emailVerify')->name('email-verify');
+Route::get('/alternative', 'HomeController@alternative');
 Route::get('/alternative/ringcentral', 'HomeController@alternative_ringcentral');
 Route::get('/alternative/nextiva', 'HomeController@alternative_nextiva');
 Route::get('/alternative/dialpad', 'HomeController@alternative_dialpad');
