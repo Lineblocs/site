@@ -256,6 +256,18 @@ class HomeController extends BaseController {
   {
     return view('pages.alternative');
   }
+    public function alternative_nextiva(Request $request)
+    {
+        return view('pages.alternative');
+    }
+    public function alternative_dialpad(Request $request)
+    {
+        return view('pages.alternative');
+    }
+    public function alternative_grasshopper(Request $request)
+    {
+        return view('pages.alternative');
+    }
   public function flowbuilder_features(Request $request)
   {
     return view('pages.flowbuilder_features');

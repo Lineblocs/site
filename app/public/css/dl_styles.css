@@ -860,17 +860,6 @@ p{
     }
 }
 
-
-.primary-button{
-    background: #0A1247;
-    border-radius: 10px;
-    color: #FFFFFF;
-}
-.secondary-button{
-    border: 1px solid #0A1247;
-    border-radius: 10px;
-    color: #0A1247;
-}
 a.button{
     padding: 16px 38px;
     font-family: Poppins;
@@ -1991,6 +1980,28 @@ section.content{
         padding-left: 15px;
         padding-top: 0;
     }
+}
+.primary-button{
+    background: #0A1247;
+    border-radius: 10px;
+    color: #FFFFFF;
+}
+.secondary-button{
+    border: 1px solid #0A1247;
+    background: transparent;
+    border-radius: 10px;
+    color: #0A1247;
+}
+a.secondary-button{
+    color: #0A1247;
+}
+.secondary-button:hover{
+    background: #0A1247;
+    border-radius: 10px;
+    color: #fff;
+}
+a.secondary-button:hover{
+    color: #fff;
 }
 
 

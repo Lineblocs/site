@@ -66,7 +66,7 @@
             <div class="ov-block">
               <div class="row">
                 <div class="col-12 col-lg-2 icon-holder my-auto">
-                  <img src="./images/icon-fully-featured.png" alt="" class="icon">
+                  <img src="/images/icon-fully-featured.png" alt="" class="icon">
                 </div>
                 <div class="col-12 col-lg-10 heading">
                   <h3>Fully Featured</h3>
@@ -83,7 +83,7 @@
             <div class="ov-block">
               <div class="row">
                 <div class="col-12 col-lg-2 icon-holder my-auto">
-                  <img src="./images/icon-rocket.png" alt="" class="icon">
+                  <img src="/images/icon-rocket.png" alt="" class="icon">
                 </div>
                 <div class="col-12 col-lg-10 heading">
                   <h3>Integrations</h3>
@@ -103,7 +103,7 @@
             <div class="ov-block">
               <div class="row">
                 <div class="col-12 col-lg-2 icon-holder my-auto">
-                  <img src="./images/icon-scalable.png" alt="" class="icon">
+                  <img src="/images/icon-scalable.png" alt="" class="icon">
                 </div>
                 <div class="col-12 col-lg-10 heading">
                   <h3>Scalable pops</h3>
@@ -120,7 +120,7 @@
             <div class="ov-block">
               <div class="row">
                 <div class="col-12 col-lg-2 icon-holder my-auto">
-                  <img src="./images/coins.png" alt="" class="icon">
+                  <img src="/images/coins.png" alt="" class="icon">
                 </div>
                 <div class="col-12 col-lg-10 heading">
                   <h3>Flexible Pricing</h3>
@@ -238,7 +238,7 @@
 
           </div>
           <div class="col-12 col-md-6 mobile-hidden my-auto">
-            <img src="./images/analysis-cf.png" alt="Man" class="img-fluid">
+            <img src="/images/analysis-cf.png" alt="Man" class="img-fluid">
           </div>
         </div>
       </div>
@@ -368,12 +368,12 @@
       <div class="row">
         <div class="col-12 col-md-6">
           <a href="#link">
-            <img src="./images/review-2.png" alt="" class="img-fluid my-auto">
+            <img src="/images/review-2.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
         <div class="col-12 col-md-6">
           <a href="#link">
-            <img src="./images/review-1.png" alt="" class="img-fluid my-auto">
+            <img src="/images/review-1.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
       </div>

@@ -42,7 +42,7 @@ Route::get('/alternative', 'HomeController@alternative');
 Route::get('/alternative/ringcentral', 'HomeController@alternative_ringcentral');
 Route::get('/alternative/nextiva', 'HomeController@alternative_nextiva');
 Route::get('/alternative/dialpad', 'HomeController@alternative_dialpad');
-Route::get('/grasshopper/alternative', 'HomeController@grasshopper_alternative');
+Route::get('/alternative/grasshopper', 'HomeController@alternative_grasshopper');
 Route::get('/ucaas/', 'HomeController@ucaas');
 Route::get('/ucaas/{countryId}', 'HomeController@ucaas_country');
 Route::get('/ucaas/{countryId}/{regionId}', 'HomeController@ucaas_services');
