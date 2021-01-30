@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="description" content="Lineblocs is a fully custimizable cloud phone system for productive teams.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="/js/bootstrap.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -42,7 +44,7 @@
 </head>
 <body>
 
-        <header class="header main">
+        <header class="header">
             <nav class="navbar navbar-expand-md navbar-light" aria-label="Eighth navbar example">
                 <div class="container">
                     <a class="navbar-brand ml-0" href="/"><img src="/images/logo.png" alt="Logo"></a>
@@ -77,7 +79,7 @@
                             </div>
                             <div class="row rights">
                                 <div class="col">
-                                    <p>© 1999-2020 LineBlocs.com. All rights reserved. </p>
+                                    <p>© 1999-2021 LineBlocs.com. All rights reserved. </p>
                                 </div>
 
                             </div>
