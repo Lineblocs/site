@@ -116,7 +116,7 @@
     <div class="row cta-block">
       <div class="d-flex p-4">
         <img src="/images/hand-settings.png" alt="Icon Hand Settings" class="icon img-fluid my-auto">
-        <p>For more topics and support please view our <a href="#">Resources section</a></p>
+        <p>For more topics and support please view our <a href="/resources">Resources section</a></p>
       </div>
     </div>
   </div>

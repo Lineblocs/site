@@ -1591,12 +1591,14 @@ section p{
     /* Grey */
     color: #828495;
 }
-.list-faqs .card-header .btn[aria-expanded="true"]{
+.list-faqs .card-header .btn {
     font-style: normal;
     font-weight: normal;
     font-size: 37px;
     line-height: 120%;
     /* or 44px */
+}
+.list-faqs .card-header .btn[aria-expanded="true"]{
     /* Blue */
     color: #0A1247;
 }
@@ -1634,6 +1636,7 @@ section p{
 .list-faqs .btn{
     text-align: left;
 }
+
 .faq .cta-block{
     background: #6AD7FA;
     box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
@@ -1660,6 +1663,30 @@ section p{
 .faq .cta-block .icon{
     width: 52px;
     height: 52px;
+}
+@media (max-width: 767px) {
+    .list-faqs .card-header .btn{
+        font-style: normal;
+        font-weight: normal;
+        font-size: 24px;
+        line-height: 120%;
+    }
+    .list-faqs .card-body{
+        font-size: 18px;
+    }
+    h1{
+        font-size: 36px;
+    }
+    .faq .heading p{
+        font-size: 14px;
+    }
+    .list-faqs{
+        margin-top: 45px;
+        margin-bottom: 30px;
+    }
+    .faq .cta-block p{
+        font-size: 22px;
+    }
 }
 
 /*
@@ -2003,6 +2030,10 @@ a.secondary-button{
 a.secondary-button:hover{
     color: #fff;
 }
+.navbar-brand img{
+    max-width: 200px;
+}
+
 
 
 
