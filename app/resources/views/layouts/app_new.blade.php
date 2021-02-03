@@ -47,7 +47,7 @@
         <header class="header">
             <nav class="navbar navbar-expand-md navbar-light" aria-label="Eighth navbar example">
                 <div class="container">
-                    <a class="navbar-brand ml-0" href="/"><img src="/images/logo.png" alt="Logo"></a>
+                    <a class="navbar-brand ml-0" href="/"><img src="/images/Logo-Comp_03.png" alt="Logo"></a>
                     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
                         <span></span>
                         <span></span>

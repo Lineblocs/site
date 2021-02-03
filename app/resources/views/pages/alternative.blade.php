@@ -367,8 +367,8 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-6">
-          <a href="#link">
-            <img src="/images/review-2.png" alt="" class="img-fluid my-auto">
+          <a href="https://www.trustpilot.com/evaluate/lineblocs.com">
+            <img src="/images/logo-white.svg" alt="" class="img-fluid my-auto">
           </a>
         </div>
         <div class="col-12 col-md-6">
