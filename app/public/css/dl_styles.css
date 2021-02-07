@@ -1392,7 +1392,8 @@ header i.toggle-icon {
 
 }
 button:focus,
-.button:focus{
+.button:focus,
+.btn:focus{
     outline: none;
     box-shadow: none;
 }
@@ -2033,10 +2034,196 @@ a.secondary-button:hover{
 .navbar-brand img{
     max-width: 200px;
 }
+.breadcrumbs{
+    margin-top: 45px;
+    margin-bottom: 25px;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 130%;
+}
+.breadcrumbs a{
+    color: #0A1247;
+    opacity: 0.9;
+    padding-right: 6px;
+}
+.breadcrumbs a{
+    text-decoration: none;
+}
+.breadcrumbs span{
+    color: #828495;
+    opacity: 0.9;
+}
+.breadcrumbs span:before{
+    content: "•";
+    color: #0A1247;
+    padding-right: 10px;
+    opacity: 0.9;
+}
+.breadcrumbs a + a:before{
+    content: "•";
+    color: #0A1247;
+    padding-right: 10px;
+    opacity: 0.9;
+}
+.resources-section .cards{
+    margin-top: 45px;
+    margin-bottom: 150px;
+}
+.resources-section .card{
+    background: #FFFFFF;
+    box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
+    border-radius: 20px;
+    border: none;
+}
+.resources-section .card:hover{
+    cursor: pointer;
+    background: #FFFFFF;
+    box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.15);
+    border-radius: 20px;
+}
+.resources-section a.card{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 120%;
+    color: #0A1247;
+    padding: 33px 75px 33px 50px;
+}
+.resources-section a.card .content{
+    margin-left: 0;
+}
+.resources-section a.card p{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 130%;
+    color: #828495;
+    padding-top: 5px;
+    margin: 0;
+}
+.resources-section a.card:hover{
+    text-decoration: none;
+}
+.resources-section .arrow {
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    position: absolute;
+    right: 50px;
+    transform: rotate(45deg);
+}
+.resources-section .arrow:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    border-width: 1px 1px 0 0;
+    border-style: solid;
+    border-color: #828495;
+    transition: .2s ease;
+    display: block;
+    transform-origin: 100% 0;
+}
+.resources-section .arrow:after {
+     content: '';
+     float: left;
+     position: relative;
+     top: -100%;
+     width: 100%;
+     height: 100%;
+     border-width: 0 1px 0 0;
+     border-style: solid;
+     border-color: #828495;
+     transform-origin: 100% 0;
+     transition:.2s ease;
+ }
+.related-bar{
+    margin-top: 50px;
+}
+.resources-item h1{
+    text-align: left;
+    margin-bottom: 40px;
+}
+.resources-item h2{
+    margin-top: 50px;
+}
+.resources-item .resource{
+    margin-bottom: 100px;
+}
 
+@media (max-width: 767px) {
+    .resources-item .resource{
+        margin-bottom: 50px;
+    }
+}
+.resource ol {
+    padding-inline-start: 20px;
+}
+ul.related-items{
+    background: #FFFFFF;
+    /* For image */
 
+    box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.09);
+    border-radius: 20px;
+    padding: 30px 50px;
+    list-style-position: inside;
+}
+ul.related-items li:before{
+    content: "\2022";
+    color: #6AD7FA;
+    margin-left: -16px;
 
+}
+ul.related-items li a {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 130%;
+    color: #0A1247;
+    padding-left: 5px;
+}
+ul.related-items li a:hover{
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: none;
+}
+.resources-section .card.support-card-desktop{
+    background-color: #EEFCFC;
+    box-shadow: none;
+}
+.resources-section .card.support-card-desktop .card-content p{
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 130%;
+    color: #0A1247;
+    margin-bottom: 20px;
+}
+.resources-section .card.support-card-desktop .card-content p.heading{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 120%;
+    color: #0A1247;
+    margin-bottom: 10px;
+}
+.resources-section .card.support-card-desktop .card-content .btn{
+    padding: 16px 35px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 100%;
+    /* identical to box height, or 18px */
 
+    text-align: center;
+
+    color: #FFFFFF;
+}
+.resources-section .card.support-card-desktop:hover{
+    cursor: auto;
+}
 
 
 
