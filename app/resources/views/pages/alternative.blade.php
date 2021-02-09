@@ -367,13 +367,13 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-6">
-          <a href="https://www.trustpilot.com/evaluate/lineblocs.com">
-            <img src="/images/logo-white.svg" alt="" class="img-fluid my-auto">
+          <a href="https://www.trustpilot.com/evaluate/lineblocs.com" target="_blank" title="Lineblocs on Trustpilot">
+            <img src="/images/trustpilot_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
         <div class="col-12 col-md-6">
-          <a href="#link">
-            <img src="/images/review-1.png" alt="" class="img-fluid my-auto">
+          <a href="https://www.g2.com/products/lineblocs/reviews" target="_blank" title="Lineblocs on G2Crowd">
+            <img src="/images/g2crowd_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
       </div>

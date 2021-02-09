@@ -2225,6 +2225,27 @@ a:hover{
     cursor: auto;
 }
 
+#scrollToTop {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #0a1247;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 28px;
+}
+
+#scrollToTop:hover {
+    background-color: #fff;
+    color: #0a1247;
+    font-size: 28px;
+}
 
 
 

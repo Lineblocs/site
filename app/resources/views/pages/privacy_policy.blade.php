@@ -163,7 +163,12 @@
             <a href="contact@lineblocs.com">contact@lineblocs.com</a>
           </div>
         </div>
-     </div>
+         <button onclick="function topFunction() {
+               document.body.scrollTop = 0; // For Safari
+                 document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+         }
+         topFunction()" id="scrollToTop" title="Go to top"><i class="far fa-arrow-alt-circle-up"></i></button>
+       </div>
 
      @section('scripts')
      <script>
@@ -171,6 +176,20 @@
           jQuery("#selectbox").change(function () {
               location.href = jQuery(this).val();
           })
+
+         let mybutton = document.getElementById("scrollToTop");
+
+         // When the user scrolls down 20px from the top of the document, show the button
+         window.onscroll = function() {scrollFunction()};
+
+         function scrollFunction() {
+           if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+             mybutton.style.display = "block";
+           } else {
+             mybutton.style.display = "none";
+           }
+         }
+
       })
      </script>
      @endsection
