@@ -5,7 +5,7 @@
     <div class="container resource">
         <div class="row breadcrumbs">
             <div class="col s12">
-                <a href="/resources/">Resources</a> <a
+                <a href="/resources">Resources</a> <a
                     href="/resources/{{$theSection['link']}}">{{$theSection['name']}}</a>  <span>{{$title}}</span>
             </div>
         </div>

@@ -17,19 +17,20 @@
 
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/common.css">
+
   <link rel="stylesheet" href="/css/features/service-content.css">
   <link rel="stylesheet" href="/css/features/overview-section.css">
   <link rel="stylesheet" href="/css/faq-page.css">
   <link rel="stylesheet" href="/css/about/about.css">
   <link rel="stylesheet" href="/css/contact.css">
-  <link rel="stylesheet" href="/css/resources-page/resources.css" />
+  <!--<link rel="stylesheet" href="/css/resources-page/resources.css" />-->
   <link rel="stylesheet" href="/css/resources-section.css">
   <link rel="stylesheet" href="/css/region_landing.css">
   <link rel="stylesheet" href="/css/pricing.css">
   <link rel="stylesheet" href="/css/our-pricing.css">
 
   <link rel="stylesheet" href="/css/about/about.css">
-  <link rel="stylesheet" href="/css/resources.css" />
+  <!--<link rel="stylesheet" href="/css/resources.css" />-->
   <link rel="stylesheet" href="/css/landing.css" />
   <link rel="stylesheet" href="/css/system-status.css">
   <link rel="stylesheet" href="/css/sip-trunking-networks.css">
@@ -43,8 +44,12 @@
 
 </head>
 <body>
+    @if (isset($header_cls))
+        <header class="header {{$header_cls}}">
+        @else
+            <header class="header">
+                @endif
 
-        <header class="header">
             <nav class="navbar navbar-expand-md navbar-light" aria-label="Eighth navbar example">
                 <div class="container">
                     <a class="navbar-brand ml-0" href="/"><img src="/images/Logo-Comp_03.png" alt="Logo"></a>
@@ -65,7 +70,15 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/resources">Resources</a>
                             </li>
-                            <li class="nav-item"><a href="https://app.lineblocs.com/#/register"><button type="button" class="nav__btn">Try Free</button></a></li>
+                            <li class="nav-item">
+                                <a href="https://app.lineblocs.com/#/register">
+                                    @if (isset($header_cls))
+                                        <button type="button" class="nav__btn">Login</button>
+                                    @else
+                                        <button type="button" class="nav__btn">Try Free</button>
+                                    @endif
+                                </a>
+                            </li>
                         </ul>
                         <div class="mob-menu">
                             <div class="row socials mx-auto">

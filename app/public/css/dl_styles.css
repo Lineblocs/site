@@ -1877,7 +1877,7 @@ section p{
 .analysis-page section.faq{
     padding-top: 100px;
     border-top: 1px solid #E8E8EB;
-    background-image: url("/images/blue-dots-down.png");
+    background-image: url('/images/blue-dots-down.png');
     background-repeat: no-repeat;
     background-position: 90% 10%;
     background-size: 70px;
@@ -2224,6 +2224,10 @@ a:hover{
 .resources-section .card.support-card-desktop:hover{
     cursor: auto;
 }
+.resources-item img{
+    max-width: 100%;
+    height: auto;
+}
 
 #scrollToTop {
     display: none;
@@ -2246,7 +2250,159 @@ a:hover{
     color: #0a1247;
     font-size: 28px;
 }
+.resources .search{
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.resources #search-box{
+    position: relative;
+    margin:  30px auto 60px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border: 1px solid #D7D8E1;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 20px 100px rgba(10, 18, 71, 0.05));
+    border-radius: 20px;
+}
+.resources #search-form{
+    height: 65px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.resources #search-text{
+    font-size: 14px;
+    color: #ddd;
+    border-width: 0;
+    background: transparent;
+    line-height: 15px;
+}
+.resources #search-box input[type="search"]{
+    width: 90%;
+    padding: 10px 0 5px 1em;
+    color: #333;
+    outline: none;
+    border: none;
+    height: 56px;
+}
+.resources #search{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    height: 50px;
+    width: 160px;
+    color: #fff;
+    text-align: center;
+    border-width: 0;
+    cursor: pointer;
+    border-radius: 10px;
+    outline: 0;
+}
+
+@media (max-width: 767px) {
+    .resources #search span{
+        display: none;
+    }
+    .resources #search{
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        top: 16px;
+    }
+    .resources #search i{
+        background: url('/images/search-icon.png');
+        display: block;
+        width: 30px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    }
+}
+
+@media (min-width: 768px) {
+    .resources #search i{
+        display: none;
+    }
+}
 
 
+@media (min-width: 1024px){
+    .resources .input-field {
+        margin-bottom: auto;
+    }
+}
+.resources .tile {
+    background: #FFFFFF;
+    box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 20px;
+    border: none;
+}
+.resources .tile .title p{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 120%;
+    color: #0A1247;
+}
+.resources .tile .title .row{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.resources .tile .title p.muted{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 120%;
+    color: #828495;
+}
 
+@media (max-width: 767px) {
+    .resources .tile .title p.muted{
+        display: none;
+    }
+    .resources .tile .title{
+        margin-bottom: 15px;
+    }
+}
+.resources .tile .links ul li{
+    padding-bottom: 20px;
+}
+.resources .tile .links ul li a{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 100%;
+    color: #0A1247;
+}
+
+.resources .tile .links ul li a.view-all{
+    font-weight: 500;
+    color: #6AD7FA;
+}
+.resources .tile .links ul li a.view-all:after{
+    content: ">";
+    padding-left: 5px;
+}
+.resources .tile .links ul li a:hover,
+.resources .tile .links ul li a.view-all:hover{
+ font-weight: 500;
+ font-size: 18px;
+ line-height: 100%;
+ color: #0A1247;
+}
+header.resources{
+    background: #f4fdfd;
+}
+header.resources .container{
+    max-width: 90%;
+}
+
+@media (min-width: 1400px) {
+    header.resources .container{
+        max-width: 1400px;
+    }
+}
 
