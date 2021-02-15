@@ -70,7 +70,15 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/resources">Resources</a>
                             </li>
-                            <li class="nav-item"><a href="https://app.lineblocs.com/#/register"><button type="button" class="nav__btn">Try Free</button></a></li>
+                            <li class="nav-item">
+                                <a href="https://app.lineblocs.com/#/register">
+                                    @if (isset($header_cls))
+                                        <button type="button" class="nav__btn">Login</button>
+                                    @else
+                                        <button type="button" class="nav__btn">Try Free</button>
+                                    @endif
+                                </a>
+                            </li>
                         </ul>
                         <div class="mob-menu">
                             <div class="row socials mx-auto">

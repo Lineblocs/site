@@ -2393,6 +2393,9 @@ a:hover{
  line-height: 100%;
  color: #0A1247;
 }
+header.resources{
+    background: #f4fdfd;
+}
 header.resources .container{
     max-width: 90%;
 }
