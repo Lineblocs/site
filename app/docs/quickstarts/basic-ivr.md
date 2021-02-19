@@ -64,6 +64,6 @@ You should now be able to hear your IVR in action! When you call your DID number
 
 In this guide we went over how to setup a IVR. For other related guides be sure to view the following:
 
-[Recordings and Voicemail](http://lineblocs.com/resources/quickstarts/recordings-and-voicemail)
+[Recordings and Voicemail](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)
 
-[Setup Extension](http://lineblocs.com/resources/quickstarts/setup-extension)
+[Setup Extension](https://lineblocs.com/resources/quickstarts/setup-extension)

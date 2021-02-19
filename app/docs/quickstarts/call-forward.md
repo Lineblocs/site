@@ -55,6 +55,6 @@ Your calls should be now forwarded to the number you specified along with the Ca
 
 In this guide we discussed setting up a simple call forward. for more advanced configurations please see guides below:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
-[Setup Extension](http://lineblocs.com/resources/quickstarts/setup-extension)
+[Setup Extension](https://lineblocs.com/resources/quickstarts/setup-extension)

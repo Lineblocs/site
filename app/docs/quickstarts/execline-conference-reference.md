@@ -248,6 +248,6 @@ Use the host number to call into the conferenciing line
 
 In this guide we went over a reference conferencing app integration. For more related articles please see:
 
-[Create a cold transfer](http://lineblocs.com/resources/quickstarts/setup-cold-transfers)
+[Create a cold transfer](https://lineblocs.com/resources/quickstarts/setup-cold-transfers)
 
-[Setup Macro for Business Hours](http://lineblocs.com/resources/quickstarts/business-hours-with-custom-macros)
+[Setup Macro for Business Hours](https://lineblocs.com/resources/quickstarts/business-hours-with-custom-macros)

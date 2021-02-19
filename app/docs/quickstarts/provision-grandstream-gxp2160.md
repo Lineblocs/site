@@ -69,7 +69,7 @@ Model: Grandstream GXP2160
 
 In order for our phone to register as well as fetch its configuration details such as its Extension #, SIP Server URL and other GXP21XX related settings we will need to create a "Global Template". 
 
-To setup a global template please go to the [Provisioning -> Global Templates](http://app.lineblocs.com/#/provision/global-settings) section in Lineblocs dashboard.
+To setup a global template please go to the [Provisioning -> Global Templates](https://app.lineblocs.com/#/provision/global-settings) section in Lineblocs dashboard.
 
 On the Global Templates page please click "Add Global Settings"
 
@@ -127,7 +127,7 @@ Please save all changes once you are complete.
 
 Your phone is now ready to fetch its configuration from Lineblocs.
 
-To Deploy the config please go to ["Provision" -> "Deploy Now"](http://app.lineblocs.com/#/provision/deploy).
+To Deploy the config please go to ["Provision" -> "Deploy Now"](https://app.lineblocs.com/#/provision/deploy).
 
 You should see that there is "1" phone pending provision on this page.
 
@@ -149,6 +149,6 @@ For tips on troubleshooting please read article [Debugging Config Deployment](ht
 
 In this guide we discussed how to provision a Grandstream GXP2160 in Lineblocs phone provisioner. For related articles be sure to check out the following posts:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
-[Setup Extension](http://lineblocs.com/resources/quickstarts/setup-extension)
+[Setup Extension](https://lineblocs.com/resources/quickstarts/setup-extension)

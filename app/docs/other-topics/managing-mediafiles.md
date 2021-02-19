@@ -28,6 +28,6 @@ To remove a media file, please click the ![Trash](/img/frontend/docs/shared/tras
 
 for related articles please see the following:
 
-[Blocking A Number](http://lineblocs.com/resources/other-topics/blocking-a-number)
+[Blocking A Number](https://lineblocs.com/resources/other-topics/blocking-a-number)
 
-[Create Extension Codes](http://lineblocs.com/resources/other-topics/create-extension-codes)
+[Create Extension Codes](https://lineblocs.com/resources/other-topics/create-extension-codes)

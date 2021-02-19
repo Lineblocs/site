@@ -4,7 +4,7 @@ Lineblocs tries to prevent call spam internally, using an array of methods. Howe
 
 ## Reporting Calls
 
-To report spam related calls, please reach out to us using our [Contact Us](http://lineblocs.com/contact) page. 
+To report spam related calls, please reach out to us using our [Contact Us](https://lineblocs.com/contact) page. 
 
 Please be sure to provide us the following details:
 
@@ -23,6 +23,6 @@ If we find out this is a case of call spam we will take immediate action to pena
 
 For related articles be sure to check out:
 
-[Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
+[Usage Limits](https://lineblocs.com/resources/other-topics/usage-limits)
 
-[Account Settings](http://lineblocs.com/resources/other-topics/account-settings)
+[Account Settings](https://lineblocs.com/resources/other-topics/account-settings)

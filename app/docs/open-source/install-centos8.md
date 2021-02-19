@@ -250,8 +250,8 @@ be sure to follow the login link given in step 7 to login to lineblocs. you will
 
 this tutorial went over how to install lineblocs open source edition. for related articles be sure to check out the following.
 
-[Creating Trunks](http://lineblocs.com/resources/open-source/creating-trunks)
+[Creating Trunks](https://lineblocs.com/resources/open-source/creating-trunks)
 
-[Working with routes](http://lineblocs.com/resources/open-source/working-with-routes)
+[Working with routes](https://lineblocs.com/resources/open-source/working-with-routes)
 
-[Setup Open Source Extension](http://lineblocs.com/resources/open-source/setup-extension)
+[Setup Open Source Extension](https://lineblocs.com/resources/open-source/setup-extension)

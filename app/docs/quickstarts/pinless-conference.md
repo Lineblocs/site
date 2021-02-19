@@ -63,6 +63,6 @@ Your team members should now be able to join conference calls using your DID num
 
 in this guide we discussed setting up pinless based conference. for other related quickstart posts please see guides below:
 
-[Setup Pin Conference](http://lineblocs.com/resources/quickstarts/pin-conference)
+[Setup Pin Conference](https://lineblocs.com/resources/quickstarts/pin-conference)
 
 [Voicemail and Recordings](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)

@@ -73,9 +73,9 @@ Our DID will be used by outside callers that will need to place calls and speak 
 
 We will register a DID and setup a call forward workflow so that extension 1000 can receive calls directly from our DID, and then forward them to 1001 using our newly created extension code.
 
-To learn more about registering DIDs please refer to: [Creating Extensions](https://lineblocs.com/resources/managing-numbers/purchase-numbers)
+To learn more about registering DIDs please refer to: [Creating Extensions](https://lineblocs.com/resources/quickstarts/setup-extension)
 
-To learn how to create a call transfer flow please read this post: [Call Transfer](https://lineblocs.com/resources/quickstarts/call-forward-extension)
+To learn how to create a call transfer flow please read this post: [Call Transfer](https://lineblocs.com/resources/quickstarts/create-cold-transfer)
 
 ## Testing Cold Transfer
 
@@ -87,6 +87,6 @@ When you receive calls on your DID they should be forwarded to "1000" you can pr
 
 In this guide we discussed setting up cold transfers on Lineblocs. for other related quickstart posts please see guides below:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
 [Voicemail and Recordings](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)

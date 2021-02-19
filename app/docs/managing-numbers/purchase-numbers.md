@@ -22,5 +22,5 @@ Once you have purchased a new number you can change the number's settings accord
 
 For related guides please see the following:
 
-- [Porting Numbers](http://lineblocs.com/resources/managing-numbers/porting-numbers)
-- [Releasing Numbers](http://lineblocs.com/resources/managing-numbers/releasing-numbers)
+- [Porting Numbers](https://lineblocs.com/resources/managing-numbers/porting-numbers)
+- [Releasing Numbers](https://lineblocs.com/resources/managing-numbers/release-numbers)

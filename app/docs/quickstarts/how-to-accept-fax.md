@@ -14,7 +14,7 @@ When you search for a DID on lineblocs you can check if the number has fax servi
 
 By default any DID you purchase on lineblocs will be set to accept voice calls. to update the number to accept fax please use the following steps:
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
+1. Login to your Lineblocs account at [app.linelocs.com/#/login](https://app.lineblocs.com/#/login)
 2. In the left nav click "DID numbers"
 3. click "Edit" on the number you want to change
 4. change "DID Action" to "Accept Fax"
@@ -37,6 +37,6 @@ To remove a Fax message please click the "Delete" icon in the Fax messages list 
 
 In this guide we discussed how you can setup a DID to accept fax. for more related articles please see:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
-[Setup Extension](http://lineblocs.com/resources/quickstarts/setup-extension)
+[Setup Extension](https://lineblocs.com/resources/quickstarts/setup-extension)

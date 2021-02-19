@@ -34,6 +34,6 @@ Please click the "Delete" button next to the Extension you want to remove.
 
 In this guide we went over how to create and connect to extensions. For related posts be sure to view:
 
-[Extension security best practice](http://lineblocs.com/resources/other-topics/extension-security)
+[Extension security best practice](https://lineblocs.com/resources/other-topics/extension-security)
 
-[Avoiding call spam](http://lineblocs.com/resources/other-topics/call-spam)
+[Avoiding call spam](https://lineblocs.com/resources/other-topics/report-spam)

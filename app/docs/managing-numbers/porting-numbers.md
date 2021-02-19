@@ -74,6 +74,6 @@ then click the ![](/img/frontend/docs/shared/edit.png) icon on the ported number
 
 For more info on managing numbers or billing related to numbers be sure to see articles below:
 
-[Managing Numbers](http://lineblocs.com/resources/managing-numbers/manage-numbers)
+[Managing Numbers](https://lineblocs.com/resources/managing-numbers/manage-numbers)
 
-[Monthly Invoices](http://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
+[Monthly Invoices](https://lineblocs.com/resources/billing-and-pricing/monthly-invoices)

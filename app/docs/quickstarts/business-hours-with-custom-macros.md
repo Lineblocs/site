@@ -166,6 +166,6 @@ You should be able to call your number and see your business hours check working
 
 in this guide we discussed setting up macros on lineblocs. for other related quickstart posts please see guides below:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
 [Voicemail and Recordings](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)

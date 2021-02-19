@@ -10,7 +10,7 @@ In this guide we will discuss how to setup a usage trigger on Lineblocs.
 
 To setup a usage trigger:
 
-1. On Lineblocs dashboard go to the [Billing Page](http://app.lineblocs.com/#/dashboard/billing)
+1. On Lineblocs dashboard go to the [Billing Page](https://app.lineblocs.com/#/dashboard/billing)
 2. click tab "Limits"
 3. under Usage Triggers click "Create New"
 4. Select a type of usage trigger
@@ -21,6 +21,6 @@ To setup a usage trigger:
 
 for related articles be sure to check out:
 
-[Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
+[Usage Limits](https://lineblocs.com/resources/other-topics/usage-limits)
 
-[Account Settings](http://lineblocs.com/resources/other-topics/account-settings)
+[Account Settings](https://lineblocs.com/resources/other-topics/account-settings)

@@ -68,6 +68,6 @@ Your callers should now be placed in a queue with music on hold when they call y
 
 In this guide we discussed setting up call queues on Lineblocs. for other related quickstart posts, be sure to view the following:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
 [Voicemail and Recordings](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)

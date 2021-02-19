@@ -23,6 +23,6 @@ To remove a card you can click the ![trash](/img/frontend/docs/shared/trash.png)
 
 For more info on billing matters please see articles below:
 
-[Call Pricing](http://lineblocs.com/resources/billing-and-pricing/call-pricing)
+[Call Pricing](https://lineblocs.com/resources/billing-and-pricing/call-pricing)
 
-[Monthly Invoices](http://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
+[Monthly Invoices](https://lineblocs.com/resources/billing-and-pricing/monthly-invoices)

@@ -5,7 +5,7 @@ You can use the Lineblocs dashboard to add credit to your account at any time.
 ## Adding Credit using a Card
 
 
-1. In Lineblocs dashboard go to the [Billing Section](http://app.lineblocs.com/#/dashboard/billing)
+1. In Lineblocs dashboard go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
 2. Select a card and the desired credit amount
 3. Click &nbsp;&nbsp;&nbsp;&nbsp;![Pay PayPal](/img/frontend/docs/shared/add-credit.png)
 
@@ -21,6 +21,6 @@ to use PayPal as a checkout method:
 
 For more info on billing related topics, please see articles below:
 
-[Call Pricing](http://lineblocs.com/resources/billing-and-pricing/call-pricing)
+[Call Pricing](https://lineblocs.com/resources/billing-and-pricing/call-pricing)
 
-[Monthly Invoices](http://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
+[Monthly Invoices](https://lineblocs.com/resources/billing-and-pricing/monthly-invoices)

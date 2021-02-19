@@ -31,6 +31,6 @@ To save your number settings, click "Save"
 
 For other related guides be sure to check out the following:
 
-[Porting Numbers](http://lineblocs.com/resources/managing-numbers/porting-numbers)
+[Porting Numbers](https://lineblocs.com/resources/managing-numbers/porting-numbers)
 
-[Monthly Invoices](http://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
+[Monthly Invoices](https://lineblocs.com/resources/billing-and-pricing/monthly-invoices)

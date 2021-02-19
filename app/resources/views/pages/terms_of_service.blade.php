@@ -48,7 +48,7 @@
         </div>
         <div class="parent-group">
           <h1>4.	PRIVACY POLICY</h1>
-          <div class="block"> <b>4.1</b> By accessing the Services and submitting your Personal Information, you consent to the collection, use, transmission and disclosure of your Personal Information in accordance with our privacy policy (<b>“Privacy Policy”</b>), found <a href="./privacy.html">here</a>. </div>
+          <div class="block"> <b>4.1</b> By accessing the Services and submitting your Personal Information, you consent to the collection, use, transmission and disclosure of your Personal Information in accordance with our privacy policy (<b>“Privacy Policy”</b>), found <a href="/pages/privacy-policy">here</a>. </div>
         </div>
         <div class="parent-group">
           <h1>5.	USER ACCOUNTS</h1>
@@ -100,7 +100,7 @@
         </div>
         <div class="parent-group">
           <h1>11.	THIRD-PARTY SERVICES</h1>
-          <div class="block"> <b>11.1 Third-Party Software and Licenses.</b> The Services contain third-party software and open-source software that may be subject to their own licences. These licences may contain additional terms and conditions. The Customer understands and acknowledges that such software is not licensed to it pursuant to the provisions of these Terms and that these Terms may not be construed to grant any such right and/or licence. The third-party software licences are incorporated into these Terms. By accepting these Terms and accessing and using the Services, the Customer also accepts these licences. To access any third-party licenses, please contact us at <a href="contact@lineblocs.com">contact@lineblocs.com</a>. </div>
+          <div class="block"> <b>11.1 Third-Party Software and Licenses.</b> The Services contain third-party software and open-source software that may be subject to their own licences. These licences may contain additional terms and conditions. The Customer understands and acknowledges that such software is not licensed to it pursuant to the provisions of these Terms and that these Terms may not be construed to grant any such right and/or licence. The third-party software licences are incorporated into these Terms. By accepting these Terms and accessing and using the Services, the Customer also accepts these licences. To access any third-party licenses, please contact us at <a href="mailto:contact@lineblocs.com">contact@lineblocs.com</a>. </div>
           <div class="block"> <b>11.2 Hosting.</b> The Provider will cause the Software and accounts on the Services to be hosted on third-party servers maintained and operated by one or more reputable third-party service providers. The Provider will be responsible for contracting with the third-party service providers, and for paying all fees and charges of the third-party service providers. All Customer Data stored on the Services is located on servers operated by the third-party service providers based on their hosting policies.</div>
           <div class="block"> <b>11.3 Third-Party Services.</b> The Services may provide links to third-party sites and content that are not owned or monitored by the Provider (<b>“Third-Party Services”</b>). The Provider makes no representations about any Third-Party Services that may be accessed from the Services. The Provider does not endorse, approve or guarantee the accuracy of any content on the Third-Party Services, and when visiting them the Customer will no longer be governed by these Terms and our Privacy Policy. The Customer and its Users should familiarize themselves with and are responsible for reading and understanding the terms and conditions, privacy policies and data security practices of the Third-Party Services accessed. Those are the policies and practices that will apply to the use of the Third-Party Services. If the Customer or its Users choose to access any Third-Party Services, it is done at their own risk. The Provider has no control over the contents of any Third-Party Services and accept no responsibility for such services or for any loss or damage that may arise from the use of them. </div>
           <div class="block"> Links to Third-Party Services from the Services may include links to social media features that may enable Users to link, transmit or display on its own or using Third-Party Services, certain content from the Services. Users may only use these features when they are provided by the Provider and solely with respect to the content identified by the Provider.</div>
@@ -165,7 +165,7 @@
         <div class="parent-group">
           <h1>18.	QUESTIONS</h1>
           <div class="block"> <b>18.1</b> If you have any questions regarding these Terms or your use of the Services, please contact us here:
-            <p><a href="contact@lineblocs.com">contact@lineblocs.com</a></p>
+            <p><a href="mailto:contact@lineblocs.com">contact@lineblocs.com</a></p>
           </div>
         </div>
       </div>

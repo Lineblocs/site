@@ -18,6 +18,6 @@ Billing charges for your number will be terminated on the 1st of the following m
 
 For more info on managing numbers or billing posts, please see:
 
-[Managing Numbers](http://lineblocs.com/resources/managing-numbers/manage-numbers)
+[Managing Numbers](https://lineblocs.com/resources/managing-numbers/manage-numbers)
 
-[Monthly Invoices](http://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
+[Monthly Invoices](https://lineblocs.com/resources/billing-and-pricing/monthly-invoices)

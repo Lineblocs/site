@@ -10,7 +10,7 @@ In this example we will setup a flow that only forwards a call to an agent durin
 
 ## Getting Started
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
+1. Login to your Lineblocs account at [app.linelocs.com/#/login](https://app.lineblocs.com/#/login)
 2. click "Settings" in the left menu
 3. click "Workspace Params"
 
@@ -31,7 +31,7 @@ When you are done please click "Save"
 
 To create a new lineblocs flow based on your timezone availability:
 
-1. Login to your Lineblocs account at [app.linelocs.com/#/login](http://app.lineblocs.com/#/login)
+1. Login to your Lineblocs account at [app.linelocs.com/#/login](https://app.lineblocs.com/#/login)
 2. click "Create" button on the top right
 3. click "New Flow"
 4. enter name "Business Hours Check"
@@ -162,6 +162,6 @@ You should be able to call your number and see your business hours check working
 
 In this guide we discussed setting up macros on lineblocs. For other related quickstart posts be sure to check out:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
 [Voicemail and Recordings](https://lineblocs.com/resources/quickstarts/recordings-and-voicemail)

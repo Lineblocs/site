@@ -24,7 +24,7 @@
               Lineblocs Ltd. and its affiliates (referred to collectively as “<b>Lineblocs</b>”, “<b>we</b>”, “<b>us</b>” and terms of similar meaning) respect your privacy and is committed to protecting it by complying with the terms outlined in this Lineblocs Privacy Policy (“<b>Privacy Policy</b>”). This Privacy Policy describes how we collect, use, share and protect personal information from our users and contractors (“<b>you</b>”) through providing the Lineblocs unified communications platform (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) (the “<b>Services</b>”).
             </div>
             <div>
-              We will only use your personal information in accordance with this Privacy Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes. By accessing the Services, you confirm that you have read and understand our Terms and Conditions (“<b>Terms</b>”), found <a href="./terms.html">here</a>, and this Privacy Policy before using the Services.
+              We will only use your personal information in accordance with this Privacy Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes. By accessing the Services, you confirm that you have read and understand our Terms and Conditions (“<b>Terms</b>”), found <a href="/pages/tos">here</a>, and this Privacy Policy before using the Services.
             </div>
             
             <div class="parent-group">
@@ -160,7 +160,7 @@
             </div>
                           
             <h1>Privacy Officer</h1>
-            <a href="contact@lineblocs.com">contact@lineblocs.com</a>
+            <a href="mailto:contact@lineblocs.com">contact@lineblocs.com</a>
           </div>
         </div>
          <button onclick="function topFunction() {

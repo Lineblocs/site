@@ -53,6 +53,6 @@ Your agents should now be able to screen calls as per your workflow. To test the
 
 in this guide we discussed setting up a simple call screening. for more advanced configurations please see guides below:
 
-[Simple IVR](http://lineblocs.com/resources/quickstarts/basic-ivr)
+[Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 
 [Cold Transfer](https://lineblocs.com/resources/quickstarts/create-cold-transfer)

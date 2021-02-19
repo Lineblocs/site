@@ -21,6 +21,6 @@ To remove a blocked number please click ![Trash](/img/frontend/docs/shared/trash
 
 For related articles please see the following:
 
-[Managing IP Whitelist](http://lineblocs.com/resources/other-topics/managing-ip-whitelist)
+[Managing IP Whitelist](https://lineblocs.com/resources/other-topics/managing-ip-whitelist)
 
-[Account Settings](http://lineblocs.com/resources/other-topics/account-settings)
+[Account Settings](https://lineblocs.com/resources/other-topics/account-settings)

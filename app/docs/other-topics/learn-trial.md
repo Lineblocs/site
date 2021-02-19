@@ -24,12 +24,12 @@ To upgrade your account to a dedicated membership please add a valid billing met
 
 If you wish to use pay as you go plan you will need to add a valid billing method and an amount of credit. 
 
-To learn how to add credit please view [Add Credit](http:///lineblocs.com/resources/billing-and-pricing/add-credit)
+To learn how to add credit please view [Add Credit](https:///lineblocs.com/resources/billing-and-pricing/add-credit)
 
 ## Next Steps
 
 For related articles be sure to view:
 
-[Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
+[Usage Limits](https://lineblocs.com/resources/other-topics/usage-limits)
 
-[Account Settings](http://lineblocs.com/resources/other-topics/account-settings)
+[Account Settings](https://lineblocs.com/resources/other-topics/account-settings)

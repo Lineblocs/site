@@ -154,6 +154,14 @@ sections:
         description: learn how to store WAV/MP3 media files on lineblocs as well as use them in lineblocs flows
         link: managing-mediafiles
         tags: managing, media files, media, cloud, google drive, lineblocs
+      - name: Debugging config deployment
+        description: learn how to troubleshoot any issues with your Lineblocs configurations
+        link: debugging-config-deploy
+        tags: config, lineblocs, debug
+      - name: Extension security
+        description: How to secure your Lineblocs extensions
+        link: extension-security
+        tags: lineblocs, extension, security
 
   - name: Open Source
     link: open-source

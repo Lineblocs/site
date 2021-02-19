@@ -24,6 +24,6 @@ To save a widget as a template:
 
 In this guide we discussed how you can save a widget as a template. For more related articles please see:
 
-[Create a cold transfer](http://lineblocs.com/resources/quickstarts/setup-cold-transfers)
+[Create a cold transfer](https://lineblocs.com/resources/quickstarts/setup-cold-transfers)
 
-[Setup Macro for Business Hours](http://lineblocs.com/resources/quickstarts/business-hours-with-custom-macros)
+[Setup Macro for Business Hours](https://lineblocs.com/resources/quickstarts/business-hours-with-custom-macros)

@@ -10,7 +10,7 @@ By default the IP Whitelists are disabled.
 
 To enable the IP Whitelist:
 
-1. On Lineblocs dashboard go to [Settings -> IP Whitelist](http://app.lineblocs.com/#/settings-ip-whitelist)
+1. On Lineblocs dashboard go to [Settings -> IP Whitelist](https://app.lineblocs.com/#/settings-ip-whitelist)
 2. Click &nbsp;&nbsp;&nbsp;&nbsp;![Enable Whitelist](/img/frontend/docs/ip-whitelists/enable-whitelist.png)
 
 ## Adding an IP to the whitelist
@@ -29,6 +29,6 @@ To remove an IP from the whitelist please click the ![Trash](/img/frontend/docs/
 
 For related articles please see the following:
 
-[Usage Limits](http://lineblocs.com/resources/other-topics/usage-limits)
+[Usage Limits](https://lineblocs.com/resources/other-topics/usage-limits)
 
-[Account Settings](http://lineblocs.com/resources/other-topics/account-settings)
+[Account Settings](https://lineblocs.com/resources/other-topics/account-settings)

@@ -45,16 +45,16 @@ To use the voicemail flow on a DID number:
 
 You can view a history of voicemail in your dashboard at any time. You can also sort or filter voicemails you've received in the past, as well as download the MP3 files. 
 
-To view a history of your voicemail recordings please go to the [Recordings Page](http://app.lineblocs.com/#/recordings).
+To view a history of your voicemail recordings please go to the [Recordings Page](https://app.lineblocs.com/#/recordings).
 
 ## Deleting Recordings
 
-To delete recordings please click the "Delete" button next to the voicemail item in [Recordings Page](http://app.lineblocs.com/#/recordings).
+To delete recordings please click the "Delete" button next to the voicemail item in [Recordings Page](https://app.lineblocs.com/#/recordings).
 
 ## Next Steps
 
 This guide went over recordings and voicemail. for related guides be sure to view the following:
 
-[Call Forward](http://lineblocs.com/resources/quickstarts/call-forward)
+[Call Forward](https://lineblocs.com/resources/quickstarts/call-forward)
 
-[Setup Extension](http://lineblocs.com/resources/quickstarts/setup-extension)
+[Setup Extension](https://lineblocs.com/resources/quickstarts/setup-extension)

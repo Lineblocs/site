@@ -16,7 +16,7 @@ Numbers: 10
 
 To view your current usage history:
 
-1. On Lineblocs Dashboard [Lineblocs Dashboard](http://app.lineblocs.com/#/dashboard/home)
+1. On Lineblocs Dashboard [Lineblocs Dashboard](https://app.lineblocs.com/#/dashboard/home)
 2. In the left menu click "Billing"
 3. click tab "Usage Limits"
 
@@ -24,6 +24,6 @@ To view your current usage history:
 
 For related articles be sure to check out:
 
-[Setup Usage Triggers](http://lineblocs.com/resources/other-topics/setup-usage-limits)
+[Setup Usage Triggers](https://lineblocs.com/resources/other-topics/usage-limits)
 
-[Account Settings](http://lineblocs.com/resources/other-topics/account-settings)
+[Account Settings](https://lineblocs.com/resources/other-topics/account-settings)

@@ -46,6 +46,6 @@ To enable invoices by email:
 
 For more info on billing please see articles below:
 
-[Payment Options](http://lineblocs.com/resources/billing-and-pricing/payment-options)
+[Upgrading Plan](https://lineblocs.com/resources/billing-and-pricing/upgrading-plan)
 
-[Monthly Invoices](http://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
+[Monthly Invoices](https://lineblocs.com/resources/billing-and-pricing/monthly-invoices)
