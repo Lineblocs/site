@@ -982,7 +982,9 @@ section{
 }
 
 .overview{
-    margin: 100px auto;
+    padding: 100px 0;
+    border-top: 1px solid #E8E8EB;
+    margin-bottom: 0;
 }
 
 @media (max-width: 575px) {
@@ -1790,7 +1792,6 @@ section p{
     background-repeat: no-repeat;
     background-position: 35% 90%;
     background-size: 170px;
-    border-bottom: 1px solid #E8E8EB;
 }
 
 @media (max-width: 991px) {
@@ -2394,7 +2395,7 @@ a:hover{
  color: #0A1247;
 }
 header.resources{
-    background: #f4fdfd;
+    background: #f4fdfd
 }
 header.resources .container{
     max-width: 90%;
@@ -2405,4 +2406,207 @@ header.resources .container{
         max-width: 1400px;
     }
 }
+.cloud-n-solutions-page .hero-banner{
+    padding-top: 180px;
+    margin-top: 0;
+    padding-bottom: 150px;
+    background: #0A1247 url("/images/cloud-n-sol-banner.png") no-repeat 85% 50%;
+    background-size: 850px;
+}
 
+@media (max-width: 1600px) {
+    .cloud-n-solutions-page .hero-banner{
+        background-position-x: 100%;
+    }
+}
+@media (max-width: 1400px) {
+    .cloud-n-solutions-page .hero-banner{
+        background-size: 700px;
+    }
+}
+@media (max-width: 1199px) {
+    .cloud-n-solutions-page .hero-banner{
+        background-size: 600px;
+        padding-top: 120px;
+        padding-bottom: 120px;
+
+    }
+}
+@media (max-width: 991px) {
+    .cloud-n-solutions-page .hero-banner{
+        background-size: 500px;
+        padding-top: 90px;
+        padding-bottom: 90px;
+
+    }
+}
+@media (max-width: 767px) {
+    .cloud-n-solutions-page .hero-banner{
+        background-image: none;
+        padding-top: 50px;
+        padding-bottom: 50px;
+
+    }
+}
+
+.cloud-n-solutions-page .hero-banner h1,
+.cloud-n-solutions-page .hero-banner p{
+    color: #fff;
+}
+.button.bg-light-blue{
+    background: #6AD7FA;
+    border-radius: 10px;
+}
+
+@media (min-width: 768px) {
+    .mobile-only{
+        display: none;
+    }
+}
+.help-cards ul{
+    margin-top: 35px;
+    display: inline-flex;
+}
+.help-cards ul li{
+    padding-left: 35px;
+    padding-right: 35px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 130%;
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.help-cards ul li{
+    border-bottom: 1px solid #F1F1F4;
+    padding-bottom: 25px;
+}
+.help-cards ul li:last-child{
+    padding-right: 35px;
+}
+.help-cards ul li:first-child{
+    padding-left: 35px;
+}
+.help-cards ul li.inactive{
+    color: #828495;
+}
+.help-cards ul li.active{
+    border-bottom: 2px solid #6AD7FA;
+    color: #0A1247;
+}
+.help-cards .card .card-icon{
+    width: 68px;
+    height: 68px;
+    margin-top: 35px;
+}
+.help-cards .card-footer{
+    border: none;
+    background: transparent;
+    padding-bottom: 50px;
+}
+.help-cards .subhead{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    /* or 18px */
+
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+
+}
+.help-cards .card-title{
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 120%;
+    /* or 31px */
+
+    text-align: center;
+}
+.help-cards .card-text{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 130%;
+    /* or 21px */
+
+    text-align: center;
+
+    color: #0A1247;
+}
+.help-cards .card{
+    background: #FFFFFF;
+    box-shadow: 0px 20px 100px rgba(10, 18, 71, 0.05);
+    border-radius: 20px !important;
+    margin: 10px 10px;
+    border: none;
+}
+.help-cards .tablinks:hover{
+    cursor: pointer;
+    color: #0A1247;
+}
+.help-cards .tabcontent {
+    display: none;
+}
+.cloud-n-solutions-page .compare-table{
+    overflow-y: auto;
+    height: 70vh;
+}
+
+@media (max-width: 767px) {
+    .cloud-n-solutions-page .compare-table{
+        height: 85vh;
+    }
+}
+.cloud-n-solutions-page .compare-table table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+}
+.cloud-n-solutions-page .compare-table table .title{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: #0A1247;
+}
+.cloud-n-solutions-page .compare-table::-webkit-scrollbar {
+    display: none;
+}
+section.comparison{
+    border-top: 1px solid #E8E8EB;
+    padding-top: 100px;
+    margin-top: 0;
+}
+
+@media (max-width: 767px) {
+    .help-cards ul li.tablinks{
+        padding-left: 15px;
+        padding-right: 15px;
+        font-size: 15px;
+    }
+    .help-cards ul li.tablinks:last-child {
+        padding-right: 10px;
+    }
+    .help-cards ul li.tablinks:first-child {
+        padding-left: 10px;
+    }
+}
+@media (max-width: 500px) {
+    .help-cards ul li.tablinks{
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 13px;
+    }
+    .help-cards ul li.tablinks:last-child {
+        padding-right: 0;
+    }
+    .help-cards ul li.tablinks:first-child {
+        padding-left: 0;
+    }
+}

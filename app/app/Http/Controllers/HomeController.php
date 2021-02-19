@@ -268,6 +268,10 @@ class HomeController extends BaseController {
     {
         return view('pages.alternative');
     }
+    public function cloud_native_solutions(Request $request)
+    {
+        return view('pages.cloud-native-solutions');
+    }
   public function flowbuilder_features(Request $request)
   {
     return view('pages.flowbuilder_features');
