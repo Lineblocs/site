@@ -23,7 +23,7 @@ Route::get('/features', 'HomeController@features');
 Route::get('/features/call-flow-builder', 'HomeController@flowbuilder_features');
 Route::get('/features/did-manage', 'HomeController@didnumbers_features');
 Route::get('/features/pops', 'HomeController@pops_features');
-Route::get('/solutions/cloud-native-solutions', 'HomeController@cloud_native_solutions');
+Route::get('/solutions/cloud-native', 'HomeController@cloud_native_solutions');
 Route::get('/register', 'HomeController@register');
 Route::post('/register', 'HomeController@registerSubmit');
 Route::get('/register/2', 'HomeController@register2');
