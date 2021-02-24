@@ -1,16 +1,29 @@
-@extends('layouts.main')
+@extends('layouts.app_new')
 @section('title') Home :: @parent @endsection
 @section('content')
-<div class="section no-bottom-margin more-padding" id="index-banner">
+<section class="notfound">
   <div class="container">
-    <h1>Page Not Found</h1>
-    <p>
-      The page you requested could not be found.
-    </p>
-    <br/>
-    <a onclick="javascript:window.history.back();">Go Back</a>
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <h1 class="text-left">Ooops, something went wrong...</h1>
+        <p>We can't seem to find the page you're looking for.</p>
+        <a href="/" class="button btn primary-button bg-blue">Go home</a>
+        <div class="extra-links">
+          <p>Here are some helpful links instead:</p>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/resources">Search</a></li>
+            <li><a href="/resources">Help</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="/images/404.png" alt="404 image" class="img-fluid">
+      </div>
+    </div>
   </div>
-</div>
+</section>
+
 @endsection
 @section('scripts')
 <script>
