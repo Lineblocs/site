@@ -41,7 +41,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <title>Lineblocs</title>
-
 </head>
 <body>
     @if (isset($header_cls))
@@ -132,6 +131,15 @@
            <p>© 1999-2021 LineBlocs.com. All rights reserved. </p>
         </footer>
         @yield('scripts')
-
+            <!-- Twitter universal website tag code -->
+                <script>
+                    !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+                    },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
+                        a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+                    // Insert Twitter Pixel ID and Standard Event data below
+                    twq('init','o60rk');
+                    twq('track','PageView');
+                </script>
+                <!-- End Twitter universal website tag code -->
 </body>
 </html>
