@@ -71,8 +71,8 @@ RUN mv .env.k8s .env
 
 #RUN php -d memory_limit=-1 /usr/local/bin/composer install --no-scripts
 RUN mv vendor-loaded vendor
-RUN php artisan key:generate
-RUN php artisan migrate
+#RUN php artisan key:generate
+#RUN php artisan migrate
 
 # Copy existing application directory permissions
 #RUN chown -R www-data:www-data /var/www/html
