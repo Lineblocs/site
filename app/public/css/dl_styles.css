@@ -2610,3 +2610,29 @@ section.comparison{
         padding-left: 0;
     }
 }
+.notfound h1{
+    margin-bottom: 24px;
+}
+.notfound .extra-links{
+    margin-top: 50px;
+}
+
+@media (max-width: 767px) {
+    .notfound .extra-links{
+        margin-top: 0;
+    }
+}
+.notfound .extra-links a{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 130%;
+    /* or 21px */
+    color: #0A1247;
+}
+.notfound .extra-links a:before{
+    content: "•";
+    color: #0A1247;
+    padding-right: 10px;
+    opacity: 0.9;
+}
