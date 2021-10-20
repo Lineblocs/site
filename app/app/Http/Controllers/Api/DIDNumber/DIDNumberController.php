@@ -78,7 +78,8 @@ class DIDNumberController extends ApiAuthController {
                 'provider' => $provider,
                 'country' => $country,
                 'features' => $features,
-                'type' => $type
+                'type' => $type,
+                'did_action' => 'accept-call'
             ];
              $params['availability'] = 'ready-to-use'; 
             if ($type=='vanity') {
