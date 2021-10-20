@@ -23,7 +23,7 @@
 
                         <div class="address">
                             <span>Address</span>
-                            <p>228 Hamilton Ave 3rd Floor<br />Palo Alto, CA 94301</p>
+                            <p>First Edmonton Place <br/>10665 Jasper Avenue<br/>Suite 1412</p>
                         </div>
                         <div class="email">
                             <span>E-mail</span>
