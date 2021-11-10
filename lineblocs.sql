@@ -314,6 +314,7 @@ CREATE TABLE `calls` (
   `to` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `direction` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+`channel_id` varchar(255) default '',
   `duration` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
