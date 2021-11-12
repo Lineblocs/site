@@ -213,7 +213,7 @@ class RegisterController extends ApiAuthController
 
 
           // create k8s deployments
-          $svc = "lineblocs-user-k8s-service"
+          $svc = "lineblocs-k8s-user";
           $params = array(
               'workspace' => $workspace->name,
               'user_id' => $user->id,
