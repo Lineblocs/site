@@ -38,6 +38,6 @@ final class WebSvcHelper {
   }
   public static function post( $service, $path, $params = array())
   {
-    return WebSvcHelper::request( $service, $path, $params );
+    return WebSvcHelper::request( $service, $path, "POST", $params );
   }
 }
