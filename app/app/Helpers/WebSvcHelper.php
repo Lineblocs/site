@@ -3,7 +3,7 @@ namespace App\Helpers;
 final class WebSvcHelper {
   public static function request( $service, $path, $method, $params = array())
   {
-    $url = sprintf("http://%s%s", $service, $path)
+    $url = sprintf("http://%s%s", $service, $path);
     if ( $method == 'GET' ) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
@@ -38,6 +38,6 @@ final class WebSvcHelper {
   }
   public static function post( $service, $path, $params = array())
   {
-    return WebSvcHelper::request( $service, $path, $params )
+    return WebSvcHelper::request( $service, $path, $params );
   }
 }
