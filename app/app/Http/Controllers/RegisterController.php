@@ -11,6 +11,7 @@ use App\Helpers\PBXServerHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\NamecheapHelper;
+use App\Helpers\WebSvcHelper;
 use \Config;
 use \Mail;
 use Twilio\Rest\Client;
@@ -203,11 +204,27 @@ class RegisterController extends ApiAuthController
           }
           */
 
+
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
           $result = PBXServerHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo']);
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
+
+
+          // create k8s deployments
+          $svc = "lineblocs-user-k8s-service"
+          $params = array(
+              'workspace' => $workspace->name,
+              'user_id' => $user->id,
+              'workspace_id' => $workspace->id,
+          );
+          $result = WebSvcHelper::post($svc, '/CreateContainer', $params)
+          if (!$result) {
+            return $this->errorInternal($request, 'Error occured when creating user containers')
+          }
+
+
           $result = NamecheapHelper::refreshIPs();
           if (!$result) {
             return $this->errorInternal($request, 'DNS error occured');
