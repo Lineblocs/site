@@ -219,9 +219,9 @@ class RegisterController extends ApiAuthController
               'user_id' => $user->id,
               'workspace_id' => $workspace->id,
           );
-          $result = WebSvcHelper::post($svc, '/CreateContainer', $params)
+          $result = WebSvcHelper::post($svc, '/CreateContainer', $params);
           if (!$result) {
-            return $this->errorInternal($request, 'Error occured when creating user containers')
+            return $this->errorInternal($request, 'Error occured when creating user containers');
           }
 
 
