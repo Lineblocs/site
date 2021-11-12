@@ -10,7 +10,12 @@ final class WebSvcHelper {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
         curl_setopt($ch, CURLOPT_HTTPHEADER, array());
         $result = curl_exec($ch);
-        return $result;
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close( $ch );
+        if ( $httpcode >= 200 && $httpcode <= 299) {
+          return $result;
+        }
+        return FALSE;
     } else if ( $method == 'POST' ) {
         $data_string = http_build_query($params);
                                                                                                                             
@@ -23,7 +28,12 @@ final class WebSvcHelper {
         );                                                                                                                   
                                                                                                                         
         $result = curl_exec($ch);
-        return $result;
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close( $ch );
+        if ( $httpcode >= 200 && $httpcode <= 299) {
+          return $result;
+        }
+        return FALSE;
     }
   }
   public static function post( $service, $path, $params = array())
