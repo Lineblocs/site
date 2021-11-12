@@ -18,6 +18,16 @@ use App\Helpers\WorkspaceHelper;
 
 
 class MacroController extends ApiAuthController {
+
+    private function updateWorkspaceContainer($workspace) {
+          $svc = "lineblocs-k8s-user";
+          $params = array(
+              'workspace' => $workspace->name,
+          );
+          $result = WebSvcHelper::post($svc, '/updateContainer', $params);
+          return $result;
+    }
+
     public function saveFunction(Request $request)
     {
         $data = $request->only('title', 'code');
@@ -33,7 +43,7 @@ class MacroController extends ApiAuthController {
         $result = MainHelper::compileTypescript($data['code'], $output, $return);
         if (!$result) {
             $send = [
-                'success' => FALSE,
+                'success' => false,
                 'info' => $result
             ];
             return $this->response->array($send);
@@ -46,11 +56,18 @@ class MacroController extends ApiAuthController {
               'workspace_id' => $workspace->id,
               'compiled_code' => $compiled
           ]));
+
+        if ( !$this->updateWorkspaceContainer($workspace)  ) {
+            $send = [
+                'success' => false,
+                'info' => 'could not update container';
+            ];
+            return $this->response->array($send);
+        }
         $send = [
                 'success' => TRUE,
                 'function' => $function->toArray()
             ];
-
         return $this->response->array($send)->withHeader('X-Function-ID', $function->public_id);
     }
     public function updateFunction(Request $request, $functionId)
@@ -68,6 +85,11 @@ class MacroController extends ApiAuthController {
         $data['compiled_code'] = $compiled;
         $function->update( $data );
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+
+        if ( !$this->updateWorkspaceContainer($workspace)  ) {
+            return $this->errorInternal( $request, 'could not update workspace');
+        }
         return $this->response->noContent();
     }
     public function deleteFunction(Request $request, $functionId)
@@ -79,7 +101,11 @@ class MacroController extends ApiAuthController {
         }
         $user = $this->getUser($request);
         $function->delete();
-            return $this->errorInternal( $request, 'delete function error'); 
+
+        if ( !$this->updateWorkspaceContainer($workspace)  ) {
+            return $this->errorInternal( $request, 'could not update workspace');
+        }
+        return $this->response->noContent();
   }
 
 
