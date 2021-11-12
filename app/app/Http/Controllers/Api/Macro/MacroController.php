@@ -60,7 +60,7 @@ class MacroController extends ApiAuthController {
         if ( !$this->updateWorkspaceContainer($workspace)  ) {
             $send = [
                 'success' => false,
-                'info' => 'could not update container';
+                'info' => 'could not update container'
             ];
             return $this->response->array($send);
         }
