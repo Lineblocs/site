@@ -24,6 +24,9 @@
 <div id="wrapper">
     @include('admin.partials.nav')
     <div id="page-wrapper">
+        @if(Session::has('message'))
+                <p class="alert alert-{{ Session::get('type', 'info') }}">{{ Session::get('message') }}</p>
+        @endif
         @yield('main')
     </div>
 </div>

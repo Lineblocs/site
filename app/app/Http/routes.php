@@ -177,6 +177,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('errortrace', 'Admin\ErrorTraceController');
 
 
+
+    Route::get('settings', 'Admin\SettingsController@view');
+    Route::post('settings', 'Admin\SettingsController@save');
+
+
 });
 // API routes
 $api = app('Dingo\Api\Routing\Router');
