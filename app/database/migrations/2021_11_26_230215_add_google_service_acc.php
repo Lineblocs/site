@@ -14,7 +14,7 @@ class AddGoogleServiceAcc extends Migration
     {
         Schema::table('api_credentials', function (Blueprint $table) {
             //
-            $table->string("google_service_account_json")->default('');
+            $table->string("google_service_account_json", 8192)->default('');
         });
     }
 
