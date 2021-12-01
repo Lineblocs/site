@@ -18,9 +18,9 @@ In this tutorial we will go over how to create a basic pin based conference usin
 
 ## Add Pin Numbers
 
-By default the conference will be setup with default pins for moderator and user access. 
+By default, the pinned conference will wait for a moderator to join, end when the moderator leaves as well as only allow up to 10 participants maximum on the call at any given time.
 
-To update the pin numbers used for your conference, please click the "Switch" widget to bring up its options, then open the "Links" tab.
+To update settings for your conference please open the “PinConference” widget.
 
 ![Pin Access](/img/frontend/docs/pinned-conference/pin-access.png)
 
@@ -53,7 +53,7 @@ To save all your changes please click ![Save](/img/frontend/docs/shared/save.png
 
 To use your call flow on a DID Number:
 
-1. In the lineblocs dashboard please click [DID Numbers -> My Numbers](https://app.lineblocs.com/#/dashboard/dids/my-numbers)
+1. In the lineblocs dashboard, please click [DID Numbers -> My Numbers](https://app.lineblocs.com/#/dashboard/dids/my-numbers)
 2. Click the "Edit" button next to your number
 3. Update the "Attached Flow" field
 4. click "Save"
@@ -64,7 +64,7 @@ Your team members should now be able to join conference calls using your DID num
 
 ## Next Steps
 
-in this guide we discussed setting up pin based conference. for other related quickstart posts please see guides below:
+in this guide we discussed setting up pin-based conference. for other related quickstart posts please see guides below:
 
 [Call Queues](https://lineblocs.com/resources/quickstarts/call-queues)
 

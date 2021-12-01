@@ -19,7 +19,7 @@ to use PayPal as a checkout method:
 
 ## Next Steps
 
-For more info on billing related topics, please see articles below:
+For more info on billing rela-ed topics, please see articles below:
 
 [Call Pricing](https://lineblocs.com/resources/billing-and-pricing/call-pricing)
 

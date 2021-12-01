@@ -6,15 +6,15 @@ Lineblocs lets you add new team members to your account on demand. You can creat
 
 To add a new workspace member to your Lineblocs account:
 
-1. In Lineblocs dashboard go to  [Settings -> Workspace Users](https://app.lineblocs.com/#/dashboard/settings/workspace-users)
-2. click "Add User"
+1. In Lineblocs dashboard, go to  [Settings -> Workspace Users](https://app.lineblocs.com/#/dashboard/settings/workspace-users)
+2. Click "Add User"
 3. Enter user details such as email and contact info
 4. Assign user roles
 5. Click "Save"
 
 Once you have created a new user, the user will receive an invite email that includes a registration link.
 
-> Note: All new invitations expire in 7 days after they are sent
+> Note: All new invitations expire after 7 days.
 
 ## Editing Workspace Users
 
@@ -30,7 +30,7 @@ If you want to remove a user from your workspace please click the ![Trash](/img/
 
 ## Next Steps
 
-For related articles be sure to view:
+For related articles, be sure to view:
 
 [Usage Limits](https://lineblocs.com/resources/other-topics/usage-limits)
 

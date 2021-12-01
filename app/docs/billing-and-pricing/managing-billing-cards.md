@@ -1,6 +1,6 @@
 # Managing Billing
 
-You can use the Lineblocs dashboard to add a new card, remove a card, or change the primary billing card on your account at any time.
+Lineblocs dashboard can also be used to add a new card, remove a card, or change the primary billing card on your account at any time.
 
 ## Adding Credit Card
 
@@ -21,7 +21,7 @@ To remove a card you can click the ![trash](/img/frontend/docs/shared/trash.png)
 
 ## Next Steps
 
-For more info on billing matters please see articles below:
+For more info on billing matters, please see the articles below:
 
 [Call Pricing](https://lineblocs.com/resources/billing-and-pricing/call-pricing)
 

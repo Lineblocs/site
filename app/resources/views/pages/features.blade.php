@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-12 col-md-5 my-auto">
                             <h2 class="text-left">Low-Code Flow Editor</h2>
-                            <p>Get access to an all-in-one flow editor that allows you to create highly customizable workflows for calls, fax, and IM. Our flow editor can be used to create any calling workflow imaginable.</p>
+                            <p>Get access to an all-in-one flow editor that allows you to create highly customizable workflows for calls, fax, and IM. Our flow editor can be used to generate any calling workflow imaginable.</p>
                             <a href="https://app.lineblocs.com/#/register" class="button btn primary-button">Create account</a>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-12 col-md-5 my-auto">
                             <h2 class="text-left">DID number portal</h2>
-                            <p>Purchase numbers from a DID inventory that includes local, toll free, and vanity based numbers. We offer a full range of DIDs that span across multiple rate centers throughout North America</p>
+                            <p>Purchase numbers from a DID inventory that includes local, toll free, and vanity-based numbers. We also offer a full range of DIDs that span across multiple rate centers throughout North America.</p>
                             <a href="https://app.lineblocs.com/#/register" class="button btn primary-button">Create account</a>
                         </div>
                         <div class="col-12 col-md-6 my-auto text-center">
@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-12 col-md-5 my-auto">
                             <h2 class="text-left">PoPs and high availability</h2>
-                            <p>Our network allows you to provision extensions nearest to your location as well as rotate from more than 10+ PoPs across North America.</p>
+                            <p>Our network allows you to provision extensions nearest to your location and rotates from more than 10+ PoPs across North America.</p>
                             <a href="https://app.lineblocs.com/#/register" class="button btn primary-button">Create account</a>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-lg-10 offset-lg-2 content">
-                                        <p>Self serve number rental and management in one easy to use number management portal.</p>
+                                        <p>Self-serve number rental and management in one easy to use number management portal.</p>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +181,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-lg-10 offset-lg-2 content">
-                                        <p>Our solutions are completely based on low-code integrations, allowing teams to create high level workflows.</p>
+                                        <p>Our solutions are entirely based on low-code integrations, allowing teams to create high-level workflows.</p>
                                     </div>
                                 </div>
                             </div>

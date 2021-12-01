@@ -3,26 +3,26 @@
 ![Pinless Conference](/img/frontend/docs/pinless-conference/main.png)
 
 Pinless conferences allow you to create discussion rooms you and your team can access on demand.
-A basic pinless conference usually includes a dial in phone number and a set of assigned attendee numbers.
+A basic pinless conference usually includes a dial-in phone number and a set of assigned attendee numbers.
 
-In Lineblocs you can fully create basic and advanced pinless conferences as well as customize pinless conferencing workflows as per your needs
+In Lineblocs you can entirely create basic and advanced pinless conferences as well as customize pinless conferencing workflows as per your needs
 
-In this tutorial we will go over how to create a basic pinless conference using the Lineblocs flow editor.
+This tutorial will go over how to create a basic pinless conference using the Lineblocs flow editor.
 
 ## Getting Started
 
 1. In [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click "Create" -> "New Flow"
 2. Enter a name for your flow
-3. Select "Pin Conference" template
+3. Select the "Pin Conference" template
 4. Click "Create"
 
 ## Setup Attendees
 
-By default the conference will be setup with no attendee numbers that can call into the conference.
+By default, the conference will be set up with no attendee numbers that can call into the conference.
 
-You can change the numbers your moderator and users will be using to join your conference by updating the access numbers used for your conference.
+You can change the numbers your moderator and users will be using to join your conference by updating the access numbers used for your meeting.
 
-To view your access numbers please click the "SetupAttendees" to bring up its options.
+To view your access numbers, please click the "SetupAttendees" to bring up its options.
 
 ![Access Numbers](/img/frontend/docs/pinless-conference/access-numbers.png)
 
@@ -61,7 +61,7 @@ Your team members should now be able to join conference calls using your DID num
 
 ## Next Steps
 
-in this guide we discussed setting up pinless based conference. for other related quickstart posts please see guides below:
+In this guide, we discussed setting up a pinless-based conference. For other related quickstart posts, please see guides below:
 
 [Setup Pin Conference](https://lineblocs.com/resources/quickstarts/pin-conference)
 

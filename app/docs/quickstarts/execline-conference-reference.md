@@ -1,17 +1,16 @@
 # Reference Integration: ExecLine Conferencing
 
-Complex conferencing workflows allow you to communicate with multiple end users on demand. Advanced conference workflows can be integrated to work with third party apps, web services and APIs. Using modern CPaaS, you can design and develop unique conferencing apps that provide your callers a stellar conferencing experience.
+Complex conferencing workflows allow you to communicate with multiple end-users on demand. Advanced conference workflows can be integrated to work with third-party apps, web services, and APIs. Using modern CPaaS, you can design and develop unique conferencing apps that provide your callers with a stellar conferencing experience.
 
-In this tutorial we will be looking at an advanced reference integration of a conferencing line for a small business owner.
+In this tutorial, we will be looking at an advanced reference integration of a conferencing line for a small business owner.
 
-Our conference will include two user types:
+The conference will include two user types:
 
-1. host                                                                                     
-            ```A.K.A our small business owner who will be managing the conference line.```
-2. member                                                                                      
-            ```users that can call our host on demand.```
+1. Host                                                                                     
+A.K.A our small business owner who will be managing the conference line.
+2. Member                                                                                      
 
-In our example conference, conference members will call into our conference line to speak with our host, regarding some service. 
+In our example conference, members will call into our conference line to speak with our host regarding some services. 
 
 ## How it works
 
@@ -23,7 +22,7 @@ In our example conference, conference members will call into our conference line
 
 You will need the following to complete this tutorial:
 
-1. a DID Number
+1. A DID Number
 2. MessageBird account
 3. Lineblocs account
 
@@ -38,11 +37,11 @@ To create a new blank flow:
 
 ## Setup Variables
 
-First, we will setup variables so that we can keep track of what our host's number is when they call in. 
+First, we will set up variables to keep track of what our host's number is when they call in. 
 
-Our variables will allow us to switch context in our flow as well as to ensure we are providing moderator access to our host.
+Our variables will allow us to switch context in our flow and to ensure we provide moderator access to our host.
 
-To setup variables, please drag a "Set Variables" widget from the right pane into the flow graph, then connect the Launch widget "Incoming Call" port into the Set Variables "In" port.
+To set up variables, please drag a "Set Variables" widget from the right pane into the flow graph, then connect the Launch widget "Incoming Call" port into the Set Variables "In" port.
 
 ![Macro Added](/img/frontend/docs/execline/execline-2.png)
 
@@ -80,9 +79,9 @@ Value: your-messagebird-number
 
 We will add a macro to allow us to integrate a custom conferencing workflow.
 
-Our macro will be setup to subscribe to conference events as they are triggered.
+Our macro will be set up to subscribe to conference events as they are triggered.
 
-To add a new macro please drag the "Macro" widget from the right pane into the flow graph, then rename this widget to "ConferenceEvents".
+To add a new macro, please drag the "Macro" widget from the right pane into the flow graph, then rename this widget to "ConferenceEvents.".
 
 ![Events](/img/frontend/docs/execline/events.png)
 
@@ -90,11 +89,11 @@ To add a new macro please drag the "Macro" widget from the right pane into the f
 
 ## Setup Conference Events
 
-Our conference events widget will be setup to track when new members join the conference as well as to make sure our conference always has at most two participants – the host and one member, at any given time.
+Our conference events widget will be set up to track when new members join the conference and make sure our conference always has at most two participants – the host and one member, at any given time.
 
 To setup the conferencing events, please click the "ConferenceEvents" widget, then in the right pane under function click ![create](/img/frontend/docs/execline/create.png)
 
-On the Macro Template screen, select template "Blank", then click "Save".
+On the Macro Template screen, select template "Blank,", then click "Save.".
 
 In the Lineblocs function editor, please add the following code:
         
@@ -148,9 +147,9 @@ In the Lineblocs function editor, please add the following code:
 
 ## Setup Switch
 
-Next, we will create a "Switch" widget, so that we can change context depending on whether our host is calling, or if a member is calling.
+Next, we will create a "Switch" widget to change context depending on whether our host is calling or if a member is calling.
 
-To setup a switch, please drag a "Switch" widget from the right pane into the flow graph, then add the following two links:
+To set up a switch, please drag a "Switch" widget from the right pane into the flow graph, then add the following two links:
 
 ### Link 1
 
@@ -174,9 +173,9 @@ Value: {{SetupVariables.host_number}}
 
 ## Create Conference Routes
 
-Our conference will atleast require two conferencing roles, the "user", and the "moderator".
+Our conference will require at least two conferencing roles, the "user." and the "moderator."
 
-To setup the call flow routes, please create two "SetVariable" widgets: "ModeratorRoute" and "UserRoute".
+To set up the call flow routes, please create two "SetVariable" widgets: "ModeratorRoute" and "UserRoute."
 
 Please add the following variables under "ModeratorRoute":
 
@@ -207,11 +206,11 @@ Our final piece of the flow will be to add a "Conference" widget.
 
 To add a "Conference" widget into the flow, please drag a "Conference" widget from the right pane into the flow.
 
-In the "Conference" settings please check "Wait for Moderator", and "End on Moderator leave" settings.
+In the "Conference" settings, please check "Wait for Moderator" and "End on Moderator leave" settings.
 
 ## Connecting the Flow
 
-To make our flow all work together we will need to add links between the widgets created.
+To make our flow all work together, we will need to add links between the widgets created.
 
 Please add the following links:
 
@@ -234,19 +233,20 @@ To use your call flow on a DID Number:
 1. In the lineblocs dashboard please click [DID Numbers -> My Numbers](https://app.lineblocs.com/#/dashboard/dids/my-numbers)
 2. Click the "Edit" button next to your number
 3. Update the "Attached Flow" field
-4. click "Save"
+4. Click "Save"
 
 ## Testing the flow
 
 To test as a caller:
 Call the conferencing line number
 
-To test as a host:
-Use the host number to call into the conferenciing line
+To test as a host: 
+Use the host number to call into the conferencing line
 
 ## Next Steps
 
 In this guide we went over a reference conferencing app integration. For more related articles please see:
+In this guide, we went over a reference conferencing app integration. For more related articles, please see:
 
 [Create a cold transfer](https://lineblocs.com/resources/quickstarts/setup-cold-transfers)
 

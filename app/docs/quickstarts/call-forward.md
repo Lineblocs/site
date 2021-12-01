@@ -1,8 +1,8 @@
 # Call Forwarding
 
-Lineblocs editor allows you to create call flows for basic and advanced call forwarding needs.
+Lineblocs editors allow you to create call flows for basic and advanced call forwarding needs.
 
-In this guide we will show you how to forward a call to a external phone number using the Lineblocs flow editor.
+This guide will show you how to forward a call to a external phone number using the Lineblocs flow editor.
 
 ## Requirements
 

@@ -37,13 +37,13 @@
                       <small>$</small>0
                     </div>
                     <small class="per-month" style="font-size: 10px;">
-                      Per month / user</small>
+                      Per month/user</small>
                   </h2>
                 </div>
 
                 <ul class="collection center">
                   <li class="collection-item">
-                    <strong>Metered</strong> minutes outbound in US or Canada
+                    <strong>Metered</strong> minutes outbound in the US or Canada 
                   </li>
                   <li class="collection-item">
                     <strong>5</strong> Extensions
@@ -95,12 +95,12 @@
                       <small>$</small>
                       24<span class="pricing-decimals">.99</span>
                     </div>
-                    <small class="per-month" style="font-size: 10px;">Per month / user</small>
+                    <small class="per-month" style="font-size: 10px;">Per month/user</small>
                   </h2>
                 </div>
                 <ul class="collection center">
                   <li class="collection-item">
-                    <strong>200</strong> minutes outbound free minutes per month in US or Canada
+                    <strong>200</strong> minutes outbound free minutes per month in the US or Canada
                   </li>
                   <li class="collection-item">
                     <strong>5</strong> Extensions
@@ -160,13 +160,13 @@
                     <div class="pricing-price">
                       <small>$</small>49<span class="pricing-decimals">.99</span>
                     </div>
-                    <small class="per-month" style="font-size: 10px;">Per month / user</small>
+                    <small class="per-month" style="font-size: 10px;">Per month/user</small>
                   </h2>
                 </div>
 
                 <ul class="collection center">
                   <li class="collection-item">
-                    <strong>250</strong> minutes outbound free minutes per month in US or Canada
+                    <strong>250</strong> minutes outbound free minutes per month in the US or Canada
                   </li>
                   <li class="collection-item">
                     <strong>5</strong> Extensions
@@ -213,7 +213,7 @@
                     Multiple SIP domains
                   </li>
                   <li class="collection-item">
-                    Bring Your Own Carrier
+                    Bring Your Carrier
                   </li>
                 </ul>
                 <div class="card-content center card-button">
@@ -239,13 +239,13 @@
                     <div class="pricing-price">
                       <small>$</small>69<span class="pricing-decimals">.99</span>
                     </div>
-                    <small class="per-month" style="font-size: 10px;">Per month / user</small>
+                    <small class="per-month" style="font-size: 10px;">Per month/user</small>
                   </h2>
                 </div>
 
                 <ul class="collection center">
                   <li class="collection-item">
-                    <strong>500</strong> minutes outbound free minutes per month in US or Canada
+                    <strong>500</strong> minutes outbound free minutes per month in the US or Canada
                   </li>
                   <li class="collection-item">
                     <strong>5</strong> Extensions
@@ -268,7 +268,7 @@
                     24 / 7 Support
                   </p>
                   <p class="collection-item">
-                    AI base call routing
+                    AI based call routing
                   </p>
                 </ul>
 
@@ -306,7 +306,7 @@
             <th>unlimited</th>
           </tr>
           <tr>
-            <td>Munutes outbound in Us or Canada</td>
+            <td>Minutes outbound in US or Canada</td>
             <td>Metered</td>
             <td><strong>200</strong> Minutes</td>
             <td><strong>250</strong> Minutes</td>
@@ -840,7 +840,7 @@
             </td>
           </tr>
           <tr>
-            <td>AI based call routing</td>
+            <td>AI-based call routing</td>
             <td>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12Z" fill="#DFF2F2"></path>
@@ -921,7 +921,7 @@
         <div class="container">
           <div class="learn_more-content">
             <h3 class="learn_more-heading">Learn More</h3>
-            <p class="learn_more-para">Have queries regarding our offerings ? Feel free to contact us.</p>
+            <p class="learn_more-para">Have queries regarding our offerings? Feel free to contact us.</p>
 
             <a href="/contact" class="btn-custom service-btn margin-auto">
               <span>Contact Us</span>

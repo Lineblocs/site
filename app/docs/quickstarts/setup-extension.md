@@ -1,8 +1,8 @@
 # Setup Extension
 
-A Lineblocs extension allows you to route calls to a softphone or hardphone.
+A Lineblocs extension allows you to route calls to a softphone or hard phone.
 
-Extensions can be created and managed using the Lineblocs dashboard. You can provision new extensions on demand, as well as update an Extension's default Caller ID and other settings.
+Extensions can be created and managed using the Lineblocs dashboard. You can provide new extensions on-demand, as well as update an Extension's default Caller ID and other settings.
 
 ## Create Extension
 
@@ -14,7 +14,7 @@ Extensions can be created and managed using the Lineblocs dashboard. You can pro
 
 ## Connecting
 
-To get the info to connect to your extension using a softphone or supported hard phone. please go to [Extensions](https://app.lineblocs.com/#/extensions) page, then click the info bubble ![info](/img/frontend/docs/create-extensions/info-bubble.png) next to the extension you want to connect to.
+To get the information to connect to your extension using a softphone or supported hard phone, please go to[Extensions](https://app.lineblocs.com/#/extensions) page, then click the info bubble ![info](/img/frontend/docs/create-extensions/info-bubble.png) next to the extension you want to connect to.
 
 ![connect](/img/frontend/docs/create-extensions/connect-2.png)
 
@@ -32,7 +32,7 @@ Please click the "Delete" button next to the Extension you want to remove.
 
 ## Next Steps
 
-In this guide we went over how to create and connect to extensions. For related posts be sure to view:
+In this guide, we went over how to create and connect to extensions. For related posts, be sure to view:
 
 [Extension security best practice](https://lineblocs.com/resources/other-topics/extension-security)
 

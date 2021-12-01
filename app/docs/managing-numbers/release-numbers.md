@@ -1,7 +1,6 @@
 # Release Numbers
 
-You can unrent a Lineblocs number at any time – regardless of your membership plan or account status.
-Please note that once you unrent a number all of its call records and associated data will also be removed from your account. 
+You can unrent a Lineblocs number at any time – regardless of your membership plan or account status. Please note that once you unrent a number, all of its call records and associated data will also be removed from your account. 
 
 ## Unrent A Number
 
@@ -12,7 +11,7 @@ Please note that once you unrent a number all of its call records and associated
 
 ## Discontinued Number Billing Charge
 
-Billing charges for your number will be terminated on the 1st of the following month. For example if you have unrented a number on Jan 15th, billing for this number will stop on Feb 1st.
+Billing charges for your number will be terminated on the 1st of the following month. For example, if you have unrented at number on Jan 15th, billing for this number will stop on Feb 1st.
 
 # Next Steps
 
