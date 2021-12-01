@@ -26,9 +26,8 @@ return [
     |
     */
 
-    'url' => 'https://lineblocs.com',
-    'portal_url' => 'https://app.lineblocs.com',
-
+    'url' => env('APP_URL', 'http://example.org'),
+    'portal_url' => env('PORTAL_URL', 'http://portal.example.org'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

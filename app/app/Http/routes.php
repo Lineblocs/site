@@ -3,7 +3,10 @@
 Route::pattern('id', '[0-9]+');
 Route::pattern('slug', '[0-9a-z-_]+');
 /***************    Site routes  **********************************/
+
+
 Route::get('/', 'HomeController@index');
+Route::get('healthz', 'HealthzController@healthz');
 Route::get('404', 'HomeController@notfound_404')->name('404');
 Route::get('home', 'HomeController@index');
 Route::get('about', 'HomeController@about');
@@ -175,6 +178,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('errortrace/{errortrace}/edit', 'Admin\ErrorTraceController@edit');
     Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
     Route::resource('errortrace', 'Admin\ErrorTraceController');
+
+
+
+    Route::get('settings', 'Admin\SettingsController@view');
+    Route::post('settings', 'Admin\SettingsController@save');
 
 
 });
