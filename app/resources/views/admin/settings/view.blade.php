@@ -39,7 +39,7 @@
                 <div class="controls">
                     <select class="form-control" name="aws_region" id="aws_region">
                         @foreach ( $aws_regions as $key => $region )
-                            @if ($region==$creds->region)
+                            @if ($region==$selected_region)
                                 <option value="{{$key}}" selected>{{$region}}</option>
                             @else
                                 <option value="{{$key}}">{{$region}}</option>

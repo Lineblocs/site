@@ -13,6 +13,7 @@ class ApiCredential extends Model {
   public static function getRecord() {
     return ApiCredential::all()[0];
   }
+
 }
 
 
