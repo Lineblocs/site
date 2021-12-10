@@ -20,6 +20,7 @@ class AddSipProviderMetrics extends Migration
             $table->integer('avg_answer_rate')->nullable()->default(NULL);
             $table->integer('avg_call_duration')->nullable()->default(NULL);
             $table->integer('failure_response_pct')->nullable()->default(NULL);
+            $table->string('status');
             $table->integer('provider_id')->nullable()->unsigned();
             $table->foreign('provider_id')->references('id')->on('sip_providers')->onDelete('CASCADE');
         });
