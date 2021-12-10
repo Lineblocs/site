@@ -15,6 +15,7 @@ class AddSipcallid extends Migration
         Schema::table('calls', function (Blueprint $table) {
             //
             $table->string("sip_call_id")->default("");
+            $table->integer("sip_status")->nullable();
         });
     }
 
