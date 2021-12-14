@@ -26,6 +26,8 @@ CREATE TABLE `api_credentials` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`storage_provider` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `tts_provider` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `aws_access_key_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `aws_secret_access_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `aws_region` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'us-east-1',
@@ -39,6 +41,7 @@ CREATE TABLE `api_credentials` (
   `smtp_user` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `smtp_password` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `smtp_tls` tinyint(1) NOT NULL DEFAULT '0',
+  `setup_complete` tinyint(1) NOT NULL DEFAULT '0',
   `google_service_account_json` varchar(8192) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1549,6 +1552,7 @@ CREATE TABLE `sip_providers` (
   `priority` int(11) NOT NULL,
   `host` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
+  `status` varchar(255) NOT NULL DEFAULT '',
   `api_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type_of_provider` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)

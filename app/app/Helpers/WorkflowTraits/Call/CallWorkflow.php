@@ -11,6 +11,7 @@ use \App\Recording;
 use \App\Transformers\CallTransformer;
 use DateTime;
 use DateInterval;
+use DB;
 use App\Helpers\MainHelper;
 
 
@@ -39,8 +40,6 @@ trait CallWorkflow {
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
         $calls = Call::select(DB::raw("DISTINCT(calls.id), calls.*, calls.from AS call_from, calls.to AS call_to, calls.status AS call_status, calls.direction AS call_direction, (SELECT GROUP_CONCAT(call_tags.tag) FROM call_tags WHERE call_tags.call_id = calls.id) AS tags"));
-
-        $calls->leftJoin('calls', 'calls.id', '=', 'calls.call_id');
         $calls->leftJoin('call_tags', 'call_tags.call_id', '=', 'calls.id');
         $calls->where('calls.user_id', '=', $user->id);
         $search = $request->get("tags");
@@ -56,7 +55,7 @@ trait CallWorkflow {
         }
         MainHelper::addSearch($request, $calls, ['from', 'to', 'status', 'direction']);
         \Log::info("query: " . $calls->toSql());
-        $results = $calls->paginate($paginate);
+        $results = $calls;
 
         return $this->sendPaginationResults($request, $results, $paginate, new CallTransformer);
     }
