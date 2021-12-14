@@ -16,7 +16,6 @@ class AddSipProviderToCalls extends Migration
             //
             $table->integer('provider_id')->nullable()->unsigned();
             $table->foreign('provider_id')->references('id')->on('sip_providers')->onDelete('SET NULL');
-            $table->foreign('provider_id')->references('id')->on('sip_providers')->onDelete('SET NULL');
         });
     }
 
