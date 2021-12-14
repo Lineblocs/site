@@ -1,48 +1,48 @@
 # Call Queues
 
-Call queues can allow you to receive multiple calls simultanously. A well designed call queue can also provide a smooth experience in case of a long wait time for a call.
+Call queues can allow you receive multiple calls simultaneously. A well-designed call queue can also provide a smooth experience for a long wait time for a call.
 
-In this guide we will be creating a basic call queue using the Lineblocs flow editor. The call queue will be assigned to all our extensions and setup with basic options. 
+In this guide, we will be creating a primary call queue using the Lineblocs flow editor. The call queue will be assigned to all our extensions and set up with basic options. 
 
 ## Getting Started
 
-1. In [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard) click "Create" -> "New Flow"
+1. In [Lineblocs dashboard](https://app.lineblocs.com/#/dashboard), click "Create" -> "New Flow"
 2. Enter a name for your flow
-3. Select "Queue Example" template
+3. Select the "Queue Example" template
 4. Click "Create"
 
 
 ## Add Extensions
 
-By default the call queue will be setup with no extensions. You can add extensions to your queue by adjusting the Queue's widget options.
+By default, the call queue will be set up with no extensions. You can add extensions to your queue by adjusting the Queue's widget options.
 
-To update the widget extensions settings for your queue please click the "SupportQueue" to open its options, then select the extensions you would like to include in the "Select Extensions" field.
+To update the widget extensions settings for your queue, please click the "SupportQueue" to open its options, then select the extensions you would like to include in the "Select Extensions" field.
 
 ![Call Queues example](/img/frontend/docs/call-queue/extension-select.png)
 
 ## Max Queue Wait Time
 
-Max queue wait time allow you to adjust how long a caller can wait in the call queue before either terminating the call or going to an alternate destination.
+Maximum queue wait time allows you to adjust how long a caller can wait in the call queue before either terminating the call or going to an alternate destination.
 
-By default the max queue wait time is set to 60 seconds.
+By default, the maximum queue wait time is set to 60 seconds.
 
-To change the max wait time for the queue please update "Max Wait Time" option.
+To change the maximum wait time for the queue, please update the "Max Wait Time" option.
 
 ![Queue Max Timeout](/img/frontend/docs/call-queue/queue-max-wait.png)
 
 ## Max Extension Timeout
 
-To update how long you want to ring an agent's phone for, you can update the "Max Extension Timeout" option.
+To update how long you want to ring an agent's phone, you can update the "Max Extension Timeout" option.
 
 ![Queue Max Ext Timeout](/img/frontend/docs/call-queue/queue-max-ext-timeout.png)
 
 ## Music On Hold
 
-By default all call queues will play a music on hold while the caller waits for an agent to answer the call. 
+By default, all call queues will play music on hold while the caller waits for an agent to answer the call. 
 
-Music On Hold will be played recurringly -- until the caller hangs up, an agent picks up a call or the maximum queue wait time elapses.
+Music On Hold will be played recurringly -- until the caller hangs up, an agent picks up a call, or the maximum queue wait time elapses.
 
-You can customize the music you play in your queue updating the "Music On Hold URL" setting in the widget settings box. 
+You can customize the music you play in your queue updating, the "Music On Hold URL" setting in the widget settings box. 
 
 ## End Result
 
@@ -55,10 +55,10 @@ To save all your changes please click ![Save](/img/frontend/docs/shared/save.png
 
 To use your call flow on a DID Number:
 
-1. In the lineblocs dashboard please click [DID Numbers -> My Numbers](https://app.lineblocs.com/#/dashboard/dids/my-numbers)
+1. In the Lineblocs dashboard, please click [DID Numbers -> My Numbers](https://app.lineblocs.com/#/dashboard/dids/my-numbers)
 2. Click the "Edit" button next to your number
 3. Update the "Attached Flow" field
-4. click "Save"
+4. Click "Save"
 
 ## Testing the flow
 
@@ -66,7 +66,7 @@ Your callers should now be placed in a queue with music on hold when they call y
 
 ## Next Steps
 
-In this guide we discussed setting up call queues on Lineblocs. for other related quickstart posts, be sure to view the following:
+In this guide, we discussed setting up call queues on Lineblocs. for other related quickstart posts, be sure to view the following:
 
 [Simple IVR](https://lineblocs.com/resources/quickstarts/basic-ivr)
 

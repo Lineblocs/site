@@ -16,10 +16,10 @@ class CreateSipRoutersMediaServers extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('router_id')->unsigned()->nullable();
-            $table->foreign('router_id')->references('id')->on('sip_routers');
+            $table->foreign('router_id')->references('id')->on('sip_routers')->onDelete('cascade');
 
             $table->integer('server_id')->unsigned()->nullable();
-            $table->foreign('server_id')->references('id')->on('media_servers');
+            $table->foreign('server_id')->references('id')->on('media_servers')->onDelete('cascade');
 
         });
     }

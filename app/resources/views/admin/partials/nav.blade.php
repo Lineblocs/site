@@ -68,7 +68,11 @@
                         <i class="glyphicon glyphicon-user"></i> Media Servers
                     </a>
                 </li>
-
+                <li>
+                    <a href="{{url('admin/settings')}}">
+                        <i class="glyphicon glyphicon-user"></i> Settings
+                    </a>
+                </li>
                 <li>
                     <a href="{{url('admin/rate')}}">
                         <i class="glyphicon glyphicon-user"></i> Call Rates

@@ -1,6 +1,6 @@
 # Managing Account Settings
 
-You can update your Lineblocs account settings at any time. This includes updating your organization's email, password, and your personal contact details.
+You can update your Lineblocs account settings at any time. This includes updating your organization's email, password, and personal contact details.
 
 ## View Account settings
 

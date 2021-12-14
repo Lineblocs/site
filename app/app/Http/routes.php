@@ -3,7 +3,20 @@
 Route::pattern('id', '[0-9]+');
 Route::pattern('slug', '[0-9a-z-_]+');
 /***************    Site routes  **********************************/
+
+
 Route::get('/', 'HomeController@index');
+Route::get('healthz', 'HealthzController@healthz');
+Route::get('setup', 'SetupController@setup');
+Route::get('setup/storage', 'SetupController@setup_storage');
+Route::post('setup/storage', 'SetupController@save_storage');
+Route::get('setup/tts', 'SetupController@setup_tts');
+Route::post('setup/tts', 'SetupController@save_tts');
+Route::get('setup/payments', 'SetupController@setup_payments');
+Route::post('setup/payments', 'SetupController@save_payments');
+Route::get('setup/smtp', 'SetupController@setup_smtp');
+Route::post('setup/smtp', 'SetupController@save_smtp');
+Route::get('setup/complete', 'SetupController@setup_complete');
 Route::get('404', 'HomeController@notfound_404')->name('404');
 Route::get('home', 'HomeController@index');
 Route::get('about', 'HomeController@about');
@@ -175,6 +188,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('errortrace/{errortrace}/edit', 'Admin\ErrorTraceController@edit');
     Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
     Route::resource('errortrace', 'Admin\ErrorTraceController');
+
+
+
+    Route::get('settings', 'Admin\SettingsController@view');
+    Route::post('settings', 'Admin\SettingsController@save');
 
 
 });

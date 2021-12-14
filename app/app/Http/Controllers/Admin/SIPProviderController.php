@@ -279,7 +279,7 @@ $rates = [];
      */
     public function data()
     {
-        $providers = SIPProvider::select(array('sip_providers.id', 'sip_providers.name','sip_providers.active', 'sip_providers.country', 'sip_providers.type_of_provider', 'sip_providers.created_at'));
+        $providers = SIPProvider::select(array('sip_providers.id', 'sip_providers.name','sip_providers.active', 'sip_providers.country', 'sip_providers.type_of_provider', 'sip_providers.status', 'sip_providers.created_at'));
 
         return Datatables::of($providers)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')

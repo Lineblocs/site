@@ -1,8 +1,8 @@
 # Managing Media Files
 
-Media files allow you to import new audio related content from your personal device or from a external source such as Google Drive.
+Media files allow you to import new audio-related content from your personal device or an external source such as Google Drive.
 
-Lineblocs media files can be used to host audio files that you may need to use in your call flows for voiceovers and other speech related prompts.
+Lineblocs media files can be used to host audio files that you may need to use in your call flows for voiceovers and other speech-related prompts.
 
 In this guide we will discuss how you can upload and manage media files using Lineblocs.
 
@@ -10,7 +10,7 @@ In this guide we will discuss how you can upload and manage media files using Li
 
 To add a new media file:
 
-1. In Lineblocs dashboard click "Media Files"
+1. In Lineblocs dashboard, click "Media Files"
 2. Click &nbsp;&nbsp;&nbsp;&nbsp;![Add File](/img/frontend/docs/mediafiles/add-file.png) 
 3. Select "Upload File"
 
@@ -26,7 +26,7 @@ To remove a media file, please click the ![Trash](/img/frontend/docs/shared/tras
 
 ## Next Steps
 
-for related articles please see the following:
+For related articles, please see the following:
 
 [Blocking A Number](https://lineblocs.com/resources/other-topics/blocking-a-number)
 

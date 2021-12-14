@@ -15,8 +15,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
 
-        $k8s = (int) env('APP_ON_K8S');
-        if ( $k8s ) {
+        $ssl = (int) env('APP_USE_SSL');
+        if ( $ssl ) {
             \URL::forceSchema('https');
         }
     }

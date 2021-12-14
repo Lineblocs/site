@@ -1,8 +1,8 @@
 # Extension Codes
 
-At a high level extension codes let you customize the functionality of your phone system. You can use extension codes to add new functionality to your call flows such as cold transfers and voicemail or add complex features such as intercom, custom IVRs, and more.
+At a high level, extension codes let you customize the functionality of your phone system. You can use extension codes to add new functionality to your call flows such as cold transfers and voicemail or add complex features such as intercom, custom IVRs, and more.
 
-By default extension codes in Lineblocs can be customized using the Lineblocs flow editor. You can also create as many extension codes as you need, and assign them to custom workflows, using Lineblocs flows.
+By default, extension codes in Lineblocs can be customized using the Lineblocs flow editor. You can also create as many extension codes as you need and assign them to custom workflows using Lineblocs flows.
 
 ## Viewing Extension Codes
 
@@ -22,7 +22,7 @@ Name: Check Voicemail
 Code: *97
 ```
 
-Once you have added the extension code please click "Save"
+Once you have added the extension code, please click "Save."
 
 ## Removing Extension Code
 
@@ -30,21 +30,21 @@ To remove an extension code click the ![Remove](/img/frontend/docs/shared/remove
 
 ## Testing extension codes
 
-To test an extension code please login to your extension then dial the extension code.
+To test an extension code, please login to your extension then dial the extension code.
 
 ### Troubleshooting
 
 You can troubleshoot the code for an extension code by viewing the Lineblocs call monitor. To view the latest error logs generated from your extension code:
 
 1. On Lineblocs dashboard go to [Call Monitor](https://app.lineblocs.com/#/dashboard/call-monitor)
-2. In the "Flow" field select the your flow
+2. In the "Flow" field select, your flow
 3. Type in the extension code in the "Dialing" field
 
-If you need more info on debugging please have a look at the lineblocs debugging guide. [Debugging Lineblocs flows & Calls](https://linelocs.com/resources/other-topics/debugging-lineblocs)
+If you need more info on debugging, please have a look at the lineblocs debugging guide. [Debugging Lineblocs flows & Calls](https://linelocs.com/resources/other-topics/debugging-lineblocs)
 
 ## Next Steps
 
-For related articles be sure to check out:
+For related articles, be sure to check out:
 
 [Usage Limits](https://lineblocs.com/resources/other-topics/usage-limits)
 

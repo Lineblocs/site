@@ -1,20 +1,20 @@
 # Monthly Invoices
 
 
-Monthly invoices are generated in Lineblocs dashboard and available at any time for download.
+Monthly invoices are generated in the Lineblocs dashboard and available at any time for download.
 
-In this guide we discuss monthly billing. And the resources you are billed for on a month-to-month basis.
+In this guide we discuss monthly billing, and the resources you are billed for on a monthly basis.
 
 ## Billed Resources
 
-We currently bill based on the dedicated usage of calling, fax, and IM based resources. The costs associated with our billing plans are typically based on carrier call toll, server hosting costs, and the usage of third party API services.
+We currently bill based on the dedicated usage of call, fax, and IM based resources. The costs associated with our billing plans are typically based on carrier call toll, server hosting costs, and the usage of third-party API services.
 
 #### Usage Billing
 
 1. Incoming Call Toll
 2. Outgoing Call Toll
 3. Fax related charges
-4. Third party API services
+4. Third-party API services
 
 #### Per month related
 
@@ -26,8 +26,8 @@ We currently bill based on the dedicated usage of calling, fax, and IM based res
 
 To download a monthly invoice:
 
-1. In Lineblocs dashboard go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
-2. Click "History" tab
+1. In Lineblocs dashboard, go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
+2. Click the "History" tab
 4. Enter a start and end date range for your invoice
 5. Click "Download"
 
@@ -37,14 +37,14 @@ You can also choose to receive invoices by email.
 
 To enable invoices by email:
 
-1. In Lineblocs dashboard go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
+1. In Lineblocs dashboard, go to the [Billing Section](https://app.lineblocs.com/#/dashboard/billing)
 2. Click the "Settings" tab
 4. Check "Receive monthly invoices by email"
 5. Click "Save"
 
 ## Next Steps
 
-For more info on billing please see articles below:
+For more info on billing, please see the articles below:
 
 [Upgrading Plan](https://lineblocs.com/resources/billing-and-pricing/upgrading-plan)
 

@@ -1,6 +1,6 @@
 # Call Pricing
 
-Lineblocs currently offers competitive local and toll free call pricing in select regions.
+Lineblocs currently offers competitive local and toll-free call pricing in select regions.
 All user calls on Lineblocs are billed by usage and also based on your membership plan.
 
 ## Call Rates
