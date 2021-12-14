@@ -93,6 +93,12 @@ final class NamecheapHelper {
           'type' => 'A',
           'address' => '155.138.159.234',
           'ttl' => '60'
+      ],
+      [
+          'host' => 'stage',
+          'type' => 'A',
+          'address' => '149.248.57.81',
+          'ttl' => '60'
       ]
     ];
     //sendgrid
