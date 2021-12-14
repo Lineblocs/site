@@ -8,7 +8,7 @@
     <title>Lineblocs setup</title>
 </head>
 <body>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <style>
@@ -99,6 +99,11 @@
         </div>
         </div>
     </div>
+@if(Session::has('message'))
+<div class="alert alert-{{ Session::get('type', 'info') }}" role="alert">
+{{ Session::get('message') }}
+</div>
+@endif
 @yield('content')
 </body>
 </html>

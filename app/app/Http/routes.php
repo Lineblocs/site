@@ -7,17 +7,24 @@ Route::pattern('slug', '[0-9a-z-_]+');
 
 Route::get('/', 'HomeController@index');
 Route::get('healthz', 'HealthzController@healthz');
-Route::get('setup', 'SetupController@setup');
-Route::get('setup/storage', 'SetupController@setup_storage');
-Route::post('setup/storage', 'SetupController@save_storage');
-Route::get('setup/tts', 'SetupController@setup_tts');
-Route::post('setup/tts', 'SetupController@save_tts');
-Route::get('setup/payments', 'SetupController@setup_payments');
-Route::post('setup/payments', 'SetupController@save_payments');
-Route::get('setup/smtp', 'SetupController@setup_smtp');
-Route::post('setup/smtp', 'SetupController@save_smtp');
-Route::get('setup/complete', 'SetupController@setup_complete');
-Route::get('404', 'HomeController@notfound_404')->name('404');
+Route::group(['prefix' => 'setup', 'middleware' => '\App\Http\Middleware\Setup'], function() {
+  Route::get('', 'SetupController@setup');
+  Route::get('restart', 'SetupController@setup_restart');
+  Route::get('storage', 'SetupController@setup_storage');
+  Route::post('storage', 'SetupController@save_storage');
+  Route::get('tts', 'SetupController@setup_tts');
+  Route::post('tts', 'SetupController@save_tts');
+  Route::get('payments', 'SetupController@setup_payments');
+  Route::post('payments', 'SetupController@save_payments');
+  Route::get('smtp', 'SetupController@setup_smtp');
+  Route::post('smtp', 'SetupController@save_smtp');
+  Route::get('admin', 'SetupController@setup_admin');
+  Route::post('admin', 'SetupController@save_admin');
+  Route::get('complete', 'SetupController@setup_complete');
+  Route::get('alreadycomplete', 'SetupController@setup_alreadycomplete');
+});
+
+  Route::get('404', 'HomeController@notfound_404')->name('404');
 Route::get('home', 'HomeController@index');
 Route::get('about', 'HomeController@about');
 Route::get('contact', 'HomeController@contact');

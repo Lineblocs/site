@@ -7,6 +7,8 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use  Illuminate\Http\Request;
+use App\Http\Controllers\Auth\Request as AuthRequest;
 
 class AuthController extends Controller
 {
@@ -22,6 +24,8 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    protected $redirectTo = '/admin/dashboard';
+   	protected $redirectAfterLogout = 'auth/login';
 
     /**
      * Create a new authentication controller instance.
@@ -31,10 +35,6 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'getLogout']);
-    }
-
-    protected function authenticated( $request, $user ) {
-        return redirect()->intended( $user->admin == 1 ? '/admin/dashboard' : '/not-applicable');
     }
 
     /**
@@ -65,5 +65,14 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+
+    protected function authenticated(Request $request, $user)
+    {
+      if ( $user->admin ) {// do your margic here
+            return redirect('/admin/dashboard');
+      }
+      return redirect('/');
     }
 }

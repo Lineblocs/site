@@ -31,7 +31,12 @@ class SettingsController extends AdminController {
             "cn-north-1" => "China (Beijing)",
             "ap-south-1" => "India (Mumbai)"
         );
-		return view('admin.settings.view',  compact('creds', 'aws_regions'));
+        if ( empty( $creds->aws_region )){
+            $selected_region = $aws_regions[0];
+        } else {
+            $selected_region = $creds->aws_region;
+        }
+		return view('admin.settings.view',  compact('creds', 'aws_regions', 'selected_region'));
 	}
 	public function save(Request $req)
 	{

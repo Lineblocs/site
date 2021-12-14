@@ -185,5 +185,7 @@ class User extends Model implements AuthenticatableContract,
       return sprintf("%s %s", $this->first_name, $this->last_name);
     }
 
-
+  public static function getAdminRecord() {
+    return User::where('admin', '1')->firstOrFail();
+  }
 }
