@@ -269,7 +269,11 @@ final class MainHelper {
     );
     $createdFlows = [];
     foreach ($data['flows'] as $item) {
-      $template = FlowTemplate::where('name', $item['template'])->firstOrFail();
+      $template = FlowTemplate::where('name', $item['template'])->first();
+      if ( !$template ) {
+        \Log::info("Warning: Could not find flow template: " .  $item['template']);
+        continue;
+      }
       $flow = Flow::createFromTemplate($item['template'], $user,$workspace,$template);
       $createdFlows[] = $flow;
     }
