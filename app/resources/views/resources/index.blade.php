@@ -18,8 +18,8 @@
         <div class="row search">
             <div class="col-12" id="search-box">
                 <form name="search_frm" method="GET" action="" novalidate id="search-form">
-                    <input name="search" type="search" id="autocomplete-input" class="autocomplete" placeholder="Search Resources"/>
-                    <button id="search" class="btn-custom service-btn resource-search">
+                    <input name="search" type="search" id="autocomplete-input" class="autocomplete" placeholder="Search Resources" required=""/>
+                    <button type="submit" id="search" class="btn-custom service-btn resource-search">
                         <i class="material-icons"></i>
                         <span>Search</span>
                     </button>
@@ -255,11 +255,7 @@
 
     $("#search").click(function() {
         console.log("search clicked..");
-        if (!validateForm()) {
-            return;
-        }
         clickedSearch = true;
-        $("form[name='search_frm']").submit();
     });
     function clearHideLogic() {
          var val = $( "input[name='search']" ).val();
