@@ -69,9 +69,22 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{url('admin/settings')}}">
-                        <i class="glyphicon glyphicon-user"></i> Settings
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> Settings
+                        <span class="fa arrow"></span>
                     </a>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/settings')}}">
+                                <i class="glyphicon glyphicon-list"></i>  API details
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/customizations')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Customizations
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{{url('admin/rate')}}">

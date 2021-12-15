@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "lineblocs/admin-site",
+    "description": "Lineblocs site for admins",
+    "keywords": ["lineblocs", "voip", "pbx", "kubernetes", "docker", "cloud native"],
     "license": "MIT",
     "type": "project",
     "repositories": [
