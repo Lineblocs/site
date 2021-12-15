@@ -562,3 +562,7 @@ section.gray {
     width: 112px;
     border: none;
 }
+.no-results {
+  text-align: center;
+  font-size: 14px;
+}

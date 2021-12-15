@@ -91,6 +91,12 @@ class ResourcesController extends BaseController {
         }
 
     }
+
+    if ( $searched ) {
+      $acOptions = $this->createACoptions();
+      $query = $search;
+      return view('resources.search_results', compact('data', 'searched', 'results', 'search', 'acOptions', 'query'));
+    }
     $acOptions = $this->createACoptions();
     return view('resources.index', compact('data', 'searched', 'results', 'search', 'acOptions'));
   }

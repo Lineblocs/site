@@ -325,3 +325,8 @@ ul:not(.browser-default) {
   width: 100%;
   margin-bottom: 50px;
 }
+.no-results {
+  font-size: 14px;
+  margin-top: 20px;
+  margin-bottom: 200px;
+}
