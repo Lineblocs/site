@@ -10,6 +10,8 @@ use App\SIPRateCenter;
 use App\SIPRateCenterProvider;
 use App\SIPProvider;
 use DB;
+use App\NumberService\ThirdParty\VoIPMSNumberService;
+
 abstract class NumberService {
     public static function listNumbers($country, $region, $prefix, $center=NULL, $params=array()){
         $amount = 50;
