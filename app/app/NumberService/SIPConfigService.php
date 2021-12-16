@@ -1,4 +1,4 @@
-<?php namespace App\ThirdParty;
+<?php namespace App\NumberService;
 use App\Extension;
 
 final class SIPConfigService {

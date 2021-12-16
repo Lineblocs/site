@@ -8,7 +8,7 @@ use App\SIPRateCenterProvider;
 use App\SIPProvider;
 $provider1 = SIPProvider::where('name', 'VoIPms')->firstOrFail();
 $countries = SIPCountry::all();
-$test = new \App\ThirdParty\VoIPMSNumberService();
+$test = new \App\NumberService\ThirdParty\VoIPMSNumberService();
 foreach ($countries as $country) {
   if ($country->iso=='CA') {
 /*

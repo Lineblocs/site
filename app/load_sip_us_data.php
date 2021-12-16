@@ -1,7 +1,7 @@
 <<?php
 use App\User;
 use App\UserDebit;
-use App\ThirdParty\VoIPMSNumberService;
+use App\NumberService\ThirdParty\VoIPMSNumberService;
 $country = "US";
 $region = "CA";
 $prefix = "";

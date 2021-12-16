@@ -6,7 +6,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPRateCenterProvider;
 use App\SIPProvider;
-use App\ThirdParty\VoIPMSNumberService;
+use App\NumberService\ThirdParty\VoIPMSNumberService;
 
 $instance = new VoIPMSNumberService();
 $provider1 = SIPProvider::where('name', 'VoIPms')->firstOrFail();

@@ -10,7 +10,7 @@ use \App\MacroFunction;
 use \App\MacroTemplate;
 use \App\Transformers\MacroFunctionTransformer;
 use \App\Transformers\MacroTemplateTransformer;
-use \App\ThirdParty\SIPConfigService;
+use \App\NumberService\SIPConfigService;
 use \App\Helpers\PBXServerHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;

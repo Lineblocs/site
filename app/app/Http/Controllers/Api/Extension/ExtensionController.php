@@ -10,7 +10,7 @@ use \App\Extension;
 use \App\ExtensionTag;
 use \App\Flow;
 use \App\Transformers\ExtensionTransformer;
-use \App\ThirdParty\SIPConfigService;
+use \App\NumberService\SIPConfigService;
 use \App\Helpers\PBXServerHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;

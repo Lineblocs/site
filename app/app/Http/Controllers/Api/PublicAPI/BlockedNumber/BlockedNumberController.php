@@ -11,7 +11,7 @@ use \App\DIDNumberTag;
 use \App\UserDebit;
 use \App\Flow;
 use \App\Transformers\DIDNumberTransformer;
-use \App\ThirdParty\NumberService;
+use \App\NumberService\NumberService;
 use \App\Helpers\MainHelper;
 use \App\Helpers\WorkflowTraits\BlockedNumber\BlockedNumberWorkflow;
 use \DB;
