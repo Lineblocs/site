@@ -9,6 +9,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPRateCenterProvider;
 use App\SIPProvider;
+use App\NumberInventory;
 use DB;
 
 class InventoryService extends NumberService {
@@ -54,7 +55,7 @@ class InventoryService extends NumberService {
               ->whereLike('number', \DB::raw($prefix.'%'));
         $result=[];
         foreach ($numbers->get() as $item){
-            $result[] =$this->mapNumber($item);
+            $result[] =$this->mapNumber($country,$type,$item);
 
         }
 
