@@ -30,7 +30,7 @@ class CreateNumberInventory extends Migration
 
 
             $table->integer('routed_server')->nullable()->unsigned();
-            $table->foreign('routed_server')->references('id')->on('sip_routers')->onDelete('CASCADE');
+            $table->foreign('routed_server')->references('id')->on('sip_routers')->onDelete('SET NULL');
 
             $table->integer('provider_id')->nullable()->unsigned();
             $table->foreign('provider_id')->references('id')->on('sip_providers')->onDelete('CASCADE');
