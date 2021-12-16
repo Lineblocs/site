@@ -22,5 +22,6 @@ return [
     'ip_whitelist' => 'IP Whitelist',
     'rates' => 'Rates',
     'dids' => 'DID Numbers',
-    'prefixes' => 'Prefixes'
+    'prefixes' => 'Prefixes',
+    'import' => 'Import'
 ];

@@ -16,6 +16,12 @@
                                 class="glyphicon glyphicon-plus-sign"></span> {{
 					trans("admin/modal.new") }}</a>
                 </div>
+                <div class="pull-right">
+                    <a href="{!! url('admin/rate/import') !!}"
+                       class="btn btn-sm  btn-primary iframe"><span
+                                class="glyphicon glyphicon-plus-sign"></span> {{
+					trans("admin/modal.import") }}</a>
+                </div>
             </div>
         </h3>
     </div>
