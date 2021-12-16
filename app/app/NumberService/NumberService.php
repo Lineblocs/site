@@ -53,7 +53,7 @@ abstract class NumberService {
       // first check inventory
       $inventory = new \App\NumberService\InventoryService();
       $inventoryNumbers = $inventory->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
-      list( $numbers, $exceededAllowedAmount ) = $this->addNumbers( $numbers, $inventoryNumbers, $amount );
+      list( $numbers, $exceededAllowedAmount ) = NumberService::addNumbers( $numbers, $inventoryNumbers, $amount );
 
       foreach ($providers as $provider) {
         if ( $exceededAllowedAmount ) {
@@ -62,7 +62,7 @@ abstract class NumberService {
 
         $provider = NumberService::getProvider($provider->api_name) ;
         $providerNumbers = $provider->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
-        list( $numbers, $exceededAllowedAmount ) = $this->addNumbers( $numbers, $providerNumbers );
+        list( $numbers, $exceededAllowedAmount ) = NumberService::addNumbers( $numbers, $providerNumbers, $amount );
         if ( $exceededAllowedAmount ) {
           break;
         }
