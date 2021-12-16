@@ -19,7 +19,7 @@ class CreateNumberInventory extends Migration
             $table->string('api_number');
             $table->string('country');
             $table->string('region');
-            $table->string('name');
+            $table->string('status'); // available, disconnected, etc..
             $table->integer('monthly_cost'); //cents
             $table->integer('setup_cost'); //cents
             $table->integer('type'); //local,toll-free,vanity

@@ -47,6 +47,11 @@ class InventoryService extends NumberService {
             'number_inventory.created_at')
         );
         $numbers->join('sip_providers', 'sip_providers.id', '=', 'number_inventory.provider_id');
+        $numbers->whereNull('reserved_by')
+              ->where('region', $region)
+              ->where('country', $country)
+              ->where('type', $type)
+              ->whereLike('number', \DB::raw($prefix.'%'));
         $result=[];
         foreach ($numbers->get() as $item){
             $result[] =$this->mapNumber($item);
