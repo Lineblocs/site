@@ -69,6 +69,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/number')}}">
+                        <i class="glyphicon glyphicon-user"></i> Number Inventory
+                    </a>
+                </li>
+                <li>
                     <a href="#">
                         <i class="glyphicon glyphicon-bullhorn"></i> Settings
                         <span class="fa arrow"></span>

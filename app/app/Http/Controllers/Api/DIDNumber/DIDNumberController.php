@@ -64,7 +64,7 @@ class DIDNumberController extends ApiAuthController {
 
           $providerObj = NumberService::getProvider($provider);
 
-          $register = $providerObj->register($type, $apiNumber);
+          $register = $providerObj->register($workspace, $type, $apiNumber);
         if ($register) {
             $monthlyCost = "";
             $params = [

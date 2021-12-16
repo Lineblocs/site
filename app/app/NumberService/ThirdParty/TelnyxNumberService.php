@@ -1,6 +1,8 @@
-<?php namespace App\ThirdParty;
+<?php 
+namespace App\NumberService\ThirdParty;
 use Config;
 use Session;
+use App\NumberService\NumberService;
 final class TelnyxNumberService {
 
     public static function cachePut($key, $value)
@@ -74,7 +76,7 @@ final class TelnyxNumberService {
       }
       return $numbers;  
     }
-    public static function register($number)
+     public function register($workspace, $type, $number, $region=NULL, $cost=NULL)
     {
       $telnyx = Config::get("telnyx");
       $payload = [

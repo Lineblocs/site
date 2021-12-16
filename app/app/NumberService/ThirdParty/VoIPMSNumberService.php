@@ -1,10 +1,10 @@
 <?php
-namespace App\ThirdParty;
+namespace App\NumberService\ThirdParty;
 use Config;
 use Session;
 use Log;
 use App\Helpers\MainHelper;
-use App\ThirdParty\NumberService;
+use App\NumberService\NumberService;
 use App\Classes\VoIPms;
 class VoIPMSNumberService extends NumberService {
     public function __construct() {
@@ -135,7 +135,7 @@ class VoIPMSNumberService extends NumberService {
       }
       return $numbers;
     }
-    public function register($type, $number, $region=NULL, $cost=NULL)
+    public function register($workspace, $type, $number, $region=NULL, $cost=NULL)
     {
       if ($type=='local') {
         //$routing = "account:" . $this->config['account_no'];

@@ -1,5 +1,5 @@
 <?php
-namespace App\ThirdParty;
+namespace App\NumberService;
 use Config;
 use Session;
 use Log;
@@ -47,27 +47,47 @@ abstract class NumberService {
       }
 
       $numbers = [];
+
+      // first check inventory
+      $inventory = new \App\NumberService\InventoryService();
+      $inventoryNumbers = $inventory->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
+      list( $numbers, $exceededAllowedAmount ) = $this->addNumbers( $numbers, $inventoryNumbers );
+
       foreach ($providers as $provider) {
+        if ( $exceededAllowedAmount ) {
+          break;
+        }
+
         $provider = NumberService::getProvider($provider->api_name) ;
         $providerNumbers = $provider->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
-        $addedNumbers = $numbers + $providerNumbers;
-        if (count($addedNumbers) > $amount) {
-          $remains = $amount - count($numbers);
-          $take = array_slice($addedNumbers, count($numbers), $remains);
-          $numbers = $numbers + $take;
-        } else {
-          $numbers = $addedNumbers;
-        }
-        if (count($numbers)==$amount) {
+        list( $numbers, $exceededAllowedAmount ) = $this->addNumbers( $numbers, $providerNumbers );
+        if ( $exceededAllowedAmount ) {
           break;
         }
       }
       return NumberService::sortProviderNumbers($numbers);
     }
+
+    public static function addNumbers($allNumbers, $numbers, $totalAllowed)
+    {
+        $addedNumbers = $allNumbers + $numbers;
+        if (count($addedNumbers) > $amount) {
+          $remains = $amount - count($numbers);
+          $take = array_slice($addedNumbers, count($allNumbers), $remains);
+          $allNumbers = $allNumbers + $take;
+        } else {
+          $allNumbers = $addedNumbers;
+        }
+        if (count($allNumbers)==$totalAllowed) {
+          return [$allNumbers, TRUE];
+        }
+        return [$allNumbers, FALSE];
+      }
+
     public static function sortProviderNumbers($numbers) {
       return $numbers;
     }
-    abstract public function register($type, $number, $region=NULL, $cost=NULL);
+    abstract public function register($workspace, $type, $number, $region=NULL, $cost=NULL);
     abstract public function unrent($number);
     abstract public function getName();
     public function getNumberFields() {
@@ -79,7 +99,11 @@ abstract class NumberService {
       return $this->getNumberFields() + $params;
     }
     public static function getProvider($name) {
-      $full = "\\App\\ThirdParty\\".$name."NumberService";
+      if ( $name=='Inventory') {
+        return new \App\NumberService\InventoryService();
+
+      }
+      $full = "\\App\\NumberService\\ThirdParty\\".$name."NumberService";
       return new $full;
     }
 

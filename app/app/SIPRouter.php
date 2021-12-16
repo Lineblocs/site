@@ -9,6 +9,14 @@ class SIPRouter extends Model {
 
   protected $guarded  = array('id');
   protected $table  = "sip_routers";
+  public static function asSelect() {
+    $list = [];
+    $items = self::all();
+    foreach ( $items as $item ) {
+      $list[ $item->id ] = $item->name;
+    }
+    return $list;
+  }
 }
 
 

@@ -158,6 +158,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('server/{server}/delete', 'Admin\MediaServerController@delete');
     Route::resource('server', 'Admin\MediaServerController');
 
+
+    # NumberInventorys
+    Route::get('number/data', 'Admin\NumberInventoryController@data');
+    Route::get('number/{number}/show', 'Admin\NumberInventoryController@show');
+    Route::get('number/{number}/edit', 'Admin\NumberInventoryController@edit');
+    Route::get('number/{number}/delete', 'Admin\NumberInventoryController@delete');
+    Route::resource('number', 'Admin\NumberInventoryController');
+
+
+
      # SIPCountrys
     Route::get('country/data', 'Admin\SIPCountryController@data');
     Route::get('country/{country}/add_region', 'Admin\SIPCountryController@add_region');
