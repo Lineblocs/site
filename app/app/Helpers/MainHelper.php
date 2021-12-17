@@ -720,4 +720,27 @@ final class MainHelper {
 
       }
 
+    public static function determineFileType( $mime, $extension ) {
+            if ( $mime == 'text/csv') {
+                return 'csv';
+            }
+            if ( $mime == 'text/plain' && $extension =='csv' ) {
+                return 'csv';
+            }
+
+            if ( $mime == 'text/tsv') {
+                return 'tsv';
+            }
+            if ( $mime == 'text/plain' && $extension =='tsv' ) {
+                return 'tsv';
+            }
+            if (  $extension =='.xls') {
+                return 'xls';
+            }
+            if (   $extension =='.xlsx') {
+                return 'xlsx';
+            }
+            return FALSE;
+
+    }
 }

@@ -122,6 +122,134 @@ $countries = [
         $number->delete();
     }
 
+
+    public function import(Request $request)
+    {
+        return view('admin.number.import');
+    }
+
+    public function import_save(Request $request)
+    {
+        $session = $request->session();
+        if(!$request->hasFile('file')) {
+            return view('admin.number.import');
+        }
+        if($request->hasFile('file') && !$request->file('file')->isValid()){
+            return view('admin.number.import');
+        }
+        $file = $request->file('file');
+        $size = $file->getSize();
+        $mime = $file->getMimeType();
+        $path = $file->getPathName();
+        $extension = $file->getClientOriginalExtension();
+        $type = MainHelper::determineFileType($mime, $extension);
+
+        if ( !$type ) {
+            $session->flash('type', 'danger');
+            $session->flash('message', 'Password did not match');
+            return view('admin.number.import');
+        }
+        $file_name = str_random(30) . '.' . $file->getClientOriginalExtension();
+        $contents = file_get_contents($file->getRealPath());
+        if ( $type == 'csv' ) {
+            $records = $this->parseCSV( $path );
+        } else if ( $type == 'tsv' ) {
+            $records = $this->parseCSV( $path, '\t' );
+        } else if ( $type == 'xls' ) {
+            $records = $this->parseXLS( $path );
+        } else if ( $type == 'xlsx' ) {
+            $records = $this->parseXLS( $path );
+        }
+        foreach ( $records as $record ) {
+                $number = NumberInventory::create( $record );
+        }
+        $session->flash('type', 'success');
+        $session->flash('message', 'Number(s) uploaded');
+        return view('admin.number.import');
+    }
+
+    private function parseCSV( $path, $delim="," )
+    {
+        $row = 0;
+        $map = array(
+            0 => "api_number",
+            1 => "country",
+            2 => "region",
+            3 => "monthly_cost",
+            4 => "setup_cost",
+            5 => "provider_id",
+            6 => "routed_server"
+        );
+
+
+        $items = [];
+        $handle = fopen($path, "r");
+
+        if ( $handle == FALSE ) {
+            return FALSE;
+        }
+        while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+            $num = count($data);
+            $row++;
+            if ( $row == 1 ) {
+                continue; // headers
+            }
+            $item = [];
+            for ($c=0; $c < $num; $c++) {
+                $header = $map[$c];
+                $value = $data[$c];
+                if ( $header == 'provider_id' ) {
+                    // check if need to lookup by name
+                    $record = SIPProvider::where('name', $value)->first();
+                    $determined_value = NULL;
+
+                    if ( $record ) {
+                        $determined_value = $record->id;
+                    }
+
+                    // lookup by ID
+                    $record = SIPProvider::find( $value );
+                    if ( $record ) {
+                        $determined_value = $record->id;
+                    }
+
+
+                    if ( is_null( $determined_value ) ) {
+                        // leave value blank in this case...
+                        $value = "";
+                    } else {
+                        $value = $determined_value;
+                    }
+                } else  if ( $header == 'routed_server' ) {
+                    // check if need to lookup by name
+                    $record = SIPRouter::where('name', $value)->first();
+                    $determined_value = NULL;
+                    if ( $record ) {
+                        $determined_value = $record->id;
+                    }
+
+                    // lookup by ID
+                    $record = SIPRouter::find( $value );
+                    if ( $record ) {
+                        $determined_value = $record->id;
+                    }
+
+                    if ( is_null( $determined_value ) ) {
+                        // leave value blank in this case...
+                        $value = "";
+                    } else {
+                        $value = $determined_value;
+                    }
+                }
+                $item[ $header ] = $value;
+            }
+
+            $items[] = $item;
+
+        }
+        fclose($handle);
+        return $items;
+    }
     /**
      * Show a list of all the languages posts formatted for Datatables.
      *

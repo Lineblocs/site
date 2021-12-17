@@ -159,4 +159,103 @@ class CallRateController extends AdminController
             ->remove_column('id')
             ->make();
     }
+
+    public function import(Request $request)
+    {
+        return view('admin.number.import');
+    }
+
+    public function import_save(Request $request)
+    {
+        $session = $request->session();
+        if(!$request->hasFile('file')) {
+            return view('admin.number.import');
+        }
+        if($request->hasFile('file') && !$request->file('file')->isValid()){
+            return view('admin.number.import');
+        }
+        $file = $request->file('file');
+        $size = $file->getSize();
+        $mime = $file->getMimeType();
+        $path = $file->getPathName();
+        $extension = $file->getClientOriginalExtension();
+        $type = MainHelper::determineFileType($mime, $extension);
+
+        if ( !$type ) {
+            $session->flash('type', 'danger');
+            $session->flash('message', 'Password did not match');
+            return view('admin.number.import');
+        }
+        $file_name = str_random(30) . '.' . $file->getClientOriginalExtension();
+        $contents = file_get_contents($file->getRealPath());
+        if ( $type == 'csv' ) {
+            $records = $this->parseCSV( $path );
+        } else if ( $type == 'tsv' ) {
+            $records = $this->parseCSV( $path, '\t' );
+        } else if ( $type == 'xls' ) {
+            $records = $this->parseXLS( $path );
+        } else if ( $type == 'xlsx' ) {
+            $records = $this->parseXLS( $path );
+        }
+        foreach ( $records as $record ) {
+                $data = $record;
+                $prefixes = $data['prefixes'];
+                unset( $data['prefixes'] );
+                $rate = CallRate::create( $data );
+                foreach ( $prefixes as $prefix ) {
+                    CallRateDialPrefix::create([
+                            'call_rate_id' => $rate->id,
+                            'dial_prefix' => $prefix
+                    ]);
+                }
+        }
+        $session->flash('type', 'success');
+        $session->flash('message', 'Rate(s) uploaded');
+        return view('admin.number.import');
+    }
+    private function parseCSV( $path, $delim="," )
+    {
+        $row = 0;
+        $map = array(
+            0 => "name",
+            1 => "call_rate",
+            2 => "type",
+            3 => "inbound",
+            4 => "prefixes"
+        );
+
+
+        $items = [];
+        $handle = fopen($path, "r");
+
+        if ( $handle == FALSE ) {
+            return FALSE;
+        }
+        while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+            $num = count($data);
+            $row++;
+            if ( $row == 1 ) {
+                continue; // headers
+            }
+            $item = [];
+            $prefixesToAdd = [];
+            for ($c=0; $c < $num; $c++) {
+                $header = $map[$c];
+                $value = $data[$c];
+                if ( $header == 'prefixes' ) {
+                    // check if need to lookup by name
+
+                    $prefixesToAdd = implode(",", $value);
+                    $item[ 'prefixes' ] = $prefixesToAdd;
+                } else {
+                    $item[ $header ] = $value;
+                }
+            }
+
+            $items[] = $item;
+
+        }
+        fclose($handle);
+        return $items;
+    }
 }

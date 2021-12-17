@@ -10,13 +10,13 @@
         <h3>
             {!! trans("admin/callrates.call_rates") !!}
             <div class="pull-right">
-                <div class="pull-right">
+                <div class="pull-left button-margin">
                     <a href="{!! url('admin/rate/create') !!}"
                        class="btn btn-sm  btn-primary iframe"><span
                                 class="glyphicon glyphicon-plus-sign"></span> {{
 					trans("admin/modal.new") }}</a>
                 </div>
-                <div class="pull-right">
+                <div class="pull-left">
                     <a href="{!! url('admin/rate/import') !!}"
                        class="btn btn-sm  btn-primary iframe"><span
                                 class="glyphicon glyphicon-plus-sign"></span> {{

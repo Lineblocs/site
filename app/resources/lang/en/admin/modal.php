@@ -23,5 +23,6 @@ return [
     'rates' => 'Rates',
     'dids' => 'DID Numbers',
     'prefixes' => 'Prefixes',
-    'import' => 'Import'
+    'import' => 'Import',
+    'upload' => 'Upload'
 ];

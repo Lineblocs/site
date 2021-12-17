@@ -164,6 +164,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('number/{number}/show', 'Admin\NumberInventoryController@show');
     Route::get('number/{number}/edit', 'Admin\NumberInventoryController@edit');
     Route::get('number/{number}/delete', 'Admin\NumberInventoryController@delete');
+    Route::get('number/import', 'Admin\NumberInventoryController@import');
+    Route::post('number/import', 'Admin\NumberInventoryController@import_save');
     Route::resource('number', 'Admin\NumberInventoryController');
 
 

@@ -15592,3 +15592,7 @@ table.dataTable thead .sorting:after {
 
 	padding: 0 !important;
 }
+
+.button-margin {
+	margin-right: 5px;
+}
