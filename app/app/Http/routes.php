@@ -355,6 +355,7 @@ $api->version('v1', function($api) {
   $api->post('addUsageTrigger', '\App\Http\Controllers\BillingController@addUsageTrigger');
   $api->delete('delUsageTrigger/{triggerId}', '\App\Http\Controllers\BillingController@delUsageTrigger');
   $api->get('getCallSystemTemplates', '\App\Http\Controllers\MergedController@getCallSystemTemplates');
+  $api->get('getCallRoutingTemplates', '\App\Http\Controllers\MergedController@getCallRoutingTemplates');
   $api->get('getWorkspaceTokens', '\App\Http\Controllers\MergedController@getWorkspaceTokens');
   $api->get('refreshWorkspaceTokens', '\App\Http\Controllers\MergedController@refreshWorkspaceTokens');
   $api->get('getConfig', '\App\Http\Controllers\ConfigController@getConfig');
@@ -388,6 +389,15 @@ $api->version('v1', function($api) {
   $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
     $api->post('saveWidget', 'WidgetTemplateController@saveWidget');
     $api->get('listWidgets', 'WidgetTemplateController@listWidgets');
+  });
+
+  $api->group([ 'prefix' => 'flow', 'namespace' => '\App\Http\Controllers\Api\RouterFlow'], function($api) {
+      $api->get("/flowData/{flowId}", "FlowController@flowData");
+      $api->post("/saveFlow", "FlowController@saveFlow");
+      $api->post("/updateFlow/{flowId}", "FlowController@updateFlow");
+      $api->get("/listFlows", "FlowController@listFlows");
+      $api->delete("/deleteFlow/{flowId}", "FlowController@deleteFlow");
+      $api->get("/listTemplates", "FlowController@listTemplates");
   });
 
   $api->group([ 'prefix' => 'flow', 'namespace' => '\App\Http\Controllers\Api\Flow'], function($api) {
