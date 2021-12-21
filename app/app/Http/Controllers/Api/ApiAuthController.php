@@ -52,7 +52,15 @@ class ApiAuthController extends ApiController {
           }
           $user = NULL;
           $headers = apache_request_headers();
-          $token = $headers['authorization'];
+          $token = NULL;
+          foreach ( $headers as $key => $value ) {
+               $lower = strtolower($key);
+               if ( $lower == 'authorization' ) {
+                    $token = $value;
+               }
+          }
+              
+          //$token = $headers['authorization'];
 
            if (!empty($token)) {
              $parts = explode(" ", $token);

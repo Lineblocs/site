@@ -17,6 +17,7 @@ class CreateRouterFlows extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('description');
+            $table->string('category');
             $table->mediumText('flow_json');
             $table->timestamps();
             $table->integer('admin_id')->unsigned();

@@ -108,6 +108,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('rate/{rate}/edit', 'Admin\CallRateController@edit');
     Route::get('rate/{rate}/delete', 'Admin\CallRateController@delete');
     Route::resource('rate', 'Admin\CallRateController');
+
+
+    Route::get('routerflow/data', 'Admin\RouterFlowController@data');
+    Route::post('routerflow/show', 'Admin\RouterFlowController@show');
+    Route::get('routerflow/{routerflow}/edit', 'Admin\RouterFlowController@edit');
+    Route::put('routerflow/{routerflow}/delete', 'Admin\RouterFlowController@delete');
+    Route::resource('routerflow', 'Admin\RouterFlowController');
+
     # SIPProviders
     Route::get('provider/data', 'Admin\SIPProviderController@data');
     Route::get('provider/{provider}/show', 'Admin\SIPProviderController@show');
@@ -391,7 +399,7 @@ $api->version('v1', function($api) {
     $api->get('listWidgets', 'WidgetTemplateController@listWidgets');
   });
 
-  $api->group([ 'prefix' => 'flow', 'namespace' => '\App\Http\Controllers\Api\RouterFlow'], function($api) {
+  $api->group([ 'prefix' => 'routerflow', 'namespace' => '\App\Http\Controllers\Api\RouterFlow'], function($api) {
       $api->get("/flowData/{flowId}", "FlowController@flowData");
       $api->post("/saveFlow", "FlowController@saveFlow");
       $api->post("/updateFlow/{flowId}", "FlowController@updateFlow");

@@ -18,6 +18,7 @@ class CreateRouterFlowsTemplates extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('description');
+            $table->string('category');
             $table->mediumText('flow_json')->nullable();
         });
     }

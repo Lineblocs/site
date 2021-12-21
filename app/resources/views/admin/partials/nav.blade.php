@@ -74,6 +74,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/routerflow')}}">
+                        <i class="glyphicon glyphicon-user"></i> Router flows
+                    </a>
+                </li>
+                <li>
                     <a href="#">
                         <i class="glyphicon glyphicon-bullhorn"></i> Settings
                         <span class="fa arrow"></span>

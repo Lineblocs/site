@@ -22,6 +22,7 @@ use \App\SIPRegion;
 use \App\SIPRateCenter;
 use \App\SystemStatusCategory;
 use \App\NumberInventory;
+use \App\RouterFlow;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -61,6 +62,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('systemstatus', SystemStatusCategory::class);
        \Route::model('errortrace', ErrorUserTrace::class);
        \Route::model('number', NumberInventory::class);
+       \Route::model('routerflow', RouterFlow::class);
     }
 
     /**

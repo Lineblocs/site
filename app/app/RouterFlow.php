@@ -3,14 +3,14 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 
-class Flow extends Model {
+class RouterFlow extends Model {
   protected $dates = ['created_at', 'updated_at'];
 
   protected $guarded  = array();
   protected $casts = array(
     "started" => "boolean"
   );
-  public static function createFromTemplate($name, $user, $workspace, $template, $category='phone') {
+  public static function createFromTemplate($name, $user, $template, $category='pstn') {
           $json = $template->flow_json;
           $flow = RouterFlow::create([
             'admin_id' => $user->id,
