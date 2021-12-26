@@ -21,6 +21,7 @@ class CreateRtpproxyTbl extends Migration
             $table->float('cpu_used', 8, 2)->default(0.0);
             $table->float('mem_pct', 2, 4)->default(0.0);
             $table->float('mem_used', 8, 2)->default(0.0);
+            $table->integer('active')->default(1);
             $table->string('status')->default('uknown');
             $table->integer('priority')->default(0);
             $table->string('region')->default('');

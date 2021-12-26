@@ -20,6 +20,7 @@ use App\ErrorUserTrace;
 use \App\SIPCountry;
 use \App\SIPRegion;
 use \App\SIPRateCenter;
+use \App\RTPProxy;
 use \App\SystemStatusCategory;
 use \App\NumberInventory;
 use \App\RouterFlow;
@@ -63,6 +64,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('errortrace', ErrorUserTrace::class);
        \Route::model('number', NumberInventory::class);
        \Route::model('routerflow', RouterFlow::class);
+       \Route::model('rtpproxy', RTPProxy::class);
     }
 
     /**

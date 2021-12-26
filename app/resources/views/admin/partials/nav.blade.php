@@ -61,6 +61,13 @@
                         <i class="glyphicon glyphicon-user"></i> SIP Routers
                     </a>
                 </li>
+                <li>
+                    <a href="{{url('admin/rtpproxy')}}">
+                        <i class="glyphicon glyphicon-user"></i> RTP proxies
+                    </a>
+                </li>
+
+
 
 
                 <li>
