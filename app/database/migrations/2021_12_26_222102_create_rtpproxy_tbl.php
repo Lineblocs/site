@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateRtpproxyTbl extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('rtpproxy_sockets', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
+            $table->text('rtpproxy_sock`');
+            $table->integer('set_id', 10);
+            $table->float('cpu_pct', 2, 4)->default(0.0);
+            $table->float('cpu_used', 8, 2)->default(0.0);
+            $table->float('mem_pct', 2, 4)->default(0.0);
+            $table->float('mem_used', 8, 2)->default(0.0);
+            $table->string('status')->default('uknown');
+            $table->integer('priority')->default(0);
+            $table->string('region')->default('');
+
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('rtpproxy_sockets');
+    }
+}
