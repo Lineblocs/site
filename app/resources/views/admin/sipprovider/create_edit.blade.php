@@ -81,6 +81,14 @@
             </div>
         </div>
 
+        <div class="form-group  {{ $errors->has('carrier_key') ? 'has-error' : '' }}">
+            {!! Form::label('carrier_key', trans("admin/sipproviders.carrier_key"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('carrier_key', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('carrier_key', ':message') }}</span>
+            </div>
+        </div>
+
         <div class="form-group  {{ $errors->has('type_of_provider') ? 'has-error' : '' }}">
             {!! Form::label('type_of_provider', trans("admin/sipproviders.type_of_provider"), array('class' => 'control-label')) !!}
             <div class="controls">

@@ -11,5 +11,6 @@ return [
     'type_of_provider' => 'Type of provider',
    'api_name' => 'API Name', 
    'status' => 'Status',
-    'active' => 'Active'
+    'active' => 'Active',
+    'carrier_key' => 'Carrier key'
 ];
