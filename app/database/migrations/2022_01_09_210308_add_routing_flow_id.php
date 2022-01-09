@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddWorkspaceToRouterFlows extends Migration
+class AddRoutingFlowId extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class AddWorkspaceToRouterFlows extends Migration
      */
     public function up()
     {
-        Schema::table('router_flows', function (Blueprint $table) {
+        Schema::table('workspaces', function (Blueprint $table) {
             //
-            $table->integer('workspace_id')->unsigned();
-            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
+            $table->integer('flow_id')->nullable()->unsigned();
+            $table->foreign('flow_id')->references('id')->on('router_flows')->onDelete('CASCADE');
         });
     }
 
@@ -26,7 +26,7 @@ class AddWorkspaceToRouterFlows extends Migration
      */
     public function down()
     {
-        Schema::table('router_flows', function (Blueprint $table) {
+        Schema::table('workspaces', function (Blueprint $table) {
             //
         });
     }
