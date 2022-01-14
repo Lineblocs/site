@@ -1,14 +1,14 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/rtpproxys.media_servers") !!} :: @parent
+@section('title') {!! trans("admin/mediaservers.media_servers") !!} :: @parent
 @endsection
 
 {{-- Content --}}
 @section('main')
     <div class="page-header">
         <h3>
-            {!! trans("admin/rtpproxys.media_servers") !!}
+            {!! trans("admin/mediaservers.media_servers") !!}
             <div class="pull-right">
                 <div class="pull-right">
                     <a href="{!! url('admin/server/create') !!}"
@@ -23,9 +23,9 @@
     <table id="table" class="table table-striped table-hover">
         <thead>
         <tr>
-            <th>{!! trans("admin/rtpproxys.rtpproxy_sock") !!}</th>
-            <th>{!! trans("admin/rtpproxys.cpu_used") !!}</th>
-            <th>{!! trans("admin/rtpproxys.mem_used") !!}</th>
+            <th>{!! trans("admin/mediaservers.name") !!}</th>
+            <th>{!! trans("admin/mediaservers.ip_address") !!}</th>
+            <th>{!! trans("admin/mediaservers.ip_address_range") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>
             <th>{!! trans("admin/admin.action") !!}</th>
         </tr>
