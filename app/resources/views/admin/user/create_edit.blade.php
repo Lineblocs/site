@@ -9,7 +9,8 @@
             trans("admin/modal.workspaces") }}</a></li>
     <li class=""><a href="#tab-dids" data-toggle="tab"> {{
             trans("admin/modal.dids") }}</a></li>
-
+    <li class=""><a href="#tab-routingflows" data-toggle="tab"> {{
+            trans("admin/modal.routing_flows") }}</a>
     <li class=""><a href="#tab-billing" data-toggle="tab"> {{
 			trans("admin/modal.billing") }}</a></li>
     <li class=""><a href="#tab-ports" data-toggle="tab"> {{
@@ -210,7 +211,34 @@ true)) !!}
             </tbody>
         </table>
     </div>
+    <!-- routing flows tab -->
+    <div class="tab-pane" id="tab-routingflows">
+        <table class="table stripped">
+            <thead>
+                <th>Country</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                @foreach ($sipcountries as $country)
+                <tr>
+                    <td>{{$country->name}}</td>
+                    @if ( !empty( $country->wflow_id)  )
+                    <td>
+                        <a target="_blank" href="/admin/user/{{$country->wflow_id}}/flow" class="btn btn-primary">Edit</a>
+                    </td>f
+                    @else
+                    <td>
+                        <a target="_blank" href="/admin/user/createFlowForCountry?countryiso={{$country->iso}}" class="btn btn-primary">Create</a>
+                    </td>
+                    @endif
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
     <!-- Billing history tab -->
+
     <div class="tab-pane" id="tab-billing">
         <h3>Billing Overview</h3>
         <h5>Plan {{$user['plan']}}</h5>
@@ -254,6 +282,7 @@ true)) !!}
             </tbody>
         </table>
     </div>
+
     <!-- Port-in requests tab -->
     <div class="tab-pane" id="tab-ports">
         <h3>Port-In Requests</h3>

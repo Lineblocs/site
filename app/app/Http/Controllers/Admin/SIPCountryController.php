@@ -7,6 +7,7 @@ use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPProvider;
 use App\SIPRateCenterProvider;
+use App\RouterFlow;
 use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\SIPCountryRequest;
@@ -53,7 +54,19 @@ class SIPCountryController extends AdminController
     public function store(SIPCountryRequest $request)
     {
 
-        $country = new SIPCountry ($request->all());
+        //create new flow
+
+        $user = \Auth::user();
+        /*
+        $flow = RouterFlow::createFromTemplate('LCR', $user);
+        */
+        $data = $request->all();
+        $flow = RouterFlow::create([
+            'name' => 'flow for country: ' . $data['name'],
+            'flow_json' => NULL
+        ]);
+        $country = new SIPCountry ($data);
+        $country->flow_id = $flow->id;
         $country->save();
         header("X-Goto-URL: /admin/country/" . $country->id . "/edit");
     }
@@ -69,6 +82,14 @@ class SIPCountryController extends AdminController
         $regions =SIPRegion::where('country_id', $country->id)->get();
         return view('admin.sipcountry.create_edit', compact('country', 'regions'));
     }
+
+    public function edit_flow(SIPCountry $country)
+    {
+        $flowId = $country->flow_id;
+        return view('admin.sipcountry.edit_flow', compact('flowId'));
+    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -234,6 +255,7 @@ public function del_ratecenter(Request $request, SIPCountry $country, SIPRegion 
         return Datatables::of($countrys)
             //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
             ->add_column('actions', '<a href="{{{ url(\'admin/country/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+            <a href="{{{ url(\'admin/country/\' . $id . \'/flow\' ) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit_flow") }}</a>
                     <a href="{{{ url(\'admin/country/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();

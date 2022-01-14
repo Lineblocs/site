@@ -3,6 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\Workspace;
+use App\WorkspaceRoutingFlow;
+use App\RouterFlow;
+use App\SIPCountry;
 use App\PortNumber;
 use App\DIDNumber;
 use App\Http\Requests\Admin\UserRequest;
@@ -89,7 +92,10 @@ class UserController extends AdminController
          $billingInfo = $user->getBillingInfo();
          $countries = MainHelper::getCountries();
          $cannedEmails = AdminUIHelper::getCannedEmails();
-        return view('admin.user.create_edit', compact('user', 'numbers', 'workspaces', 'billingHistory', 'billingInfo', 'countries', 'ports', 'cannedEmails', 'dids'));
+         $sipcountries = SIPCountry::select(array('sip_countries.iso', 'sip_countries.name', 'workspaces_routing_flows.flow_id', \DB::raw('workspaces_routing_flows.id AS wflow_id')));
+         $sipcountries = $sipcountries->leftJoin('workspaces_routing_flows', 'workspaces_routing_flows.country_id', '=', 'sip_countries.id');
+         $sipcountries = $sipcountries->get();
+        return view('admin.user.create_edit', compact('user', 'numbers', 'workspaces', 'billingHistory', 'billingInfo', 'countries', 'ports', 'cannedEmails', 'dids', 'countries', 'sipcountries'));
     }
 
     /**
@@ -381,6 +387,34 @@ EOF;
         }
         return $text;
     }
+
+    public function edit_flow(WorkspaceRoutingFlow $workspaceflow)
+    {
+        $flowId = $workspaceflow->flow_id;
+        return view('admin.sipcountry.edit_flow', compact('flowId'));
+    }
+
+    public function create_flow_for_country(Request $request)
+    {
+        $iso = $request->get('countryiso');
+        $user = \Auth::user();
+        $country = SIPCountry::where('iso', $iso)->first();
+        $flow = RouterFlow::create([
+            'name' => 'flow for country: ' . $country->name,
+            'flow_json' => NULL
+        ]);
+        $workspace_flow = WorkspaceRoutingFlow::create([
+            'country_id' => $country->id,
+            'dest_code' => $country->country_code,
+            'flow_id' => $flow->id
+        ]);
+
+        $flowId = $workspace_flow->flow_id;
+        return view('admin.sipcountry.edit_flow', compact('flowId'));
+    }
+
+
+
     public function send_email(Request $request, User $user)
     {
         $subject = $request->get("subject");

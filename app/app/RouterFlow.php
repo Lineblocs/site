@@ -10,14 +10,16 @@ class RouterFlow extends Model {
   protected $casts = array(
     "started" => "boolean"
   );
-  public static function createFromTemplate($name, $user, $template, $category='pstn') {
-          $json = $template->flow_json;
-          $flow = RouterFlow::create([
-            'admin_id' => $user->id,
-            'name' => $name,
-            'flow_json' => $json,
-            'category' => $category
-          ]);
+  public static function createFromTemplate($template_name, $user, $category='pstn') {
+
+    $template = RouterFlowTemplate::where('name', $template_name)->first();
+      $json = $template->flow_json;
+      $flow = RouterFlow::create([
+        'admin_id' => $user->id,
+        'name' => $name,
+        'flow_json' => $json,
+        'category' => $category
+      ]);
        
       return $flow;
 

@@ -174,6 +174,7 @@ class User extends Model implements AuthenticatableContract,
       $work = \App\Workspace::where('creator_id', $this->id)->first();
       if ( $work ) {
         $limits = Config::get("service_plans")[$work->plan];
+        return $limits;
       } else {
         return [
           'call_duration' => 'N/A',

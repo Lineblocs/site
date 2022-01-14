@@ -35,6 +35,13 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('country_code') ? 'has-error' : '' }}">
+            {!! Form::label('country_code', trans("admin/sipcountrys.country_code"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('country_code', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('country_code', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('active') ? 'has-error' : '' }}">
             {!! Form::label('active', trans("admin/admin.active"), array('class' => 'control-label')) !!}
             <div class="controls">

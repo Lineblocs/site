@@ -21,6 +21,8 @@ class WorkspacesRoutingFlows extends Migration
             $table->foreign('flow_id')->references('id')->on('router_flows')->onDelete('CASCADE');
             $table->integer('workspace_id')->unsigned();
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
+            $table->integer('country_id')->unsigned();
+            $table->foreign('country_id')->references('id')->on('sip_countries')->onDelete('CASCADE');
         });
     }
 

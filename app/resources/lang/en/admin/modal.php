@@ -24,5 +24,6 @@ return [
     'dids' => 'DID Numbers',
     'prefixes' => 'Prefixes',
     'import' => 'Import',
-    'upload' => 'Upload'
+    'upload' => 'Upload',
+    'routing_flows' => 'Routing flows'
 ];

@@ -85,6 +85,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 
     # Users
     Route::get('user/data', 'Admin\UserController@data');
+    Route::get('user/{workspaceflow}/flow', 'Admin\UserController@edit_flow');
+    Route::get('user/createFlowForCountry','Admin\UserController@create_flow_for_country');
     Route::get('user/{user}/show', 'Admin\UserController@show');
     Route::get('user/{user}/edit', 'Admin\UserController@edit');
     Route::get('user/{user}/delete', 'Admin\UserController@delete');
@@ -184,9 +186,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('number', 'Admin\NumberInventoryController');
 
 
-
      # SIPCountrys
     Route::get('country/data', 'Admin\SIPCountryController@data');
+    Route::get('country/{country}/flow', 'Admin\SIPCountryController@edit_flow');
     Route::get('country/{country}/add_region', 'Admin\SIPCountryController@add_region');
     Route::post('country/{country}/add_region', 'Admin\SIPCountryController@add_region_save');
     Route::get('country/{country}/add_region/{region}', 'Admin\SIPCountryController@add_region_edit');

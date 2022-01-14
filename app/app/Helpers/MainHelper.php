@@ -743,4 +743,32 @@ final class MainHelper {
             return FALSE;
 
     }
+    public static function createCallRouterEditingUrl($user, $flowId)
+    {
+
+      if (!$token = JWTAuth::fromUser($user)) {
+          \Log::error('could not create token');
+          throw new \Exception( 'could not create token' );
+      }
+
+       // $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
+       $params = sprintf( "?auth=%s&flowId=%s", $token, $flowId );
+       //$url = "https://callroutedesigner.lineblocs.com/edit".$params;
+       $url = "http://localhost:9000/edit".$params;
+       return $url;
+    }
+    public static function createCallRoutereUrl2($user, $flowId)
+    {
+
+      if (!$token = JWTAuth::fromUser($user)) {
+          \Log::error('could not create token');
+          throw new \Exception( 'could not create token' );
+      }
+
+       // $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
+       $params = sprintf( "?auth=%s&flowId=%s", $token, $flowId );
+       //$url = "https://callroutedesigner.lineblocs.com/edit".$params;
+       $url = "http://localhost:9000/edit".$params;
+       return $url;
+    }
 }

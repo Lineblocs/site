@@ -10,7 +10,7 @@ use \App\DIDNumber;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
 use \App\SIPProviderRate;
-
+use \App\WorkspaceRoutingFlow;
 use \App\SIPProviderWhitelistIp;
 use \App\SIPRouter;
 use \App\SIPRouterMediaServer;
@@ -65,6 +65,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('number', NumberInventory::class);
        \Route::model('routerflow', RouterFlow::class);
        \Route::model('rtpproxy', RTPProxy::class);
+       \Route::model('workspaceflow', WorkspaceRoutingFlow::class);
     }
 
     /**
