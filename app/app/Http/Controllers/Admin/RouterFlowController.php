@@ -58,6 +58,8 @@ class RouterFlowController extends AdminController
      */
     public function edit(RouterFlow $flow)
     {
+        $flowId = $flow->id;
+        return view('admin.sipcountry.edit_flow', compact('flowId'));
     }
 
     /**
@@ -103,7 +105,7 @@ class RouterFlowController extends AdminController
         $flows = RouterFlow::select(array('router_flows.id', 'router_flows.name', 'router_flows.created_at'));
 
         return Datatables::of($flows)
-            ->add_column('actions', '<a href="{{{ url(\'admin/flow/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+            ->add_column('actions', '<a href="{{{ url(\'admin/flow/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/flow/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
