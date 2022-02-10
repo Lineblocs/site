@@ -22,7 +22,10 @@ use App\Recording;
 use App\IpWhitelist;
 use App\BlockedNumber;
 use App\VerifiedCallerId;
+
+use App\Customizations;
 use App\Phone;
+
 use App\PhoneGroup;
 use App\WorkspaceUser;
 use JWTAuth;
@@ -639,6 +642,14 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $config = \Config::get("mothernodes");
         $options = MainHelper::getRegions();
         return $this->response->array($options);
+      }
+  public function getAllSettings(Request $request) {
+
+        $customizations = Customizations::getRecord();
+        $result = [
+          'customizations' => $customizations->toArray()
+        ];
+        return $this->response->array($result);
       }
 
 }

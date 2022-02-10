@@ -12,9 +12,15 @@ class Customizations extends Model {
   protected $guarded  = array('id');
   protected $table ='customizations';
   public static function getRecord() {
-    return Customizations:all()[0];
+    return Customizations::all()[0];
   }
-
+  public function toArray() {
+    $result = parent::toArray();
+    $result['app_logo'] = url('assets/img/' . $result['app_logo']);
+    $result['app_icon'] = url('assets/img/' . $result['app_icon']);
+    $result['admin_portal_logo'] = url('assets/img/' . $result['admin_portal_logo']);
+    return $result;
+  }
 }
 
 
