@@ -15,7 +15,7 @@ class AddSipCountryFields extends Migration
         Schema::table('sip_countries', function (Blueprint $table) {
             //
             $table->string('country_code')->default('');
-            $table->integer('flow_id')->unsigned();
+            $table->integer('flow_id')->unsigned()->nullable();
             $table->foreign('flow_id')->references('id')->on('router_flows')->onDelete('CASCADE');
         });
     }

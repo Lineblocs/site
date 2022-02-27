@@ -23,6 +23,17 @@ class LoadBasicData extends Seeder
 
         echo "loading SIP providers.." .PHP_EOL;
         require_once($dir2."load_sip_providers.php");
+
+        echo "loading SIP routers data.." .PHP_EOL;
+        require_once($dir2."load_sip_routers.php");
+        echo "loading System statuses.." .PHP_EOL;
+        require_once($dir2."load_system_statuses.php");
+        echo "loading call rates.." .PHP_EOL;
+        require_once($dir2."load_call_rates.php");
+
+
+
+
         echo "loading SIP data.." .PHP_EOL;
         require_once($dir2."load_sip_data.php");
         /*
@@ -31,12 +42,6 @@ class LoadBasicData extends Seeder
         echo "loading SIP United States data.." .PHP_EOL;
         require_once($dir2."load_sip_us_data.php");
         */
-        echo "loading SIP routers data.." .PHP_EOL;
-        require_once($dir2."load_sip_routers.php");
-        echo "loading System statuses.." .PHP_EOL;
-        require_once($dir2."load_system_statuses.php");
-        echo "loading call rates.." .PHP_EOL;
-        require_once($dir2."load_call_rates.php");
 
     }
 }

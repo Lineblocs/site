@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(FlowTableSeeder::class);
         $this->call(LoadSampleCalls::class);
         $this->call(PhoneDefSeeder::class);
-        $this->call(LoadBasicData::class);
         $this->call(LoadPhoneData::class);
+        $this->call(LoadBasicData::class);
         Model::reguard();
     }
 }

@@ -15,7 +15,6 @@ class CreateRouterFlowsTemplates extends Migration
         Schema::create('router_flows_templates', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->timestamps();
             $table->string('name');
             $table->string('description');
             $table->string('category');
