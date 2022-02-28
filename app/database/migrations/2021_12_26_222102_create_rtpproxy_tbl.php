@@ -15,7 +15,7 @@ class CreateRtpproxyTbl extends Migration
         Schema::create('rtpproxy_sockets', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->text('rtpproxy_sock`');
+            $table->string('rtpproxy_sock')->default('');
             $table->integer('set_id');
             $table->float('cpu_pct', 2, 2)->default(0.0);
             $table->float('cpu_used', 8, 2)->default(0.0);

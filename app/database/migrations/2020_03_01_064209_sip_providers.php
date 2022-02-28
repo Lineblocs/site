@@ -21,6 +21,7 @@ class SipProviders extends Migration
             $table->string('dial_prefix');
             $table->integer('priority');
             $table->string('host');
+            $table->string('status')->default('unknown');
         });
     }
 

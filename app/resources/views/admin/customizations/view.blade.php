@@ -12,7 +12,7 @@
         </h3>
     </div>
     <div class="col-md-12">
-        <form method="POST" action="">
+        <form method="POST" action="" enctype="multipart/form-data">
             <div class="row">
                 <h3>Logos</h3>
                 <hr/>

@@ -6,7 +6,8 @@ use App\Helpers\PBXServerHelper;
 use App\Workspace;
 use App\WorkspaceUser;
 use App\PlanUsagePeriod;
-
+use App\Customizations:
+use App\ApiCredential;
 class UserTableSeeder extends Seeder {
 
 public function run()
@@ -58,6 +59,8 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
     WorkspaceUser::createSuperAdmin($workspace, $user);
         PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);
     PBXServerHelper::addUserToProxy($user->toArray(), $workspace->toArray());
+    Customizations::create();
+    ApiCredential::create();
 	}
 
 }
