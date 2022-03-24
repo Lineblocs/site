@@ -42,6 +42,8 @@ class WorkspaceUser extends PublicResource {
       'create_byo_carrier' => 'bool',
       'manage_byo_did_numbers' => 'bool',
       'create_byo_did_number' => 'bool',
+      'manage_trunks' => 'bool',
+      'create_trunks' => 'bool',
 
 
 
@@ -78,7 +80,10 @@ class WorkspaceUser extends PublicResource {
       'manage_byo_carriers',
       'create_byo_carrier',
       'manage_byo_did_numbers',
-      'create_byo_did_number'
+      'create_byo_did_number',
+      'manage_trunks',
+      'create_trunks'
+
   ];
   public static function createSuperAdmin($workspace, $user, $extras=[]) {
       $attrs = [];

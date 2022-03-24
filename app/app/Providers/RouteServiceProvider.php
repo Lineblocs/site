@@ -24,6 +24,10 @@ use \App\RTPProxy;
 use \App\SystemStatusCategory;
 use \App\NumberInventory;
 use \App\RouterFlow;
+use \App\SIPTrunk;
+use \App\SIPTrunkOrigination;
+use \App\SIPTrunkOriginationEndpoint;
+use \App\SIPTrunkTermination;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -66,6 +70,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('routerflow', RouterFlow::class);
        \Route::model('rtpproxy', RTPProxy::class);
        \Route::model('workspaceflow', WorkspaceRoutingFlow::class);
+       \Route::model('trunk', SIPTrunk::class);
     }
 
     /**

@@ -25,5 +25,7 @@ return [
     'prefixes' => 'Prefixes',
     'import' => 'Import',
     'upload' => 'Upload',
-    'routing_flows' => 'Routing flows'
+    'routing_flows' => 'Routing flows',
+    'origination' => 'Origination',
+    'termination' => 'Termination',
 ];

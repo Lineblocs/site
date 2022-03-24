@@ -62,6 +62,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/trunk')}}">
+                        <i class="glyphicon glyphicon-user"></i> SIP Trunks
+                    </a>
+                </li>
+                <li>
                     <a href="{{url('admin/rtpproxy')}}">
                         <i class="glyphicon glyphicon-user"></i> RTP proxies
                     </a>

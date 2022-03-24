@@ -148,6 +148,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('host', 'Admin\SIPProviderController');
 
 
+
+    # SIPTrunks
+    Route::get('trunk/data', 'Admin\SIPTrunkController@data');
+    Route::get('trunk/{trunk}/show', 'Admin\SIPTrunkController@show');
+    Route::get('trunk/{trunk}/edit', 'Admin\SIPTrunkController@edit');
+    Route::get('trunk/{trunk}/delete', 'Admin\SIPTrunkController@delete');
+    Route::resource('trunk', 'Admin\SIPTrunkController');
+    //Route::resource('orig', 'Admin\SIPTrunkController');
+    //Route::resource('termination', 'Admin\SIPTrunkController');
+
+
     # SIPRouters
     Route::get('router/data', 'Admin\SIPRouterController@data');
     Route::get('router/{router}/show', 'Admin\SIPRouterController@show');
@@ -291,6 +302,13 @@ $api->version('v1', function($api) {
           $api->put("/{didId}", "DIDNumberController@put");
           $api->delete("/{didId}", "DIDNumberController@delete");
       });
+    $api->group([ 'prefix' => 'trunk', 'namespace' => '\SIPTrunk'], function($api) {
+        $api->get("/list", "SIPTrunkController@list");
+        $api->get("/{trunkId}", "SIPTrunkController@get");
+        $api->post("/", "SIPTrunkController@post");
+        $api->post("/{trunkId}", "SIPTrunkController@put");
+        $api->delete("/{trunkId}", "SIPTrunkController@delete");
+    });
 
     });
   });

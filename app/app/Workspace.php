@@ -40,7 +40,14 @@ class Workspace extends Model {
     $plans = \Config::get("service_plans");
     return $plans[ $this->plan ];
   }
-
+  public static function asSelect() {
+    $items = Workspace::all();
+    $results = [];
+    foreach ( $items as $item_db ){
+      $results[$item_db->id] = $item_db->name;
+    }
+    return $results;
+  }
 
       
 
