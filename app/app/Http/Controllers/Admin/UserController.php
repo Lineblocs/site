@@ -45,7 +45,9 @@ class UserController extends AdminController
      */
     public function create()
     {
-        return view('admin.user.create_edit');
+         $countries = MainHelper::getCountries();
+
+        return view('admin.user.create_edit', compact('countries'));
     }
 
     /**
@@ -60,6 +62,7 @@ class UserController extends AdminController
         $user->password = bcrypt($request->password);
         $user->confirmation_code = str_random(32);
         $user->save();
+        header("X-Goto-URL: /admin/user/" . $user->id . "/edit");
     }
 
     /**
@@ -95,7 +98,7 @@ class UserController extends AdminController
          $sipcountries = SIPCountry::select(array('sip_countries.iso', 'sip_countries.name', 'workspaces_routing_flows.flow_id', \DB::raw('workspaces_routing_flows.id AS wflow_id')));
          $sipcountries = $sipcountries->leftJoin('workspaces_routing_flows', 'workspaces_routing_flows.country_id', '=', 'sip_countries.id');
          $sipcountries = $sipcountries->get();
-        return view('admin.user.create_edit', compact('user', 'numbers', 'workspaces', 'billingHistory', 'billingInfo', 'countries', 'ports', 'cannedEmails', 'dids', 'countries', 'sipcountries'));
+        return view('admin.user.create_edit', compact('user', 'numbers', 'workspaces', 'billingHistory', 'billingInfo', 'countries', 'ports', 'cannedEmails', 'dids',  'sipcountries'));
     }
 
     /**
