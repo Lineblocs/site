@@ -302,14 +302,13 @@ $api->version('v1', function($api) {
           $api->put("/{didId}", "DIDNumberController@put");
           $api->delete("/{didId}", "DIDNumberController@delete");
       });
+    });
     $api->group([ 'prefix' => 'trunk', 'namespace' => '\SIPTrunk'], function($api) {
         $api->get("/list", "SIPTrunkController@list");
         $api->get("/{trunkId}", "SIPTrunkController@get");
         $api->post("/", "SIPTrunkController@post");
         $api->post("/{trunkId}", "SIPTrunkController@put");
         $api->delete("/{trunkId}", "SIPTrunkController@delete");
-    });
-
     });
   });
   $api->group([ 'prefix' => 'internal', 'namespace' => '\App\Http\Controllers\Api\Internal'], function($api) {
