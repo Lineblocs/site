@@ -72,7 +72,7 @@
           <div class="card-header" id="heading5">
             <h2 class="mb-0">
               <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                Does lineblocs offer an API like Twilio or Plivo?
+                Does Lineblocs offer an API like Twilio?
               </button>
             </h2>
           </div>
