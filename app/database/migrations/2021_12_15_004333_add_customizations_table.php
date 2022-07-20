@@ -17,6 +17,7 @@ class AddCustomizationsTable extends Migration
             $table->timestamps();
             $table->string('app_logo')->default('');
             $table->string('app_icon')->default('');
+            $table->string('alt_app_logo')->default('');
             $table->string('admin_portal_logo')->default('');
             $table->string('color_scheme')->default('');
             $table->string('layout_type')->default('');

@@ -32,6 +32,7 @@ public function run()
       'name' => 'admin',
       'api_token' => MainHelper::createAPIToken(),
       'api_secret' => MainHelper::createAPISecret(),
+      'plan' => 'ultimate'
     ]);
 WorkspaceUser::createSuperAdmin($workspace, $admin);
   PBXServerHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
@@ -55,6 +56,8 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
         'name' => 'workspace',
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
+        'plan' => 'ultimate'
+    ]);
       ]);
     WorkspaceUser::createSuperAdmin($workspace, $user);
         PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);

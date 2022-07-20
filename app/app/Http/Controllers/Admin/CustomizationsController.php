@@ -64,6 +64,16 @@ class CustomizationsController extends AdminController {
 			}
 			$update_params['app_icon'] = $app_icon;
 		}
+		if ($request->hasFile('alt_app_logo')) {
+			$alt_app_logo = $this->processUploadedFile($request, $record, 'alt_app_logo');
+			if ( !$alt_app_logo ) {
+				$session = $request->session();
+				$session->flash('type', 'error');
+				$session->flash('message', 'Could not save app logo');
+				return redirect("/admin/customizations");
+			}
+			$update_params['alt_app_logo'] = $alt_app_logo;
+		}
 		if ($request->hasFile('admin_portal_logo')) {
 			$admin_logo = $this->processUploadedFile($request, $record, 'admin_portal_logo');
 			if ( !$admin_logo ) {

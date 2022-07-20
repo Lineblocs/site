@@ -35,6 +35,15 @@
                     @endif
                 </div>
             </div>
+            <div class="row form-group">
+                <label for="alt_app_logo">Alt App logo (for login and user facing pages)</label>
+                <div class="controls">
+                    <input id="alt_app_logo" type="file" class="form-control" name="alt_app_logo" value=""/>
+                    @if (!empty( $record->alt_app_logo))
+                        <a target="_blank" href="/assets/img/{{$record->alt_app_logo}}">View current</a>
+                    @endif
+                </div>
+            </div>
 
             <div class="row form-group">
                 <label for="admin_portal_logo">Admin portal logo</label>

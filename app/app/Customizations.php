@@ -17,6 +17,7 @@ class Customizations extends Model {
   public function toArray() {
     $result = parent::toArray();
     $result['app_logo'] = url('assets/img/' . $result['app_logo']);
+    $result['alt_app_logo'] = url('assets/img/' . $result['alt_app_logo']);
     $result['app_icon'] = url('assets/img/' . $result['app_icon']);
     $result['admin_portal_logo'] = url('assets/img/' . $result['admin_portal_logo']);
     return $result;
