@@ -24,7 +24,7 @@ public function run()
     'office_number' => 'ADMIN',
     'confirmation_code' => md5(microtime() . env('APP_KEY')),
     'region' => 'ca-central-1',
-    'plan' => 'standard',
+    'plan' => 'ultimate',
     'stripe_id' => 'cus_HPMybdGfNCjbIl'
   ]);
     $workspace = Workspace::create([
@@ -47,7 +47,7 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
 			'mobile_number' => 'USER',
 			'office_number' => 'USER',
       'region' => 'ca-central-1',
-      'plan' => 'standard',
+      'plan' => 'ultimate',
       'stripe_id' => 'cus_HPMybdGfNCjbIl'
 		]);
       $workspace = Workspace::create([
