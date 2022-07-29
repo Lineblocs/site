@@ -12,6 +12,7 @@ use \App\SIPTrunkOriginationEndpoint;
 use \App\SIPTrunkTermination;
 use \App\SIPTrunkTerminationAcl;
 use \App\SIPTrunkTerminationCredential;
+use \App\DIDNumber;
 use \App\Transformers\TrunkTransformer;
 use \App\NumberService\SIPConfigService;
 use \App\Helpers\PBXServerHelper;
@@ -43,11 +44,13 @@ class SIPTrunkController extends ApiAuthController {
             $term_creds=  $data['term_creds'];
         }
         $term_settings =  $data['term_settings'];
+        $did_numbers=  $data['did_numbers'];
         unset( $data['orig_endpoints'] );
         unset( $data['orig_settings'] );
         unset( $data['term_acls'] );
         unset( $data['term_creds'] );
         unset( $data['term_settings'] );
+        unset( $data['did_numbers'] );
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         $trunk  = SIPTrunk::create( [
@@ -71,7 +74,15 @@ class SIPTrunkController extends ApiAuthController {
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
-
+        foreach ( $did_numbers as $did_id) {
+            $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->firstOrFail();
+            if (!$this->checkIfDIDAvailable( $did ) ) {
+                $this->response->errorinternal(sprintf('cant associate DID $s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number']));
+            }
+            $did->update([
+                'trunk_id' => $trunk->id
+            ]);
+        }
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
     }
 
@@ -129,6 +140,7 @@ class SIPTrunkController extends ApiAuthController {
         $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+        $did_numbers=  $data['did_numbers'];
         $orig_endpoints=  [];
         if ( array_key_exists('orig_endpoints',$data ) ) {
             $orig_endpoints=  $data['orig_endpoints'];
@@ -172,6 +184,15 @@ class SIPTrunkController extends ApiAuthController {
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
+        foreach ( $did_numbers as $did_id ) {
+            $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->firstOrFail();
+            if (!$this->checkIfDIDAvailable( $did ) ) {
+                $this->response->errorinternal(sprintf('cant associate DID $s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number']));
+            }
+            $did->update([
+                'trunk_id' => $trunk->id
+            ]);
+        }
     }
     public function trunkData(Request $request, $trunkId)
     {
