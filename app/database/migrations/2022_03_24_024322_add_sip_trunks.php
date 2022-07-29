@@ -16,6 +16,7 @@ class AddSipTrunks extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('name');
+            $table->string('public_id');
             $table->boolean('record');
             $table->string('record_type')->default('dual');
             $table->integer('workspace_id')->nullable()->unsigned();

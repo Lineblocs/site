@@ -501,6 +501,13 @@ $api->version('v1', function($api) {
      });
 
   });
+    $api->group([ 'prefix' => 'trunk', 'namespace' => '\App\Http\Controllers\Api\SIPTrunk'], function($api) {
+        $api->get("/list", "SIPTrunkController@listTrunks");
+        $api->get("/{trunkId}", "SIPTrunkController@trunkData");
+        $api->post("/", "SIPTrunkController@saveTrunk");
+        $api->post("/{trunkId}", "SIPTrunkController@updateTrunk");
+        $api->delete("/{trunkId}", "SIPTrunkController@deleteTrunk");
+    });
   $api->group([ 'prefix' => 'call', 'namespace' => '\App\Http\Controllers\Api\Call'], function($api) {
       $api->get("/callData/{callId}", "CallController@callData");
       $api->get("/listCall", "CallController@listCalls");

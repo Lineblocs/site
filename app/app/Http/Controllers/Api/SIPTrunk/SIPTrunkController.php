@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Api\Trunk;
+namespace App\Http\Controllers\Api\SIPTrunk;
 use \App\Http\Controllers\Api\ApiAuthController;
 use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
 use \App\SIPTrunk;
+use \App\SIPTrunkOrigination;
+use \App\SIPTrunkOriginationEndpoint;
+use \App\SIPTrunkTermination;
+use \App\SIPTrunkTerminationAcl;
+use \App\SIPTrunkTerminationCredential;
 use \App\Transformers\TrunkTransformer;
 use \App\NumberService\SIPConfigService;
 use \App\Helpers\PBXServerHelper;
@@ -43,7 +48,26 @@ class SIPTrunkController extends ApiAuthController {
         unset( $data['term_acls'] );
         unset( $data['term_creds'] );
         unset( $data['term_settings'] );
-        $trunk  = SIPTrunk::create( $data );
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $trunk  = SIPTrunk::create( [
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
+            'name' => $data['name'],
+            'record' => $data['record']
+        ]);
+        $orig_data = array_merge( $orig_settings, [
+            'trunk_id' => $trunk->id
+        ]);
+        $orig_settings_db  = SIPTrunkOrigination::create( $orig_data );
+        $term_data = [
+            'trunk_id' => $trunk->id,
+            'sip_addr' => $term_settings['sip_addr']
+        ];
+        $term_db = SIPTrunkTermination::create($term_data);
+        $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
+        $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
+        $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
@@ -51,24 +75,42 @@ class SIPTrunkController extends ApiAuthController {
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
     }
 
-    private function patchResource( $trunk, $trunk_resource_before, $trunk_resource_db, $trunk_resource_cls)
+    private function patchResource( $trunk, $trunk_resource_before, $trunk_resource_db, $trunk_resource_cls, $alt_key=NULL)
     {
         foreach ( $trunk_resource_db as $item ) {
             $found = FALSE;
-            foreach ( $trunk_resource as $item2 ) {
-                if ( isset( $item2['id'] ) && $item['id'] == $item2['id'] ) {
-                    $found = TRUE;
+            foreach ( $trunk_resource_before as $item2 ) {
+                if ( !$alt_key) {
+                    if ( (isset( $item2['id'] ) && $item['id'] == $item2['id'])
+                    || 
+                         isset( $item2[$alt_key] ) && $item[$alt_key] == $item2[$alt_key]) {
+                        $found = TRUE;
+                    }
+                } else {
+
+                    if ( isset( $item2['id'] ) && $item['id'] == $item2['id'] ) {
+                        $found = TRUE;
+                    }
                 }
             }
             if ( !$found ) {
                 $item->delete();
             }
         }
-        foreach ( $trunk_resource as $item ) {
+        foreach ( $trunk_resource_before as $item ) {
             $found = FALSE;
             foreach ( $trunk_resource_db as $item2 ) {
-                if ( isset( $item['id'] ) && $item['id'] == $item2['id'] ) {
-                    $found = $item2;
+                if ( !$alt_key) {
+                    if ( isset( $item['id'] ) && $item['id'] == $item2['id'] ) {
+
+                        $found = $item2;
+                    }
+                } else {
+                    if ( isset( $item['id'] ) && $item['id'] == $item2['id'] 
+                            || 
+                            isset( $item[$alt_key] ) && $item[$alt_key] == $item2[$alt_key] ) {
+                        $found = $item2;
+                    }
                 }
             }
             if ( $found ) {
@@ -83,6 +125,7 @@ class SIPTrunkController extends ApiAuthController {
 
     public function updateTrunk(Request $request, $trunkId)
     {
+         $trunk =   SIPTrunk::where( 'public_id', $trunkId )->firstOrFail();
         $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
@@ -106,7 +149,26 @@ class SIPTrunkController extends ApiAuthController {
         unset( $data['term_acls'] );
         unset( $data['term_creds'] );
         unset( $data['term_settings'] );
-        $trunk->update($data);
+        $trunk->update([
+            'name' => $data['name'],
+            'record' => $data['record']
+        ]);
+
+        $orig_data = array_merge( $orig_settings, [
+            'trunk_id' => $trunk->id
+        ]);
+        $orig_settings_db  = SIPTrunkOrigination::where('trunk_id', $trunk->id)->firstOrFail();
+        $orig_settings_db->update($orig_settings);
+
+        $term_data = [
+            'sip_addr' => $term_settings['sip_addr']
+        ];
+        $term_db = SIPTrunkTermination::where('trunk_id', $trunk->id)->firstOrFail();
+        $term_db->update($term_data);
+
+        $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
+        $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
+        $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
@@ -117,7 +179,21 @@ class SIPTrunkController extends ApiAuthController {
         if (!$this->hasPermissions($request, $trunk, 'manage_trunks')) {
             return $this->response->errorForbidden();
         }
-        return $this->response->array($trunk->toArray());
+
+        \Log::info(sprintf('loading trunk data for trunk ID = %s', $trunk->id));
+
+        $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
+        $orig_settings_db = SIPTrunkOrigination::where('trunk_id', $trunk->id)->first();
+        $term_settings_db = SIPTrunkTermination::where('trunk_id', $trunk->id)->first();
+        $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
+        $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
+
+
+        $data = $trunk->toArray();
+        $data['orig_endpoints'] = $orig_endpoints_db->toArray();
+        $data['orig_settings'] = $orig_settings_db->toArray();
+        $data['term_settings'] = $term_settings_db->toArray();
+        return $this->response->array($data);
     }
     public function listTrunks(Request $request)
     {

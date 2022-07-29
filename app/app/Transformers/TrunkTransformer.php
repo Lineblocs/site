@@ -3,12 +3,12 @@ namespace App\Transformers;
 use League\Fractal\TransformerAbstract;
 use \DB;
 use \Config;
-use App\Trunk;
+use App\SIPTrunk;
 
 final class TrunkTransformer extends TransformerAbstract {
-     public function transform(Trunk $flow)
+     public function transform(SIPTrunk $trunk)
     {
-        $array = $flow->toArray();
+        $array = $trunk->toArray();
         return $array;
     }
 }
