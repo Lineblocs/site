@@ -15596,3 +15596,9 @@ table.dataTable thead .sorting:after {
 .button-margin {
 	margin-right: 5px;
 }
+.add-btm-margin {
+	margin-bottom: 10px !important;
+}
+.trunk-list-input {
+	margin-bottom: 10px;
+}

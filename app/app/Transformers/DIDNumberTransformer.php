@@ -22,6 +22,14 @@ final class DIDNumberTransformer extends TransformerAbstract {
         if (array_key_exists($number->availability, $map)) {
           $array['availability'] = $map[ $number->availability ];
         }
+          $array['is_already_integrated'] = FALSE;
+        if ( !empty( $number->flow_id ) ) {
+          $array['is_already_integrated'] = TRUE;
+          $array['integrated_with'] = 'flow';
+        } else if ( !empty( $number->trunk_id ) ) {
+          $array['is_already_integrated'] = TRUE;
+          $array['integrated_with'] = 'trunk';
+        }
         return $array;
     }
 }

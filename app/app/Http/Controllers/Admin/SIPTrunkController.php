@@ -12,6 +12,7 @@ use \App\SIPTrunkTerminationCredential;
 
 use App\Workspace;
 use App\PortNumber;
+use App\DIDNumber;
 use App\Http\Requests\Admin\SIPTrunkRequest;
 use App\Helpers\MainHelper;
 use App\SIPTrunkHost;
@@ -86,7 +87,8 @@ class SIPTrunkController extends AdminController
         $term_settings = SIPTrunkTermination::where('trunk_id', '=', $trunk->id)->first();
         $term_acls = SIPTrunkTerminationAcl::where('trunk_id', '=', $trunk->id)->get();
         $term_creds = SIPTrunkTerminationCredential::where('trunk_id', '=', $trunk->id)->get();
-        return view('admin.siptrunk.create_edit', compact('trunk', 'orig_settings', 'orig_endpoints', 'term_settings', 'term_acls', 'term_creds', 'workspaces'));
+        $dids= DIDNumber::where('trunk_id', '=', $trunk->id)->get();
+        return view('admin.siptrunk.create_edit', compact('trunk', 'orig_settings', 'orig_endpoints', 'term_settings', 'term_acls', 'term_creds', 'workspaces', 'dids'));
     }
 
     /**

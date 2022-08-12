@@ -56,8 +56,9 @@ trait DIDNumberWorkflow {
     public function listNumbers(Request $request)
     {
         $paginate = $this->getPaginate( $request );
-        $user = $this->getUser($request);
-        $numbers = DIDNumber::where('user_id', $user->id);
+        //$user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $numbers = DIDNumber::where('workspace_id', $workspace->id);
         MainHelper::addSearch($request, $numbers, ['number', 'region']);
         return $this->response->paginator($numbers->paginate($paginate), new DIDNumberTransformer);
     }

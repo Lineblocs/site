@@ -21,7 +21,17 @@ use App\Helpers\WorkspaceHelper;
 use \DB;
 use Mail;
 use Config;
+use Exception;
+class DIDNumberAllocatedException extends Exception {
+    function __construct( $did_number, $msg ) {
+        $this->did_number = $did_number;
+        parent::__construct( $msg );
+    }
+    public function getDIDNumber() {
+        return $this->did_number;
 
+    }
+}
 
 class SIPTrunkController extends ApiAuthController {
     public function saveTrunk(Request $request)
@@ -44,13 +54,16 @@ class SIPTrunkController extends ApiAuthController {
             $term_creds=  $data['term_creds'];
         }
         $term_settings =  $data['term_settings'];
-        $did_numbers=  $data['did_numbers'];
+        $did_numbers = [];
+        if ( array_key_exists('did_numbers',$data ) ) {
+            $did_numbers=  $data['did_numbers'];
+            unset( $data['did_numbers'] );
+        }
         unset( $data['orig_endpoints'] );
         unset( $data['orig_settings'] );
         unset( $data['term_acls'] );
         unset( $data['term_creds'] );
         unset( $data['term_settings'] );
-        unset( $data['did_numbers'] );
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         $trunk  = SIPTrunk::create( [
@@ -71,18 +84,16 @@ class SIPTrunkController extends ApiAuthController {
         $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
         $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
         $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
+        try {
+            $this->integrateTrunkWithDIDNumbers($trunk, $workspace, $did_numbers);
+        } catch ( DIDNumberAllocatedException $ex ) {
+            $did_number = $ex->getDIDNumber();
+            return $this->response->errorInternal(sprintf('cant associate DID %s with trunk as it is already reserved. please unlink the DID before trying again..', $did_number['number']));
+        }
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
-        foreach ( $did_numbers as $did_id) {
-            $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->firstOrFail();
-            if (!$this->checkIfDIDAvailable( $did ) ) {
-                $this->response->errorinternal(sprintf('cant associate DID $s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number']));
-            }
-            $did->update([
-                'trunk_id' => $trunk->id
-            ]);
-        }
+        $this->patchResource( $trunk, $did_numbers, $did_numbers_db, "\\App\\DIDNumber" );
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
     }
 
@@ -140,8 +151,12 @@ class SIPTrunkController extends ApiAuthController {
         $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
-        $did_numbers=  $data['did_numbers'];
         $orig_endpoints=  [];
+        $did_numbers = [];
+        if ( array_key_exists('did_numbers',$data ) ) {
+            $did_numbers=  $data['did_numbers'];
+            unset( $data['did_numbers'] );
+        }
         if ( array_key_exists('orig_endpoints',$data ) ) {
             $orig_endpoints=  $data['orig_endpoints'];
         }
@@ -178,21 +193,53 @@ class SIPTrunkController extends ApiAuthController {
         $term_db = SIPTrunkTermination::where('trunk_id', $trunk->id)->firstOrFail();
         $term_db->update($term_data);
 
+        try {
+            $this->integrateTrunkWithDIDNumbers($trunk, $workspace, $did_numbers);
+        } catch ( DIDNumberAllocatedException $ex ) {
+            $did_number = $ex->getDIDNumber();
+            return $this->response->errorInternal(sprintf('cant associate DID %s with trunk as it is already reserved. please unlink the DID before trying again..', $did_number['number']));
+        }
         $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
         $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
         $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
-        foreach ( $did_numbers as $did_id ) {
-            $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->firstOrFail();
+    }
+
+    private function integrateTrunkWithDIDNumbers($trunk, $workspace, $did_numbers) {
+        $did_numbers_db = DIDNumber::where('trunk_id', $trunk->id)->get();
+        foreach ( $did_numbers as $did ) {
+            $did_id = $did['public_id'];
+            $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->first();
             if (!$this->checkIfDIDAvailable( $did ) ) {
-                $this->response->errorinternal(sprintf('cant associate DID $s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number']));
+                throw new DIDNumberAllocatedException( $did, 'cant associate DID %s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number'] );
             }
             $did->update([
                 'trunk_id' => $trunk->id
             ]);
         }
+        foreach ( $did_numbers_db  as $item ) {
+            $found = FALSE;
+            foreach ( $did_numbers as $did_id ) {
+
+                if ( (int) $did_id == $item->id ) {
+                    $found = TRUE;
+                }
+            }
+            if ( !$found ) {
+
+                $item->update([
+                    'trunk_id' => NULL
+                ]);
+            }
+        }
+    }
+    public function checkIfDIDAvailable( $did_db ) { 
+        if ( !empty( $did_db->flow_id ) ) {
+            return FALSE;
+        }
+        return TRUE;
     }
     public function trunkData(Request $request, $trunkId)
     {

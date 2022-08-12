@@ -15624,3 +15624,9 @@ table.dataTable thead .sorting:after {
 
 	padding: 0 !important;
 }
+.add-list-margin {
+	margin-bottom: 10px;
+}
+.add-btm-margin {
+	margin-bottom: 10px !important;
+}
