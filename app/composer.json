@@ -20,7 +20,7 @@
         "laravelcollective/html": "5.1.*",
         "cviebrock/eloquent-sluggable": "3.1.4",
         "dingo/api": "1.0.x@dev",
-        "tymon/jwt-auth": "0.5.13",
+        "tymon/jwt-auth": "0.5.12",
         "doctrine/dbal": "^2.9",
         "ramsey/uuid": "^3.8.0",
         "telnyx/telnyx-php": "^0.0.1",
