@@ -125,7 +125,7 @@
             @endif
 
             @if (isset($trunk))
-            <div class="tab-pane" id="tab-dids">
+            div class="tab-pane" id="tab-dids">
             <br/>
             <p>Below are the numbers that have been registered with this trunk:</p>
                 <br/>

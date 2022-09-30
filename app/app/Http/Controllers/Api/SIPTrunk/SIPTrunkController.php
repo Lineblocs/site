@@ -66,6 +66,13 @@ class SIPTrunkController extends ApiAuthController {
         unset( $data['term_settings'] );
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+
+        // check if trunk exists with same name
+
+        $trunkCount  = SIPTrunk::where('name', $data['name'])->count();
+        if ( $trunkCount  > 0 ) {
+            return $this->response->errorInternal(sprintf('trunk exists with name %s', $data['name']));
+        }
         $trunk  = SIPTrunk::create( [
             'user_id' => $user->id,
             'workspace_id' => $workspace->id,
@@ -93,7 +100,6 @@ class SIPTrunkController extends ApiAuthController {
         $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
-        $this->patchResource( $trunk, $did_numbers, $did_numbers_db, "\\App\\DIDNumber" );
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
     }
 

@@ -12,6 +12,7 @@ use App\Workspace;
 use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
+use App\SIPTrunk;
 use App\PhoneDefault;
 use App\Fax;
 use App\PlanUsagePeriod;
@@ -480,6 +481,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       } elseif ($module == 'workspaceUser') { 
         foreach ( $data['items'] as $item) {
           $item = WorkspaceUser::findOrFail($item['id']);
+          $item->delete();
+        }
+      } elseif ($module == 'trunks') { 
+        foreach ( $data['items'] as $item) {
+          $item = SIPTrunk::findOrFail($item['id']);
           $item->delete();
         }
       }

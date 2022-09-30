@@ -74,6 +74,7 @@ class AuthenticateController extends ApiAuthController
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
+            \Log::info("error occured: " . $e->getMessage());
             return $this->errorInternal($request, 'Could not create token');
         }
         $currentUser = Auth::user();
