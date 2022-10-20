@@ -33,6 +33,7 @@ class DIDNumberAllocatedException extends Exception {
     }
 }
 
+
 class SIPTrunkController extends ApiAuthController {
     public function saveTrunk(Request $request)
     {
@@ -97,10 +98,28 @@ class SIPTrunkController extends ApiAuthController {
             $did_number = $ex->getDIDNumber();
             return $this->response->errorInternal(sprintf('cant associate DID %s with trunk as it is already reserved. please unlink the DID before trying again..', $did_number['number']));
         }
-        $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
+
+
+
+        $this->updateOriginationEndpoint( $trunk, $orig_endpoints, $orig_endpoints_db );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
+    }
+
+    private function updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db ) {
+
+        // lookup IP addresses
+        // try to get all address types (v4 and v6)
+        for ($i = 0; $i != count($orig_endpoints) - 1; $i ++ ) {
+            $item = $orig_endpoints[$i];
+            $ipv4 = gethostbyname($item['sip_addr']);
+            // setting IP info...
+            $orig_endpoints[$i]['ipv4'] = $ipv4;
+            $orig_endpoints[$i]['ipv6'] = $ipv4;
+        }
+        $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
+
     }
 
     private function patchResource( $trunk, $trunk_resource_before, $trunk_resource_db, $trunk_resource_cls, $alt_key=NULL)
@@ -208,28 +227,30 @@ class SIPTrunkController extends ApiAuthController {
         $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
         $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
         $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
-        $this->patchResource( $trunk, $orig_endpoints, $orig_endpoints_db, "\\App\\SIPTrunkOriginationEndpoint" );
+        $this->updateOriginationEndpoint( $trunk, $orig_endpoints, $orig_endpoints_db );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
     }
 
     private function integrateTrunkWithDIDNumbers($trunk, $workspace, $did_numbers) {
         $did_numbers_db = DIDNumber::where('trunk_id', $trunk->id)->get();
-        foreach ( $did_numbers as $did ) {
-            $did_id = $did['public_id'];
+        foreach ( $did_numbers as $did_input ) {
+            $did_id = $did_input['public_id'];
             $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->first();
             if (!$this->checkIfDIDAvailable( $did ) ) {
                 throw new DIDNumberAllocatedException( $did, 'cant associate DID %s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number'] );
             }
-            $did->update([
-                'trunk_id' => $trunk->id
-            ]);
+            if ( $did->trunk_id != $trunk->id ) {
+                $did->update([
+                    'trunk_id' => $trunk->id
+                ]);
+            }
         }
         foreach ( $did_numbers_db  as $item ) {
             $found = FALSE;
-            foreach ( $did_numbers as $did_id ) {
+            foreach ( $did_numbers as $did_input ) {
 
-                if ( (int) $did_id == $item->id ) {
+                if ( $did_input['public_id'] == $item->public_id ) {
                     $found = TRUE;
                 }
             }
