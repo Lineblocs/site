@@ -3,6 +3,7 @@
 return [
     'create' => 'Create',
     'edit' => 'Edit',
+    'edit_flow' => 'Edit Flow',
     'reset' => 'Reset',
     'cancel' => 'Cancel',
     'general' => 'General',
