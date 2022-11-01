@@ -214,7 +214,7 @@ final class NamecheapHelper {
     }
 
     foreach ($sip_trunk_terminations as $cnt => $term_settings) {
-      $host = sprintf("%.pstn", $term_settings->sip_addr);
+      $host = sprintf("%s.pstn", $term_settings->sip_addr);
       $number = $cnt + $increment;
       //main PoP
       $nc['HostName'.$number] = $host;
@@ -224,7 +224,7 @@ final class NamecheapHelper {
     }
 
 
-    //echo var_dump($nc);
+    echo var_dump($nc);
     $result = $namecheap->dnsSetHosts("lineblocs.com", $nc);
     if (!$result) {
       Log::error( "NAMECHEAP error occured: " . $namecheap->Error);
