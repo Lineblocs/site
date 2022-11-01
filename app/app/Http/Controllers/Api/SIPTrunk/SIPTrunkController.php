@@ -101,12 +101,16 @@ class SIPTrunkController extends ApiAuthController {
 
 
 
-        $this->updateOriginationEndpoint( $trunk, $orig_endpoints, $orig_endpoints_db );
+        $this->updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db );
+        $this->updateDNSRecords( $trunk, $term_settings );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
     }
 
+    private function updateDNSRecords( $trunk, $term_settings) {
+
+    }
     private function updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db ) {
 
         // lookup IP addresses
@@ -227,7 +231,8 @@ class SIPTrunkController extends ApiAuthController {
         $orig_endpoints_db = SIPTrunkOriginationEndpoint::where('trunk_id', $trunk->id)->get();
         $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
         $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
-        $this->updateOriginationEndpoint( $trunk, $orig_endpoints, $orig_endpoints_db );
+        $this->updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db );
+        $this->updateDNSRecords( $trunk, $term_settings );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
     }

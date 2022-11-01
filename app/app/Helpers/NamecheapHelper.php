@@ -3,6 +3,8 @@
 namespace App\Helpers;
 use App\Helpers\MainHelper;
 use App\Classes\namecheap;
+use App\SIPTrunk;
+use App\SipTrunkTermination;
 use Config;
 use Log;
 final class NamecheapHelper {
@@ -10,6 +12,7 @@ final class NamecheapHelper {
     $regions = MainHelper::getRegions();
 
     $data = MainHelper::reservedIPsForHost();
+    $sip_trunk_terminations = SIPTrunkTermination::all();
     $nc = array();
     $sld = "lineblocs";
     $tld = " com";
@@ -209,6 +212,18 @@ final class NamecheapHelper {
         $nc['TTL'.$number] = '60';
       }
     }
+
+    foreach ($sip_trunk_terminations as $cnt => $term_settings) {
+      $host = sprintf("%.pstn", $term_settings->sip_addr);
+      $number = $cnt + $increment;
+      //main PoP
+      $nc['HostName'.$number] = $host;
+      $nc['RecordType'.$number] = 'A';
+      $nc['Address'.$number] = $ip;
+      $nc['TTL'.$number] = '60';
+    }
+
+
     //echo var_dump($nc);
     $result = $namecheap->dnsSetHosts("lineblocs.com", $nc);
     if (!$result) {

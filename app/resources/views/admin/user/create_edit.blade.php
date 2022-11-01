@@ -145,7 +145,7 @@ true)) !!}
 
 
         <div class="form-group  {{ $errors->has('confirmed') ? 'has-error' : '' }}">
-            {!! Form::label('confirmed', trans("admin/users.active_user"), array('class' => 'control-label')) !!}
+            {!! Form::label('confirmed', trans("admin/admin.active"), array('class' => 'control-label')) !!}
             <div class="controls">
                 {!! Form::label('confirmed', trans("admin/users.yes"), array('class' => 'control-label')) !!}
                 {!! Form::radio('confirmed', '1', @isset($user)? $user->confirmed : 'false') !!}

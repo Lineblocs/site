@@ -19,5 +19,6 @@ return [
     'users' => 'Users',
     'yes' => 'Yes',
     'no' => 'No',
-    'active' => 'Active'
+    'active' => 'Active',
+    'webrtc_optimized' => 'WebRTC optimized'
 	];

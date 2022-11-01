@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="form-group  {{ $errors->has('webrtc_optimized') ? 'has-error' : '' }}">
-            {!! Form::label('webrtc_optimized', trans("admin/users.active_user"), array('class' => 'control-label')) !!}
+            {!! Form::label('webrtc_optimized', trans("admin/admin.webrtc_optimized"), array('class' => 'control-label')) !!}
             <div class="controls">
                 {!! Form::label('webrtc_optimized', trans("admin/users.yes"), array('class' => 'control-label')) !!}
                 {!! Form::radio('webrtc_optimized', '1', @isset($user)? $user->webrtc_optimized : 'false') !!}
