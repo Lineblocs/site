@@ -14,7 +14,7 @@ class AddCallFields extends Migration
     {
         Schema::table('calls', function (Blueprint $table) {
             //
-            $table->string('notes');
+            $table->string('notes')->default('');
         });
     }
 
