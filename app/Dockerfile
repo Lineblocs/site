@@ -64,7 +64,7 @@ COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # copy php.ini
 RUN mv php.ini "$PHP_INI_DIR/php.ini"
-RUN mv .env.k8s .env
+RUN mv .env.custom .env
 
 # Change current user to www
 # Expose port 9000 and start php-fpm server
@@ -80,5 +80,6 @@ RUN ./deploy-docker.sh
 
 # Change current user to www
 # Expose port 9000 and start php-fpm server
+COPY ports.conf /etc/apache2/ports.conf
 EXPOSE 8080
 CMD [ "apache2-foreground" ]
