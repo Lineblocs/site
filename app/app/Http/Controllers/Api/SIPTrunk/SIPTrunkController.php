@@ -115,7 +115,7 @@ class SIPTrunkController extends ApiAuthController {
 
         // lookup IP addresses
         // try to get all address types (v4 and v6)
-        for ($i = 0; $i != count($orig_endpoints) - 1; $i ++ ) {
+        for ($i = 0; $i != count($orig_endpoints); $i ++ ) {
             $item = $orig_endpoints[$i];
             $ipv4 = gethostbyname($item['sip_uri']);
             // setting IP info...
