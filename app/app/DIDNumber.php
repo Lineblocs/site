@@ -10,6 +10,7 @@ class DIDNumber extends PublicResource {
 
   protected $guarded  = array('id');
   protected $table = "did_numbers";
+
 }
 
 

@@ -14,7 +14,7 @@ class AddDidAction extends Migration
     {
         Schema::table('did_numbers', function (Blueprint $table) {
             //
-            $table->string('did_action');
+            $table->string('did_action')->default('accept-call');
         });
     }
 
