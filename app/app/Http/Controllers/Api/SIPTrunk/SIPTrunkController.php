@@ -110,15 +110,11 @@ class SIPTrunkController extends ApiAuthController {
     }
 
     private function syncTrunkWithRouter( $user, $trunk, $term_settings) {
+          // entry to database
+         $fullDomain = MainHelper::createSIPTrunkTerminationURI( $term_settings['sip_addr'] ).".".Config::get("app.sip_base_domain");;
+         SIPRouterHelper::addDomain($user,$fullDomain);
         // update DNS
           $result = DNSHelper::refreshIPs();
-          if (!$result) {
-            return $this->errorInternal($request, 'DNS error occured');
-          }
-          // entry to database
-         $fullDomain = MainHelper::createSIPTrunkTerminationURI( $term_settings['sip_addr'] ).Config::get("app.sip_base_domain");;
-         SIPRouterHelper::addDomain($user,$fullDomain);
-
     }
     private function updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db ) {
 
@@ -327,7 +323,7 @@ class SIPTrunkController extends ApiAuthController {
             return $this->response->errorForbidden();
         }
         $term_settings = SIPTrunkTermination::where('trunk_id', $trunk->id)->firstOrFail();
-        $fullDomain = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr ).Config::get("app.sip_base_domain");;
+        $fullDomain = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr ).".".Config::get("app.sip_base_domain");;
         SIPRouterHelper::removeDomain($user, $fullDomain);
 
         $trunk->delete();
