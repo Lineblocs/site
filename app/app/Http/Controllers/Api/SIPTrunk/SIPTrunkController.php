@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\SIPTrunk;
 use \App\Http\Controllers\Api\ApiAuthController;
 use \JWTAuth;
-use \Config;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
@@ -104,7 +103,7 @@ class SIPTrunkController extends ApiAuthController {
 
 
         $this->updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db );
-        $this->syncTrunkWithRouter( $trunk, $term_settings );
+        $this->syncTrunkWithRouter( $user, $trunk, $term_settings );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
