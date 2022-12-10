@@ -303,7 +303,7 @@ final class MainHelper {
 }
 
     $extensions = Extension::where('workspace_id', '=', $workspace->id)->get()->toArray();
-    $status = PBXServerHelper::provision($user, $workspace, $extensions);
+    $status = SIPRouterHelper::provision($user, $workspace, $extensions);
     if (!$status) {
       return FALSE;
     }
@@ -770,5 +770,12 @@ final class MainHelper {
        //$url = "https://callroutedesigner.lineblocs.com/edit".$params;
        $url = "http://localhost:9000/edit".$params;
        return $url;
+    }
+    public static function createURL($path='') {
+
+      return sprintf("%s.pstn", $trunk_name);
+    }
+    public static function createSIPTrunkTerminationURI($trunk_name) {
+      return sprintf("%s.pstn", $trunk_name);
     }
 }

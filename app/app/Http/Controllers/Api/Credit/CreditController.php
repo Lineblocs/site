@@ -11,7 +11,7 @@ use \App\Call;
 use \App\Transformers\CallTransformer;
 use \App\Helpers\MainHelper;
 use \App\UserCredit;
-use \App\Helpers\PBXServerHelper;
+use \App\Helpers\SIPRouterHelper;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
@@ -61,7 +61,7 @@ class CreditController extends HasStripeController {
           ]);
           $plans = Config::get("service_plans");
           $standard = $plans['standard'];
-          $upgraded = PBXServerHelper::modifyUser($user, $standard['ports']);
+          $upgraded = SIPRouterHelper::modifyUser($user, $standard['ports']);
           if (!$upgraded) {
             return FALSE;
           }

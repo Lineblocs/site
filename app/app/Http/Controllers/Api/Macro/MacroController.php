@@ -11,7 +11,7 @@ use \App\MacroTemplate;
 use \App\Transformers\MacroFunctionTransformer;
 use \App\Transformers\MacroTemplateTransformer;
 use \App\NumberService\SIPConfigService;
-use \App\Helpers\PBXServerHelper;
+use \App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 

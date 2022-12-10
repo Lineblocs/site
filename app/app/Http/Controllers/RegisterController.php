@@ -7,10 +7,10 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
-use App\Helpers\PBXServerHelper;
+use App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\AWSHelper;
-use App\Helpers\NamecheapHelper;
+use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
 use \Config;
 use \Mail;
@@ -206,7 +206,7 @@ class RegisterController extends ApiAuthController
 
 
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
-          $result = PBXServerHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo']);
+          $result = SIPRouterHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo']);
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
@@ -225,7 +225,7 @@ class RegisterController extends ApiAuthController
           }
 
 
-          $result = NamecheapHelper::refreshIPs();
+          $result = DNSHelper::refreshIPs();
           if (!$result) {
             return $this->errorInternal($request, 'DNS error occured');
           }

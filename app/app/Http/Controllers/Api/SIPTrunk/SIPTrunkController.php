@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\SIPTrunk;
 use \App\Http\Controllers\Api\ApiAuthController;
 use \JWTAuth;
+use \Config;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
@@ -15,7 +16,8 @@ use \App\SIPTrunkTerminationCredential;
 use \App\DIDNumber;
 use \App\Transformers\TrunkTransformer;
 use \App\NumberService\SIPConfigService;
-use \App\Helpers\PBXServerHelper;
+use \App\Helpers\SIPRouterHelper;
+use \App\Helpers\DNSHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use \DB;
@@ -102,13 +104,21 @@ class SIPTrunkController extends ApiAuthController {
 
 
         $this->updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db );
-        $this->updateDNSRecords( $trunk, $term_settings );
+        $this->syncTrunkWithRouter( $trunk, $term_settings );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
         return $this->response->array($trunk->toArray())->withHeader('X-Trunk-ID', $trunk->public_id);
     }
 
-    private function updateDNSRecords( $trunk, $term_settings) {
+    private function syncTrunkWithRouter( $user, $trunk, $term_settings) {
+        // update DNS
+          $result = DNSHelper::refreshIPs();
+          if (!$result) {
+            return $this->errorInternal($request, 'DNS error occured');
+          }
+          // entry to database
+         $fullDomain = MainHelper::createSIPTrunkTerminationURI( $term_settings['sip_addr'] ).Config::get("app.sip_base_domain");;
+         SIPRouterHelper::addDomain($user,$fullDomain);
 
     }
     private function updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db ) {
@@ -232,7 +242,6 @@ class SIPTrunkController extends ApiAuthController {
         $term_acls_db = SIPTrunkTerminationAcl::where('trunk_id', $trunk->id)->get();
         $term_creds_db = SIPTrunkTerminationCredential::where('trunk_id', $trunk->id)->get();
         $this->updateOriginationEndpoints( $trunk, $orig_endpoints, $orig_endpoints_db );
-        $this->updateDNSRecords( $trunk, $term_settings );
         $this->patchResource( $trunk, $term_acls, $term_acls_db, "\\App\\SIPTrunkTerminationAcl" );
         $this->patchResource( $trunk, $term_creds, $term_creds_db, "\\App\\SIPTrunkTerminationCredential" );
     }
@@ -314,9 +323,14 @@ class SIPTrunkController extends ApiAuthController {
     {
         $data = $request->json()->all();
         $trunk = SIPTrunk::findOrFail($trunkId);
+        $user = $this->getUser($request);
         if (!$this->hasPermissions($request, $trunk, 'manage_trunks')) {
             return $this->response->errorForbidden();
         }
+        $term_settings = SIPTrunkTermination::where('trunk_id', $trunk->id)->firstOrFail();
+        $fullDomain = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr ).Config::get("app.sip_base_domain");;
+        SIPRouterHelper::removeDomain($user, $fullDomain);
+
         $trunk->delete();
         return $this->response->noContent();
     }

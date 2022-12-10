@@ -9,7 +9,7 @@ use \App\User;
 use \App\SIPTrunk;
 use \App\Transformers\TrunkTransformer;
 use \App\NumberService\SIPConfigService;
-use \App\Helpers\PBXServerHelper;
+use \App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use \DB;

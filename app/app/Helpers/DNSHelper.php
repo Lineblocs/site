@@ -7,7 +7,7 @@ use App\SIPTrunk;
 use App\SipTrunkTermination;
 use Config;
 use Log;
-final class NamecheapHelper {
+final class DNSHelper {
   public static function refreshIPs() {
     $regions = MainHelper::getRegions();
 
@@ -214,7 +214,7 @@ final class NamecheapHelper {
     }
 
     foreach ($sip_trunk_terminations as $cnt => $term_settings) {
-      $host = sprintf("%s.pstn", $term_settings->sip_addr);
+      $host = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr );
       $number = $cnt + $increment;
       //main PoP
       $nc['HostName'.$number] = $host;

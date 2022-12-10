@@ -4,7 +4,7 @@ use \Config;
 use \Log;
 use \DB;
 use App\Helpers\MainHelper;
-final class PBXServerHelper {
+final class SIPRouterHelper {
   public static function request($url, $body) 
   {
     $data_string = json_encode($body);                                                                                   
@@ -34,7 +34,7 @@ final class PBXServerHelper {
   public static function create($user,$workspace, $region, $proxyInfo, $hostInfo,  $reservedInfo="")
   {
     $url = self::serverURL($hostInfo['publicIp'], "/create");
-    PBXServerHelper::addUserToProxy($user->toArray(), $workspace->toArray());
+    SIPRouterHelper::addUserToProxy($user->toArray(), $workspace->toArray());
     $user->update([
       'ip_address' => $hostInfo['publicIp'],
        'ip_private' => $hostInfo['privateIp'],
@@ -53,7 +53,7 @@ final class PBXServerHelper {
   {
     $url = Config::get("pbxserver.server_url")."/modifyUser";
 
-    $result =PBXServerHelper::request($url, [
+    $result =SIPRouterHelper::request($url, [
       'user' => $user->toArray(),
       'request' => [
         'neededPorts' => $neededPorts
@@ -73,7 +73,7 @@ final class PBXServerHelper {
     $payload = array_map(function($item) {
       return ['user' => $item['username'], 'secret' => $item['secret'], 'caller_id' => $item['caller_id']];
     }, $extensions);
-    PBXServerHelper::updateProxySIPUsers($user->toArray(), $workspace->toArray(), $payload);
+    SIPRouterHelper::updateProxySIPUsers($user->toArray(), $workspace->toArray(), $payload);
     return TRUE;
   }
   public static function toDollars($cents) {
@@ -86,7 +86,7 @@ final class PBXServerHelper {
 
   public static function addUserToProxy($user, $workspace) {
     $conn = DB::connection('mysql-opensips');
-    $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$workspace['domain']]);
+    self::addDomain($user, $workspace['domain']);
     //add all possible regions
     $regions = MainHelper::getRegions();
     //create domain per region
@@ -95,6 +95,18 @@ final class PBXServerHelper {
       $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
     }
   }
+
+  public static function addDomain($user, $domain) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
+  }
+
+  public static function removeDomain($user, $domain) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->delete('DELETE FROM `domain` WHERE `domain` = ?', [$domain]);
+  }
+
+
 
 
   public static function processSIPProxyDomain($user, $workspace, $domain, $extensions) 

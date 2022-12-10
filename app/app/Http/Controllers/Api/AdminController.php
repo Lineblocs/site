@@ -31,10 +31,10 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
-use App\Helpers\PBXServerHelper;
+use App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\AWSHelper;
-use App\Helpers\NamecheapHelper;
+use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
 
 use App\PhoneGlobalSetting;

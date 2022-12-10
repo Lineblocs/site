@@ -11,7 +11,7 @@ use \App\ExtensionTag;
 use \App\Flow;
 use \App\Transformers\ExtensionTransformer;
 use App\NumberService\SIPConfigService;
-use \App\Helpers\PBXServerHelper;
+use \App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use \DB;
@@ -89,7 +89,7 @@ trait ExtensionWorkflow {
     
 
         //$status = SIPConfigService::provision($user->id, $user->username, $data['username'], $data['secret']);
-        $status = PBXServerHelper::provision($user, $workspace, $extensions);
+        $status = SIPRouterHelper::provision($user, $workspace, $extensions);
         if ($status) {
             $mail = Config::get("mail");
             $data = compact('extension', 'workspace');
@@ -121,7 +121,7 @@ trait ExtensionWorkflow {
         $extensions = Extension::where('user_id', '=', $user->id)->get()->toArray();
         //$status = SIPConfigService::provision($user->id, $user->username, $data['username'], $data['secret']);
         \Log::info("updateExtension provision called");
-        $status = PBXServerHelper::provision($user, $workspace, $extensions);
+        $status = SIPRouterHelper::provision($user, $workspace, $extensions);
         \Log::info("updateExtension provision ended");
 
         if ($status) {
@@ -141,7 +141,7 @@ trait ExtensionWorkflow {
         $extension->delete();
         $extensions = Extension::where('user_id', '=', $user->id)->get()->toArray();
         //$status = SIPConfigService::provision($user->id, $user->username, $data['username'], $data['secret']);
-        $status = PBXServerHelper::provision($user, $workspace, $extensions);
+        $status = SIPRouterHelper::provision($user, $workspace, $extensions);
         if ($status) {
             return $this->response->array($extension->toArray())->withHeader('X-Extension-ID', $extension->id);
         }

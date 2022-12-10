@@ -28,6 +28,8 @@ return [
 
     'url' => env('APP_URL', 'http://example.org'),
     'portal_url' => env('PORTAL_URL', 'http://portal.example.org'),
+
+    'sip_base_domain' => env('SIP_BASE_DOMAIN','lineblocs.com'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

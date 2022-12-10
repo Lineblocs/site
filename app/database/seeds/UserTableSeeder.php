@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Helpers\MainHelper;
-use App\Helpers\PBXServerHelper;
+use App\Helpers\SIPRouterHelper;
 use App\Workspace;
 use App\WorkspaceUser;
 use App\PlanUsagePeriod;
@@ -35,7 +35,7 @@ public function run()
       'plan' => 'ultimate'
     ]);
 WorkspaceUser::createSuperAdmin($workspace, $admin);
-  PBXServerHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
+  SIPRouterHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
 
 
   $user = \App\User::create([
@@ -60,7 +60,7 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
     ]);
     WorkspaceUser::createSuperAdmin($workspace, $user);
         PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);
-    PBXServerHelper::addUserToProxy($user->toArray(), $workspace->toArray());
+    SIPRouterHelper::addUserToProxy($user->toArray(), $workspace->toArray());
     Customizations::create();
     ApiCredential::create();
 	}
