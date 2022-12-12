@@ -91,10 +91,10 @@
         <div class="setup-main-text">
             <div class="row">
                 <div class="pull-left">
-                    <img src="/img/lineblocs-setup.png" width="64" />
+                    <img src="/img/Logo-Comp_03.png" width="64" />
                 </div>
                 <div class="pull-left">
-                <h2>Lineblocs<br> Setup</h2>
+                <h2>Setup</h2>
             </div>
         </div>
         </div>
