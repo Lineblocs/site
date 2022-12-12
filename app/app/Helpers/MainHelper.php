@@ -790,7 +790,7 @@ final class MainHelper {
         $default_logo = '/images/logo-comp_03.png';
         return $default_logo;
     }
-    public static function appogo() {
+    public static function appLogo() {
         $cust = Customizations::getRecord()->toArray();
         $logo = $cust['app_logo'];
         if ( !empty( $logo )) {
