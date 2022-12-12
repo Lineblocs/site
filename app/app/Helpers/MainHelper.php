@@ -780,7 +780,7 @@ final class MainHelper {
     }
     public static function adminLogo() {
         $cust = Customzations::getRecord()->toArray();
-        $logo = $cust['amdin_portal_logo'];
+        $logo = $cust['admin_portal_logo'];
         if ( !empty( $logo )) {
           return $logo;
         }
