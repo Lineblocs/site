@@ -317,7 +317,7 @@ class SIPTrunkController extends ApiAuthController {
     public function deleteTrunk(Request $request, $trunkId)
     {
         $data = $request->json()->all();
-        $trunk = SIPTrunk::findOrFail($trunkId);
+        $trunk = SIPTrunk::where('public_id', $trunkId)->firstOrFail();
         $user = $this->getUser($request);
         if (!$this->hasPermissions($request, $trunk, 'manage_trunks')) {
             return $this->response->errorForbidden();

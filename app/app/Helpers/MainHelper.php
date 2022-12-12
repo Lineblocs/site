@@ -778,4 +778,13 @@ final class MainHelper {
     public static function createSIPTrunkTerminationURI($trunk_name) {
       return sprintf("%s.pstn", $trunk_name);
     }
+    public static function adminLogo() {
+        $cust = Customzations::getRecord()->toArray();
+        $logo = $cust['amdin_portal_logo'];
+        if ( !empty( $logo )) {
+          return $logo;
+        }
+        $default_logo = '/images/logo-white.png';
+        return $default_logo;
+    }
 }
