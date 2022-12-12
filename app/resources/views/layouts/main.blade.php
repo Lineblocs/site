@@ -19,7 +19,8 @@
   @else
     <meta name="keywords" content="cloud pbx, lineblocs, visual PBX, drag and drop">
   @endif
-<link rel="shortcut icon" type="image/png" href="favicon.png"/>
+<!--<link rel="shortcut icon" type="image/png" href="favicon.png"/>-->
+<link rel="shortcut icon" type="image/png" href="{!! asset('images/new-icon.png') !!}">
   <!-- CSS  -->
 <!-- Matomo -->
 <script type="text/javascript">

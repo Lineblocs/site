@@ -9,7 +9,8 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">
-                <img src="/images/logo-white.png" height="42"/>
+                <!--<img src="/images/logo-white.png" height="42"/>-->
+                <img src="{{\App\Helpers\MainHelper::adminLogo()}}" height="42"/>
             </a>
         </div>
 
