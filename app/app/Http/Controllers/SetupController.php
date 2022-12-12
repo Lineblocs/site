@@ -221,6 +221,17 @@ class SetupController extends BaseController {
       'email' =>  $data['email'],
       'password' =>  bcrypt($data['admin_password']),
     ]);
+    return redirect("/setup/customization");
+  }
+
+
+  public function setup_customization(Request $request)
+  {
+    return view("setup.customization", $params);
+  }
+  public function save_customization(Request $request)
+  {
+    $data = $request->all();
     return redirect("/setup/complete");
   }
 public function setup_complete(Request $request)

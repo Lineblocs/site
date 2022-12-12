@@ -5,6 +5,8 @@ use App\User;
 use App\Customizations;
 use App\ApiCredential;
 use Illuminate\Http\Request;
+use Exception;
+use Log;
 
 class CustomizationsController extends AdminController {
 
@@ -34,7 +36,11 @@ class CustomizationsController extends AdminController {
 			\Log::info("storing file..");
 			$this->storeUploadedFile( $file,$file_name );
 			if ( !empty( $record->{$key} ) ) {
-				$this->removeFile( $record->{$key} );
+				try {
+					$this->removeFile( $record->{$key} );
+				} catch ( Exception $ex ) {
+					Log::error('error occured while removing image: ' . $ex->getMessage());
+				}
 			}
 			return $file_name;
 		}

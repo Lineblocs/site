@@ -20,6 +20,11 @@ Route::group(['prefix' => 'setup', 'middleware' => '\App\Http\Middleware\Setup']
   Route::post('smtp', 'SetupController@save_smtp');
   Route::get('admin', 'SetupController@setup_admin');
   Route::post('admin', 'SetupController@save_admin');
+
+  Route::get('customization', 'SetupController@setup_customization');
+  Route::post('customization', 'SetupController@save_customization');
+  route::get('customization', 'setupcontroller@setup_customization');
+  route::post('customization', 'setupcontroller@save_customization');
   Route::get('complete', 'SetupController@setup_complete');
   Route::get('alreadycomplete', 'SetupController@setup_alreadycomplete');
 });

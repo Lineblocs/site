@@ -9,6 +9,7 @@ use App\Flow;
 use App\FlowTemplate;
 use App\ExtensionCode;
 use App\UserCard;
+use App\Customizations;
 use Config;
 use Auth;
 use DB;
@@ -779,7 +780,7 @@ final class MainHelper {
       return sprintf("%s.pstn", $trunk_name);
     }
     public static function adminLogo() {
-        $cust = Customzations::getRecord()->toArray();
+        $cust = Customizations::getRecord()->toArray();
         $logo = $cust['admin_portal_logo'];
         if ( !empty( $logo )) {
           return $logo;
