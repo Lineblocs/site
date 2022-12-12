@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-                <img src="/images/logo-white.png" height="42"/>
+                <img src="{{\App\Helpers\MainHelper::adminLogo()}}" height="42"/>
         </a>
     </div>
     <div class="navbar-default sidebar" role="navigation">

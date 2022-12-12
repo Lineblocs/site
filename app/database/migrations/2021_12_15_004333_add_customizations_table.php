@@ -24,6 +24,7 @@ class AddCustomizationsTable extends Migration
             $table->string('grid_size')->default('');
             $table->string('primary_font')->default('');
             $table->string('secondary_font')->default('');
+            $table->string('site_name')->default('');
 
         });
     }

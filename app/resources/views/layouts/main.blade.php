@@ -102,7 +102,8 @@ drift.load('84i5z2ttdxg5');
     <header id="header">
         <div id="navbar" class="header-content color-header">
                 <div class="logo">
-                        <a href="/"><img src="/images/logo-blue-gimp.png"></a>
+                        <!--<a href="/"><img src="/images/logo-blue-gimp.png"></a>-->
+                        <a href="/"><img src="{{\App\Helpers\MainHelper::appLogo()}}"></a>
                     </div>
 
                 <div class="burger">
