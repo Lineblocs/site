@@ -786,7 +786,7 @@ final class MainHelper {
         }
         // old version
         //$default_logo = '/images/logo-white.png';
-        $default_logo = '/images/Logo-Comp_03.png';
+        $default_logo = '/images/logo-comp_03.png';
         return $default_logo;
     }
 }
