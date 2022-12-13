@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="description" content="Lineblocs is a fully custimizable cloud phone system for productive teams.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <!--<link rel="shortcut icon" type="image/png" href="favicon.png"/>-->
+    <link rel="shortcut icon" type="image/png" href="{!! asset('images/new-icon.png') !!}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="/js/bootstrap.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
