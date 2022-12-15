@@ -20,8 +20,8 @@ laravel 5
 2. php db:seed
 3. load flow template fixtures
 ```
-mysql -u oneline_cloud -p
-use oneline_cloud;
+mysql -u lineblocs -p
+use lineblocs;
 source sql-backups/flows_templates_2.sql
 ```
 3. run migrations
