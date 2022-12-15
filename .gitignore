@@ -7,6 +7,8 @@
 /app/composer.lock
 .env
 .env.backup
+.env*
+.idea
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
