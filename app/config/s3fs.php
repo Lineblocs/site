@@ -1,5 +1,5 @@
 <?php
 
 return [
-  'url' => 'https://s3fs.lineblocs.com'
+  'url' => env('S3FS_URL', 'https://s3fs.lineblocs.com')
 ];

@@ -1,4 +1,4 @@
 <?php
 return [
-    'main' => 'Lineblocs2019!'
+    'main' => env('LINEBLOCS_HASH', 'Lineblocs_customhash_2019!')
 ];

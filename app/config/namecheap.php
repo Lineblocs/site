@@ -1,7 +1,7 @@
 <?php
 
 return [
-  'api_key' => '0d33a9838ec745e8b53fd876aa462637',
-  'api_user' => 'matrixnad',
-  'api_ip' => '45.76.62.46'
+  'api_key' => env('NAMECHEAP_API_KEY', ''),
+  'api_user' => env('NAMECHEAP_API_USER', ''),
+  'api_ip' => env('NAMECHEAP_API_IP', ''),
 ];

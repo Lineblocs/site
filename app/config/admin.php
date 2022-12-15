@@ -1,6 +1,5 @@
 <?php
 
-          $adminWorkspaceToken = "HelloLineblocs2020!";
 return [
-  'frontend_token' => $adminWorkspaceToken
+  'frontend_token' => env('LINEBLOCS_ADMIN_WORKSPACE_TOKEN', 'HelloLineblocs2020!')
 ];

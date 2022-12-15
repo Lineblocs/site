@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'user' => 'usjc8191',
-    'pass' => 'mPuZESOt'
+    'user' => env('D7_USER', ''),
+    'pass' => env('D7_PASS', '')
 ];

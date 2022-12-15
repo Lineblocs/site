@@ -2,10 +2,10 @@
 
 return [
   'voipms' => [
-    'api_username' => 'nhamid@infinitet3ch.com',
-    'api_password' => '!#LinerAPI2019!',
-    'account_no' => '258062',
-    'sub_account_no' => '258062_liner',
-    'main_pop' => '52'
+    'api_username' => env('VOIPMS_API_USERNAME',''),
+    'api_password' => env('VOIPMS_API_PASSWORD',''),
+    'account_no' => env('VOIPMS_ACCOUNT_NO',''),
+    'sub_account_no' => env('VOIPMS_SUBACCOUNT_NO',''),
+    'main_pop' =>env('VOIPMS_MAIN_POP','52')
   ]
 ];

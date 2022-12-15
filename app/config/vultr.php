@@ -1,6 +1,6 @@
 <?php
 
 return [
-  'api_key' => 'QSM7735PCA4GX4SS4IBFKU2IZXJBM5RREG3A',
+  'api_key' => env('VULTR_API_KEY', ''),
   'toronto_dcid' => '22'
 ];

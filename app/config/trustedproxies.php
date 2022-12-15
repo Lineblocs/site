@@ -2,8 +2,6 @@
 
 return [
     'proxies' => [
-        '104.248.107.178',
-        '10.245.222.85'
     ],
 
     // These are defaults already set in the config:
