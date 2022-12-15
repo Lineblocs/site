@@ -10,7 +10,7 @@ laravel 5
 
 ## config
 
-1. move .env.sample to .env
+1. move .env.example to .env
 2. change .env file
 
 
