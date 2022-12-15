@@ -1,5 +1,6 @@
 # Lineblocs backend
 
+[![Alt text](https://github.com/Lineblocs/site/actions/workflows/ci.yml/badge.svg)](https://github.com/Lineblocs/site/actions/workflows/ci.yml/badge.svg)
 ## requirements
 
 ```
