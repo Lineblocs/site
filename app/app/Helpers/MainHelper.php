@@ -801,4 +801,8 @@ final class MainHelper {
         $default_logo = '/images/logo-comp_03.png';
         return $default_logo;
     }
+    public static function createPortalLink($path) {
+      return sprintf("https://app.%s/%s", \Config::get("app.deployment_domain"), $path);
+    }
+
 }

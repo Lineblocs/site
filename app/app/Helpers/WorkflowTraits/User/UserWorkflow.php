@@ -48,7 +48,7 @@ trait UserWorkflow {
         $mailData = compact('newUser', 'workspace');
         $invite = $this->createInvite($workspaceUser);
         //$hash = $workspaceUser->createJoinHash();
-        $link = Config::get("app.portal_url")."/#/join-workspace/". $invite->hash;
+        $link = MainHelper::createPortalLink("/#/join-workspace/". $invite->hash);
         $mailData['link'] =  $link;
           Mail::send('emails.invited_to_workspace', $mailData, function ($message) use ($newUser, $mail, $workspace) {
             $message->to($newUser->email);

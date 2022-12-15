@@ -26,10 +26,10 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://example.org'),
-    'portal_url' => env('PORTAL_URL', 'http://portal.example.org'),
+    'deployment_domain' => env('DEPLOYMENT_DOMAIN'),
+    'sip_base_domain' => env('DEPLOYMENT_DOMAIN'),
 
-    'sip_base_domain' => env('SIP_BASE_DOMAIN','lineblocs.com'),
+    'url' => sprintf("https://%s", env('DEPLOYMENT_DOMAIN')),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
