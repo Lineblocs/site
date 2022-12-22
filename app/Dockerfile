@@ -70,7 +70,7 @@ RUN mv .env.custom .env
 # Expose port 9000 and start php-fpm server
 
 #RUN php -d memory_limit=-1 /usr/local/bin/composer install --no-scripts
-RUN mv vendor-loaded vendor
+RUN mv vendoring vendor
 #RUN php artisan key:generate
 #RUN php artisan migrate
 
