@@ -38,7 +38,7 @@ $flows = [
         );
         CallSystemTemplate::create([
           'name' => 'Basic Call System',
-          'description' => 'Includes 2 extensions, call forwarding, cold transfers and a simple IVR setup',
+          'description' => 'Includes 2 extensions, call forwarding and a simple IVR setup',
           'data' => json_encode($template)
         ]);
 

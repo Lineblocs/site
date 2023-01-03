@@ -16,6 +16,7 @@ class FlowTableSeeder extends Seeder
     {
         //
 
+        /*
         $abs = base_path("/sql-backups/flows_templates.sql");
         $contents = file_get_contents($abs);
         \DB::unprepared($contents);
@@ -23,6 +24,7 @@ class FlowTableSeeder extends Seeder
         $this->setupBasicIVRDefaults();
         $this->setupVoicemailDefaults();
         $this->setupQueueDefaults();
+        */
     }
     private function setupCallForwardDefaults() {
         $template = FlowTemplate::where('name', 'Call Forward')->firstOrFail();
