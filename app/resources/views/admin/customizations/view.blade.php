@@ -121,6 +121,61 @@
             </div>
 
 
+            <div class="row">
+                <h3>Preferences</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <label for="app_logo">Verification workflow</label>
+                <div class="controls">
+                    <select name="verification_workflow" class="form-control" id="verification_workflow">
+                        @if ( $record->verification_workflow == 'sms')
+                            <option value="sms" selected>SMS</option>
+                            <option value="email">Email</option>
+                        @elseif ( $record->verification_workflow == 'email')
+                            <option value="sms">SMS</option>
+                            <option value="email" selected>Email</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="payments_enabled">Payments enabled</label>
+                <div class="controls">
+                    <select name="payment_gateway_enabled" class="form-control" id="payment_gateway_enabled">
+                        @if ( $record->payment_gateway_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="payment_gateway">Payment gateway</label>
+                <div class="controls">
+                    <select name="payment_gateway" class="form-control" id="payment_gateway">
+                        @if ( $record->payment_gateway == 'stripe')
+                            <option value="stripe" selected>Stripe</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+
+
+
+
+
 
             <div class="row form-group">
                 <input type="hidden" name="_token" value="{{csrf_token()}}"/>

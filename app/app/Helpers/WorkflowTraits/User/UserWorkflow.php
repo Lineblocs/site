@@ -26,7 +26,7 @@ trait UserWorkflow {
     private function createUser($data, $workspace) {
         $user = $data['user'];
         //TODO send invite
-        $newUser = MainHelper::createUserWithoutStripe($user, TRUE);
+        $newUser = MainHelper::createUserWithoutPaymentGateway($user, TRUE);
         return $newUser;
     }
 

@@ -14,6 +14,8 @@ class AddCustomizationFieldsForVerificationWorkflow extends Migration
     {
         Schema::table('customizations', function (Blueprint $table) {
             //
+            $table->string('verification_workflow')->default('sms'); // sms, email, totp, etc...
+            $table->string('verification_provider'); // if using sms or service that requires API integration
         });
     }
 

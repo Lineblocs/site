@@ -323,14 +323,6 @@ class RegisterController extends ApiAuthController
         'workspace_id' => $workspace->id,
         'plan' => 'trial'
       ]);
-      //create caller id
-      VerifiedCallerId::create([
-          'user_id' => $user->id,
-          'workspace_id' => $workspace->id,
-          'code' => '',
-          'confirmed' => TRUE,
-          'number' => $user->mobile_number
-      ]);
       $attrs = [];
       return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);
     }

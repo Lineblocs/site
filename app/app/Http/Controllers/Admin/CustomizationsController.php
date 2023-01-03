@@ -90,6 +90,12 @@ class CustomizationsController extends AdminController {
 			}
 			$update_params['admin_portal_logo'] = $admin_logo;
 		}
+		$payments_enabled = false;
+
+		if ( $update_params['payment_gateway_enabled'] =='yes') {
+			$payments_enabled = true;
+		}
+		$update_params['payment_gateway_enabled'] = $payments_enabled;
 		$record->update( $update_params );
 		$session = $request->session();
 		$session->flash('type', 'success');

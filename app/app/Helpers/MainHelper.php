@@ -153,7 +153,7 @@ final class MainHelper {
         return $data;
     }
 
-    public static function createUserWithoutStripe($data, $needsPasswordSet=FALSE) {
+    public static function createUserWithoutPaymentGateway($data, $needsPasswordSet=FALSE) {
         $verifiedHash = MainHelper::emailVerifyHash($data['email']);
         $password = uniqid(TRUE);
         if (isset($data['password'])) {
@@ -185,24 +185,29 @@ final class MainHelper {
     }
   public static function createUser($data) {
       $key = Config::get("stripe.secret_key");
-        \Stripe\Stripe::setApiKey($key);
+      $customization = Customizations::getRecord();
+      $user = MainHelper::createUserWithoutPaymentGateway($data);
+      if ( $customization->payment_gateway_enabled ) {
+        if ( $customization->payment_gateway == 'stripe' ) {
+          \Stripe\Stripe::setApiKey($key);
 
-        $container = uniqid(TRUE);
-        $customer = \Stripe\Customer::create([
-          "description" => "Customer for " . $data['email']
-        ]);
-        $verifiedHash = MainHelper::emailVerifyHash($data['email']);
-        $user = MainHelper::createUserWithoutStripe($data);
-       
+          $container = uniqid(TRUE);
+          $customer = \Stripe\Customer::create([
+            "description" => "Customer for " . $data['email']
+          ]);
+          $verifiedHash = MainHelper::emailVerifyHash($data['email']);
+        
           $key = Config::get("stripe.secret_key");
-        \Stripe\Stripe::setApiKey($key);
+          \Stripe\Stripe::setApiKey($key);
 
-        $customer = \Stripe\Customer::create([
-          "description" => "Customer for " . $data['email']
-        ]);
-        $user->update(['stripe_id' => $customer->id]);
-        $user->update(['free_trial_started' => new DateTime()]);
-        return $user;
+          $customer = \Stripe\Customer::create([
+            "description" => "Customer for " . $data['email']
+          ]);
+          $user->update(['stripe_id' => $customer->id]);
+        }
+      }
+      $user->update(['free_trial_started' => new DateTime()]);
+      return $user;
 
   }
   public static function addSearch($request, $resource, $filters)
