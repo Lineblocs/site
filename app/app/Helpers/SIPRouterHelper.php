@@ -31,22 +31,8 @@ final class SIPRouterHelper {
       return sprintf("http://%s:8080", $ip) . $endpoint;
   }
 
-  public static function create($user,$workspace, $region, $proxyInfo, $hostInfo,  $reservedInfo="")
-  {
-    $url = self::serverURL($hostInfo['publicIp'], "/create");
+  public static function updateProxyToEnableWorkspace($user,$workspace, $proxy) {
     SIPRouterHelper::addUserToProxy($user->toArray(), $workspace->toArray());
-    $user->update([
-      'ip_address' => $hostInfo['publicIp'],
-       'ip_private' => $hostInfo['privateIp'],
-      'reserved_ip' => '',
-      'reserved_private_ip' => $reservedInfo['privateIp'],
-      //'network_device' => $json['network_device'],
-      //'sip_port' => $json['sipPort'],
-      'sip_port' => '5060',
-      //'rtp_ports' => implode(",", $json['rtpPorts']),
-      'rtp_ports' => '',
-      'region' => $region
-    ]);
     return TRUE;
   }
   public static function modifyUser($user, $neededPorts=0)

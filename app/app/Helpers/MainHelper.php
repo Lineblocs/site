@@ -24,6 +24,7 @@ use DateTime;
 use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
+use App\SIPRouter;
 use App\CallRate;
 use App\CallRateDialPrefix;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
@@ -117,14 +118,23 @@ final class MainHelper {
   }
   public static function getHostIPForUser($region, $user) {
       $info = User::whereNotNull('region')->get();
-      $mothernode = Config::get("mothernodes");
-      $info = $mothernode['regions'][$region]['options'][0];
-      $proxy= $mothernode['regions'][$region]['proxy'];
+      $mothernode = Config::get("routerdata");
+      $routers = SIPRouter::all();
+      $proxy = '';
+      foreach ( $routers as $router ) {
+        if ( $router->region == $region ) {
+          $proxy=$router->ip_address;
+        }
+      }
+
+      // todo this should be handled before this step but remember to look into
+      // $proxy variable possibly being unset here. if possible improve this workflow
+      if ( empty ( $proxy )) { // region not available
+      }
       return array(
           "region" => $region,
           "main" => $info,
-          "proxy" => $proxy,
-          "reservedInfo" => $info['hosts'][0]
+          "proxy" => $proxy
        );
       return FALSE;
   }

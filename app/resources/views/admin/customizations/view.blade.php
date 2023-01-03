@@ -172,8 +172,58 @@
             </div>
 
 
+            <div class="row form-group">
+                <label for="custom_code_containers_enabled">Allow users to run custom code</label>
+                <small>note: this will create custom compute resources that allow users to compile and execute their custom code</small>
+                <div class="controls">
+                    <select name="custom_code_containers_enabled" class="form-control" id="custom_code_containers_enabled">
+                        @if ( $record->custom_code_containers_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
 
 
+
+            <div class="row form-group">
+                <label for="dns_provider">DNS provider</label>
+                <small>note: if you are using the self managed option be sure to update the nameservers at your registrar to point to your deployment domain</small>
+                <div class="controls">
+                    <select name="dns_provider" class="form-control" id="dns_provider">
+                        @if ( $record->dns_provider == 'namecheap')
+                            <option value="namecheap" selected>Namecheap</option>
+                            <option value="route53">Route53</option>
+                            <option value="self-managed">Self managed</option>
+                        @elseif ( $record->dns_provider == 'route53')
+                            <option value="namecheap">Namecheap</option>
+                            <option value="route53" selected>Route53</option>
+                            <option value="self-managed">Self managed</option>
+                        @elseif ( $record->dns_provider == 'self-managed')
+                            <option value="namecheap">Namecheap</option>
+                            <option value="route53">Route53</option>
+                            <option value="self-managed" selected>Self managed</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="mail_provider">Mail provider</label>
+                <div class="controls">
+                    <select name="mail_provider" class="form-control" id="mail_provider">
+                        @if ( $record->mail_provider == 'smtp-gateway')
+                            <option value="smtp-gateway" selected>SMTP gateway</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
 
 
 

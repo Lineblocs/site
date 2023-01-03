@@ -5,7 +5,7 @@ use App\CallSystemTemplate;
 use App\Helpers\MainHelper;
 
 $flows = [
-
+/*
           [
             'name' => 'Simple IVR',
             'template' => 'Simple IVR'
@@ -14,6 +14,7 @@ $flows = [
             'name' => 'Call Forward',
             'template' => 'Call Forward'
           ]
+          */
        ];
 
 

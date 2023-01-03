@@ -12,6 +12,7 @@ use App\Helpers\MainHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
+use App\Helpers\EmailHelper;
 use \Config;
 use \Mail;
 use Twilio\Rest\Client;
@@ -27,6 +28,7 @@ use App\WorkspaceUser;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
+use App\Customizations;
 use DateTime;
 
 class RegisterController extends ApiAuthController
@@ -191,10 +193,10 @@ class RegisterController extends ApiAuthController
     {
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
+        $customizations =Customizations::getRecord();
         $plans = Config::get("service_plans");
         $plan = $plans[$data['plan']];
         $region = "ca-central-1";
-        if ($user->confirmed) {
           $info = MainHelper::getHostIPForUser($region, $user);
           //$reservedIp = AWSHelper::reserveIP($region, $ip['main'], $ip['reservedIp']);
           //$reservedIp = VultrHelper::reserveIP($region, $ip['main'], $ip."/32");
@@ -206,7 +208,12 @@ class RegisterController extends ApiAuthController
 
 
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
-          $result = SIPRouterHelper::create($user, $workspace, $region, $info['proxy'], $info['main'], $info['reservedInfo']);
+          // setup default region
+          $workspace->update([
+            'default_region' => $region
+          ]);
+          $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
+
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
@@ -219,9 +226,12 @@ class RegisterController extends ApiAuthController
               'user_id' => $user->id,
               'workspace_id' => $workspace->id,
           );
-          $result = WebSvcHelper::post($svc, '/createContainer', $params);
-          if (!$result) {
-            return $this->errorInternal($request, 'Error occured when creating user containers');
+
+          if ( $customizations->custom_code_containers_enabled  ) {
+            $result = WebSvcHelper::post($svc, '/createContainer', $params);
+            if (!$result) {
+              return $this->errorInternal($request, 'Error occured when creating user containers');
+            }
           }
 
 
@@ -257,21 +267,17 @@ class RegisterController extends ApiAuthController
               'user_id' => $user->id,
               'percentage' => 50
           ]);
-          $mail = Config::get('mail');
+
+          // TODO integrate custom email workflows
+          // admin should be able to select from one of many email providers
+          // integrate code for handling emails
           $link = route('email-verify', ['hash' => $user->email_verify_hash]);
           $data = [
             'user' => $user,
             'link' => $link
           ];
-          Mail::send('emails.verify_email', $data, function ($message) use ($user, $mail) {
-              $message->to($user->email);
-              $message->subject("Lineblocs.com - Verify Your Email");
-              $from = $mail['from'];
-              $message->from($from['address'], $from['name']);
-          });
+          $result = EmailHelper::sendEmail($user->email, 'verify-email', $data);
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
-        }
-      return $this->response->array(['success' => FALSE]);
     }
 
 
