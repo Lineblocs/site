@@ -1,4 +1,4 @@
 <?php
 return [
-  'register_credits' => int( env('REGISTER_CREDITS', '5') )
+  'register_credits' => (int) env('REGISTER_CREDITS', '5')
 ];

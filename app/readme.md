@@ -4,8 +4,8 @@
 ## requirements
 
 ```
-PHP 7
-laravel 5
+PHP 7.4
+laravel 5.1
 ```
 
 
