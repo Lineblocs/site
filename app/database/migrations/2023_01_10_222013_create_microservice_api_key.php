@@ -16,7 +16,7 @@ class CreateMicroserviceApiKey extends Migration
             //
             $table->increments('id');
             $table->timestamps();
-            $table->string('api_name')->default('');
+            $table->string('service_name')->default('');
             $table->string('token');
             $table->dateTime('rotated_at')->nullable();
         });
