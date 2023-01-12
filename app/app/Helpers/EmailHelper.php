@@ -9,6 +9,7 @@ use App\Customizations;
 use Config;
 use Log;
 use Exception;
+use Mail;
 final class EmailHelper {
   public static function sendEmail($to, $template, $data) {
     $customizations = Customizations::getRecord();

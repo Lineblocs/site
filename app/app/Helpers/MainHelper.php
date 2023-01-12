@@ -712,12 +712,16 @@ final class MainHelper {
   public static function getRegions() {
     $nodes = \Config::get("mothernodes");
     $results = [];
-    foreach ($nodes['regions'] as $code => $item) {
+    $routers = SIPRouter::all();
+    foreach ($routers as $item) {
       $results[] = [
-        'name' => $item['name'],
-        'internal_code' => $item['internal_code'],
-        'aws_code' => $code,
-        'proxy' => $item['proxy']
+        'name' => $item->name,
+        'internal_code' => $item->region,
+        'aws_code' => $item->name,
+	'proxy' => [
+		'publicIp' => $item->public_ip,
+		'privateIp' => $item->private_ip,
+	]
       ];
     }
     return $results;
