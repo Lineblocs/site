@@ -98,7 +98,7 @@
                     <ul class="nav collapse">
                         <li>
                             <a href="{{url('admin/settings')}}">
-                                <i class="glyphicon glyphicon-list"></i>  API details
+                                <i class="glyphicon glyphicon-list"></i>  API credentials
                             </a>
                         </li>
                         <li>
