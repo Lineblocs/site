@@ -18,7 +18,7 @@ class CreateDnsRecords extends Migration
             $table->timestamps();
             $table->string('host')->default('')->unique(0);
             $table->string('type')->default('A');
-            $table->string('address')->default('');
+            $table->string('value')->default('');
             $table->integer('ttl')->default(300);
         });
     }

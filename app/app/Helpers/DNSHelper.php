@@ -66,7 +66,7 @@ final class DNSHelper {
         $baseRecords[] = [
           'host' => $record['host'],
           'type' => $record['type'],
-          'address' => $record['address'],
+          'address' => $record['value'],
           'ttl' => (string) $record['ttl']
         ];
       }

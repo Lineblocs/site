@@ -114,6 +114,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/dns')}}">
+                        <i class="glyphicon glyphicon-user"></i> DNS Records
+                    </a>
+                </li>
+                <li>
                     <a href="{{url('admin/systemstatus')}}">
                         <i class="glyphicon glyphicon-user"></i> System Status
                     </a>
