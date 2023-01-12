@@ -13,6 +13,7 @@ use App\Customizations;
 use Config;
 use Auth;
 use DB;
+use Log;
 
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
@@ -138,20 +139,41 @@ final class MainHelper {
        );
       return FALSE;
   }
-  public static function reservedIPsForHost() {
+  public static function createDNSRecordsForRouters() {
       $data = array();
-      $info = User::whereNotNull('region')->get();
-      $config = Config::get("mothernodes");
-      foreach ($info as $item) {
-        $workspace = Workspace::where('creator_id', '=', $item->id)->first();
-        if ($workspace) {
-          $region = $config['regions'][$item->region];
-          $data[] = [
-            'user' => $item,
-            'workspace' => $workspace,
-            'proxy_ip' => $region['proxy']['publicIp']
-          ];
+      //$info = User::whereNotNull('region')->get();
+      $config = Config::get("siprouter");
+      $workspaces = Workspace::all();
+      $routers = SIPRouter::all();
+      foreach ($workspaces as $item) {
+        if ( empty( $region ) ) {
+          Log::error('region was empty..');
+          continue;
         }
+        $router = NULL;
+        foreach ( $routers as $item ) {
+          if ( $router->region == $item->region ) {
+            $router = $item;
+          }
+        }
+        if ( empty( $router ) ) {
+          Log::error('SIP router not found for workspace region ' . $item->region);
+          continue;
+        }
+        $user = User::find($workspace->creator_id);
+        //$regions = WorkspaceRegion::where('workspace_id', $item->id)->get()->toArray();
+        $regions = [
+          [
+            'internal_code' => $item['region'],
+            'router_ip' => $item['public_i[']
+          ]
+          ];
+        $data[] = [
+          'user' => $user,
+          'workspace' => $workspace,
+          'proxy_ip' => $router['ip_address'],
+          'regions' => $regions
+        ];
       }
       return $data;
   }

@@ -1,121 +1,76 @@
 <?php
-
 namespace App\Helpers;
+
 use App\Helpers\MainHelper;
 use App\Classes\namecheap;
+use Aws\Route53\Route53Client;
+use Aws\Exception\CredentialsException;
+use Aws\Route53\Exception\Route53Exception;
+
 use App\SIPTrunk;
 use App\SipTrunkTermination;
 use App\Customizations;
+use App\ApiCredential;
+use App\DNSRecord;
 use Config;
-use Log;
-final class DNSHelper {
-  public static function refreshIPs() {
-    $regions = MainHelper::getRegions();
+use Exception;
 
-    $data = MainHelper::reservedIPsForHost();
+final class DNSHelper {
+
+
+  public static function refreshIPs() {
+
+    $routerDNS = MainHelper::createDNSRecordsForRouters();
     $domain = env('DEPLOYMENT_DOMAIN');
     $sip_trunk_terminations = SIPTrunkTermination::all();
     $nc = array();
-    $sld = "lineblocs";
-    $tld = " com";
-
+    $api_credentials = ApiCredential::getRecord();
     $customizations = Customizations::getRecord();
     $dns_provider = $customizations->dns_provider;
+    $dns = Config::get("dns");
+    $ingress = $dns['ingress'];
+    $sandbox = FALSE;
+    $baseEecordHosts = [
+        '@',
+        'app',
+        'editor',
+        'internals',
+        'emailer',
+        'tsc',
+        's3fs',
+        'prv',
+        'mediafiles',
+        'phpmyadmin'
+    ];
     if ( $dns_provider == 'namecheap' ) {
-      $dns = Config::get("dns");
-      $ingress = $dns['ingress'];
-      $sandbox = FALSE;
+      //$sandbox = $api_credentials->namecheap_sandbox;
+      $sandbox = FAlSE;
       $namecheap = new namecheap([
-          'api_user' => $customizations->namecheap_api_user,
-          'api_key' => $customizations->namecheap_api_key,
-          'api_ip' => $customizations->namecheap_api_ip
+          'api_user' => $api_credentials->namecheap_api_user,
+          'api_key' => $api_credentials->namecheap_api_key,
+          'api_ip' => $api_credentials->namecheap_api_ip
       ], $sandbox);
 
-      $baseRecords = [
-          [
-            'host' => '@',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
+      $baseRecords = [];
+      foreach ( $baseEecordHosts as $host ) {
+        $baseRecords[] = [
+              'host' => $host,
+              'type' => 'A',
+              'address' => $ingress,
+              'ttl' => '60'
+          ];
+      }
 
-        [
-            'host' => 'app',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-
-        [
-            'host' => 'editor',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-        [
-            'host' => 'emailer',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-        [
-            'host' => 'tsc',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-        [
-            'host' => 's3fs',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-
-        [
-            'host' => 'prv',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-
-        [
-            'host' => 'mediafiles',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-        [
-            'host' => 'phpmyadmin',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-        [
-            'host' => 'internals',
-            'type' => 'A',
-            'address' => $ingress,
-            'ttl' => '60'
-        ],
-        [
-            'host' => 'pbx',
-            'type' => 'A',
-            'address' => '155.138.159.234',
-            'ttl' => '60'
-        ],
-        [
-            'host' => 'stage',
-            'type' => 'A',
-            'address' => '149.248.57.81',
-            'ttl' => '60'
-        ]
-      ];
-      //sendgrid
-      $baseRecords[] = [
-        'host' => 'em8989',
-        'type' => 'CNAME',
-        'address' => 'u15410632.wl133.sendgrid.net',
-        'ttl' => '60'
-      ];
+      $dnsRecords = DNSRecord::all();
+      foreach ( $dnsRecords as $record ) {
+        $baseRecords[] = [
+          'host' => $record['host'],
+          'type' => $record['type'],
+          'address' => $record['address'],
+          'ttl' => (string) $record['ttl']
+        ];
+      }
+      /*
       $baseRecords[] = [
         'host' => 's2._domainkey',
         'type' => 'CNAME',
@@ -183,6 +138,7 @@ final class DNSHelper {
         'address' => 'google-site-verification=OdyUqonYof7cCbTWAPKJ4Wu-SvYxcfkMq9afhcP7rDs',
         'ttl' => '60'
       ];
+      */
 
       foreach ($baseRecords as $cnt =>$info) {
         $number = $cnt + 1;
@@ -195,17 +151,16 @@ final class DNSHelper {
 
       $increment = count($baseRecords) + 1;
 
-      foreach ($data as $cnt => $info) {
+      foreach ($routerDNS as $cnt => $info) {
         $user = $info['user'];
-        $ip = $info['proxy_ip'];
         $number = $cnt + $increment;
         //main PoP
         $nc['HostName'.$number] = $info['workspace']['name'];
         $nc['RecordType'.$number] = 'A';
-        $nc['Address'.$number] = $ip;
+        $nc['Address'.$number] = $router_ip;
         $nc['TTL'.$number] = '60';
 
-        foreach ( $regions as $code => $region ) {
+        foreach ( $info['regions'] as $code => $region ) {
           // best way to make increment also increase ? look into better solution when possible
           $increment = $increment + 1;
           $number = $cnt + $increment;
@@ -213,7 +168,7 @@ final class DNSHelper {
           $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
           $nc['HostName'.$number] = $value;
           $nc['RecordType'.$number] = 'A';
-          $nc['Address'.$number] = $region['proxy']['publicIp'];
+          $nc['Address'.$number] = $region['router_ip'];
           $nc['TTL'.$number] = '60';
         }
       }
@@ -224,19 +179,124 @@ final class DNSHelper {
         //main PoP
         $nc['HostName'.$number] = $host;
         $nc['RecordType'.$number] = 'A';
-        $nc['Address'.$number] = $ip;
+        $nc['Address'.$number] = $router_ip;
         $nc['TTL'.$number] = '60';
       }
 
 
       $result = $namecheap->dnsSetHosts($domain, $nc);
       if (!$result) {
-        Log::error( "NAMECHEAP error occured: " . $namecheap->Error);
+        \Log::error( "NAMECHEAP error occured: " . $namecheap->Error);
         return FALSE;
       }
       return TRUE;
     } else if ( $dns_provider == 'route53' ) {
       // TODO implement
+      //To build connection
+      try {
+          $access_key = $api_credentials['aws_access_key_id'];
+          $secret_key = $api_credentials['aws_secret_access_key'];
+          $region = $api_credentials['aws_region'];
+          $client = Route53Client::factory(array(
+              'region' => $region,
+              'version' => '2013-04-01',
+              'credentials' => [
+                          'key' => $access_key,
+                          'secret' => $secret_key,
+                    ]
+          ));
+      } catch (Exception $e) {
+              \Log::error('error initializing AWS client. ' . $e->getMessage());
+              return FALSE;
+      }
+
+      /* Create sub domain */
+
+      try {
+
+          $HostedZoneId = $customizations->aws_route53_zone_id;
+          $baseRecords = [];
+          foreach ( $baseEecordHosts as $host ) {
+            $baseRecords[] = [
+                'Action'            => 'CREATE',
+                "ResourceRecordSet" => [
+                    'Name'            => $host,
+                    'Type'            => 'A',
+                    'TTL'             => '60',
+                    'ResourceRecords' => [
+                        array('Value' => $ingress)
+                    ]
+                ]
+            ];
+          }
+          $dnsRecords = DNSRecord::all();
+          foreach ( $dnsRecords as $record ) {
+            $baseRecords[] = [
+                'Action'            => 'CREATE',
+                "ResourceRecordSet" => [
+                    'Name'            => $record['host'],
+                    'Type'            => $record['type'],
+                    'TTL'             => (string) $record['ttl'],
+                    'ResourceRecords' => [
+                        array('Value' => $record['value'])
+                    ]
+                ]
+            ];
+          }
+
+        foreach ($routerDNS as $cnt => $info) {
+          $baseRecords[] = [
+                'Action'            => 'CREATE',
+                "ResourceRecordSet" => [
+                    'Name'            => $info['workspace']['name'],
+                    'Type'            => 'A',
+                    'TTL'             => '60',
+                    'ResourceRecords' => [
+                        array('Value' => $info['proxy_ip'])
+                    ]
+                ]
+            ];
+          foreach ( $info['regions'] as $code => $region ) {
+            //region PoP
+            $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+            $baseRecords[] = [
+                  'Action'            => 'CREATE',
+                  "ResourceRecordSet" => [
+                      'Name'            => $value,
+                      'Type'            => 'A',
+                      'TTL'             => '60',
+                      'ResourceRecords' => [
+                          array('Value' => $region['router_ip'])
+                      ]
+                  ]
+              ];
+          }
+        }
+      foreach ($sip_trunk_terminations as $cnt => $term_settings) {
+        $host = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr );
+        $baseRecords[] = [
+              'Action'            => 'CREATE',
+              "ResourceRecordSet" => [
+                  'Name'            => $host,
+                  'Type'            => 'A',
+                  'TTL'             => '60',
+                  'ResourceRecords' => [
+                      array('Value' => $router_ip)
+                  ]
+              ]
+          ];
+      }
+
+          $client->changeResourceRecordSets([
+              'ChangeBatch'  => [
+                  'Changes' => $baseRecords
+              ],
+              'HostedZoneId' => $HostedZoneId
+          ]);
+        } catch (Exception $ex) {
+              \Log::error('error updating route53 records. ' . $ex->getMessage());
+              return FALSE;
+        }
       return TRUE;
     } else if ( $dns_provider == 'self-managed' ) {
       // TODO implement
