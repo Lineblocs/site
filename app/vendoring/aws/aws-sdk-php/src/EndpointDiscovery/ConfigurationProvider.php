@@ -73,17 +73,14 @@ class ConfigurationProvider extends AbstractConfigurationProvider
      */
     public static function defaultProvider(array $config = [])
     {
-        $configProviders = [self::env()];
-        if (
-            !isset($config['use_aws_shared_config_files'])
-            || $config['use_aws_shared_config_files'] != false
-        ) {
-            $configProviders[] = self::ini();
-        }
-        $configProviders[] = self::fallback($config);
+        $configProviders = [
+            self::env(),
+            self::ini(),
+            self::fallback($config)
+        ];
 
         $memo = self::memoize(
-            call_user_func_array([ConfigurationProvider::class, 'chain'], $configProviders)
+            call_user_func_array('self::chain', $configProviders)
         );
 
         if (isset($config['endpoint_discovery'])
@@ -110,7 +107,7 @@ class ConfigurationProvider extends AbstractConfigurationProvider
                 $enabled = getenv(self::ENV_ENABLED_ALT);
             }
             if ($enabled !== false && $enabled !== '') {
-                return Promise\Create::promiseFor(
+                return Promise\promise_for(
                     new Configuration($enabled, $cacheLimit)
                 );
             }
@@ -148,7 +145,7 @@ class ConfigurationProvider extends AbstractConfigurationProvider
         }
 
         return function () use ($enabled) {
-            return Promise\Create::promiseFor(
+            return Promise\promise_for(
                 new Configuration(
                     $enabled,
                     self::DEFAULT_CACHE_LIMIT
@@ -179,7 +176,7 @@ class ConfigurationProvider extends AbstractConfigurationProvider
         $profile = $profile ?: (getenv(self::ENV_PROFILE) ?: 'default');
 
         return function () use ($profile, $filename, $cacheLimit) {
-            if (!@is_readable($filename)) {
+            if (!is_readable($filename)) {
                 return self::reject("Cannot read configuration from $filename");
             }
             $data = \Aws\parse_ini_file($filename, true);
@@ -190,11 +187,11 @@ class ConfigurationProvider extends AbstractConfigurationProvider
                 return self::reject("'$profile' not found in config file");
             }
             if (!isset($data[$profile]['endpoint_discovery_enabled'])) {
-                return self::reject("Required endpoint discovery config values
+                return self::reject("Required endpoint discovery config values 
                     not present in INI profile '{$profile}' ({$filename})");
             }
 
-            return Promise\Create::promiseFor(
+            return Promise\promise_for(
                 new Configuration(
                     $data[$profile]['endpoint_discovery_enabled'],
                     $cacheLimit

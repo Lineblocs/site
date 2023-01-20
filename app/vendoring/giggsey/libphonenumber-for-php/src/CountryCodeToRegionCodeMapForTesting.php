@@ -68,10 +68,6 @@ class CountryCodeToRegionCodeMapForTesting {
   array (
     0 => 'BR',
   ),
-  57 => 
-  array (
-    0 => 'CO',
-  ),
   61 => 
   array (
     0 => 'AU',

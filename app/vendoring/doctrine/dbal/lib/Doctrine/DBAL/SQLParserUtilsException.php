@@ -9,7 +9,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-class SQLParserUtilsException extends Exception
+class SQLParserUtilsException extends DBALException
 {
     /**
      * @param string $paramName
@@ -18,9 +18,7 @@ class SQLParserUtilsException extends Exception
      */
     public static function missingParam($paramName)
     {
-        return new self(
-            sprintf('Value for :%1$s not found in params array. Params array key should be "%1$s"', $paramName)
-        );
+        return new self(sprintf('Value for :%1$s not found in params array. Params array key should be "%1$s"', $paramName));
     }
 
     /**
@@ -30,8 +28,6 @@ class SQLParserUtilsException extends Exception
      */
     public static function missingType($typeName)
     {
-        return new self(
-            sprintf('Value for :%1$s not found in types array. Types array key should be "%1$s"', $typeName)
-        );
+        return new self(sprintf('Value for :%1$s not found in types array. Types array key should be "%1$s"', $typeName));
     }
 }

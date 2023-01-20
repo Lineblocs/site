@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\StreamInterface;
@@ -8,8 +7,6 @@ use Psr\Http\Message\StreamInterface;
  * Reads from multiple streams, one after the other.
  *
  * This is a read-only stream decorator.
- *
- * @final
  */
 class AppendStream implements StreamInterface
 {
@@ -64,7 +61,7 @@ class AppendStream implements StreamInterface
 
     public function getContents()
     {
-        return Utils::copyToString($this);
+        return copy_to_string($this);
     }
 
     /**

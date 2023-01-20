@@ -15,10 +15,6 @@ if (extension_loaded('uuid')) {
     return;
 }
 
-if (\PHP_VERSION_ID >= 80000) {
-    return require __DIR__.'/bootstrap80.php';
-}
-
 if (!defined('UUID_VARIANT_NCS')) {
     define('UUID_VARIANT_NCS', 0);
 }
@@ -60,7 +56,7 @@ if (!defined('UUID_TYPE_INVALID')) {
 }
 
 if (!function_exists('uuid_create')) {
-    function uuid_create($uuid_type = \UUID_TYPE_DEFAULT) { return p\Uuid::uuid_create($uuid_type); }
+    function uuid_create($type = UUID_TYPE_DEFAULT) { return p\Uuid::uuid_create($type); }
 }
 if (!function_exists('uuid_generate_md5')) {
     function uuid_generate_md5($uuid_ns, $name) { return p\Uuid::uuid_generate_md5($uuid_ns, $name); }

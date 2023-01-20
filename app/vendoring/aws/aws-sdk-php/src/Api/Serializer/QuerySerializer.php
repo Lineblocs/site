@@ -3,8 +3,6 @@ namespace Aws\Api\Serializer;
 
 use Aws\Api\Service;
 use Aws\CommandInterface;
-use Aws\EndpointV2\EndpointProviderV2;
-use Aws\EndpointV2\EndpointV2SerializerTrait;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
@@ -14,8 +12,6 @@ use Psr\Http\Message\RequestInterface;
  */
 class QuerySerializer
 {
-    use EndpointV2SerializerTrait;
-
     private $endpoint;
     private $api;
     private $paramBuilder;
@@ -34,54 +30,39 @@ class QuerySerializer
      * When invoked with an AWS command, returns a serialization array
      * containing "method", "uri", "headers", and "body" key value pairs.
      *
-     * @param CommandInterface $command Command to serialize into a request.
-     * @param $endpointProvider Provider used for dynamic endpoint resolution.
-     * @param $clientArgs Client arguments used for dynamic endpoint resolution.
+     * @param CommandInterface $command
      *
      * @return RequestInterface
      */
-    public function __invoke(
-        CommandInterface $command,
-        $endpointProvider = null,
-        $clientArgs = null
-    )
+    public function __invoke(CommandInterface $command)
     {
         $operation = $this->api->getOperation($command->getName());
+
         $body = [
             'Action'  => $command->getName(),
             'Version' => $this->api->getMetadata('apiVersion')
         ];
-        $commandArgs = $command->toArray();
+
+        $params = $command->toArray();
 
         // Only build up the parameters when there are parameters to build
-        if ($commandArgs) {
+        if ($params) {
             $body += call_user_func(
                 $this->paramBuilder,
                 $operation->getInput(),
-                $commandArgs
+                $params
             );
         }
-        $body = http_build_query($body, '', '&', PHP_QUERY_RFC3986);
-        $headers = [
-            'Content-Length' => strlen($body),
-            'Content-Type'   => 'application/x-www-form-urlencoded'
-        ];
 
-        if ($endpointProvider instanceof EndpointProviderV2) {
-            $this->setRequestOptions(
-                $endpointProvider,
-                $command,
-                $operation,
-                $commandArgs,
-                $clientArgs,
-                $headers
-            );
-        }
+        $body = http_build_query($body, null, '&', PHP_QUERY_RFC3986);
 
         return new Request(
             'POST',
             $this->endpoint,
-            $headers,
+            [
+                'Content-Length' => strlen($body),
+                'Content-Type'   => 'application/x-www-form-urlencoded'
+            ],
             $body
         );
     }

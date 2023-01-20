@@ -14,13 +14,12 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '4\\d{6}|8\\d{11,12}|(?:[2-58]\\d\\d|900)\\d{7}',
+    'NationalNumberPattern' => '(?:4|8\\d{5})\\d{6}|(?:[2-58]\\d\\d|900)\\d{7}',
     'PossibleLength' => 
     array (
       0 => 7,
       1 => 10,
       2 => 12,
-      3 => 13,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -52,13 +51,12 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '8(?:00\\d{7}(?:\\d{2,3})?|11\\d{7})',
+    'NationalNumberPattern' => '800\\d{7}(?:\\d{2})?',
     'ExampleNumber' => '8001234567',
     'PossibleLength' => 
     array (
       0 => 10,
       1 => 12,
-      2 => 13,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -100,11 +98,9 @@ return array (
   ),
   'voip' => 
   array (
-    'NationalNumberPattern' => '850\\d{7}',
-    'ExampleNumber' => '8500123456',
     'PossibleLength' => 
     array (
-      0 => 10,
+      0 => -1,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -124,11 +120,12 @@ return array (
   ),
   'uan' => 
   array (
-    'NationalNumberPattern' => '444\\d{4}',
+    'NationalNumberPattern' => '(?:444|850\\d{3})\\d{4}',
     'ExampleNumber' => '4441444',
     'PossibleLength' => 
     array (
       0 => 7,
+      1 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -146,11 +143,10 @@ return array (
   ),
   'noInternationalDialling' => 
   array (
-    'NationalNumberPattern' => '(?:444|811\\d{3})\\d{4}',
+    'NationalNumberPattern' => '444\\d{4}',
     'PossibleLength' => 
     array (
       0 => 7,
-      1 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -182,7 +178,7 @@ return array (
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
-        0 => '512|8[01589]|90',
+        0 => '512|8[0589]|90',
       ),
       'nationalPrefixFormattingRule' => '0$1',
       'domesticCarrierCodeFormattingRule' => '',
@@ -216,7 +212,7 @@ return array (
     ),
     4 => 
     array (
-      'pattern' => '(\\d{3})(\\d{3})(\\d{6,7})',
+      'pattern' => '(\\d{3})(\\d{3})(\\d{6})',
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
@@ -235,7 +231,7 @@ return array (
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
-        0 => '512|8[01589]|90',
+        0 => '512|8[0589]|90',
       ),
       'nationalPrefixFormattingRule' => '0$1',
       'domesticCarrierCodeFormattingRule' => '',
@@ -269,7 +265,7 @@ return array (
     ),
     3 => 
     array (
-      'pattern' => '(\\d{3})(\\d{3})(\\d{6,7})',
+      'pattern' => '(\\d{3})(\\d{3})(\\d{6})',
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
@@ -281,5 +277,6 @@ return array (
     ),
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => true,
 );

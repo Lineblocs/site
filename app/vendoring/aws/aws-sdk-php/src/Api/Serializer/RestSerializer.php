@@ -8,10 +8,7 @@ use Aws\Api\Shape;
 use Aws\Api\StructureShape;
 use Aws\Api\TimestampShape;
 use Aws\CommandInterface;
-use Aws\EndpointV2\EndpointProviderV2;
-use Aws\EndpointV2\EndpointV2SerializerTrait;
 use GuzzleHttp\Psr7;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\RequestInterface;
@@ -22,12 +19,10 @@ use Psr\Http\Message\RequestInterface;
  */
 abstract class RestSerializer
 {
-    use EndpointV2SerializerTrait;
-
     /** @var Service */
     private $api;
 
-    /** @var Uri */
+    /** @var Psr7\Uri */
     private $endpoint;
 
     /**
@@ -37,44 +32,25 @@ abstract class RestSerializer
     public function __construct(Service $api, $endpoint)
     {
         $this->api = $api;
-        $this->endpoint = Psr7\Utils::uriFor($endpoint);
+        $this->endpoint = Psr7\uri_for($endpoint);
     }
 
     /**
-     * @param CommandInterface $command Command to serialize into a request.
-     * @param $endpointProvider Provider used for dynamic endpoint resolution.
-     * @param $clientArgs Client arguments used for dynamic endpoint resolution.
+     * @param CommandInterface $command Command to serialized
      *
      * @return RequestInterface
      */
-    public function __invoke(
-        CommandInterface $command,
-        $endpointProvider = null,
-        $clientArgs = null
-    )
+    public function __invoke(CommandInterface $command)
     {
         $operation = $this->api->getOperation($command->getName());
-        $commandArgs = $command->toArray();
-        $opts = $this->serialize($operation, $commandArgs);
-        $headers = isset($opts['headers']) ? $opts['headers'] : [];
+        $args = $command->toArray();
+        $opts = $this->serialize($operation, $args);
+        $uri = $this->buildEndpoint($operation, $args, $opts);
 
-        if ($endpointProvider instanceof EndpointProviderV2) {
-            $this->setRequestOptions(
-                $endpointProvider,
-                $command,
-                $operation,
-                $commandArgs,
-                $clientArgs,
-                $headers
-            );
-            $this->endpoint = new Uri($this->endpoint);
-        }
-        $uri = $this->buildEndpoint($operation, $commandArgs, $opts);
-
-        return new Request(
+        return new Psr7\Request(
             $operation['http']['method'],
             $uri,
-            $headers,
+            isset($opts['headers']) ? $opts['headers'] : [],
             isset($opts['body']) ? $opts['body'] : null
         );
     }
@@ -120,8 +96,6 @@ abstract class RestSerializer
 
         if (isset($bodyMembers)) {
             $this->payload($operation->getInput(), $bodyMembers, $opts);
-        } else if (!isset($opts['body']) && $this->hasPayloadParam($input, $payload)) {
-            $this->payload($operation->getInput(), [], $opts);
         }
 
         return $opts;
@@ -140,7 +114,7 @@ abstract class RestSerializer
         ) {
             // Streaming bodies or payloads that are strings are
             // always just a stream of data.
-            $opts['body'] = Psr7\Utils::streamFor($args[$name]);
+            $opts['body'] = Psr7\stream_for($args[$name]);
             return;
         }
 
@@ -154,10 +128,7 @@ abstract class RestSerializer
                 ? $member['timestampFormat']
                 : 'rfc822';
             $value = TimestampShape::format($value, $timestampFormat);
-        } elseif ($member->getType() === 'boolean') {
-            $value = $value ? 'true' : 'false';
         }
-
         if ($member['jsonvalue']) {
             $value = json_encode($value);
             if (empty($value) && JSON_ERROR_NONE !== json_last_error()) {
@@ -205,103 +176,50 @@ abstract class RestSerializer
 
     private function buildEndpoint(Operation $operation, array $args, array $opts)
     {
-        // Create an associative array of variable definitions used in expansions
-        $varDefinitions = $this->getVarDefinitions($operation, $args);
+        $varspecs = [];
+
+        // Create an associative array of varspecs used in expansions
+        foreach ($operation->getInput()->getMembers() as $name => $member) {
+            if ($member['location'] == 'uri') {
+                $varspecs[$member['locationName'] ?: $name] =
+                    isset($args[$name])
+                        ? $args[$name]
+                        : null;
+            }
+        }
 
         $relative = preg_replace_callback(
             '/\{([^\}]+)\}/',
-            function (array $matches) use ($varDefinitions) {
+            function (array $matches) use ($varspecs) {
                 $isGreedy = substr($matches[1], -1, 1) == '+';
                 $k = $isGreedy ? substr($matches[1], 0, -1) : $matches[1];
-                if (!isset($varDefinitions[$k])) {
+                if (!isset($varspecs[$k])) {
                     return '';
                 }
 
                 if ($isGreedy) {
-                    return str_replace('%2F', '/', rawurlencode($varDefinitions[$k]));
+                    return str_replace('%2F', '/', rawurlencode($varspecs[$k]));
                 }
 
-                return rawurlencode($varDefinitions[$k]);
+                return rawurlencode($varspecs[$k]);
             },
             $operation['http']['requestUri']
         );
 
         // Add the query string variables or appending to one if needed.
         if (!empty($opts['query'])) {
-           $relative = $this->appendQuery($opts['query'], $relative);
+            $append = Psr7\build_query($opts['query']);
+            $relative .= strpos($relative, '?') ? "&{$append}" : "?$append";
         }
 
-        $path = $this->endpoint->getPath();
-
-        //Accounts for trailing '/' in path when custom endpoint
-        //is provided to endpointProviderV2
-        if ($this->api->isModifiedModel()
-            && $this->api->getServiceName() === 's3'
-        ) {
-            if (substr($path, -1) === '/' && $relative[0] === '/') {
-                $path = rtrim($path, '/');
-            }
-            $relative = $path . $relative;
-        }
         // If endpoint has path, remove leading '/' to preserve URI resolution.
+        $path = $this->endpoint->getPath();
         if ($path && $relative[0] === '/') {
             $relative = substr($relative, 1);
-        }
-
-        //Append path to endpoint when leading '//...' present
-        // as uri cannot be properly resolved
-        if ($this->api->isModifiedModel()
-            && strpos($relative, '//') === 0
-        ) {
-            return new Uri($this->endpoint . $relative);
         }
 
         // Expand path place holders using Amazon's slightly different URI
         // template syntax.
         return UriResolver::resolve($this->endpoint, new Uri($relative));
-    }
-
-    /**
-     * @param StructureShape $input
-     */
-    private function hasPayloadParam(StructureShape $input, $payload)
-    {
-        if ($payload) {
-            $potentiallyEmptyTypes = ['blob','string'];
-            if ($this->api->getMetadata('protocol') == 'rest-xml') {
-                $potentiallyEmptyTypes[] = 'structure';
-            }
-            $payloadMember = $input->getMember($payload);
-            if (in_array($payloadMember['type'], $potentiallyEmptyTypes)) {
-                return false;
-            }
-        }
-        foreach ($input->getMembers() as $member) {
-            if (!isset($member['location'])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function appendQuery($query, $endpoint)
-    {
-        $append = Psr7\Query::build($query);
-        return $endpoint .= strpos($endpoint, '?') !== false ? "&{$append}" : "?{$append}";
-    }
-
-    private function getVarDefinitions($command, $args)
-    {
-        $varDefinitions = [];
-
-        foreach ($command->getInput()->getMembers() as $name => $member) {
-            if ($member['location'] == 'uri') {
-                $varDefinitions[$member['locationName'] ?: $name] =
-                    isset($args[$name])
-                        ? $args[$name]
-                        : null;
-            }
-        }
-        return $varDefinitions;
     }
 }

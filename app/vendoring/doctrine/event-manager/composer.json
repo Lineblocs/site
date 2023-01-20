@@ -1,8 +1,7 @@
 {
     "name": "doctrine/event-manager",
-    "description": "The Doctrine Event Manager is a simple PHP event system that was built to be used with the various Doctrine projects.",
-    "license": "MIT",
     "type": "library",
+    "description": "The Doctrine Event Manager is a simple PHP event system that was built to be used with the various Doctrine projects.",
     "keywords": [
         "events",
         "event",
@@ -10,60 +9,42 @@
         "event manager",
         "event system"
     ],
-    "authors": [
-        {
-            "name": "Guilherme Blanco",
-            "email": "guilhermeblanco@gmail.com"
-        },
-        {
-            "name": "Roman Borschel",
-            "email": "roman@code-factory.org"
-        },
-        {
-            "name": "Benjamin Eberlei",
-            "email": "kontakt@beberlei.de"
-        },
-        {
-            "name": "Jonathan Wage",
-            "email": "jonwage@gmail.com"
-        },
-        {
-            "name": "Johannes Schmitt",
-            "email": "schmittjoh@gmail.com"
-        },
-        {
-            "name": "Marco Pivetta",
-            "email": "ocramius@gmail.com"
-        }
-    ],
     "homepage": "https://www.doctrine-project.org/projects/event-manager.html",
+    "license": "MIT",
+    "authors": [
+        {"name": "Guilherme Blanco", "email": "guilhermeblanco@gmail.com"},
+        {"name": "Roman Borschel", "email": "roman@code-factory.org"},
+        {"name": "Benjamin Eberlei", "email": "kontakt@beberlei.de"},
+        {"name": "Jonathan Wage", "email": "jonwage@gmail.com"},
+        {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"},
+        {"name": "Marco Pivetta", "email": "ocramius@gmail.com"}
+    ],
     "require": {
-        "php": "^7.1 || ^8.0",
-        "doctrine/deprecations": "^0.5.3 || ^1"
+        "php": "^7.1 || ^8.0"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^9 || ^10",
-        "phpstan/phpstan": "~1.4.10 || ^1.8.8",
-        "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-        "vimeo/psalm": "^4.24"
+        "doctrine/coding-standard": "^6.0",
+        "phpunit/phpunit": "^7.0"
     },
     "conflict": {
-        "doctrine/common": "<2.9"
+        "doctrine/common": "<2.9@dev"
+    },
+    "config": {
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
-            "Doctrine\\Common\\": "src"
+            "Doctrine\\Common\\": "lib/Doctrine/Common"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Doctrine\\Tests\\Common\\": "tests"
+            "Doctrine\\Tests\\": "tests/Doctrine/Tests"
         }
     },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        },
-        "sort-packages": true
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }

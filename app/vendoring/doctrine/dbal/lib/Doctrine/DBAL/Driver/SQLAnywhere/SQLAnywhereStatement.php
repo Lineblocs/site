@@ -2,7 +2,7 @@
 
 namespace Doctrine\DBAL\Driver\SQLAnywhere;
 
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Driver\DriverException;
 use Doctrine\DBAL\Driver\FetchUtils;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\Statement;
@@ -13,11 +13,9 @@ use IteratorAggregate;
 use PDO;
 use ReflectionClass;
 use ReflectionObject;
-use ReturnTypeWillChange;
 use stdClass;
 
 use function array_key_exists;
-use function assert;
 use function func_get_args;
 use function func_num_args;
 use function gettype;
@@ -45,8 +43,6 @@ use const SASQL_BOTH;
 
 /**
  * SAP SQL Anywhere implementation of the Statement interface.
- *
- * @deprecated Support for SQLAnywhere will be removed in 3.0.
  */
 class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
 {
@@ -62,7 +58,7 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
     /** @var int Default fetch mode to use. */
     private $defaultFetchMode = FetchMode::MIXED;
 
-    /** @var resource|null The result set resource to fetch. */
+    /** @var resource The result set resource to fetch. */
     private $result;
 
     /** @var resource The prepared SQL statement to execute. */
@@ -73,8 +69,6 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
 
     /**
      * Prepares given statement for given connection.
-     *
-     * @internal The statement can be only instantiated by its driver connection.
      *
      * @param resource $conn The connection resource to use.
      * @param string   $sql  The SQL statement to prepare.
@@ -100,10 +94,8 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
      *
      * @throws SQLAnywhereException
      */
-    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null)
     {
-        assert(is_int($param));
-
         switch ($type) {
             case ParameterType::INTEGER:
             case ParameterType::BOOLEAN:
@@ -124,9 +116,9 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
                 throw new SQLAnywhereException('Unknown type: ' . $type);
         }
 
-        $this->boundValues[$param] =& $variable;
+        $this->boundValues[$column] =& $variable;
 
-        if (! sasql_stmt_bind_param_ex($this->stmt, $param - 1, $variable, $type, $variable === null)) {
+        if (! sasql_stmt_bind_param_ex($this->stmt, $column - 1, $variable, $type, $variable === null)) {
             throw SQLAnywhereException::fromSQLAnywhereError($this->conn, $this->stmt);
         }
 
@@ -138,8 +130,6 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
      */
     public function bindValue($param, $value, $type = ParameterType::STRING)
     {
-        assert(is_int($param));
-
         return $this->bindParam($param, $value, $type);
     }
 
@@ -323,7 +313,6 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
      *
      * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new StatementIterator($this);
@@ -356,7 +345,7 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
     /**
      * {@inheritdoc}
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchOne()
     {
@@ -366,7 +355,7 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
     /**
      * @return array<int,array<int,mixed>>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchAllNumeric(): array
     {
@@ -376,7 +365,7 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
     /**
      * @return array<int,array<string,mixed>>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchAllAssociative(): array
     {
@@ -386,7 +375,7 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
     /**
      * @return array<int,mixed>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchFirstColumn(): array
     {
@@ -423,9 +412,9 @@ class SQLAnywhereStatement implements IteratorAggregate, Statement, Result
     /**
      * Casts a stdClass object to the given class name mapping its' properties.
      *
-     * @param stdClass            $sourceObject     Object to cast from.
-     * @param class-string|object $destinationClass Name of the class or class instance to cast to.
-     * @param mixed[]             $ctorArgs         Arguments to use for constructing the destination class instance.
+     * @param stdClass      $sourceObject     Object to cast from.
+     * @param string|object $destinationClass Name of the class or class instance to cast to.
+     * @param mixed[]       $ctorArgs         Arguments to use for constructing the destination class instance.
      *
      * @return object
      *

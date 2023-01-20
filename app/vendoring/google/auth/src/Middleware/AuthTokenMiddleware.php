@@ -35,7 +35,7 @@ use Psr\Http\Message\RequestInterface;
 class AuthTokenMiddleware
 {
     /**
-     * @var callable
+     * @var callback
      */
     private $httpHandler;
 
@@ -45,7 +45,7 @@ class AuthTokenMiddleware
     private $fetcher;
 
     /**
-     * @var ?callable
+     * @var callable
      */
     private $tokenCallback;
 
@@ -115,20 +115,16 @@ class AuthTokenMiddleware
     /**
      * Call fetcher to fetch the token.
      *
-     * @return string|null
+     * @return string
      */
     private function fetchToken()
     {
-        $auth_tokens = (array) $this->fetcher->fetchAuthToken($this->httpHandler);
+        $auth_tokens = $this->fetcher->fetchAuthToken($this->httpHandler);
 
         if (array_key_exists('access_token', $auth_tokens)) {
             // notify the callback if applicable
             if ($this->tokenCallback) {
-                call_user_func(
-                    $this->tokenCallback,
-                    $this->fetcher->getCacheKey(),
-                    $auth_tokens['access_token']
-                );
+                call_user_func($this->tokenCallback, $this->fetcher->getCacheKey(), $auth_tokens['access_token']);
             }
 
             return $auth_tokens['access_token'];
@@ -137,19 +133,12 @@ class AuthTokenMiddleware
         if (array_key_exists('id_token', $auth_tokens)) {
             return $auth_tokens['id_token'];
         }
-
-        return null;
     }
 
-    /**
-     * @return string|null
-     */
     private function getQuotaProject()
     {
         if ($this->fetcher instanceof GetQuotaProjectInterface) {
             return $this->fetcher->getQuotaProject();
         }
-
-        return null;
     }
 }

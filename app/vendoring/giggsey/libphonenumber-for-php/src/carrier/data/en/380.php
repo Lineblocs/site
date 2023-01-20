@@ -11,7 +11,6 @@
  */
 
 return array (
-  38039 => 'Kyivstar',
   38050 => 'Vodafone',
   38063 => 'lifecell',
   38066 => 'Vodafone',

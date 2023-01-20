@@ -21,9 +21,9 @@ class IntegerType extends Type implements PhpIntegerMappingType
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $platform->getIntegerTypeDeclarationSQL($column);
+        return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**

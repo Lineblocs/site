@@ -2,33 +2,18 @@
 
 namespace Doctrine\Common\Annotations;
 
-use function array_merge;
-use function count;
-use function explode;
-use function strtolower;
-use function token_get_all;
-
-use const PHP_VERSION_ID;
-use const T_AS;
-use const T_COMMENT;
-use const T_DOC_COMMENT;
-use const T_NAME_FULLY_QUALIFIED;
-use const T_NAME_QUALIFIED;
-use const T_NAMESPACE;
-use const T_NS_SEPARATOR;
-use const T_STRING;
-use const T_USE;
-use const T_WHITESPACE;
-
 /**
  * Parses a file for namespaces/use/class declarations.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @author Christian Kaps <christian.kaps@mohiva.com>
  */
 class TokenParser
 {
     /**
      * The token list.
      *
-     * @phpstan-var list<mixed[]>
+     * @var array
      */
     private $tokens;
 
@@ -46,7 +31,9 @@ class TokenParser
      */
     private $pointer = 0;
 
-    /** @param string $contents */
+    /**
+     * @param string $contents
+     */
     public function __construct($contents)
     {
         $this->tokens = token_get_all($contents);
@@ -66,20 +53,19 @@ class TokenParser
     /**
      * Gets the next non whitespace and non comment token.
      *
-     * @param bool $docCommentIsComment If TRUE then a doc comment is considered a comment and skipped.
-     * If FALSE then only whitespace and normal comments are skipped.
+     * @param boolean $docCommentIsComment If TRUE then a doc comment is considered a comment and skipped.
+     *                                     If FALSE then only whitespace and normal comments are skipped.
      *
-     * @return mixed[]|string|null The token if exists, null otherwise.
+     * @return array|null The token if exists, null otherwise.
      */
-    public function next($docCommentIsComment = true)
+    public function next($docCommentIsComment = TRUE)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
-            if (
-                $this->tokens[$i][0] === T_WHITESPACE ||
+            if ($this->tokens[$i][0] === T_WHITESPACE ||
                 $this->tokens[$i][0] === T_COMMENT ||
-                ($docCommentIsComment && $this->tokens[$i][0] === T_DOC_COMMENT)
-            ) {
+                ($docCommentIsComment && $this->tokens[$i][0] === T_DOC_COMMENT)) {
+
                 continue;
             }
 
@@ -92,47 +78,38 @@ class TokenParser
     /**
      * Parses a single use statement.
      *
-     * @return array<string, string> A list with all found class names for a use statement.
+     * @return array A list with all found class names for a use statement.
      */
     public function parseUseStatement()
     {
-        $groupRoot     = '';
-        $class         = '';
-        $alias         = '';
-        $statements    = [];
+
+        $groupRoot = '';
+        $class = '';
+        $alias = '';
+        $statements = [];
         $explicitAlias = false;
         while (($token = $this->next())) {
-            if (! $explicitAlias && $token[0] === T_STRING) {
+            $isNameToken = $token[0] === T_STRING || $token[0] === T_NS_SEPARATOR;
+            if (!$explicitAlias && $isNameToken) {
                 $class .= $token[1];
-                $alias  = $token[1];
-            } elseif ($explicitAlias && $token[0] === T_STRING) {
                 $alias = $token[1];
-            } elseif (
-                PHP_VERSION_ID >= 80000 &&
-                ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
-            ) {
-                $class .= $token[1];
-
-                $classSplit = explode('\\', $token[1]);
-                $alias      = $classSplit[count($classSplit) - 1];
-            } elseif ($token[0] === T_NS_SEPARATOR) {
-                $class .= '\\';
-                $alias  = '';
-            } elseif ($token[0] === T_AS) {
+            } else if ($explicitAlias && $isNameToken) {
+                $alias .= $token[1];
+            } else if ($token[0] === T_AS) {
                 $explicitAlias = true;
-                $alias         = '';
-            } elseif ($token === ',') {
+                $alias = '';
+            } else if ($token === ',') {
                 $statements[strtolower($alias)] = $groupRoot . $class;
-                $class                          = '';
-                $alias                          = '';
-                $explicitAlias                  = false;
-            } elseif ($token === ';') {
+                $class = '';
+                $alias = '';
+                $explicitAlias = false;
+            } else if ($token === ';') {
                 $statements[strtolower($alias)] = $groupRoot . $class;
                 break;
-            } elseif ($token === '{') {
+            } else if ($token === '{' ) {
                 $groupRoot = $class;
-                $class     = '';
-            } elseif ($token === '}') {
+                $class = '';
+            } else if ($token === '}' ) {
                 continue;
             } else {
                 break;
@@ -147,7 +124,7 @@ class TokenParser
      *
      * @param string $namespaceName The namespace name of the reflected class.
      *
-     * @return array<string, string> A list with all found use statements.
+     * @return array A list with all found use statements.
      */
     public function parseUseStatements($namespaceName)
     {
@@ -157,8 +134,7 @@ class TokenParser
                 $statements = array_merge($statements, $this->parseUseStatement());
                 continue;
             }
-
-            if ($token[0] !== T_NAMESPACE || $this->parseNamespace() !== $namespaceName) {
+            if ($token[0] !== T_NAMESPACE || $this->parseNamespace() != $namespaceName) {
                 continue;
             }
 
@@ -179,12 +155,7 @@ class TokenParser
     public function parseNamespace()
     {
         $name = '';
-        while (
-            ($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR || (
-            PHP_VERSION_ID >= 80000 &&
-            ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
-            ))
-        ) {
+        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR)) {
             $name .= $token[1];
         }
 

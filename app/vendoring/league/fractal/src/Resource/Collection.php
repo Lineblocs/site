@@ -30,47 +30,82 @@ class Collection extends ResourceAbstract
      */
     protected $data;
 
-    protected ?PaginatorInterface $paginator = null;
+    /**
+     * The paginator instance.
+     *
+     * @var PaginatorInterface
+     */
+    protected $paginator;
 
-    protected ?CursorInterface $cursor = null;
+    /**
+     * The cursor instance.
+     *
+     * @var CursorInterface
+     */
+    protected $cursor;
 
-    public function getPaginator(): ?PaginatorInterface
+    /**
+     * Get the paginator instance.
+     *
+     * @return PaginatorInterface
+     */
+    public function getPaginator()
     {
         return $this->paginator;
     }
 
     /**
      * Determine if the resource has a paginator implementation.
+     *
+     * @return bool
      */
-    public function hasPaginator(): bool
+    public function hasPaginator()
     {
-        return $this->paginator !== null;
+        return $this->paginator instanceof PaginatorInterface;
     }
 
     /**
      * Get the cursor instance.
+     *
+     * @return CursorInterface
      */
-    public function getCursor(): ?CursorInterface
+    public function getCursor()
     {
         return $this->cursor;
     }
 
     /**
      * Determine if the resource has a cursor implementation.
+     *
+     * @return bool
      */
-    public function hasCursor(): bool
+    public function hasCursor()
     {
-        return $this->cursor !== null;
+        return $this->cursor instanceof CursorInterface;
     }
 
-    public function setPaginator(PaginatorInterface $paginator): self
+    /**
+     * Set the paginator instance.
+     *
+     * @param PaginatorInterface $paginator
+     *
+     * @return $this
+     */
+    public function setPaginator(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
 
         return $this;
     }
 
-    public function setCursor(CursorInterface $cursor): self
+    /**
+     * Set the cursor instance.
+     *
+     * @param CursorInterface $cursor
+     *
+     * @return $this
+     */
+    public function setCursor(CursorInterface $cursor)
     {
         $this->cursor = $cursor;
 

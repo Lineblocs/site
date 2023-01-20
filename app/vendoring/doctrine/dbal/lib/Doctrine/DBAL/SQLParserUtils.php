@@ -2,8 +2,6 @@
 
 namespace Doctrine\DBAL;
 
-use Doctrine\DBAL\Types\Type;
-
 use function array_fill;
 use function array_fill_keys;
 use function array_key_exists;
@@ -26,8 +24,6 @@ use const PREG_OFFSET_CAPTURE;
 
 /**
  * Utility class that parses sql statements with regard to types and parameters.
- *
- * @internal
  */
 class SQLParserUtils
 {
@@ -68,7 +64,7 @@ class SQLParserUtils
     /**
      * Returns a zero-indexed list of placeholder position.
      *
-     * @return list<int>
+     * @return int[]
      */
     private static function getPositionalPlaceholderPositions(string $statement): array
     {
@@ -85,7 +81,7 @@ class SQLParserUtils
     /**
      * Returns a map of placeholder positions to their parameter names.
      *
-     * @return array<int,string>
+     * @return string[]
      */
     private static function getNamedPlaceholderPositions(string $statement): array
     {
@@ -93,12 +89,7 @@ class SQLParserUtils
             $statement,
             ':',
             self::NAMED_TOKEN,
-            static function (
-                string $placeholder,
-                int $placeholderPosition,
-                int $fragmentPosition,
-                array &$carry
-            ): void {
+            static function (string $placeholder, int $placeholderPosition, int $fragmentPosition, array &$carry): void {
                 $carry[$placeholderPosition + $fragmentPosition] = substr($placeholder, 1);
             }
         );
@@ -107,12 +98,8 @@ class SQLParserUtils
     /**
      * @return mixed[]
      */
-    private static function collectPlaceholders(
-        string $statement,
-        string $match,
-        string $token,
-        callable $collector
-    ): array {
+    private static function collectPlaceholders(string $statement, string $match, string $token, callable $collector): array
+    {
         if (strpos($statement, $match) === false) {
             return [];
         }
@@ -132,9 +119,9 @@ class SQLParserUtils
     /**
      * For a positional query this method can rewrite the sql statement with regard to array parameters.
      *
-     * @param string                                                               $query  SQL query
-     * @param mixed[]                                                              $params Query parameters
-     * @param array<int, Type|int|string|null>|array<string, Type|int|string|null> $types  Parameter types
+     * @param string                 $query  The SQL query to execute.
+     * @param mixed[]                $params The parameters to bind to the query.
+     * @param array<string|int|null> $types  The types the previous parameters are in.
      *
      * @return mixed[]
      *
@@ -200,7 +187,7 @@ class SQLParserUtils
                     array_slice($types, 0, $needle),
                     $count ?
                         // array needles are at {@link \Doctrine\DBAL\ParameterType} constants
-                        // + {@link \Doctrine\DBAL\Connection::ARRAY_PARAM_OFFSET}
+                        // + {@link Doctrine\DBAL\Connection::ARRAY_PARAM_OFFSET}
                         array_fill(0, $count, $types[$needle] - Connection::ARRAY_PARAM_OFFSET) :
                         [],
                     array_slice($types, $needle + 1)
@@ -224,13 +211,13 @@ class SQLParserUtils
 
         foreach ($paramPos as $pos => $paramName) {
             $paramLen = strlen($paramName) + 1;
-            $value    = self::extractParam($paramName, $params, true);
+            $value    = static::extractParam($paramName, $params, true);
 
             if (! isset($arrayPositions[$paramName]) && ! isset($arrayPositions[':' . $paramName])) {
                 $pos         += $queryOffset;
                 $queryOffset -= $paramLen - 1;
                 $paramsOrd[]  = $value;
-                $typesOrd[]   = self::extractParam($paramName, $types, false, ParameterType::STRING);
+                $typesOrd[]   = static::extractParam($paramName, $types, false, ParameterType::STRING);
                 $query        = substr($query, 0, $pos) . '?' . substr($query, $pos + $paramLen);
 
                 continue;
@@ -241,7 +228,7 @@ class SQLParserUtils
 
             foreach ($value as $val) {
                 $paramsOrd[] = $val;
-                $typesOrd[]  = self::extractParam($paramName, $types, false) - Connection::ARRAY_PARAM_OFFSET;
+                $typesOrd[]  = static::extractParam($paramName, $types, false) - Connection::ARRAY_PARAM_OFFSET;
             }
 
             $pos         += $queryOffset;

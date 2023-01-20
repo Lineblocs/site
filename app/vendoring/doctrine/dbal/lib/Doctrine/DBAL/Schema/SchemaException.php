@@ -2,7 +2,7 @@
 
 namespace Doctrine\DBAL\Schema;
 
-use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\DBALException;
 
 use function implode;
 use function sprintf;
@@ -10,7 +10,7 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-class SchemaException extends Exception
+class SchemaException extends DBALException
 {
     public const TABLE_DOESNT_EXIST       = 10;
     public const TABLE_ALREADY_EXISTS     = 20;
@@ -127,23 +127,23 @@ class SchemaException extends Exception
     }
 
     /**
-     * @param string $name
+     * @param string $sequenceName
      *
      * @return SchemaException
      */
-    public static function sequenceAlreadyExists($name)
+    public static function sequenceAlreadyExists($sequenceName)
     {
-        return new self("The sequence '" . $name . "' already exists.", self::SEQUENCE_ALREADY_EXISTS);
+        return new self("The sequence '" . $sequenceName . "' already exists.", self::SEQUENCE_ALREADY_EXISTS);
     }
 
     /**
-     * @param string $name
+     * @param string $sequenceName
      *
      * @return SchemaException
      */
-    public static function sequenceDoesNotExist($name)
+    public static function sequenceDoesNotExist($sequenceName)
     {
-        return new self("There exists no sequence with the name '" . $name . "'.", self::SEQUENCE_DOENST_EXIST);
+        return new self("There exists no sequence with the name '" . $sequenceName . "'.", self::SEQUENCE_DOENST_EXIST);
     }
 
     /**
@@ -168,8 +168,8 @@ class SchemaException extends Exception
         return new self(
             'The performed schema operation on ' . $localTable->getName() . ' requires a named foreign key, ' .
             'but the given foreign key from (' . implode(', ', $foreignKey->getColumns()) . ') onto foreign table ' .
-            "'" . $foreignKey->getForeignTableName() . "' (" . implode(', ', $foreignKey->getForeignColumns()) . ')' .
-            ' is currently unnamed.'
+            "'" . $foreignKey->getForeignTableName() . "' (" . implode(', ', $foreignKey->getForeignColumns()) . ') is currently ' .
+            'unnamed.'
         );
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Psr7;
 
 use Psr\Http\Message\ResponseInterface;
@@ -83,7 +82,7 @@ class Response implements ResponseInterface
     /**
      * @param int                                  $status  Status code
      * @param array                                $headers Response headers
-     * @param string|resource|StreamInterface|null $body    Response body
+     * @param string|null|resource|StreamInterface $body    Response body
      * @param string                               $version Protocol version
      * @param string|null                          $reason  Reason phrase (when empty a default will be used based on the status code)
      */
@@ -101,7 +100,7 @@ class Response implements ResponseInterface
         $this->statusCode = $status;
 
         if ($body !== '' && $body !== null) {
-            $this->stream = Utils::streamFor($body);
+            $this->stream = stream_for($body);
         }
 
         $this->setHeaders($headers);

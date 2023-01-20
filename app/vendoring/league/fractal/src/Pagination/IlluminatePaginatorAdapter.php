@@ -21,10 +21,19 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
  */
 class IlluminatePaginatorAdapter implements PaginatorInterface
 {
-    protected LengthAwarePaginator $paginator;
+    /**
+     * The paginator instance.
+     *
+     * @var \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    protected $paginator;
 
     /**
      * Create a new illuminate pagination adapter.
+     *
+     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator
+     *
+     * @return void
      */
     public function __construct(LengthAwarePaginator $paginator)
     {
@@ -32,57 +41,73 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get the current page.
+     *
+     * @return int
      */
-    public function getCurrentPage(): int
+    public function getCurrentPage()
     {
         return $this->paginator->currentPage();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the last page.
+     *
+     * @return int
      */
-    public function getLastPage(): int
+    public function getLastPage()
     {
         return $this->paginator->lastPage();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the total.
+     *
+     * @return int
      */
-    public function getTotal(): int
+    public function getTotal()
     {
         return $this->paginator->total();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the count.
+     *
+     * @return int
      */
-    public function getCount(): int
+    public function getCount()
     {
         return $this->paginator->count();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the number per page.
+     *
+     * @return int
      */
-    public function getPerPage(): int
+    public function getPerPage()
     {
         return $this->paginator->perPage();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the url for the given page.
+     *
+     * @param int $page
+     *
+     * @return string
      */
-    public function getUrl(int $page): string
+    public function getUrl($page)
     {
         return $this->paginator->url($page);
     }
 
     /**
      * Get the paginator instance.
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getPaginator(): LengthAwarePaginator
+    public function getPaginator()
     {
         return $this->paginator;
     }

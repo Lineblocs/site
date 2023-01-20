@@ -14,7 +14,7 @@ interface Result
      *
      * @return array<int,mixed>|false
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchNumeric();
 
@@ -23,7 +23,7 @@ interface Result
      *
      * @return array<string,mixed>|false
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchAssociative();
 
@@ -32,7 +32,7 @@ interface Result
      *
      * @return mixed|false
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchOne();
 
@@ -41,7 +41,7 @@ interface Result
      *
      * @return array<int,array<int,mixed>>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchAllNumeric(): array;
 
@@ -50,7 +50,7 @@ interface Result
      *
      * @return array<int,array<string,mixed>>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchAllAssociative(): array;
 
@@ -59,7 +59,7 @@ interface Result
      *
      * @return array<int,mixed>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public function fetchFirstColumn(): array;
 
@@ -70,7 +70,7 @@ interface Result
      * some database drivers may return the number of rows returned by that query. However, this behaviour
      * is not guaranteed for all drivers and should not be relied on in portable applications.
      *
-     * @return int|string The number of rows.
+     * @return int The number of rows.
      */
     public function rowCount();
 

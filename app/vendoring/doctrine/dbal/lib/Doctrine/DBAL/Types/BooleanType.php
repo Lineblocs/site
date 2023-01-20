@@ -13,9 +13,9 @@ class BooleanType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $platform->getBooleanTypeDeclarationSQL($column);
+        return $platform->getBooleanTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**
