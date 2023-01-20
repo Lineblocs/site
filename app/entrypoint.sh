@@ -1,3 +1,4 @@
+#! /bin/bash
 ## generate keys
 echo "Generating app keys..."
 php artisan key:generate
