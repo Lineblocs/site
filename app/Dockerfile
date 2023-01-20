@@ -81,6 +81,7 @@ RUN ./deploy-docker.sh
 # Change current user to www
 # Expose port 9000 and start php-fpm server
 COPY ports.conf /etc/apache2/ports.conf
+RUN chown -R www-data www-data ./public/assets
 EXPOSE 8080
 #CMD [ "apache2-foreground" ]
 ENTRYPOINT ["./entrypoint.sh"]
