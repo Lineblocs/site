@@ -4,14 +4,12 @@ namespace Doctrine\DBAL\Driver\SQLSrv;
 
 use Doctrine\DBAL\Driver\FetchUtils;
 use Doctrine\DBAL\Driver\Result;
-use Doctrine\DBAL\Driver\SQLSrv\Exception\Error;
-use Doctrine\DBAL\Driver\Statement as StatementInterface;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Driver\StatementIterator;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\ParameterType;
 use IteratorAggregate;
 use PDO;
-use ReturnTypeWillChange;
 
 use function array_key_exists;
 use function count;
@@ -35,7 +33,6 @@ use function SQLSRV_SQLTYPE_VARBINARY;
 use function stripos;
 
 use const SQLSRV_ENC_BINARY;
-use const SQLSRV_ENC_CHAR;
 use const SQLSRV_ERR_ERRORS;
 use const SQLSRV_FETCH_ASSOC;
 use const SQLSRV_FETCH_BOTH;
@@ -44,10 +41,8 @@ use const SQLSRV_PARAM_IN;
 
 /**
  * SQL Server Statement.
- *
- * @deprecated Use {@link Statement} instead
  */
-class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
+class SQLSrvStatement implements IteratorAggregate, Statement, Result
 {
     /**
      * The SQLSRV Resource.
@@ -138,8 +133,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
     public const LAST_INSERT_ID_SQL = ';SELECT SCOPE_IDENTITY() AS LastInsertId;';
 
     /**
-     * @internal The statement can be only instantiated by its driver connection.
-     *
      * @param resource $conn
      * @param string   $sql
      */
@@ -176,16 +169,14 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
     /**
      * {@inheritdoc}
      */
-    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null)
     {
-        if (! is_numeric($param)) {
-            throw new SQLSrvException(
-                'sqlsrv does not support named parameters to queries, use question mark (?) placeholders instead.'
-            );
+        if (! is_numeric($column)) {
+            throw new SQLSrvException('sqlsrv does not support named parameters to queries, use question mark (?) placeholders instead.');
         }
 
-        $this->variables[$param] =& $variable;
-        $this->types[$param]     = $type;
+        $this->variables[$column] =& $variable;
+        $this->types[$column]     = $type;
 
         // unset the statement resource if it exists as the new one will need to be bound to the new variable
         $this->stmt = null;
@@ -264,7 +255,7 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
         }
 
         if (! sqlsrv_execute($this->stmt)) {
-            throw Error::new();
+            throw SQLSrvException::fromSqlSrvErrors();
         }
 
         if ($this->lastInsertId) {
@@ -308,14 +299,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
                     ];
                     break;
 
-                case ParameterType::ASCII:
-                    $params[$column - 1] = [
-                        &$variable,
-                        SQLSRV_PARAM_IN,
-                        SQLSRV_PHPTYPE_STRING(SQLSRV_ENC_CHAR),
-                    ];
-                    break;
-
                 default:
                     $params[$column - 1] =& $variable;
                     break;
@@ -325,7 +308,7 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
         $stmt = sqlsrv_prepare($this->conn, $this->sql, $params);
 
         if (! $stmt) {
-            throw Error::new();
+            throw SQLSrvException::fromSqlSrvErrors();
         }
 
         return $stmt;
@@ -350,7 +333,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
      *
      * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new StatementIterator($this);

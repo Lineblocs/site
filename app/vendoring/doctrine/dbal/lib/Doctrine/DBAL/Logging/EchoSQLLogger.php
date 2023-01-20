@@ -2,8 +2,6 @@
 
 namespace Doctrine\DBAL\Logging;
 
-use Doctrine\Deprecations\Deprecation;
-
 use function var_dump;
 
 use const PHP_EOL;
@@ -15,15 +13,6 @@ use const PHP_EOL;
  */
 class EchoSQLLogger implements SQLLogger
 {
-    public function __construct()
-    {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3935',
-            'EchoSQLLogger is deprecated without replacement, move the code into your project if you rely on it.'
-        );
-    }
-
     /**
      * {@inheritdoc}
      */

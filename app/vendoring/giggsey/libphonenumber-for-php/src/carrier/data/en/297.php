@@ -24,5 +24,4 @@ return array (
   29773 => 'Digicel',
   29774 => 'Digicel',
   29777 => 'SETAR',
-  297995 => 'SETAR',
 );

@@ -20,31 +20,45 @@ interface PaginatorInterface
 {
     /**
      * Get the current page.
+     *
+     * @return int
      */
-    public function getCurrentPage(): int;
+    public function getCurrentPage();
 
     /**
      * Get the last page.
+     *
+     * @return int
      */
-    public function getLastPage(): int;
+    public function getLastPage();
 
     /**
      * Get the total.
+     *
+     * @return int
      */
-    public function getTotal(): int;
+    public function getTotal();
 
     /**
      * Get the count.
+     *
+     * @return int
      */
-    public function getCount(): int;
+    public function getCount();
 
     /**
      * Get the number per page.
+     *
+     * @return int
      */
-    public function getPerPage(): int;
+    public function getPerPage();
 
     /**
      * Get the url for the given page.
+     *
+     * @param int $page
+     *
+     * @return string
      */
-    public function getUrl(int $page): string;
+    public function getUrl($page);
 }

@@ -3,12 +3,8 @@
 namespace Doctrine\DBAL\Driver\IBMDB2;
 
 use Doctrine\DBAL\Driver\FetchUtils;
-use Doctrine\DBAL\Driver\IBMDB2\Exception\CannotCopyStreamToStream;
-use Doctrine\DBAL\Driver\IBMDB2\Exception\CannotCreateTemporaryFile;
-use Doctrine\DBAL\Driver\IBMDB2\Exception\CannotWriteToTemporaryFile;
-use Doctrine\DBAL\Driver\IBMDB2\Exception\StatementError;
 use Doctrine\DBAL\Driver\Result;
-use Doctrine\DBAL\Driver\Statement as StatementInterface;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Driver\StatementIterator;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\ParameterType;
@@ -17,11 +13,9 @@ use PDO;
 use ReflectionClass;
 use ReflectionObject;
 use ReflectionProperty;
-use ReturnTypeWillChange;
 use stdClass;
 
 use function array_change_key_case;
-use function assert;
 use function db2_bind_param;
 use function db2_execute;
 use function db2_fetch_array;
@@ -39,7 +33,6 @@ use function func_get_args;
 use function func_num_args;
 use function fwrite;
 use function gettype;
-use function is_int;
 use function is_object;
 use function is_resource;
 use function is_string;
@@ -57,10 +50,7 @@ use const DB2_LONG;
 use const DB2_PARAM_FILE;
 use const DB2_PARAM_IN;
 
-/**
- * @deprecated Use {@link Statement} instead
- */
-class DB2Statement implements IteratorAggregate, StatementInterface, Result
+class DB2Statement implements IteratorAggregate, Statement, Result
 {
     /** @var resource */
     private $stmt;
@@ -93,8 +83,6 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     private $result = false;
 
     /**
-     * @internal The statement can be only instantiated by its driver connection.
-     *
      * @param resource $stmt
      */
     public function __construct($stmt)
@@ -107,39 +95,35 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
      */
     public function bindValue($param, $value, $type = ParameterType::STRING)
     {
-        assert(is_int($param));
-
         return $this->bindParam($param, $value, $type);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null)
     {
-        assert(is_int($param));
-
         switch ($type) {
             case ParameterType::INTEGER:
-                $this->bind($param, $variable, DB2_PARAM_IN, DB2_LONG);
+                $this->bind($column, $variable, DB2_PARAM_IN, DB2_LONG);
                 break;
 
             case ParameterType::LARGE_OBJECT:
-                if (isset($this->lobs[$param])) {
-                    [, $handle] = $this->lobs[$param];
+                if (isset($this->lobs[$column])) {
+                    [, $handle] = $this->lobs[$column];
                     fclose($handle);
                 }
 
                 $handle = $this->createTemporaryFile();
                 $path   = stream_get_meta_data($handle)['uri'];
 
-                $this->bind($param, $path, DB2_PARAM_FILE, DB2_BINARY);
+                $this->bind($column, $path, DB2_PARAM_FILE, DB2_BINARY);
 
-                $this->lobs[$param] = [&$variable, $handle];
+                $this->lobs[$column] = [&$variable, $handle];
                 break;
 
             default:
-                $this->bind($param, $variable, DB2_PARAM_IN, DB2_CHAR);
+                $this->bind($column, $variable, DB2_PARAM_IN, DB2_CHAR);
                 break;
         }
 
@@ -157,7 +141,7 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
         $this->bindParam[$position] =& $variable;
 
         if (! db2_bind_param($this->stmt, $position, 'variable', $parameterType, $dataType)) {
-            throw StatementError::new($this->stmt);
+            throw new DB2Exception(db2_stmt_errormsg());
         }
     }
 
@@ -244,7 +228,7 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
         $this->lobs = [];
 
         if ($retval === false) {
-            throw StatementError::new($this->stmt);
+            throw new DB2Exception(db2_stmt_errormsg());
         }
 
         $this->result = true;
@@ -271,7 +255,6 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
      *
      * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new StatementIterator($this);
@@ -457,9 +440,9 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     /**
      * Casts a stdClass object to the given class name mapping its' properties.
      *
-     * @param stdClass            $sourceObject     Object to cast from.
-     * @param class-string|object $destinationClass Name of the class or class instance to cast to.
-     * @param mixed[]             $ctorArgs         Arguments to use for constructing the destination class instance.
+     * @param stdClass      $sourceObject     Object to cast from.
+     * @param string|object $destinationClass Name of the class or class instance to cast to.
+     * @param mixed[]       $ctorArgs         Arguments to use for constructing the destination class instance.
      *
      * @return object
      *
@@ -529,7 +512,7 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
         $handle = @tmpfile();
 
         if ($handle === false) {
-            throw CannotCreateTemporaryFile::new(error_get_last());
+            throw new DB2Exception('Could not create temporary file: ' . error_get_last()['message']);
         }
 
         return $handle;
@@ -544,7 +527,7 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     private function copyStreamToStream($source, $target): void
     {
         if (@stream_copy_to_stream($source, $target) === false) {
-            throw CannotCopyStreamToStream::new(error_get_last());
+            throw new DB2Exception('Could not copy source stream to temporary file: ' . error_get_last()['message']);
         }
     }
 
@@ -556,7 +539,7 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     private function writeStringToStream(string $string, $target): void
     {
         if (@fwrite($target, $string) === false) {
-            throw CannotWriteToTemporaryFile::new(error_get_last());
+            throw new DB2Exception('Could not write string to temporary file: ' . error_get_last()['message']);
         }
     }
 }

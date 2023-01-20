@@ -25,7 +25,7 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '9(?:19|88)',
+    'NationalNumberPattern' => '919',
     'ExampleNumber' => '919',
     'PossibleLength' => 
     array (
@@ -57,7 +57,7 @@ return array (
   ),
   'shortCode' => 
   array (
-    'NationalNumberPattern' => '9(?:19|88)',
+    'NationalNumberPattern' => '919',
     'ExampleNumber' => '919',
     'PossibleLength' => 
     array (
@@ -107,5 +107,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => false,
 );

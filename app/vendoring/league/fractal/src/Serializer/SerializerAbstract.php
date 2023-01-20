@@ -18,9 +18,70 @@ use League\Fractal\Resource\ResourceInterface;
 abstract class SerializerAbstract implements Serializer
 {
     /**
-     * {@inheritDoc}
+     * Serialize a collection.
+     *
+     * @param string $resourceKey
+     * @param array  $data
+     *
+     * @return array
      */
-    public function mergeIncludes(array $transformedData, array $includedData): array
+    abstract public function collection($resourceKey, array $data);
+
+    /**
+     * Serialize an item.
+     *
+     * @param string $resourceKey
+     * @param array  $data
+     *
+     * @return array
+     */
+    abstract public function item($resourceKey, array $data);
+
+    /**
+     * Serialize null resource.
+     *
+     * @return array
+     */
+    abstract public function null();
+
+    /**
+     * Serialize the included data.
+     *
+     * @param ResourceInterface $resource
+     * @param array             $data
+     *
+     * @return array
+     */
+    abstract public function includedData(ResourceInterface $resource, array $data);
+
+    /**
+     * Serialize the meta.
+     *
+     * @param array $meta
+     *
+     * @return array
+     */
+    abstract public function meta(array $meta);
+
+    /**
+     * Serialize the paginator.
+     *
+     * @param PaginatorInterface $paginator
+     *
+     * @return array
+     */
+    abstract public function paginator(PaginatorInterface $paginator);
+
+    /**
+     * Serialize the cursor.
+     *
+     * @param CursorInterface $cursor
+     *
+     * @return array
+     */
+    abstract public function cursor(CursorInterface $cursor);
+
+    public function mergeIncludes($transformedData, $includedData)
     {
         // If the serializer does not want the includes to be side-loaded then
         // the included data must be merged with the transformed data.
@@ -32,41 +93,60 @@ abstract class SerializerAbstract implements Serializer
     }
 
     /**
-     * {@inheritDoc}
+     * Indicates if includes should be side-loaded.
+     *
+     * @return bool
      */
-    public function sideloadIncludes(): bool
+    public function sideloadIncludes()
     {
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * Hook for the serializer to inject custom data based on the relationships of the resource.
+     *
+     * @param array $data
+     * @param array $rawIncludedData
+     *
+     * @return array
      */
-    public function injectData(array $data, array $rawIncludedData): array
+    public function injectData($data, $rawIncludedData)
     {
         return $data;
     }
 
     /**
-     * {@inheritDoc}
+     * Hook for the serializer to inject custom data based on the available includes of the resource.
+     *
+     * @param array $data
+     * @param array $availableIncludes
+     *
+     * @return array
      */
-    public function injectAvailableIncludeData(array $data, array $availableIncludes): array
+    public function injectAvailableIncludeData($data, $availableIncludes)
     {
         return $data;
     }
 
     /**
-     * {@inheritDoc}
+     * Hook for the serializer to modify the final list of includes.
+     *
+     * @param array             $includedData
+     * @param array             $data
+     *
+     * @return array
      */
-    public function filterIncludes(array $includedData, array $data): array
+    public function filterIncludes($includedData, $data)
     {
         return $includedData;
     }
 
     /**
-     * {@inheritDoc}
+     * Get the mandatory fields for the serializer
+     *
+     * @return array
      */
-    public function getMandatoryFields(): array
+    public function getMandatoryFields()
     {
         return [];
     }

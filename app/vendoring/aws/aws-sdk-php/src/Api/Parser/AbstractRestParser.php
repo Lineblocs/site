@@ -117,10 +117,11 @@ abstract class AbstractRestParser extends AbstractParser
                 break;
             case 'timestamp':
                 try {
-                    $value = DateTimeResult::fromTimestamp(
-                        $value,
-                        !empty($shape['timestampFormat']) ? $shape['timestampFormat'] : null
-                    );
+                    if (!empty($shape['timestampFormat'])
+                        && $shape['timestampFormat'] === 'unixTimestamp') {
+                        $value = DateTimeResult::fromEpoch($value);
+                    }
+                    $value = new DateTimeResult($value);
                     break;
                 } catch (\Exception $e) {
                     // If the value cannot be parsed, then do not add it to the
@@ -160,7 +161,7 @@ abstract class AbstractRestParser extends AbstractParser
         // Check if the headers are prefixed by a location name
         $result[$name] = [];
         $prefix = $shape['locationName'];
-        $prefixLen = $prefix !== null ? strlen($prefix) : 0;
+        $prefixLen = strlen($prefix);
 
         foreach ($response->getHeaders() as $k => $values) {
             if (!$prefixLen) {

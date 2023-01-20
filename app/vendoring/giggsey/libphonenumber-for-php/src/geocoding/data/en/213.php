@@ -23,6 +23,5 @@ return array (
   21338 => 'Annaba/Skikda',
   21341 => 'Oran',
   21343 => 'Tlemcen',
-  21344 => 'Blida',
   21349 => 'Adrar/Béchar/Tindouf',
 );

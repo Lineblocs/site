@@ -25,8 +25,6 @@ final class ColumnCase
 
     /**
      * This class cannot be instantiated.
-     *
-     * @codeCoverageIgnore
      */
     private function __construct()
     {

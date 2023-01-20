@@ -7,7 +7,6 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
-use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Events;
 use InvalidArgumentException;
@@ -27,7 +26,7 @@ use function func_get_args;
  *
  * 1. Replica if primary was never picked before and ONLY if 'getWrappedConnection'
  *    or 'executeQuery' is used.
- * 2. Primary picked when 'exec', 'executeUpdate', 'executeStatement', 'insert', 'delete', 'update', 'createSavepoint',
+ * 2. Primary picked when 'exec', 'executeUpdate', 'insert', 'delete', 'update', 'createSavepoint',
  *    'releaseSavepoint', 'beginTransaction', 'rollback', 'commit', 'query' or
  *    'prepare' is called.
  * 3. If Primary was picked once during the lifetime of the connection it will always get picked afterwards.
@@ -42,7 +41,7 @@ use function func_get_args;
  * Be aware that Connection#executeQuery is a method specifically for READ
  * operations only.
  *
- * Use Connection#executeStatement for any SQL statement that changes/updates
+ * Use Connection#executeUpdate for any SQL statement that changes/updates
  * state in the database (UPDATE, INSERT, DELETE or DDL statements).
  *
  * This connection is limited to replica operations using the
@@ -57,7 +56,6 @@ use function func_get_args;
  *
  * Instantiation through the DriverManager looks like:
  *
- * @psalm-import-type Params from DriverManager
  * @example
  *
  * $conn = DriverManager::getConnection(array(
@@ -70,8 +68,7 @@ use function func_get_args;
  *    )
  * ));
  *
- * You can also pass 'driverOptions' and any other documented option to each of this drivers
- * to pass additional information.
+ * You can also pass 'driverOptions' and any other documented option to each of this drivers to pass additional information.
  */
 class PrimaryReadReplicaConnection extends Connection
 {
@@ -93,20 +90,12 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * Creates Primary Replica Connection.
      *
-     * @internal The connection can be only instantiated by the driver manager.
-     *
-     * @param array<string,mixed> $params
-     * @psalm-param Params $params
-     * @phpstan-param array<string,mixed> $params
+     * @param mixed[] $params
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(
-        array $params,
-        Driver $driver,
-        ?Configuration $config = null,
-        ?EventManager $eventManager = null
-    ) {
+    public function __construct(array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null)
+    {
         if (! isset($params['replica'], $params['primary'])) {
             throw new InvalidArgumentException('primary or replica configuration missing');
         }
@@ -115,12 +104,9 @@ class PrimaryReadReplicaConnection extends Connection
             throw new InvalidArgumentException('You have to configure at least one replica.');
         }
 
-        if (isset($params['driver'])) {
-            $params['primary']['driver'] = $params['driver'];
-
-            foreach ($params['replica'] as $replicaKey => $replica) {
-                $params['replica'][$replicaKey]['driver'] = $params['driver'];
-            }
+        $params['primary']['driver'] = $params['driver'];
+        foreach ($params['replica'] as $replicaKey => $replica) {
+            $params['replica'][$replicaKey]['driver'] = $params['driver'];
         }
 
         $this->keepReplica = (bool) ($params['keepReplica'] ?? false);
@@ -144,10 +130,7 @@ class PrimaryReadReplicaConnection extends Connection
     public function connect($connectionName = null)
     {
         if ($connectionName !== null) {
-            throw new InvalidArgumentException(
-                'Passing a connection name as first argument is not supported anymore.'
-                    . ' Use ensureConnectedToPrimary()/ensureConnectedToReplica() instead.'
-            );
+            throw new InvalidArgumentException('Passing a connection name as first argument is not supported anymore. Use ensureConnectedToPrimary()/ensureConnectedToReplica() instead.');
         }
 
         return $this->performConnect();
@@ -271,24 +254,12 @@ class PrimaryReadReplicaConnection extends Connection
 
     /**
      * {@inheritDoc}
-     *
-     * @deprecated Use {@link executeStatement()} instead.
      */
-    public function executeUpdate($sql, array $params = [], array $types = [])
+    public function executeUpdate($query, array $params = [], array $types = [])
     {
         $this->ensureConnectedToPrimary();
 
-        return parent::executeUpdate($sql, $params, $types);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function executeStatement($sql, array $params = [], array $types = [])
-    {
-        $this->ensureConnectedToPrimary();
-
-        return parent::executeStatement($sql, $params, $types);
+        return parent::executeUpdate($query, $params, $types);
     }
 
     /**
@@ -324,11 +295,11 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * {@inheritDoc}
      */
-    public function delete($table, array $criteria, array $types = [])
+    public function delete($tableName, array $identifier, array $types = [])
     {
         $this->ensureConnectedToPrimary();
 
-        return parent::delete($table, $criteria, $types);
+        return parent::delete($tableName, $identifier, $types);
     }
 
     /**
@@ -347,31 +318,31 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * {@inheritDoc}
      */
-    public function update($table, array $data, array $criteria, array $types = [])
+    public function update($tableName, array $data, array $identifier, array $types = [])
     {
         $this->ensureConnectedToPrimary();
 
-        return parent::update($table, $data, $criteria, $types);
+        return parent::update($tableName, $data, $identifier, $types);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function insert($table, array $data, array $types = [])
+    public function insert($tableName, array $data, array $types = [])
     {
         $this->ensureConnectedToPrimary();
 
-        return parent::insert($table, $data, $types);
+        return parent::insert($tableName, $data, $types);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function exec($sql)
+    public function exec($statement)
     {
         $this->ensureConnectedToPrimary();
 
-        return parent::exec($sql);
+        return parent::exec($statement);
     }
 
     /**
@@ -433,10 +404,10 @@ class PrimaryReadReplicaConnection extends Connection
     /**
      * {@inheritDoc}
      */
-    public function prepare($sql)
+    public function prepare($statement)
     {
         $this->ensureConnectedToPrimary();
 
-        return parent::prepare($sql);
+        return parent::prepare($statement);
     }
 }

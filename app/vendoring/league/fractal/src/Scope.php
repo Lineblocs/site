@@ -17,7 +17,7 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Serializer\Serializer;
+use League\Fractal\Serializer\SerializerAbstract;
 
 /**
  * Scope
@@ -28,17 +28,41 @@ use League\Fractal\Serializer\Serializer;
  */
 class Scope implements \JsonSerializable
 {
-    protected array $availableIncludes = [];
+    /**
+     * @var array
+     */
+    protected $availableIncludes = [];
 
-    protected ?string $scopeIdentifier;
+    /**
+     * @var string
+     */
+    protected $scopeIdentifier;
 
-    protected Manager $manager;
+    /**
+     * @var \League\Fractal\Manager
+     */
+    protected $manager;
 
-    protected ResourceInterface $resource;
+    /**
+     * @var ResourceInterface
+     */
+    protected $resource;
 
-    protected array $parentScopes = [];
+    /**
+     * @var array
+     */
+    protected $parentScopes = [];
 
-    public function __construct(Manager $manager, ResourceInterface $resource, ?string $scopeIdentifier = null)
+    /**
+     * Create a new scope instance.
+     *
+     * @param Manager           $manager
+     * @param ResourceInterface $resource
+     * @param string            $scopeIdentifier
+     *
+     * @return void
+     */
+    public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null)
     {
         $this->manager = $manager;
         $this->resource = $resource;
@@ -49,24 +73,35 @@ class Scope implements \JsonSerializable
      * Embed a scope as a child of the current scope.
      *
      * @internal
+     *
+     * @param string            $scopeIdentifier
+     * @param ResourceInterface $resource
+     *
+     * @return \League\Fractal\Scope
      */
-    public function embedChildScope(string $scopeIdentifier, ResourceInterface $resource): Scope
+    public function embedChildScope($scopeIdentifier, $resource)
     {
         return $this->manager->createData($resource, $scopeIdentifier, $this);
     }
 
     /**
      * Get the current identifier.
+     *
+     * @return string
      */
-    public function getScopeIdentifier(): ?string
+    public function getScopeIdentifier()
     {
         return $this->scopeIdentifier;
     }
 
     /**
      * Get the unique identifier for this scope.
+     *
+     * @param string $appendIdentifier
+     *
+     * @return string
      */
-    public function getIdentifier(?string $appendIdentifier = null): string
+    public function getIdentifier($appendIdentifier = null)
     {
         $identifierParts = array_merge($this->parentScopes, [$this->scopeIdentifier, $appendIdentifier]);
 
@@ -74,34 +109,49 @@ class Scope implements \JsonSerializable
     }
 
     /**
+     * Getter for parentScopes.
+     *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getParentScopes()
     {
         return $this->parentScopes;
     }
 
-    public function getResource(): ResourceInterface
+    /**
+     * Getter for resource.
+     *
+     * @return ResourceInterface
+     */
+    public function getResource()
     {
         return $this->resource;
     }
 
-    public function getManager(): Manager
+    /**
+     * Getter for manager.
+     *
+     * @return \League\Fractal\Manager
+     */
+    public function getManager()
     {
         return $this->manager;
     }
 
     /**
+     * Is Requested.
+     *
      * Check if - in relation to the current scope - this specific segment is allowed.
      * That means, if a.b.c is requested and the current scope is a.b, then c is allowed. If the current
      * scope is a then c is not allowed, even if it is there and potentially transformable.
      *
      * @internal
      *
+     * @param string $checkScopeSegment
+     *
      * @return bool Returns the new number of elements in the array.
      */
-    public function isRequested(string $checkScopeSegment): bool
+    public function isRequested($checkScopeSegment)
     {
         if ($this->parentScopes) {
             $scopeArray = array_slice($this->parentScopes, 1);
@@ -110,20 +160,26 @@ class Scope implements \JsonSerializable
             $scopeArray = [$checkScopeSegment];
         }
 
-        $scopeString = implode('.', $scopeArray);
+        $scopeString = implode('.', (array) $scopeArray);
 
         return in_array($scopeString, $this->manager->getRequestedIncludes());
     }
 
     /**
+     * Is Excluded.
+     *
      * Check if - in relation to the current scope - this specific segment should
      * be excluded. That means, if a.b.c is excluded and the current scope is a.b,
      * then c will not be allowed in the transformation whether it appears in
      * the list of default or available, requested includes.
      *
      * @internal
+     *
+     * @param string $checkScopeSegment
+     *
+     * @return bool
      */
-    public function isExcluded(string $checkScopeSegment): bool
+    public function isExcluded($checkScopeSegment)
     {
         if ($this->parentScopes) {
             $scopeArray = array_slice($this->parentScopes, 1);
@@ -132,7 +188,7 @@ class Scope implements \JsonSerializable
             $scopeArray = [$checkScopeSegment];
         }
 
-        $scopeString = implode('.', $scopeArray);
+        $scopeString = implode('.', (array) $scopeArray);
 
         return in_array($scopeString, $this->manager->getRequestedExcludes());
     }
@@ -144,9 +200,11 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
+     * @param string $identifierSegment
+     *
      * @return int Returns the new number of elements in the array.
      */
-    public function pushParentScope(string $identifierSegment): int
+    public function pushParentScope($identifierSegment)
     {
         return array_push($this->parentScopes, $identifierSegment);
     }
@@ -157,8 +215,10 @@ class Scope implements \JsonSerializable
      * @internal
      *
      * @param string[] $parentScopes Value to set.
+     *
+     * @return $this
      */
-    public function setParentScopes(array $parentScopes): self
+    public function setParentScopes($parentScopes)
     {
         $this->parentScopes = $parentScopes;
 
@@ -167,8 +227,10 @@ class Scope implements \JsonSerializable
 
     /**
      * Convert the current data for this scope to an array.
+     *
+     * @return array
      */
-    public function toArray(): ?array
+    public function toArray()
     {
         list($rawData, $rawIncludedData) = $this->executeResourceTransformers();
 
@@ -231,20 +293,23 @@ class Scope implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();
     }
 
-    /**
+  /**
      * Convert the current data for this scope to JSON.
+     *
+     * @param int $options
+     *
+     * @return string
      */
-    public function toJson(int $options = 0): string
+    public function toJson($options = 0)
     {
-        return \json_encode($this, $options);
+        return json_encode($this, $options);
     }
 
     /**
@@ -252,7 +317,6 @@ class Scope implements \JsonSerializable
      *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function transformPrimitiveResource()
     {
         if (! ($this->resource instanceof Primitive)) {
@@ -280,8 +344,10 @@ class Scope implements \JsonSerializable
      * Execute the resources transformer and return the data and included data.
      *
      * @internal
+     *
+     * @return array
      */
-    protected function executeResourceTransformers(): array
+    protected function executeResourceTransformers()
     {
         $transformer = $this->resource->getTransformer();
         $data = $this->resource->getData();
@@ -312,27 +378,21 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @param mixed $data
+     * @param SerializerAbstract $serializer
+     * @param mixed              $data
+     *
+     * @return array
      */
-    protected function serializeResource(Serializer $serializer, $data): ?array
+    protected function serializeResource(SerializerAbstract $serializer, $data)
     {
         $resourceKey = $this->resource->getResourceKey();
 
         if ($this->resource instanceof Collection) {
-            if (!empty($resourceKey)) {
-                return $serializer->collection($resourceKey, $data);
-            }
-
-            return $serializer->collection(null, $data);
+            return $serializer->collection($resourceKey, $data);
         }
 
         if ($this->resource instanceof Item) {
-            // this is where it breaks now.
-            if (!empty($resourceKey)) {
-                return $serializer->item($resourceKey, $data);
-            }
-
-            return $serializer->item(null, $data);
+            return $serializer->item($resourceKey, $data);
         }
 
         return $serializer->null();
@@ -345,8 +405,10 @@ class Scope implements \JsonSerializable
      *
      * @param TransformerAbstract|callable $transformer
      * @param mixed                        $data
+     *
+     * @return array
      */
-    protected function fireTransformer($transformer, $data): array
+    protected function fireTransformer($transformer, $data)
     {
         $includedData = [];
 
@@ -375,8 +437,10 @@ class Scope implements \JsonSerializable
      *
      * @param \League\Fractal\TransformerAbstract $transformer
      * @param mixed                               $data
+     *
+     * @return array
      */
-    protected function fireIncludedTransformers($transformer, $data): array
+    protected function fireIncludedTransformers($transformer, $data)
     {
         $this->availableIncludes = $transformer->getAvailableIncludes();
 
@@ -389,8 +453,10 @@ class Scope implements \JsonSerializable
      * @internal
      *
      * @param TransformerAbstract|callable $transformer
+     *
+     * @return bool
      */
-    protected function transformerHasIncludes($transformer): bool
+    protected function transformerHasIncludes($transformer)
     {
         if (! $transformer instanceof TransformerAbstract) {
             return false;
@@ -404,8 +470,10 @@ class Scope implements \JsonSerializable
 
     /**
      * Check, if this is the root scope.
+     *
+     * @return bool
      */
-    protected function isRootScope(): bool
+    protected function isRootScope()
     {
         return empty($this->parentScopes);
     }
@@ -415,8 +483,12 @@ class Scope implements \JsonSerializable
      * the scope resource
      *
      * @internal
+     *
+     * @param array  $data
+     *
+     * @return array
      */
-    protected function filterFieldsets(array $data): array
+    protected function filterFieldsets(array $data)
     {
         if (!$this->hasFilterFieldset()) {
             return $data;
@@ -437,8 +509,10 @@ class Scope implements \JsonSerializable
      * Return the requested filter fieldset for the scope resource
      *
      * @internal
+     *
+     * @return \League\Fractal\ParamBag|null
      */
-    protected function getFilterFieldset(): ?ParamBag
+    protected function getFilterFieldset()
     {
         return $this->manager->getFieldset($this->getResourceType());
     }
@@ -447,8 +521,10 @@ class Scope implements \JsonSerializable
      * Check if there are requested filter fieldsets for the scope resource.
      *
      * @internal
+     *
+     * @return bool
      */
-    protected function hasFilterFieldset(): bool
+    protected function hasFilterFieldset()
     {
         return $this->getFilterFieldset() !== null;
     }
@@ -457,8 +533,10 @@ class Scope implements \JsonSerializable
      * Return the scope resource type.
      *
      * @internal
+     *
+     * @return string
      */
-    protected function getResourceType(): string
+    protected function getResourceType()
     {
         return $this->resource->getResourceKey();
     }

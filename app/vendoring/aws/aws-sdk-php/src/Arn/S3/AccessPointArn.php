@@ -2,21 +2,20 @@
 namespace Aws\Arn\S3;
 
 use Aws\Arn\AccessPointArn as BaseAccessPointArn;
-use Aws\Arn\AccessPointArnInterface;
 use Aws\Arn\ArnInterface;
 use Aws\Arn\Exception\InvalidArnException;
 
 /**
  * @internal
  */
-class AccessPointArn extends BaseAccessPointArn implements AccessPointArnInterface
+class AccessPointArn extends BaseAccessPointArn implements ArnInterface
 {
     /**
      * Validation specific to AccessPointArn
      *
      * @param array $data
      */
-    public static function validate(array $data)
+    protected static function validate(array $data)
     {
         parent::validate($data);
         if ($data['service'] !== 's3') {

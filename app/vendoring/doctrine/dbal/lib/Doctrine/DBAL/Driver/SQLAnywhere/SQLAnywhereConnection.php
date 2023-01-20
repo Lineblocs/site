@@ -6,7 +6,6 @@ use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\Deprecations\Deprecation;
 
 use function assert;
 use function func_get_args;
@@ -28,8 +27,6 @@ use function sasql_set_option;
 
 /**
  * SAP Sybase SQL Anywhere implementation of the Connection interface.
- *
- * @deprecated Support for SQLAnywhere will be removed in 3.0.
  */
 class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
 {
@@ -39,8 +36,6 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
     /**
      * Connects to database with given connection string.
      *
-     * @internal The connection can be only instantiated by its driver.
-     *
      * @param string $dsn        The connection string.
      * @param bool   $persistent Whether or not to establish a persistent connection.
      *
@@ -48,12 +43,6 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
      */
     public function __construct($dsn, $persistent = false)
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4077',
-            'The SQLAnywhere driver is deprecated'
-        );
-
         $this->connection = $persistent ? @sasql_pconnect($dsn) : @sasql_connect($dsn);
 
         if (! is_resource($this->connection)) {
@@ -124,9 +113,9 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function exec($sql)
+    public function exec($statement)
     {
-        if (sasql_real_query($this->connection, $sql) === false) {
+        if (sasql_real_query($this->connection, $statement) === false) {
             throw SQLAnywhereException::fromSQLAnywhereError($this->connection);
         }
 
@@ -172,9 +161,9 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function prepare($sql)
+    public function prepare($prepareString)
     {
-        return new SQLAnywhereStatement($this->connection, $sql);
+        return new SQLAnywhereStatement($this->connection, $prepareString);
     }
 
     /**
@@ -193,13 +182,13 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function quote($value, $type = ParameterType::STRING)
+    public function quote($input, $type = ParameterType::STRING)
     {
-        if (is_int($value) || is_float($value)) {
-            return $value;
+        if (is_int($input) || is_float($input)) {
+            return $input;
         }
 
-        return "'" . sasql_escape_string($this->connection, $value) . "'";
+        return "'" . sasql_escape_string($this->connection, $input) . "'";
     }
 
     /**
@@ -207,12 +196,6 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
      */
     public function requiresQueryForServerVersion()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4114',
-            'ServerInfoAwareConnection::requiresQueryForServerVersion() is deprecated and removed in DBAL 3.'
-        );
-
         return true;
     }
 

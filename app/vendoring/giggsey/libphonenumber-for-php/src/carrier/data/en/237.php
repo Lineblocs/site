@@ -11,7 +11,6 @@
  */
 
 return array (
-  23762 => 'Camtel',
   237650 => 'MTN Cameroon',
   237651 => 'MTN Cameroon',
   237652 => 'MTN Cameroon',

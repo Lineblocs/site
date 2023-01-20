@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Type;
 
 use function array_change_key_case;
 use function assert;
+use function is_resource;
 use function preg_match;
 use function str_replace;
 use function strpos;
@@ -94,7 +95,7 @@ class DB2SchemaManager extends AbstractSchemaManager
             'fixed'         => (bool) $fixed,
             'default'       => $default,
             'autoincrement' => (bool) $tableColumn['autoincrement'],
-            'notnull'       => $tableColumn['nulls'] === 'N',
+            'notnull'       => (bool) ($tableColumn['nulls'] === 'N'),
             'scale'         => null,
             'precision'     => null,
             'comment'       => isset($tableColumn['comment']) && $tableColumn['comment'] !== ''
@@ -128,14 +129,14 @@ class DB2SchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
-    protected function _getPortableTableIndexesList($tableIndexes, $tableName = null)
+    protected function _getPortableTableIndexesList($tableIndexRows, $tableName = null)
     {
-        foreach ($tableIndexes as &$tableIndexRow) {
+        foreach ($tableIndexRows as &$tableIndexRow) {
             $tableIndexRow            = array_change_key_case($tableIndexRow, CASE_LOWER);
             $tableIndexRow['primary'] = (bool) $tableIndexRow['primary'];
         }
 
-        return parent::_getPortableTableIndexesList($tableIndexes, $tableName);
+        return parent::_getPortableTableIndexesList($tableIndexRows, $tableName);
     }
 
     /**
@@ -206,12 +207,13 @@ class DB2SchemaManager extends AbstractSchemaManager
     protected function _getPortableViewDefinition($view)
     {
         $view = array_change_key_case($view, CASE_LOWER);
-
-        $sql = '';
-        $pos = strpos($view['text'], ' AS ');
-
-        if ($pos !== false) {
+        // sadly this still segfaults on PDO_IBM, see http://pecl.php.net/bugs/bug.php?id=17199
+        //$view['text'] = (is_resource($view['text']) ? stream_get_contents($view['text']) : $view['text']);
+        if (! is_resource($view['text'])) {
+            $pos = strpos($view['text'], ' AS ');
             $sql = substr($view['text'], $pos + 4);
+        } else {
+            $sql = '';
         }
 
         return new View($view['name'], $sql);
@@ -220,13 +222,13 @@ class DB2SchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
-    public function listTableDetails($name): Table
+    public function listTableDetails($tableName): Table
     {
-        $table = parent::listTableDetails($name);
+        $table = parent::listTableDetails($tableName);
 
         $platform = $this->_platform;
         assert($platform instanceof DB2Platform);
-        $sql = $platform->getListTableCommentsSQL($name);
+        $sql = $platform->getListTableCommentsSQL($tableName);
 
         $tableOptions = $this->_conn->fetchAssociative($sql);
 

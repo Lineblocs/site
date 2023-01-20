@@ -13,6 +13,7 @@
   "homepage": "https://github.com/giggsey/libphonenumber-for-php",
   "license": "Apache-2.0",
   "support": {
+    "irc": "irc://irc.appliedirc.com/lobby",
     "source": "https://github.com/giggsey/libphonenumber-for-php",
     "issues": "https://github.com/giggsey/libphonenumber-for-php/issues"
   },
@@ -54,13 +55,12 @@
       ".travis.yml",
       "build.xml",
       "libphonenumber-for-php.spec",
-      "phpunit.xml.dist",
-      "phpunit"
+      "phpunit.xml.dist"
     ]
   },
   "require": {
     "php": ">=5.3.2",
-    "giggsey/locale": "^1.7|^2.0",
+    "giggsey/locale": "^1.7",
     "symfony/polyfill-mbstring": "^1.17"
   },
   "require-dev": {
@@ -68,17 +68,13 @@
     "pear/versioncontrol_git": "^0.5",
     "pear/pear-core-minimal": "^1.9",
     "pear/pear_exception": "^1.0",
-    "symfony/phpunit-bridge": "^4.2 || ^5",
-    "symfony/console": "^2.8|^3.0|^v4.4|^v5.2",
+    "phpunit/phpunit": "^4.8.36|^5.0",
+    "symfony/console": "^2.8|^3.0",
     "php-coveralls/php-coveralls": "^1.0|^2.0"
   },
   "extra": {
     "branch-alias": {
       "dev-master": "8.x-dev"
     }
-  },
-  "scripts": {
-    "test": "./phpunit",
-    "metadata": "vendor/bin/phing compile"
   }
 }

@@ -68,11 +68,7 @@ class Comparator
             if (! $fromSchema->hasTable($tableName)) {
                 $diff->newTables[$tableName] = $toSchema->getTable($tableName);
             } else {
-                $tableDifferences = $this->diffTable(
-                    $fromSchema->getTable($tableName),
-                    $toSchema->getTable($tableName)
-                );
-
+                $tableDifferences = $this->diffTable($fromSchema->getTable($tableName), $toSchema->getTable($tableName));
                 if ($tableDifferences !== false) {
                     $diff->changedTables[$tableName] = $tableDifferences;
                 }
@@ -188,24 +184,24 @@ class Comparator
     }
 
     /**
-     * Returns the difference between the tables $fromTable and $toTable.
+     * Returns the difference between the tables $table1 and $table2.
      *
      * If there are no differences this method returns the boolean false.
      *
      * @return TableDiff|false
      */
-    public function diffTable(Table $fromTable, Table $toTable)
+    public function diffTable(Table $table1, Table $table2)
     {
         $changes                     = 0;
-        $tableDifferences            = new TableDiff($fromTable->getName());
-        $tableDifferences->fromTable = $fromTable;
+        $tableDifferences            = new TableDiff($table1->getName());
+        $tableDifferences->fromTable = $table1;
 
-        $fromTableColumns = $fromTable->getColumns();
-        $toTableColumns   = $toTable->getColumns();
+        $table1Columns = $table1->getColumns();
+        $table2Columns = $table2->getColumns();
 
-        /* See if all the columns in "from" table exist in "to" table */
-        foreach ($toTableColumns as $columnName => $column) {
-            if ($fromTable->hasColumn($columnName)) {
+        /* See if all the fields in table 1 exist in table 2 */
+        foreach ($table2Columns as $columnName => $column) {
+            if ($table1->hasColumn($columnName)) {
                 continue;
             }
 
@@ -213,24 +209,23 @@ class Comparator
             $changes++;
         }
 
-        /* See if there are any removed columns in "to" table */
-        foreach ($fromTableColumns as $columnName => $column) {
-            // See if column is removed in "to" table.
-            if (! $toTable->hasColumn($columnName)) {
+        /* See if there are any removed fields in table 2 */
+        foreach ($table1Columns as $columnName => $column) {
+            // See if column is removed in table 2.
+            if (! $table2->hasColumn($columnName)) {
                 $tableDifferences->removedColumns[$columnName] = $column;
                 $changes++;
                 continue;
             }
 
-            // See if column has changed properties in "to" table.
-            $changedProperties = $this->diffColumn($column, $toTable->getColumn($columnName));
+            // See if column has changed properties in table 2.
+            $changedProperties = $this->diffColumn($column, $table2->getColumn($columnName));
 
             if (empty($changedProperties)) {
                 continue;
             }
 
-            $columnDiff = new ColumnDiff($column->getName(), $toTable->getColumn($columnName), $changedProperties);
-
+            $columnDiff                                           = new ColumnDiff($column->getName(), $table2->getColumn($columnName), $changedProperties);
             $columnDiff->fromColumn                               = $column;
             $tableDifferences->changedColumns[$column->getName()] = $columnDiff;
             $changes++;
@@ -238,12 +233,12 @@ class Comparator
 
         $this->detectColumnRenamings($tableDifferences);
 
-        $fromTableIndexes = $fromTable->getIndexes();
-        $toTableIndexes   = $toTable->getIndexes();
+        $table1Indexes = $table1->getIndexes();
+        $table2Indexes = $table2->getIndexes();
 
-        /* See if all the indexes in "from" table exist in "to" table */
-        foreach ($toTableIndexes as $indexName => $index) {
-            if (($index->isPrimary() && $fromTable->hasPrimaryKey()) || $fromTable->hasIndex($indexName)) {
+        /* See if all the indexes in table 1 exist in table 2 */
+        foreach ($table2Indexes as $indexName => $index) {
+            if (($index->isPrimary() && $table1->hasPrimaryKey()) || $table1->hasIndex($indexName)) {
                 continue;
             }
 
@@ -251,56 +246,56 @@ class Comparator
             $changes++;
         }
 
-        /* See if there are any removed indexes in "to" table */
-        foreach ($fromTableIndexes as $indexName => $index) {
-            // See if index is removed in "to" table.
+        /* See if there are any removed indexes in table 2 */
+        foreach ($table1Indexes as $indexName => $index) {
+            // See if index is removed in table 2.
             if (
-                ($index->isPrimary() && ! $toTable->hasPrimaryKey()) ||
-                ! $index->isPrimary() && ! $toTable->hasIndex($indexName)
+                ($index->isPrimary() && ! $table2->hasPrimaryKey()) ||
+                ! $index->isPrimary() && ! $table2->hasIndex($indexName)
             ) {
                 $tableDifferences->removedIndexes[$indexName] = $index;
                 $changes++;
                 continue;
             }
 
-            // See if index has changed in "to" table.
-            $toTableIndex = $index->isPrimary() ? $toTable->getPrimaryKey() : $toTable->getIndex($indexName);
-            assert($toTableIndex instanceof Index);
+            // See if index has changed in table 2.
+            $table2Index = $index->isPrimary() ? $table2->getPrimaryKey() : $table2->getIndex($indexName);
+            assert($table2Index instanceof Index);
 
-            if (! $this->diffIndex($index, $toTableIndex)) {
+            if (! $this->diffIndex($index, $table2Index)) {
                 continue;
             }
 
-            $tableDifferences->changedIndexes[$indexName] = $toTableIndex;
+            $tableDifferences->changedIndexes[$indexName] = $table2Index;
             $changes++;
         }
 
         $this->detectIndexRenamings($tableDifferences);
 
-        $fromForeignKeys = $fromTable->getForeignKeys();
-        $toForeignKeys   = $toTable->getForeignKeys();
+        $fromFkeys = $table1->getForeignKeys();
+        $toFkeys   = $table2->getForeignKeys();
 
-        foreach ($fromForeignKeys as $fromKey => $fromConstraint) {
-            foreach ($toForeignKeys as $toKey => $toConstraint) {
-                if ($this->diffForeignKey($fromConstraint, $toConstraint) === false) {
-                    unset($fromForeignKeys[$fromKey], $toForeignKeys[$toKey]);
+        foreach ($fromFkeys as $key1 => $constraint1) {
+            foreach ($toFkeys as $key2 => $constraint2) {
+                if ($this->diffForeignKey($constraint1, $constraint2) === false) {
+                    unset($fromFkeys[$key1], $toFkeys[$key2]);
                 } else {
-                    if (strtolower($fromConstraint->getName()) === strtolower($toConstraint->getName())) {
-                        $tableDifferences->changedForeignKeys[] = $toConstraint;
+                    if (strtolower($constraint1->getName()) === strtolower($constraint2->getName())) {
+                        $tableDifferences->changedForeignKeys[] = $constraint2;
                         $changes++;
-                        unset($fromForeignKeys[$fromKey], $toForeignKeys[$toKey]);
+                        unset($fromFkeys[$key1], $toFkeys[$key2]);
                     }
                 }
             }
         }
 
-        foreach ($fromForeignKeys as $fromConstraint) {
-            $tableDifferences->removedForeignKeys[] = $fromConstraint;
+        foreach ($fromFkeys as $constraint1) {
+            $tableDifferences->removedForeignKeys[] = $constraint1;
             $changes++;
         }
 
-        foreach ($toForeignKeys as $toConstraint) {
-            $tableDifferences->addedForeignKeys[] = $toConstraint;
+        foreach ($toFkeys as $constraint2) {
+            $tableDifferences->addedForeignKeys[] = $constraint2;
             $changes++;
         }
 
@@ -399,17 +394,11 @@ class Comparator
      */
     public function diffForeignKey(ForeignKeyConstraint $key1, ForeignKeyConstraint $key2)
     {
-        if (
-            array_map('strtolower', $key1->getUnquotedLocalColumns())
-            !== array_map('strtolower', $key2->getUnquotedLocalColumns())
-        ) {
+        if (array_map('strtolower', $key1->getUnquotedLocalColumns()) !== array_map('strtolower', $key2->getUnquotedLocalColumns())) {
             return true;
         }
 
-        if (
-            array_map('strtolower', $key1->getUnquotedForeignColumns())
-            !== array_map('strtolower', $key2->getUnquotedForeignColumns())
-        ) {
+        if (array_map('strtolower', $key1->getUnquotedForeignColumns()) !== array_map('strtolower', $key2->getUnquotedForeignColumns())) {
             return true;
         }
 
@@ -425,7 +414,7 @@ class Comparator
     }
 
     /**
-     * Returns the difference between the columns
+     * Returns the difference between the fields $field1 and $field2.
      *
      * If there are differences this method returns $field2, otherwise the
      * boolean false.
@@ -451,8 +440,7 @@ class Comparator
             $changedProperties[] = $property;
         }
 
-        // This is a very nasty hack to make comparator work with the legacy json_array type,
-        // which should be killed in v3
+        // This is a very nasty hack to make comparator work with the legacy json_array type, which should be killed in v3
         if ($this->isALegacyJsonComparison($properties1['type'], $properties2['type'])) {
             array_shift($changedProperties);
 
@@ -537,8 +525,8 @@ class Comparator
             return false;
         }
 
-        return (! $one instanceof Types\JsonArrayType && $other instanceof Types\JsonArrayType)
-            || (! $other instanceof Types\JsonArrayType && $one instanceof Types\JsonArrayType);
+        return ( ! $one instanceof Types\JsonArrayType && $other instanceof Types\JsonArrayType)
+            || ( ! $other instanceof Types\JsonArrayType && $one instanceof Types\JsonArrayType);
     }
 
     /**

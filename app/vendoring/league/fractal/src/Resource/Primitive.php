@@ -19,4 +19,5 @@ namespace League\Fractal\Resource;
  */
 class Primitive extends ResourceAbstract
 {
+    //
 }

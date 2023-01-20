@@ -11,7 +11,7 @@ use \RuntimeException;
 /**
  * @internal Represents a stream of data to be gcm encrypted.
  */
-class AesGcmEncryptingStream implements AesStreamInterface, AesStreamInterfaceV2
+class AesGcmEncryptingStream implements AesStreamInterface
 {
     use StreamDecoratorTrait;
 
@@ -28,17 +28,6 @@ class AesGcmEncryptingStream implements AesStreamInterface, AesStreamInterfaceV2
     private $tag = '';
 
     private $tagLength;
-
-    /**
-     * Same as non-static 'getAesName' method, allowing calls in a static
-     * context.
-     *
-     * @return string
-     */
-    public static function getStaticAesName()
-    {
-        return 'AES/GCM/NoPadding';
-    }
 
     /**
      * @param StreamInterface $plaintext
@@ -70,14 +59,9 @@ class AesGcmEncryptingStream implements AesStreamInterface, AesStreamInterfaceV2
         return "aes-{$this->keySize}-gcm";
     }
 
-    /**
-     * Same as static method and retained for backwards compatibility
-     *
-     * @return string
-     */
     public function getAesName()
     {
-        return self::getStaticAesName();
+        return 'AES/GCM/NoPadding';
     }
 
     public function getCurrentIv()
@@ -88,7 +72,7 @@ class AesGcmEncryptingStream implements AesStreamInterface, AesStreamInterfaceV2
     public function createStream()
     {
         if (version_compare(PHP_VERSION, '7.1', '<')) {
-            return Psr7\Utils::streamFor(AesGcm::encrypt(
+            return Psr7\stream_for(AesGcm::encrypt(
                 (string) $this->plaintext,
                 $this->initializationVector,
                 new Key($this->key),
@@ -97,7 +81,7 @@ class AesGcmEncryptingStream implements AesStreamInterface, AesStreamInterfaceV2
                 $this->keySize
             ));
         } else {
-            return Psr7\Utils::streamFor(\openssl_encrypt(
+            return Psr7\stream_for(\openssl_encrypt(
                 (string)$this->plaintext,
                 $this->getOpenSslName(),
                 $this->key,

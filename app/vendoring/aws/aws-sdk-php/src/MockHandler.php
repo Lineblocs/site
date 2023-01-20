@@ -5,7 +5,6 @@ use Aws\Exception\AwsException;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Promise\RejectedPromise;
 use Psr\Http\Message\RequestInterface;
-use Exception;
 
 /**
  * Returns promises that are rejected or fulfilled using a queue of
@@ -37,7 +36,7 @@ class MockHandler implements \Countable
         $this->onRejected = $onRejected;
 
         if ($resultOrQueue) {
-            call_user_func_array([$this, 'append'], array_values($resultOrQueue));
+            call_user_func_array([$this, 'append'], $resultOrQueue);
         }
     }
 
@@ -49,12 +48,12 @@ class MockHandler implements \Countable
     {
         foreach (func_get_args() as $value) {
             if ($value instanceof ResultInterface
-                || $value instanceof Exception
+                || $value instanceof AwsException
                 || is_callable($value)
             ) {
                 $this->queue[] = $value;
             } else {
-                throw new \InvalidArgumentException('Expected an Aws\ResultInterface or Exception.');
+                throw new \InvalidArgumentException('Expected an Aws\ResultInterface or Aws\Exception\AwsException.');
             }
         }
     }
@@ -106,7 +105,7 @@ class MockHandler implements \Countable
                 $meta['statusCode'] = 200;
             }
             $result['@metadata'] = $meta;
-            $result = Promise\Create::promiseFor($result);
+            $result = Promise\promise_for($result);
         }
 
         $result->then($this->onFulfilled, $this->onRejected);
@@ -139,7 +138,6 @@ class MockHandler implements \Countable
      *
      * @return int
      */
-    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->queue);

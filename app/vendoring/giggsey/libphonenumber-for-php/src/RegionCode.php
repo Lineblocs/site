@@ -19,7 +19,6 @@ namespace libphonenumber;
 
 /**
  * Class containing string constants of region codes for easier testing.
- * @internal
  */
 class RegionCode
 {
@@ -40,7 +39,6 @@ class RegionCode
     const CH = 'CH';
     const CL = 'CL';
     const CN = 'CN';
-    const CO = 'CO';
     const CS = 'CS';
     const CX = 'CX';
     const DE = 'DE';

@@ -3,12 +3,9 @@
 namespace Doctrine\DBAL\Driver\IBMDB2;
 
 use Doctrine\DBAL\Driver\AbstractDB2Driver;
-use Doctrine\Deprecations\Deprecation;
 
 /**
  * IBM DB2 Driver.
- *
- * @deprecated Use {@link Driver} instead
  */
 class DB2Driver extends AbstractDB2Driver
 {
@@ -17,16 +14,27 @@ class DB2Driver extends AbstractDB2Driver
      */
     public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
-        $params['user']     = $username;
-        $params['password'] = $password;
-        $params['dbname']   = DataSourceName::fromConnectionParameters($params)->toString();
+        if (! isset($params['protocol'])) {
+            $params['protocol'] = 'TCPIP';
+        }
 
-        return new Connection(
-            $params,
-            (string) $username,
-            (string) $password,
-            $driverOptions
-        );
+        if ($params['host'] !== 'localhost' && $params['host'] !== '127.0.0.1') {
+            // if the host isn't localhost, use extended connection params
+            $params['dbname'] = 'DRIVER={IBM DB2 ODBC DRIVER}' .
+                     ';DATABASE=' . $params['dbname'] .
+                     ';HOSTNAME=' . $params['host'] .
+                     ';PROTOCOL=' . $params['protocol'] .
+                     ';UID=' . $username .
+                     ';PWD=' . $password . ';';
+            if (isset($params['port'])) {
+                $params['dbname'] .= 'PORT=' . $params['port'];
+            }
+
+            $username = null;
+            $password = null;
+        }
+
+        return new DB2Connection($params, (string) $username, (string) $password, $driverOptions);
     }
 
     /**
@@ -36,12 +44,6 @@ class DB2Driver extends AbstractDB2Driver
      */
     public function getName()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Driver::getName() is deprecated'
-        );
-
         return 'ibm_db2';
     }
 }

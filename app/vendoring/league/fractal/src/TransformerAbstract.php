@@ -18,6 +18,8 @@ use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\ResourceInterface;
 
 /**
+ * Transformer Abstract
+ *
  * All Transformer classes should extend this to utilize the convenience methods
  * collection() and item(), and make the self::$availableIncludes property available.
  * Extend it and add a `transform()` method to transform any default or included data
@@ -27,47 +29,65 @@ abstract class TransformerAbstract
 {
     /**
      * Resources that can be included if requested.
+     *
+     * @var array
      */
-    protected array $availableIncludes = [];
+    protected $availableIncludes = [];
 
     /**
      * Include resources without needing it to be requested.
+     *
+     * @var array
      */
-    protected array $defaultIncludes = [];
+    protected $defaultIncludes = [];
 
     /**
      * The transformer should know about the current scope, so we can fetch relevant params.
+     *
+     * @var Scope
      */
-    protected ?Scope $currentScope = null;
+    protected $currentScope;
 
     /**
      * Getter for availableIncludes.
+     *
+     * @return array
      */
-    public function getAvailableIncludes(): array
+    public function getAvailableIncludes()
     {
         return $this->availableIncludes;
     }
 
     /**
      * Getter for defaultIncludes.
+     *
+     * @return array
      */
-    public function getDefaultIncludes(): array
+    public function getDefaultIncludes()
     {
         return $this->defaultIncludes;
     }
 
     /**
      * Getter for currentScope.
+     *
+     * @return \League\Fractal\Scope
      */
-    public function getCurrentScope(): ?Scope
+    public function getCurrentScope()
     {
         return $this->currentScope;
     }
 
     /**
      * Figure out which includes we need.
+     *
+     * @internal
+     *
+     * @param Scope $scope
+     *
+     * @return array
      */
-    private function figureOutWhichIncludes(Scope $scope): array
+    private function figureOutWhichIncludes(Scope $scope)
     {
         $includes = $this->getDefaultIncludes();
 
@@ -92,9 +112,10 @@ abstract class TransformerAbstract
      *
      * @internal
      *
+     * @param Scope $scope
      * @param mixed $data
      *
-     * @return array|false
+     * @return array
      */
     public function processIncludedResources(Scope $scope, $data)
     {
@@ -117,14 +138,21 @@ abstract class TransformerAbstract
     /**
      * Include a resource only if it is available on the method.
      *
+     * @internal
+     *
+     * @param Scope  $scope
      * @param mixed  $data
+     * @param array  $includedData
+     * @param string $include
+     *
+     * @return array
      */
     private function includeResourceIfAvailable(
         Scope $scope,
         $data,
-        array $includedData,
-        string $include
-    ): array {
+        $includedData,
+        $include
+    ) {
         if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
             $childScope = $scope->embedChildScope($include, $resource);
 
@@ -143,32 +171,21 @@ abstract class TransformerAbstract
      *
      * @internal
      *
+     * @param Scope  $scope
+     * @param string $includeName
      * @param mixed  $data
      *
      * @throws \Exception
      *
-     * @return \League\Fractal\Resource\ResourceInterface|false
+     * @return \League\Fractal\Resource\ResourceInterface
      */
-    protected function callIncludeMethod(Scope $scope, string $includeName, $data)
+    protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
         $scopeIdentifier = $scope->getIdentifier($includeName);
-
         $params = $scope->getManager()->getIncludeParams($scopeIdentifier);
 
         // Check if the method name actually exists
-        $methodName = 'include'.str_replace(
-            ' ',
-            '',
-            ucwords(str_replace(
-                '_',
-                ' ',
-                str_replace(
-                    '-',
-                    ' ',
-                    $includeName
-                )
-            ))
-        );
+        $methodName = 'include'.str_replace(' ', '', ucwords(str_replace('_', ' ', str_replace('-', ' ', $includeName))));
 
         $resource = call_user_func([$this, $methodName], $data, $params);
 
@@ -191,8 +208,12 @@ abstract class TransformerAbstract
 
     /**
      * Setter for availableIncludes.
+     *
+     * @param array $availableIncludes
+     *
+     * @return $this
      */
-    public function setAvailableIncludes(array $availableIncludes): self
+    public function setAvailableIncludes($availableIncludes)
     {
         $this->availableIncludes = $availableIncludes;
 
@@ -201,8 +222,12 @@ abstract class TransformerAbstract
 
     /**
      * Setter for defaultIncludes.
+     *
+     * @param array $defaultIncludes
+     *
+     * @return $this
      */
-    public function setDefaultIncludes(array $defaultIncludes): self
+    public function setDefaultIncludes($defaultIncludes)
     {
         $this->defaultIncludes = $defaultIncludes;
 
@@ -211,8 +236,12 @@ abstract class TransformerAbstract
 
     /**
      * Setter for currentScope.
+     *
+     * @param Scope $currentScope
+     *
+     * @return $this
      */
-    public function setCurrentScope(Scope $currentScope): self
+    public function setCurrentScope($currentScope)
     {
         $this->currentScope = $currentScope;
 
@@ -224,8 +253,11 @@ abstract class TransformerAbstract
      *
      * @param mixed                        $data
      * @param callable|null                $transformer
+     * @param string                       $resourceKey
+     *
+     * @return Primitive
      */
-    protected function primitive($data, ?callable $transformer = null, ?string $resourceKey = null): Primitive
+    protected function primitive($data, $transformer = null, $resourceKey = null)
     {
         return new Primitive($data, $transformer, $resourceKey);
     }
@@ -235,8 +267,11 @@ abstract class TransformerAbstract
      *
      * @param mixed                        $data
      * @param TransformerAbstract|callable $transformer
+     * @param string                       $resourceKey
+     *
+     * @return Item
      */
-    protected function item($data, $transformer, ?string $resourceKey = null): Item
+    protected function item($data, $transformer, $resourceKey = null)
     {
         return new Item($data, $transformer, $resourceKey);
     }
@@ -246,16 +281,21 @@ abstract class TransformerAbstract
      *
      * @param mixed                        $data
      * @param TransformerAbstract|callable $transformer
+     * @param string                       $resourceKey
+     *
+     * @return Collection
      */
-    protected function collection($data, $transformer, ?string $resourceKey = null): Collection
+    protected function collection($data, $transformer, $resourceKey = null)
     {
         return new Collection($data, $transformer, $resourceKey);
     }
 
     /**
      * Create a new null resource object.
+     *
+     * @return NullResource
      */
-    protected function null(): NullResource
+    protected function null()
     {
         return new NullResource();
     }

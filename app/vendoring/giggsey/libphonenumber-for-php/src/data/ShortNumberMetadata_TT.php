@@ -25,8 +25,8 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '9(?:88|9[09])',
-    'ExampleNumber' => '988',
+    'NationalNumberPattern' => '99[09]',
+    'ExampleNumber' => '990',
     'PossibleLength' => 
     array (
     ),
@@ -57,8 +57,8 @@ return array (
   ),
   'shortCode' => 
   array (
-    'NationalNumberPattern' => '9(?:88|9[09])',
-    'ExampleNumber' => '988',
+    'NationalNumberPattern' => '99[09]',
+    'ExampleNumber' => '990',
     'PossibleLength' => 
     array (
     ),
@@ -107,5 +107,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => false,
 );

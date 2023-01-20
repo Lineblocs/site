@@ -4,7 +4,7 @@ namespace Doctrine\DBAL\Cache;
 
 use ArrayIterator;
 use Doctrine\Common\Cache\Cache;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Driver\DriverException;
 use Doctrine\DBAL\Driver\FetchUtils;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\ResultStatement;
@@ -13,7 +13,6 @@ use Doctrine\DBAL\FetchMode;
 use InvalidArgumentException;
 use IteratorAggregate;
 use PDO;
-use ReturnTypeWillChange;
 
 use function array_map;
 use function array_merge;
@@ -110,7 +109,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
      *
      * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         $data = $this->fetchAll();
@@ -119,9 +117,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
     }
 
     /**
-     * Be warned that you will need to call this method until no rows are
-     * available for caching to happen.
-     *
      * {@inheritdoc}
      *
      * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
@@ -194,9 +189,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
     }
 
     /**
-     * Be warned that you will need to call this method until no rows are
-     * available for caching to happen.
-     *
      * {@inheritdoc}
      *
      * @deprecated Use fetchOne() instead.
@@ -210,9 +202,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
     }
 
     /**
-     * Be warned that you will need to call this method until no rows are
-     * available for caching to happen.
-     *
      * {@inheritdoc}
      */
     public function fetchNumeric()
@@ -227,9 +216,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
     }
 
     /**
-     * Be warned that you will need to call this method until no rows are
-     * available for caching to happen.
-     *
      * {@inheritdoc}
      */
     public function fetchAssociative()
@@ -238,9 +224,6 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
     }
 
     /**
-     * Be warned that you will need to call this method until no rows are
-     * available for caching to happen.
-     *
      * {@inheritdoc}
      */
     public function fetchOne()
@@ -259,11 +242,9 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
             $data = $this->statement->fetchAll(FetchMode::ASSOCIATIVE);
         }
 
-        $this->data = $data;
+        $this->store($data);
 
-        $this->saveToCache();
-
-        return array_map('array_values', $data);
+        return array_map('array_values', $this->data);
     }
 
     /**
@@ -277,11 +258,9 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
             $data = $this->statement->fetchAll(FetchMode::ASSOCIATIVE);
         }
 
-        $this->data = $data;
+        $this->store($data);
 
-        $this->saveToCache();
-
-        return $data;
+        return $this->data;
     }
 
     /**
@@ -301,7 +280,7 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
      * this behaviour is not guaranteed for all databases and should not be
      * relied on for portable applications.
      *
-     * @return int|string The number of rows.
+     * @return int The number of rows.
      */
     public function rowCount()
     {
@@ -318,7 +297,7 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
     /**
      * @return array<string,mixed>|false
      *
-     * @throws Exception
+     * @throws DriverException
      */
     private function doFetch()
     {
@@ -341,6 +320,14 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
         $this->saveToCache();
 
         return false;
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $data
+     */
+    private function store(array $data): void
+    {
+        $this->data = $data;
     }
 
     private function saveToCache(): void

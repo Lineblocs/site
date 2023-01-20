@@ -5,52 +5,48 @@ namespace Doctrine\DBAL\Connections;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Driver;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\Deprecations\Deprecation;
 use InvalidArgumentException;
+
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * @deprecated Use PrimaryReadReplicaConnection instead
- *
- * @psalm-import-type Params from DriverManager
  */
 class MasterSlaveConnection extends PrimaryReadReplicaConnection
 {
     /**
      * Creates Primary Replica Connection.
      *
-     * @internal The connection can be only instantiated by the driver manager.
-     *
-     * @param array<string,mixed> $params
-     * @psalm-param Params $params
-     * @phpstan-param array<string,mixed> $params
+     * @param mixed[] $params
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(
-        array $params,
-        Driver $driver,
-        ?Configuration $config = null,
-        ?EventManager $eventManager = null
-    ) {
+    public function __construct(array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null)
+    {
         $this->deprecated(self::class, PrimaryReadReplicaConnection::class);
 
         if (isset($params['master'])) {
             $this->deprecated('Params key "master"', '"primary"');
 
             $params['primary'] = $params['master'];
+            unset($params['master']);
         }
 
         if (isset($params['slaves'])) {
             $this->deprecated('Params key "slaves"', '"replica"');
 
             $params['replica'] = $params['slaves'];
+            unset($params['slaves']);
         }
 
         if (isset($params['keepSlave'])) {
             $this->deprecated('Params key "keepSlave"', '"keepReplica"');
 
             $params['keepReplica'] = $params['keepSlave'];
+            unset($params['keepSlave']);
         }
 
         parent::__construct($params, $driver, $config, $eventManager);
@@ -90,12 +86,13 @@ class MasterSlaveConnection extends PrimaryReadReplicaConnection
 
     private function deprecated(string $thing, string $instead): void
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4054',
-            '%s is deprecated since doctrine/dbal 2.11 and will be removed in 3.0, use %s instead.',
-            $thing,
-            $instead
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since doctrine/dbal 2.11 and will be removed in 3.0, use %s instead.',
+                $thing,
+                $instead
+            ),
+            E_USER_DEPRECATED
         );
     }
 }

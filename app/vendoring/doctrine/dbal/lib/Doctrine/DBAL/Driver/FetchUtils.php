@@ -12,7 +12,7 @@ final class FetchUtils
     /**
      * @return mixed|false
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public static function fetchOne(Result $result)
     {
@@ -28,7 +28,7 @@ final class FetchUtils
     /**
      * @return array<int,array<int,mixed>>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public static function fetchAllNumeric(Result $result): array
     {
@@ -44,7 +44,7 @@ final class FetchUtils
     /**
      * @return array<int,array<string,mixed>>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public static function fetchAllAssociative(Result $result): array
     {
@@ -60,7 +60,7 @@ final class FetchUtils
     /**
      * @return array<int,mixed>
      *
-     * @throws Exception
+     * @throws DriverException
      */
     public static function fetchFirstColumn(Result $result): array
     {

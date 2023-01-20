@@ -4,48 +4,45 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
+class ComposerStaticInit945bd454a41c88d9a0900ed3d735090d
 {
     public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
+        '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
-        '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
-        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
-        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
-        'fb4ca2d97fe7ba6af750497425204e70' => __DIR__ . '/..' . '/sentry/sentry/src/functions.php',
-        '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
-        '65fec9ebcfbb3cbb4fd0d519687aea01' => __DIR__ . '/..' . '/danielstjules/stringy/src/Create.php',
-        '1f87db08236948d07391152dccb70f04' => __DIR__ . '/..' . '/google/apiclient-services/autoload.php',
-        '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
-        'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
-        'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
-        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
+        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
+        '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
-        'f4e9c7747917193061b46ee142399603' => __DIR__ . '/..' . '/dingo/api/src/helpers.php',
-        'a8d3953fd9959404dd22d3dfcd0a79f0' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
+        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
+        '65fec9ebcfbb3cbb4fd0d519687aea01' => __DIR__ . '/..' . '/danielstjules/stringy/src/Create.php',
+        'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
+        '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
+        'fb4ca2d97fe7ba6af750497425204e70' => __DIR__ . '/..' . '/sentry/sentry/src/functions.php',
+        'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
+        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
+        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
+        'f4e9c7747917193061b46ee142399603' => __DIR__ . '/..' . '/dingo/api/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'p' => 
         array (
-            'phpseclib3\\' => 11,
+            'phpseclib\\' => 10,
             'phpDocumentor\\Reflection\\' => 25,
         ),
         'l' => 
@@ -69,15 +66,13 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'S' => 
         array (
             'Symfony\\Polyfill\\Uuid\\' => 22,
+            'Symfony\\Polyfill\\Util\\' => 22,
             'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Php72\\' => 23,
+            'Symfony\\Polyfill\\Php56\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
-            'Symfony\\Contracts\\Service\\' => 26,
-            'Symfony\\Contracts\\HttpClient\\' => 29,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
@@ -86,7 +81,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
-            'Symfony\\Component\\HttpClient\\' => 29,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\DomCrawler\\' => 29,
@@ -98,11 +92,9 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'Stripe\\' => 7,
             'Stringy\\' => 8,
             'Sentry\\' => 7,
-            'Sabberworm\\CSS\\' => 15,
         ),
         'R' => 
         array (
-            'Rize\\' => 5,
             'Ramsey\\Uuid\\' => 12,
         ),
         'P' => 
@@ -110,11 +102,10 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'Psy\\' => 4,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
-            'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'Prophecy\\' => 9,
             'PhpParser\\' => 10,
-            'ParagonIE\\ConstantTime\\' => 23,
+            'PackageVersions\\' => 16,
         ),
         'N' => 
         array (
@@ -129,7 +120,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         ),
         'L' => 
         array (
-            'League\\MimeTypeDetection\\' => 25,
             'League\\Fractal\\' => 15,
             'League\\Flysystem\\AwsS3v3\\' => 25,
             'League\\Flysystem\\' => 17,
@@ -152,6 +142,7 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'Http\\Discovery\\' => 15,
             'Http\\Client\\Common\\' => 19,
             'Http\\Client\\' => 12,
+            'Http\\Adapter\\Guzzle6\\' => 21,
             'Hackzilla\\PasswordGenerator\\' => 28,
         ),
         'G' => 
@@ -161,9 +152,7 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'GuzzleHttp\\' => 11,
             'Grpc\\Gcp\\' => 9,
             'Grpc\\' => 5,
-            'Google\\Service\\' => 15,
             'Google\\Protobuf\\' => 16,
-            'Google\\LongRunning\\' => 19,
             'Google\\Cloud\\WebSecurityScanner\\' => 32,
             'Google\\Cloud\\WebRisk\\' => 21,
             'Google\\Cloud\\Vision\\' => 20,
@@ -203,7 +192,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'Google\\Cloud\\' => 13,
             'Google\\CRC32\\' => 13,
             'Google\\Auth\\' => 12,
-            'Google\\ApiCore\\LongRunning\\' => 27,
             'Google\\ApiCore\\' => 15,
             'Google\\' => 7,
             'Giggsey\\Locale\\' => 15,
@@ -212,7 +200,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'GPBMetadata\\Google\\Protobuf\\' => 28,
             'GPBMetadata\\Google\\Privacy\\Dlp\\' => 31,
             'GPBMetadata\\Google\\Monitoring\\' => 30,
-            'GPBMetadata\\Google\\Longrunning\\' => 31,
             'GPBMetadata\\Google\\Logging\\' => 27,
             'GPBMetadata\\Google\\Firestore\\' => 29,
             'GPBMetadata\\Google\\Devtools\\Cloudtrace\\' => 39,
@@ -242,7 +229,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'GPBMetadata\\Google\\Cloud\\Asset\\' => 31,
             'GPBMetadata\\Google\\Bigtable\\' => 28,
             'GPBMetadata\\Google\\' => 19,
-            'GPBMetadata\\ApiCore\\' => 20,
         ),
         'F' => 
         array (
@@ -256,7 +242,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             'Dompdf\\' => 7,
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\Inflector\\' => 19,
-            'Doctrine\\Deprecations\\' => 22,
             'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Lexer\\' => 22,
             'Doctrine\\Common\\Inflector\\' => 26,
@@ -289,15 +274,15 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib3\\' => 
+        'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'libphonenumber\\' => 
         array (
@@ -327,25 +312,25 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-uuid',
         ),
+        'Symfony\\Polyfill\\Util\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-util',
+        ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
-        ),
-        'Symfony\\Polyfill\\Php73\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
         ),
         'Symfony\\Polyfill\\Php72\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
         ),
+        'Symfony\\Polyfill\\Php56\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
         'Symfony\\Polyfill\\Intl\\Idn\\' => 
         array (
@@ -354,14 +339,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
-        ),
-        'Symfony\\Contracts\\Service\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/service-contracts',
-        ),
-        'Symfony\\Contracts\\HttpClient\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
         ),
         'Symfony\\Component\\Yaml\\' => 
         array (
@@ -394,10 +371,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'Symfony\\Component\\HttpFoundation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
-        ),
-        'Symfony\\Component\\HttpClient\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/http-client',
         ),
         'Symfony\\Component\\Finder\\' => 
         array (
@@ -443,14 +416,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         array (
             0 => __DIR__ . '/..' . '/sentry/sentry/src',
         ),
-        'Sabberworm\\CSS\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
-        ),
-        'Rize\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/rize/uri-template/src/Rize',
-        ),
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -461,16 +426,12 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
-        ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
         'Psr\\Cache\\' => 
         array (
@@ -484,9 +445,9 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'ParagonIE\\ConstantTime\\' => 
+        'PackageVersions\\' => 
         array (
-            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+            0 => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions',
         ),
         'Nubs\\RandomNameGenerator\\' => 
         array (
@@ -507,10 +468,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'MessageBird\\' => 
         array (
             0 => __DIR__ . '/..' . '/messagebird/php-rest-api/src/MessageBird',
-        ),
-        'League\\MimeTypeDetection\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
         ),
         'League\\Fractal\\' => 
         array (
@@ -546,8 +503,8 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         ),
         'Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
-            1 => __DIR__ . '/..' . '/php-http/message/src',
+            0 => __DIR__ . '/..' . '/php-http/message/src',
+            1 => __DIR__ . '/..' . '/php-http/message-factory/src',
         ),
         'Http\\Factory\\Guzzle\\' => 
         array (
@@ -564,6 +521,10 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/httplug/src',
+        ),
+        'Http\\Adapter\\Guzzle6\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/guzzle6-adapter/src',
         ),
         'Hackzilla\\PasswordGenerator\\' => 
         array (
@@ -589,17 +550,9 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         array (
             0 => __DIR__ . '/..' . '/grpc/grpc/src/lib',
         ),
-        'Google\\Service\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/apiclient-services/src',
-        ),
         'Google\\Protobuf\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf',
-        ),
-        'Google\\LongRunning\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/longrunning/src/LongRunning',
         ),
         'Google\\Cloud\\WebSecurityScanner\\' => 
         array (
@@ -758,18 +711,13 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
         ),
-        'Google\\ApiCore\\LongRunning\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/longrunning/src/ApiCore/LongRunning',
-        ),
         'Google\\ApiCore\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/gax/src',
         ),
         'Google\\' => 
         array (
-            0 => __DIR__ . '/..' . '/google/apiclient/src',
-            1 => __DIR__ . '/..' . '/google/common-protos/src',
+            0 => __DIR__ . '/..' . '/google/common-protos/src',
         ),
         'Giggsey\\Locale\\' => 
         array (
@@ -794,10 +742,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'GPBMetadata\\Google\\Monitoring\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/cloud/Monitoring/metadata',
-        ),
-        'GPBMetadata\\Google\\Longrunning\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/longrunning/metadata/Longrunning',
         ),
         'GPBMetadata\\Google\\Logging\\' => 
         array (
@@ -913,12 +857,9 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         ),
         'GPBMetadata\\Google\\' => 
         array (
-            0 => __DIR__ . '/..' . '/google/common-protos/metadata',
-            1 => __DIR__ . '/..' . '/google/cloud/CommonProtos/metadata',
-        ),
-        'GPBMetadata\\ApiCore\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/gax/metadata/ApiCore',
+            0 => __DIR__ . '/..' . '/google/cloud/CommonProtos/metadata',
+            1 => __DIR__ . '/..' . '/google/common-protos/metadata',
+            2 => __DIR__ . '/..' . '/google/gax/metadata',
         ),
         'FontLib\\' => 
         array (
@@ -948,17 +889,13 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
         ),
-        'Doctrine\\Deprecations\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
-        ),
         'Doctrine\\DBAL\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
         ),
         'Doctrine\\Common\\Lexer\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/lexer/src',
+            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
         ),
         'Doctrine\\Common\\Inflector\\' => 
         array (
@@ -974,7 +911,7 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/src',
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
         ),
         'Dingo\\Blueprint\\' => 
         array (
@@ -1055,6 +992,17 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
             array (
                 0 => __DIR__ . '/..' . '/sentry/sentry-laravel/src',
             ),
+            'Sabberworm\\CSS' => 
+            array (
+                0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
+            ),
+        ),
+        'R' => 
+        array (
+            'Rize\\UriTemplate' => 
+            array (
+                0 => __DIR__ . '/..' . '/rize/uri-template/src',
+            ),
         ),
         'P' => 
         array (
@@ -1085,6 +1033,17 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
                 0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
             ),
         ),
+        'G' => 
+        array (
+            'Google_Service_' => 
+            array (
+                0 => __DIR__ . '/..' . '/google/apiclient-services/src',
+            ),
+            'Google_' => 
+            array (
+                0 => __DIR__ . '/..' . '/google/apiclient/src',
+            ),
+        ),
         'D' => 
         array (
             'Dotenv' => 
@@ -1103,34 +1062,8 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
     );
 
     public static $classMap = array (
-        'AWS\\CRT\\Auth\\AwsCredentials' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/AwsCredentials.php',
-        'AWS\\CRT\\Auth\\CredentialsProvider' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/CredentialsProvider.php',
-        'AWS\\CRT\\Auth\\Signable' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/Signable.php',
-        'AWS\\CRT\\Auth\\SignatureType' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/SignatureType.php',
-        'AWS\\CRT\\Auth\\SignedBodyHeaderType' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/SignedBodyHeaderType.php',
-        'AWS\\CRT\\Auth\\Signing' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/Signing.php',
-        'AWS\\CRT\\Auth\\SigningAlgorithm' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/SigningAlgorithm.php',
-        'AWS\\CRT\\Auth\\SigningConfigAWS' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/SigningConfigAWS.php',
-        'AWS\\CRT\\Auth\\SigningResult' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/SigningResult.php',
-        'AWS\\CRT\\Auth\\StaticCredentialsProvider' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Auth/StaticCredentialsProvider.php',
-        'AWS\\CRT\\CRT' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/CRT.php',
-        'AWS\\CRT\\HTTP\\Headers' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/HTTP/Headers.php',
-        'AWS\\CRT\\HTTP\\Message' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/HTTP/Message.php',
-        'AWS\\CRT\\HTTP\\Request' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/HTTP/Request.php',
-        'AWS\\CRT\\HTTP\\Response' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/HTTP/Response.php',
-        'AWS\\CRT\\IO\\EventLoopGroup' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/IO/EventLoopGroup.php',
-        'AWS\\CRT\\IO\\InputStream' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/IO/InputStream.php',
-        'AWS\\CRT\\Internal\\Encoding' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Internal/Encoding.php',
-        'AWS\\CRT\\Internal\\Extension' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Internal/Extension.php',
-        'AWS\\CRT\\Log' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Log.php',
-        'AWS\\CRT\\NativeResource' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/NativeResource.php',
-        'AWS\\CRT\\OptionValue' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Options.php',
-        'AWS\\CRT\\Options' => __DIR__ . '/..' . '/aws/aws-crt-php/src/AWS/CRT/Options.php',
         'AddAcceptedWorkspace' => __DIR__ . '/../..' . '/database/migrations/2020_04_17_041637_add_accepted_workspace.php',
-        'AddActiveChannels' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_234559_add_active_channels.php',
-        'AddActiveChannelsHosts' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_234631_add_active_channels_hosts.php',
         'AddActiveToCountries' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_032810_add_active_to_countries.php',
-        'AddActiveToDids' => __DIR__ . '/../..' . '/database/migrations/2020_06_18_054015_add_active_to_dids.php',
         'AddActiveToProviders' => __DIR__ . '/../..' . '/database/migrations/2020_03_01_070530_add_active_to_providers.php',
         'AddActiveToRateCenters' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_040156_add_active_to_rate_centers.php',
         'AddActiveToRegions' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_032825_add_active_to_regions.php',
@@ -1144,30 +1077,22 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'AddBalanceToCredits' => __DIR__ . '/../..' . '/database/migrations/2019_08_20_005942_add_balance_to_credits.php',
         'AddBalanceToDebits' => __DIR__ . '/../..' . '/database/migrations/2019_08_20_005957_add_balance_to_debits.php',
         'AddBillingPackage' => __DIR__ . '/../..' . '/database/migrations/2019_11_27_044950_add_billing_package.php',
-        'AddBreakdownOfCostsToInvoices' => __DIR__ . '/../..' . '/database/migrations/2020_07_17_012659_add_breakdown_of_costs_to_invoices.php',
         'AddByoRoles' => __DIR__ . '/../..' . '/database/migrations/2020_05_11_041708_add_byo_roles.php',
         'AddByoSettings' => __DIR__ . '/../..' . '/database/migrations/2020_05_11_054648_add_byo_settings.php',
-        'AddCallFields' => __DIR__ . '/../..' . '/database/migrations/2020_06_18_034824_add_call_fields.php',
         'AddCallIdToFaxes' => __DIR__ . '/../..' . '/database/migrations/2020_02_19_031556_add_call_id_to_faxes.php',
         'AddCallIdToRecordings' => __DIR__ . '/../..' . '/database/migrations/2019_08_08_193636_add_call_id_to_recordings.php',
         'AddCallRates' => __DIR__ . '/../..' . '/database/seeds/AddCallRates.php',
         'AddCallVerificationCode' => __DIR__ . '/../..' . '/database/migrations/2019_09_10_000017_add_call_verification_Code.php',
         'AddCallerIdToExtensions' => __DIR__ . '/../..' . '/database/migrations/2019_09_04_040224_add_caller_id_to_extensions.php',
-        'AddCallsBilled' => __DIR__ . '/../..' . '/database/migrations/2021_11_17_010259_add_calls_billed.php',
         'AddCardIdToCredits' => __DIR__ . '/../..' . '/database/migrations/2019_08_20_034057_add_card_id_to_credits.php',
-        'AddCarrierKey' => __DIR__ . '/../..' . '/database/migrations/2021_12_27_000342_add_carrier_key.php',
         'AddCategoryToFlowTemplates' => __DIR__ . '/../..' . '/database/migrations/2020_01_13_183249_add_category_to_flow_templates.php',
         'AddCategoryToFlows' => __DIR__ . '/../..' . '/database/migrations/2020_03_31_193531_add_category_to_flows.php',
-        'AddCentsCollectedToInvoices' => __DIR__ . '/../..' . '/database/migrations/2020_07_17_014656_add_cents_collected_to_invoices.php',
         'AddChangableParamsToMacroTemplates' => __DIR__ . '/../..' . '/database/migrations/2020_02_27_015551_add_changable_params_to_macro_templates.php',
-        'AddChannelIdToCalls' => __DIR__ . '/../..' . '/database/migrations/2021_10_20_224404_add_channel_id_to_calls.php',
         'AddCodeToVerified' => __DIR__ . '/../..' . '/database/migrations/2019_11_28_022032_add_code_to_verified.php',
         'AddCompiledCodeToMacros' => __DIR__ . '/../..' . '/database/migrations/2020_01_07_020818_add_compiled_code_to_macros.php',
         'AddConfirmedToVerified' => __DIR__ . '/../..' . '/database/migrations/2019_11_28_023459_add_confirmed_to_verified.php',
         'AddContainerName' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_021540_add_container_name.php',
         'AddCreditIdToUsageTriggers' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_050110_add_credit_id_to_usage_triggers.php',
-        'AddCustomizationFieldsForVerificationWorkflow' => __DIR__ . '/../..' . '/database/migrations/2023_01_03_195656_add_customization_fields_for_verification_workflow.php',
-        'AddCustomizationsTable' => __DIR__ . '/../..' . '/database/migrations/2021_12_15_004333_add_customizations_table.php',
         'AddDidAction' => __DIR__ . '/../..' . '/database/migrations/2020_02_18_053321_add_did_action.php',
         'AddDidNumberTags' => __DIR__ . '/../..' . '/database/migrations/2020_02_25_042156_add_did_number_tags.php',
         'AddDurationToRecordings' => __DIR__ . '/../..' . '/database/migrations/2019_11_26_044330_add_duration_to_recordings.php',
@@ -1184,25 +1109,18 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'AddFlowToDidNumbers' => __DIR__ . '/../..' . '/database/migrations/2019_07_26_190909_add_flow_to_did_numbers.php',
         'AddFlowsTemplates' => __DIR__ . '/../..' . '/database/seeds/AddFlowsTemplates.php',
         'AddFreeStarted' => __DIR__ . '/../..' . '/database/migrations/2020_02_12_021051_add_free_started.php',
-        'AddGoogleServiceAcc' => __DIR__ . '/../..' . '/database/migrations/2021_11_26_230215_add_google_service_acc.php',
         'AddGroupIdToPhones' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_031440_add_group_id_to_phones.php',
         'AddHashExpiredToWorkspaceUsers' => __DIR__ . '/../..' . '/database/migrations/2020_04_17_044206_add_hash_expired_to_workspace_users.php',
-        'AddHashToInvites' => __DIR__ . '/../..' . '/database/migrations/2020_10_15_213435_add_hash_to_invites.php',
         'AddHashToWorkspaceUsers' => __DIR__ . '/../..' . '/database/migrations/2020_04_14_190351_add_hash_to_workspace_users.php',
         'AddInvoicesByEmail' => __DIR__ . '/../..' . '/database/migrations/2019_11_27_042803_add_invoices_by_email.php',
         'AddIpPrivate' => __DIR__ . '/../..' . '/database/migrations/2019_09_23_174818_add_ip_private.php',
-        'AddIpVariablesToSipTrunkTables' => __DIR__ . '/../..' . '/database/migrations/2022_10_20_014232_add_ip_variables_to_sip_trunk_tables.php',
         'AddIpWhitelist' => __DIR__ . '/../..' . '/database/migrations/2019_12_02_013259_add_ip_whitelist.php',
         'AddJobTitleToUsers' => __DIR__ . '/../..' . '/database/migrations/2020_04_14_194525_add_job_title_to_users.php',
-        'AddK8sIdsMediaServers' => __DIR__ . '/../..' . '/database/migrations/2021_11_19_032808_add_k8s_ids_media_servers.php',
-        'AddK8sIdsSipRouters' => __DIR__ . '/../..' . '/database/migrations/2021_11_19_032551_add_k8s_ids_sip_routers.php',
         'AddLastLoginReminded' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_044609_add_last_login_reminded.php',
         'AddLastLoginToDevices' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_030648_add_last_login_to_devices.php',
         'AddLastLoginUsers' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_023727_add_last_login_users.php',
         'AddLevelToDebugger' => __DIR__ . '/../..' . '/database/migrations/2020_01_28_042638_add_level_to_debugger.php',
         'AddLinkedPaypal' => __DIR__ . '/../..' . '/database/migrations/2019_12_10_003552_add_linked_paypal.php',
-        'AddLiveMediaServerData' => __DIR__ . '/../..' . '/database/migrations/2020_10_06_033659_add_live_media_Server_data.php',
-        'AddLiveStatsToRouters' => __DIR__ . '/../..' . '/database/migrations/2020_10_14_040750_add_live_stats_to_routers.php',
         'AddManageParamsPerm' => __DIR__ . '/../..' . '/database/migrations/2020_01_08_222415_add_manage_params_perm.php',
         'AddManagePorts' => __DIR__ . '/../..' . '/database/migrations/2020_01_16_185250_add_manage_ports.php',
         'AddMobileNumber' => __DIR__ . '/../..' . '/database/migrations/2019_09_10_000219_add_mobile_number.php',
@@ -1213,54 +1131,24 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'AddNeedsPasswordSet' => __DIR__ . '/../..' . '/database/migrations/2020_04_17_032730_add_needs_password_set.php',
         'AddOfficeNumberToUsers' => __DIR__ . '/../..' . '/database/migrations/2020_03_31_202628_add_office_number_to_users.php',
         'AddOutboundVerifierMacro' => __DIR__ . '/../..' . '/database/migrations/2020_06_02_001019_add_outbound_verifier_macro.php',
-        'AddPendingNumber' => __DIR__ . '/../..' . '/database/migrations/2020_09_24_205620_add_pending_number.php',
         'AddPersonalFields' => __DIR__ . '/../..' . '/database/migrations/2019_12_10_003037_add_personal_fields.php',
         'AddPhoneGrpsToWorkspace' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_204502_add_phone_grps_to_workspace.php',
         'AddPhoneSettingsToWorkspace' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_200636_add_phone_settings_to_workspace.php',
         'AddPhonesTags' => __DIR__ . '/../..' . '/database/migrations/2020_03_23_021236_add_phones_tags.php',
-        'AddPlanToCalls' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_211217_add_plan_to_calls.php',
-        'AddPlanToFaxes' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_211237_add_plan_to_faxes.php',
-        'AddPlanToRecordings' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_211226_add_plan_to_recordings.php',
         'AddPlanToUsers' => __DIR__ . '/../..' . '/database/migrations/2019_09_04_034909_add_plan_to_users.php',
-        'AddPlanToUsersDebits' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_212948_add_plan_to_users_debits.php',
-        'AddPopWorkspaceUsers' => __DIR__ . '/../..' . '/database/migrations/2020_10_15_060038_add_pop_workspace_users.php',
         'AddPreciseDatetimeFieldsToCalls' => __DIR__ . '/../..' . '/database/migrations/2019_08_08_195213_add_precise_datetime_fields_to_calls.php',
-        'AddPrefixPriorityToSipHosts' => __DIR__ . '/../..' . '/database/migrations/2020_07_25_083648_add_prefix_priority_to_sip_hosts.php',
-        'AddPrimaryToCards' => __DIR__ . '/../..' . '/database/migrations/2020_07_07_025134_add_primary_to_cards.php',
         'AddProviderIdToNumbers' => __DIR__ . '/../..' . '/database/migrations/2019_08_11_030346_add_provider_id_to_numbers.php',
         'AddProvisionError' => __DIR__ . '/../..' . '/database/migrations/2020_06_02_051240_add_provision_error.php',
         'AddPublicId' => __DIR__ . '/../..' . '/database/migrations/2019_11_28_022555_add_public_id.php',
         'AddPublicIdToBlockedNumbers' => __DIR__ . '/../..' . '/database/migrations/2019_11_28_022613_add_public_id_to_blocked_numbers.php',
         'AddPublicIdToMacroTemplates' => __DIR__ . '/../..' . '/database/migrations/2020_01_06_233145_add_public_id_to_macro_templates.php',
         'AddPublicIdToWorkspaceUsers' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_211721_add_public_id_to_workspace_users.php',
-        'AddRateLimitSettings' => __DIR__ . '/../..' . '/database/migrations/2021_12_10_013151_add_rate_limit_settings.php',
-        'AddRateRefToRates' => __DIR__ . '/../..' . '/database/migrations/2020_07_25_062512_add_rate_ref_to_rates.php',
         'AddRecordingTagField' => __DIR__ . '/../..' . '/database/migrations/2019_08_08_222630_add_recording_tag_field.php',
-        'AddRecordingTrim' => __DIR__ . '/../..' . '/database/migrations/2022_02_10_221404_add_recording_trim.php',
-        'AddRecordingsForStorage' => __DIR__ . '/../..' . '/database/migrations/2021_11_16_213509_add_recordings_for_storage.php',
-        'AddRecordingsRelocationAttempts' => __DIR__ . '/../..' . '/database/migrations/2021_11_17_001924_add_recordings_relocation_attempts.php',
-        'AddRecordingsS3Url' => __DIR__ . '/../..' . '/database/migrations/2021_11_16_221046_add_recordings_s3_url.php',
-        'AddRegionToMediaServers' => __DIR__ . '/../..' . '/database/migrations/2021_11_22_222046_add_region_to_media_servers.php',
         'AddRegionToUser' => __DIR__ . '/../..' . '/database/migrations/2019_10_17_020822_add_region_to_user.php',
-        'AddRegisterInfoToExts' => __DIR__ . '/../..' . '/database/migrations/2020_07_27_134704_add_register_info_to_exts.php',
         'AddReservedFieldsToUser' => __DIR__ . '/../..' . '/database/migrations/2019_09_22_211335_add_reserved_fields_to_user.php',
         'AddReservedPrivateIp' => __DIR__ . '/../..' . '/database/migrations/2019_09_23_174133_add_reserved_private_ip.php',
-        'AddRoutingFlowId' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_210308_add_routing_flow_id.php',
-        'AddSettingsCols' => __DIR__ . '/../..' . '/database/migrations/2021_12_02_012416_add_settings_cols.php',
-        'AddSetupComplete' => __DIR__ . '/../..' . '/database/migrations/2021_12_14_211701_add_setup_complete.php',
-        'AddSetupCost' => __DIR__ . '/../..' . '/database/migrations/2020_07_13_000500_add_setup_cost.php',
         'AddSipAndRtpInfoToUser' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_022450_add_sip_and_rtp_info_to_user.php',
-        'AddSipCountryFields' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_205944_add_sip_country_fields.php',
-        'AddSipProviderMetrics' => __DIR__ . '/../..' . '/database/migrations/2021_12_10_014025_add_sip_provider_metrics.php',
-        'AddSipProviderToCalls' => __DIR__ . '/../..' . '/database/migrations/2021_12_10_015743_add_sip_provider_to_calls.php',
         'AddSipRateCenterProviders' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_052317_add_sip_rate_center_providers.php',
-        'AddSipTrunks' => __DIR__ . '/../..' . '/database/migrations/2022_03_24_024322_add_sip_trunks.php',
-        'AddSipTrunksOrigination' => __DIR__ . '/../..' . '/database/migrations/2022_03_24_024647_add_sip_trunks_origination.php',
-        'AddSipTrunksOriginationEndpoints' => __DIR__ . '/../..' . '/database/migrations/2022_03_24_025528_add_sip_trunks_origination_endpoints.php',
-        'AddSipTrunksTermination' => __DIR__ . '/../..' . '/database/migrations/2022_03_24_024706_add_sip_trunks_termination.php',
-        'AddSipTrunksTerminationAcl' => __DIR__ . '/../..' . '/database/migrations/2022_03_24_024955_add_sip_trunks_termination_acl.php',
-        'AddSipTrunksTerminationCreds' => __DIR__ . '/../..' . '/database/migrations/2022_03_24_025005_add_sip_trunks_termination_creds.php',
-        'AddSipcallid' => __DIR__ . '/../..' . '/database/migrations/2021_12_10_030306_add_sipcallid.php',
         'AddSizeToRecordings' => __DIR__ . '/../..' . '/database/migrations/2019_12_01_234439_add_size_to_recordings.php',
         'AddStartedToFlows' => __DIR__ . '/../..' . '/database/migrations/2019_08_25_030157_add_started_to_flows.php',
         'AddStatusToCredits' => __DIR__ . '/../..' . '/database/migrations/2019_08_21_012206_add_status_to_credits.php',
@@ -1273,8 +1161,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'AddTranscriptionText' => __DIR__ . '/../..' . '/database/migrations/2020_06_01_030814_add_transcription_text.php',
         'AddTrialFieldToPhoneNumbers' => __DIR__ . '/../..' . '/database/migrations/2019_09_01_234154_add_trial_field_to_phone_numbers.php',
         'AddTrialModeUsers' => __DIR__ . '/../..' . '/database/migrations/2019_09_01_234217_add_trial_mode_users.php',
-        'AddTrunkIdToDids' => __DIR__ . '/../..' . '/database/migrations/2022_07_29_060310_add_trunk_id_to_dids.php',
-        'AddTrunkPermsWorkspaces' => __DIR__ . '/../..' . '/database/migrations/2022_12_01_213043_add_trunk_perms_workspaces.php',
         'AddTypeOfProvider' => __DIR__ . '/../..' . '/database/migrations/2020_05_06_041334_add_type_of_provider.php',
         'AddTypeToCallRate' => __DIR__ . '/../..' . '/database/migrations/2020_04_01_025332_add_type_to_call_rate.php',
         'AddTypeToDids' => __DIR__ . '/../..' . '/database/migrations/2020_03_23_053501_add_type_to_dids.php',
@@ -1283,9 +1169,7 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'AddUserIdToCards' => __DIR__ . '/../..' . '/database/migrations/2019_08_20_012943_add_user_id_to_cards.php',
         'AddUserIdToExtCodes' => __DIR__ . '/../..' . '/database/migrations/2020_01_22_035726_add_user_id_to_ext_codes.php',
         'AddVerifiedCallerids' => __DIR__ . '/../..' . '/database/migrations/2019_11_28_012255_add_verified_callerids.php',
-        'AddWebrtcOptimizedToServers' => __DIR__ . '/../..' . '/database/migrations/2020_07_28_071822_add_webrtc_optimized_to_servers.php',
         'AddWhitelistSettingToSelf' => __DIR__ . '/../..' . '/database/migrations/2019_12_02_013217_add_whitelist_setting_to_self.php',
-        'AddWidgetKeyToPresets' => __DIR__ . '/../..' . '/database/migrations/2020_09_25_042350_add_widget_key_to_presets.php',
         'AddWorkspaceFields' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_201942_add_workspace_fields.php',
         'AddWorkspaceFields2' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_202304_add_workspace_fields_2.php',
         'AddWorkspaceIdToBlockedNumbers' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_203425_add_workspace_id_to_blocked_numbers.php',
@@ -1298,11 +1182,7 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'AddWorkspaceIdToVerifiedCallerIds' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_203425_add_workspace_id_to_verified_caller_ids.php',
         'AddWorkspacePerms' => __DIR__ . '/../..' . '/database/migrations/2020_01_06_223411_add_workspace_perms.php',
         'AddWorkspaceProvSettingsParams' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_221633_add_workspace_prov_settings_params.php',
-        'AddWorkspaceToCards' => __DIR__ . '/../..' . '/database/migrations/2020_07_07_025427_add_workspace_to_cards.php',
-        'AddWorkspaceToInvoices' => __DIR__ . '/../..' . '/database/migrations/2020_07_12_064116_add_workspace_to_invoices.php',
-        'AddWorkspaceUserAssignedData' => __DIR__ . '/../..' . '/database/migrations/2020_09_30_030600_add_workspace_user_assigned_data.php',
         'AddXmlAttrsToPhoneDefaults' => __DIR__ . '/../..' . '/database/migrations/2020_03_19_032609_add_xml_attrs_to_phone_defaults.php',
-        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'BlockedNumbers' => __DIR__ . '/../..' . '/database/migrations/2019_11_28_012315_blocked_numbers.php',
         'ByoDidAction' => __DIR__ . '/../..' . '/database/migrations/2020_06_03_222521_byo_did_action.php',
         'CallRateDialPrefix' => __DIR__ . '/../..' . '/database/migrations/2020_03_31_220721_call_rate_dial_prefix.php',
@@ -1313,15 +1193,12 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'ChangeForeignForDids' => __DIR__ . '/../..' . '/database/migrations/2020_01_28_040920_change_foreign_for_dids.php',
         'ChangeForeignForExtensions' => __DIR__ . '/../..' . '/database/migrations/2020_01_28_040930_change_foreign_for_extensions.php',
         'ChangeRegion' => __DIR__ . '/../..' . '/database/migrations/2019_10_17_021327_change_region.php',
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'CreateApiCredentials' => __DIR__ . '/../..' . '/database/migrations/2021_11_26_194222_create_api_credentials.php',
         'CreateByoCarriers' => __DIR__ . '/../..' . '/database/migrations/2020_05_11_021831_create_byo_carriers.php',
         'CreateByoCarriersIps' => __DIR__ . '/../..' . '/database/migrations/2020_05_22_061003_create_byo_carriers_ips.php',
         'CreateByoCarriersRoutes' => __DIR__ . '/../..' . '/database/migrations/2020_05_11_022031_create_byo_carriers_routes.php',
         'CreateByoDids' => __DIR__ . '/../..' . '/database/migrations/2020_05_11_021851_create_byo_dids.php',
         'CreateCallRates' => __DIR__ . '/../..' . '/database/migrations/2020_03_01_073539_create_call_rates.php',
         'CreateCallSystemTemplates' => __DIR__ . '/../..' . '/database/migrations/2020_01_14_210429_create_call_system_templates.php',
-        'CreateCallTags' => __DIR__ . '/../..' . '/database/migrations/2020_06_18_034944_create_call_tags.php',
         'CreateCallsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_29_212722_create_calls_table.php',
         'CreateConferencesMembersTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_03_194502_create_conferences_members_table.php',
         'CreateConferencesTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_03_194429_create_conferences_table.php',
@@ -1336,7 +1213,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'CreateFlowsTemplates' => __DIR__ . '/../..' . '/database/migrations/2019_08_23_221925_create_flows_templates.php',
         'CreateMacroTemplates' => __DIR__ . '/../..' . '/database/migrations/2020_01_06_224515_create_macro_templates.php',
         'CreateMediaServers' => __DIR__ . '/../..' . '/database/migrations/2020_05_25_030825_create_media_servers.php',
-        'CreateNumberInventory' => __DIR__ . '/../..' . '/database/migrations/2021_12_16_013225_create_number_inventory.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreatePhoneDefaults' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_032614_create_phone_defaults.php',
         'CreatePhonesDefinitionsTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_030714_create_phones_definitions_table.php',
@@ -1346,17 +1222,12 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'CreatePhonesIndividualSettingsTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_025605_create_phones_individual_settings_table.php',
         'CreatePhonesIndividualSettingsValues' => __DIR__ . '/../..' . '/database/migrations/2020_03_11_205622_create_phones_individual_settings_values.php',
         'CreatePhonesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_09_025513_create_phones_table.php',
-        'CreatePlanUsagePeriod' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_211150_create_plan_usage_period.php',
         'CreatePortNumbers' => __DIR__ . '/../..' . '/database/migrations/2020_01_16_181813_create_port_numbers.php',
         'CreatePortNumbersDocuments' => __DIR__ . '/../..' . '/database/migrations/2020_01_16_182010_create_port_numbers_documents.php',
         'CreateRecordingTags' => __DIR__ . '/../..' . '/database/migrations/2020_01_16_030929_create_recording_tags.php',
         'CreateRecordingsTable' => __DIR__ . '/../..' . '/database/migrations/2019_07_29_212744_create_recordings_table.php',
-        'CreateRouterFlows' => __DIR__ . '/../..' . '/database/migrations/2021_12_20_211043_create_router_flows.php',
-        'CreateRouterFlowsTemplates' => __DIR__ . '/../..' . '/database/migrations/2021_12_20_211240_create_router_flows_templates.php',
-        'CreateRtpproxyTbl' => __DIR__ . '/../..' . '/database/migrations/2021_12_26_222102_create_rtpproxy_tbl.php',
         'CreateSipCountries' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_023551_create_sip_countries.php',
         'CreateSipProvidersHosts' => __DIR__ . '/../..' . '/database/migrations/2020_05_06_032418_create_sip_providers_hosts.php',
-        'CreateSipProvidersRates' => __DIR__ . '/../..' . '/database/migrations/2020_07_25_062322_create_sip_providers_rates.php',
         'CreateSipProvidersWhitelistIps' => __DIR__ . '/../..' . '/database/migrations/2020_05_24_223501_create_sip_providers_whitelist_ips.php',
         'CreateSipRateCenters' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_023621_create_sip_rate_centers.php',
         'CreateSipRegions' => __DIR__ . '/../..' . '/database/migrations/2020_03_04_023608_create_sip_regions.php',
@@ -1364,7 +1235,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'CreateSipRoutersMediaServers' => __DIR__ . '/../..' . '/database/migrations/2020_06_05_040222_create_sip_routers_media_servers.php',
         'CreateSystemStatusCategoriesTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_07_011337_create_system_status_categories_table.php',
         'CreateSystemStatusUpdatesTable' => __DIR__ . '/../..' . '/database/migrations/2020_04_07_011505_create_system_status_updates_table.php',
-        'CreateTemplatePresets' => __DIR__ . '/../..' . '/database/migrations/2020_09_25_020516_create_template_presets.php',
         'CreateUsageTriggerResults' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_042901_create_usage_trigger_results.php',
         'CreateUsageTriggers' => __DIR__ . '/../..' . '/database/migrations/2019_11_29_041451_create_usage_triggers.php',
         'CreateUserCards' => __DIR__ . '/../..' . '/database/migrations/2019_08_19_235838_create_user_cards.php',
@@ -1375,7 +1245,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'CreateWidgetTemplates' => __DIR__ . '/../..' . '/database/migrations/2020_02_04_233222_create_widget_templates.php',
         'CreateWidgetTemplatesTags' => __DIR__ . '/../..' . '/database/migrations/2020_02_04_233438_create_widget_templates_tags.php',
         'CreateWorkspaceParams' => __DIR__ . '/../..' . '/database/migrations/2020_01_08_204250_create_workspace_params.php',
-        'CreateWorkspacesInvites' => __DIR__ . '/../..' . '/database/migrations/2020_10_15_212843_create_workspaces_invites.php',
         'CreateWorkspacesTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_171656_create_workspaces_table.php',
         'CreateWorkspacesUsersTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_08_171751_create_workspaces_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
@@ -1389,27 +1258,8 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'FlowsAddPubId' => __DIR__ . '/../..' . '/database/migrations/2019_11_22_022833_flows_add_pub_id.php',
         'FreeTrialReminder' => __DIR__ . '/../..' . '/database/migrations/2020_02_19_051706_free_trial_reminder.php',
         'GPBMetadata\\GrpcGcp' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/GPBMetadata/GrpcGcp.php',
-        'Google_AccessToken_Revoke' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AccessToken_Verify' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_AuthHandlerFactory' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_Guzzle5AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_Guzzle6AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_Guzzle7AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Client' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Collection' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Http_Batch' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Http_MediaFileUpload' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Http_REST' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Model' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Service' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Composer' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Exception.php',
+        'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Resource.php',
         'Grpc\\Gcp\\AffinityConfig' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/Grpc/Gcp/AffinityConfig.php',
         'Grpc\\Gcp\\AffinityConfig_Command' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/Grpc/Gcp/AffinityConfig_Command.php',
         'Grpc\\Gcp\\ApiConfig' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/Grpc/Gcp/ApiConfig.php',
@@ -1491,18 +1341,15 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'IlluminateQueueClosure' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Queue/IlluminateQueueClosure.php',
         'InfoNeededToPorts' => __DIR__ . '/../..' . '/database/migrations/2020_03_01_030427_info_needed_to_ports.php',
         'IpWhitelistDisabled' => __DIR__ . '/../..' . '/database/migrations/2020_06_03_222452_ip_whitelist_disabled.php',
-        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'LoadBasicData' => __DIR__ . '/../..' . '/database/seeds/LoadBasicData.php',
-        'LoadInCallTolls' => __DIR__ . '/../..' . '/database/seeds/LoadInCallTolls.php',
+        'LoadMacroTemplates' => __DIR__ . '/../..' . '/database/seeds/LoadMacroTemplates.php',
         'LoadPhoneData' => __DIR__ . '/../..' . '/database/seeds/LoadPhoneData.php',
         'LoadSampleCalls' => __DIR__ . '/../..' . '/database/seeds/LoadSampleCalls.php',
         'MakeMacroFunctions' => __DIR__ . '/../..' . '/database/migrations/2020_01_06_175437_make_macro_functions.php',
         'MakeReservedIpNullable' => __DIR__ . '/../..' . '/database/migrations/2019_09_22_222624_make_reserved_ip_nullable.php',
         'ManageExtensionCodesPriv' => __DIR__ . '/../..' . '/database/migrations/2020_01_13_013305_manage_extension_codes_priv.php',
         'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
-        'MovePlanToWorkspaces' => __DIR__ . '/../..' . '/database/migrations/2020_07_02_205621_move_plan_to_workspaces.php',
         'NeedsSetPasswordDate' => __DIR__ . '/../..' . '/database/migrations/2020_04_17_044615_needs_set_password_date.php',
-        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/Assert.php',
         'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/AssertionFailedError.php',
         'PHPUnit\\Framework\\BaseTestListener' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/BaseTestListener.php',
@@ -1909,7 +1756,6 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PhoneDefSeeder' => __DIR__ . '/../..' . '/database/seeds/PhoneDefSeeder.php',
-        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'SebastianBergmann\\Comparator\\ArrayComparator' => __DIR__ . '/..' . '/sebastian/comparator/src/ArrayComparator.php',
         'SebastianBergmann\\Comparator\\Comparator' => __DIR__ . '/..' . '/sebastian/comparator/src/Comparator.php',
         'SebastianBergmann\\Comparator\\ComparisonFailure' => __DIR__ . '/..' . '/sebastian/comparator/src/ComparisonFailure.php',
@@ -1947,27 +1793,22 @@ class ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce
         'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => __DIR__ . '/..' . '/sebastian/recursion-context/src/InvalidArgumentException.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
-        'SettingsSeeder' => __DIR__ . '/../..' . '/database/seeds/SettingsSeeder.php',
         'SipProviders' => __DIR__ . '/../..' . '/database/migrations/2020_03_01_064209_sip_providers.php',
-        'SipProvidersCallRates' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_220138_sip_providers_call_rates.php',
-        'SipProvidersCountries' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_220106_sip_providers_countries.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
-        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'UserTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UserTableSeeder.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
-        'WorkspacesRoutingFlows' => __DIR__ . '/../..' . '/database/migrations/2022_01_09_214321_workspaces_routing_flows.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb6b68f55b4929288f459f94e71d8bcce::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit945bd454a41c88d9a0900ed3d735090d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit945bd454a41c88d9a0900ed3d735090d::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit945bd454a41c88d9a0900ed3d735090d::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit945bd454a41c88d9a0900ed3d735090d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit945bd454a41c88d9a0900ed3d735090d::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -14,12 +14,10 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '5005000\\d{3}|8\\d{9,11}|(?:[269]\\d|70)\\d{8}',
+    'NationalNumberPattern' => '5005000\\d{3}|(?:[2689]\\d|70)\\d{8}',
     'PossibleLength' => 
     array (
       0 => 10,
-      1 => 11,
-      2 => 12,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -31,7 +29,6 @@ return array (
     'ExampleNumber' => '2123456789',
     'PossibleLength' => 
     array (
-      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -43,7 +40,6 @@ return array (
     'ExampleNumber' => '6912345678',
     'PossibleLength' => 
     array (
-      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -51,7 +47,7 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '800\\d{7,9}',
+    'NationalNumberPattern' => '800\\d{7}',
     'ExampleNumber' => '8001234567',
     'PossibleLength' => 
     array (
@@ -66,7 +62,6 @@ return array (
     'ExampleNumber' => '9091234567',
     'PossibleLength' => 
     array (
-      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -78,7 +73,6 @@ return array (
     'ExampleNumber' => '8011234567',
     'PossibleLength' => 
     array (
-      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -90,7 +84,6 @@ return array (
     'ExampleNumber' => '7012345678',
     'PossibleLength' => 
     array (
-      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -122,7 +115,6 @@ return array (
     'ExampleNumber' => '5005000123',
     'PossibleLength' => 
     array (
-      0 => 10,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -190,22 +182,11 @@ return array (
       'domesticCarrierCodeFormattingRule' => '',
       'nationalPrefixOptionalWhenFormatting' => false,
     ),
-    3 => 
-    array (
-      'pattern' => '(\\d{3})(\\d{3,4})(\\d{5})',
-      'format' => '$1 $2 $3',
-      'leadingDigitsPatterns' => 
-      array (
-        0 => '8',
-      ),
-      'nationalPrefixFormattingRule' => '',
-      'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
-    ),
   ),
   'intlNumberFormat' => 
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => true,
 );

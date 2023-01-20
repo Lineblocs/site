@@ -92,13 +92,9 @@ class ShortNumberInfo
      */
     protected function regionDialingFromMatchesNumber(PhoneNumber $number, $regionDialingFrom)
     {
-        if ($regionDialingFrom === null || $regionDialingFrom === '') {
-            return false;
-        }
-
         $regionCodes = $this->getRegionCodesForCountryCode($number->getCountryCode());
 
-        return in_array(strtoupper($regionDialingFrom), $regionCodes);
+        return in_array($regionDialingFrom, $regionCodes);
     }
 
     public function getSupportedRegions()
@@ -134,8 +130,6 @@ class ShortNumberInfo
      */
     public function getMetadataForRegion($regionCode)
     {
-        $regionCode = strtoupper((string)$regionCode);
-
         if (!in_array($regionCode, ShortNumbersRegionCodeSet::$shortNumbersRegionCodeSet)) {
             return null;
         }
@@ -252,9 +246,8 @@ class ShortNumberInfo
         $normalizedNumber = PhoneNumberUtil::normalizeDigitsOnly($number);
         $emergencyDesc = $metadata->getEmergency();
 
-        $allowPrefixMatchForRegion = (
-            $allowPrefixMatch
-            && !in_array(strtoupper($regionCode), static::$regionsWhereEmergencyNumbersMustBeExact)
+        $allowPrefixMatchForRegion = ($allowPrefixMatch
+            && !in_array($regionCode, static::$regionsWhereEmergencyNumbersMustBeExact)
         );
 
         return $this->matcherAPI->matchNationalNumber($normalizedNumber, $emergencyDesc, $allowPrefixMatchForRegion);

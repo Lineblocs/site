@@ -2,11 +2,9 @@
 
 namespace Doctrine\DBAL\Driver\OCI8;
 
-use Doctrine\DBAL\Driver\Connection as ConnectionInterface;
-use Doctrine\DBAL\Driver\OCI8\Exception\SequenceDoesNotExist;
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\Deprecations\Deprecation;
 use UnexpectedValueException;
 
 use function addcslashes;
@@ -28,10 +26,8 @@ use const OCI_NO_AUTO_COMMIT;
 
 /**
  * OCI8 implementation of the Connection interface.
- *
- * @deprecated Use {@link Connection} instead
  */
-class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
+class OCI8Connection implements Connection, ServerInfoAwareConnection
 {
     /** @var resource */
     protected $dbh;
@@ -41,8 +37,6 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
 
     /**
      * Creates a Connection to an Oracle Database using oci8 extension.
-     *
-     * @internal The connection can be only instantiated by its driver.
      *
      * @param string $username
      * @param string $password
@@ -104,21 +98,15 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
      */
     public function requiresQueryForServerVersion()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4114',
-            'ServerInfoAwareConnection::requiresQueryForServerVersion() is deprecated and removed in DBAL 3.'
-        );
-
         return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function prepare($sql)
+    public function prepare($prepareString)
     {
-        return new Statement($this->dbh, $sql, $this);
+        return new OCI8Statement($this->dbh, $prepareString, $this);
     }
 
     /**
@@ -152,9 +140,9 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function exec($sql)
+    public function exec($statement)
     {
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare($statement);
         $stmt->execute();
 
         return $stmt->rowCount();
@@ -162,8 +150,6 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
 
     /**
      * {@inheritdoc}
-     *
-     * @param string|null $name
      *
      * @return int|false
      */
@@ -178,7 +164,7 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
         $result = $stmt->fetchColumn();
 
         if ($result === false) {
-            throw SequenceDoesNotExist::new();
+            throw new OCI8Exception('lastInsertId failed: Query was executed but no result was returned.');
         }
 
         return (int) $result;
@@ -186,8 +172,6 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
 
     /**
      * Returns the current execution mode.
-     *
-     * @internal
      *
      * @return int
      */
@@ -242,12 +226,11 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
     public function errorCode()
     {
         $error = oci_error($this->dbh);
-
         if ($error !== false) {
-            return $error['code'];
+            $error = $error['code'];
         }
 
-        return null;
+        return $error;
     }
 
     /**

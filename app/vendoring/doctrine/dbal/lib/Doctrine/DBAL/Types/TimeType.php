@@ -22,9 +22,9 @@ class TimeType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $platform->getTimeTypeDeclarationSQL($column);
+        return $platform->getTimeTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**
@@ -54,11 +54,7 @@ class TimeType extends Type
 
         $val = DateTime::createFromFormat('!' . $platform->getTimeFormatString(), $value);
         if (! $val) {
-            throw ConversionException::conversionFailedFormat(
-                $value,
-                $this->getName(),
-                $platform->getTimeFormatString()
-            );
+            throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getTimeFormatString());
         }
 
         return $val;

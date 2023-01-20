@@ -3,17 +3,12 @@
 namespace Doctrine\DBAL\Driver\PDOSqlsrv;
 
 use Doctrine\DBAL\Driver\AbstractSQLServerDriver;
-use Doctrine\DBAL\Driver\AbstractSQLServerDriver\Exception\PortWithoutHost;
-use Doctrine\DBAL\Driver\PDO;
-use Doctrine\Deprecations\Deprecation;
 
 use function is_int;
 use function sprintf;
 
 /**
  * The PDO-based Sqlsrv driver.
- *
- * @deprecated Use {@link PDO\SQLSrv\Driver} instead.
  */
 class Driver extends AbstractSQLServerDriver
 {
@@ -32,7 +27,7 @@ class Driver extends AbstractSQLServerDriver
             }
         }
 
-        return new PDO\SQLSrv\Connection(
+        return new Connection(
             $this->_constructPdoDsn($params, $dsnOptions),
             $username,
             $password,
@@ -54,12 +49,10 @@ class Driver extends AbstractSQLServerDriver
 
         if (isset($params['host'])) {
             $dsn .= $params['host'];
+        }
 
-            if (isset($params['port'])) {
-                $dsn .= ',' . $params['port'];
-            }
-        } elseif (isset($params['port'])) {
-            throw PortWithoutHost::new();
+        if (isset($params['port']) && ! empty($params['port'])) {
+            $dsn .= ',' . $params['port'];
         }
 
         if (isset($params['dbname'])) {
@@ -96,12 +89,6 @@ class Driver extends AbstractSQLServerDriver
      */
     public function getName()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Driver::getName() is deprecated'
-        );
-
         return 'pdo_sqlsrv';
     }
 }

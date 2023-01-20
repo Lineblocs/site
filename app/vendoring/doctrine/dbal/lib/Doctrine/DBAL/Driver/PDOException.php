@@ -2,11 +2,8 @@
 
 namespace Doctrine\DBAL\Driver;
 
-use Doctrine\DBAL\Driver\PDO\Exception;
-use Doctrine\Deprecations\Deprecation;
-
 /**
- * @deprecated Use {@link Exception} instead
+ * Tiny wrapper for PDOException instances to implement the {@link DriverException} interface.
  *
  * @psalm-immutable
  */
@@ -44,13 +41,6 @@ class PDOException extends \PDOException implements DriverException
      */
     public function getErrorCode()
     {
-        /** @psalm-suppress ImpureMethodCall */
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4112',
-            'Driver\AbstractException::getErrorCode() is deprecated, use getSQLState() or getCode() instead.'
-        );
-
         return $this->errorCode;
     }
 

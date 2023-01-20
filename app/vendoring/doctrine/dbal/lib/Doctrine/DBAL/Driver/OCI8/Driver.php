@@ -2,9 +2,8 @@
 
 namespace Doctrine\DBAL\Driver\OCI8;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\AbstractOracleDriver;
-use Doctrine\DBAL\Exception;
-use Doctrine\Deprecations\Deprecation;
 
 use const OCI_NO_AUTO_COMMIT;
 
@@ -19,7 +18,7 @@ class Driver extends AbstractOracleDriver
     public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
         try {
-            return new Connection(
+            return new OCI8Connection(
                 (string) $username,
                 (string) $password,
                 $this->_constructDsn($params),
@@ -28,7 +27,7 @@ class Driver extends AbstractOracleDriver
                 $params['persistent'] ?? false
             );
         } catch (OCI8Exception $e) {
-            throw Exception::driverException($this, $e);
+            throw DBALException::driverException($this, $e);
         }
     }
 
@@ -51,12 +50,6 @@ class Driver extends AbstractOracleDriver
      */
     public function getName()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Driver::getName() is deprecated'
-        );
-
         return 'oci8';
     }
 }

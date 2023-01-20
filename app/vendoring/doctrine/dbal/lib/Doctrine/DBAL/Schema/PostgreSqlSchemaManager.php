@@ -21,6 +21,7 @@ use function preg_match;
 use function preg_replace;
 use function sprintf;
 use function str_replace;
+use function strlen;
 use function strpos;
 use function strtolower;
 use function trim;
@@ -32,7 +33,7 @@ use const CASE_LOWER;
  */
 class PostgreSqlSchemaManager extends AbstractSchemaManager
 {
-    /** @var string[]|null */
+    /** @var string[] */
     private $existingSchemaPaths;
 
     /**
@@ -42,9 +43,7 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
      */
     public function getSchemaNames()
     {
-        $statement = $this->_conn->executeQuery(
-            "SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*' AND nspname != 'information_schema'"
-        );
+        $statement = $this->_conn->executeQuery("SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*' AND nspname != 'information_schema'");
 
         return $statement->fetchAll(FetchMode::COLUMN);
     }
@@ -59,11 +58,7 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
     public function getSchemaSearchPaths()
     {
         $params = $this->_conn->getParams();
-
-        $searchPaths = $this->_conn->fetchColumn('SHOW search_path');
-        assert($searchPaths !== false);
-
-        $schema = explode(',', $searchPaths);
+        $schema = explode(',', $this->_conn->fetchColumn('SHOW search_path'));
 
         if (isset($params['user'])) {
             $schema = str_replace('"$user"', $params['user'], $schema);
@@ -84,8 +79,6 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
         if ($this->existingSchemaPaths === null) {
             $this->determineExistingSchemaSearchPaths();
         }
-
-        assert($this->existingSchemaPaths !== null);
 
         return $this->existingSchemaPaths;
     }
@@ -155,14 +148,13 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
             $onDelete = $match[1];
         }
 
-        $result = preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', $tableForeignKey['condef'], $values);
-        assert($result === 1);
-
-        // PostgreSQL returns identifiers that are keywords with quotes, we need them later, don't get
-        // the idea to trim them here.
-        $localColumns   = array_map('trim', explode(',', $values[1]));
-        $foreignColumns = array_map('trim', explode(',', $values[3]));
-        $foreignTable   = $values[2];
+        if (preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', $tableForeignKey['condef'], $values)) {
+            // PostgreSQL returns identifiers that are keywords with quotes, we need them later, don't get
+            // the idea to trim them here.
+            $localColumns   = array_map('trim', explode(',', $values[1]));
+            $foreignColumns = array_map('trim', explode(',', $values[3]));
+            $foreignTable   = $values[2];
+        }
 
         return new ForeignKeyConstraint(
             $localColumns,
@@ -309,9 +301,7 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
 
         if (! isset($sequence['increment_by'], $sequence['min_value'])) {
             /** @var string[] $data */
-            $data = $this->_conn->fetchAssoc(
-                'SELECT min_value, increment_by FROM ' . $this->_platform->quoteIdentifier($sequenceName)
-            );
+            $data = $this->_conn->fetchAssoc('SELECT min_value, increment_by FROM ' . $this->_platform->quoteIdentifier($sequenceName));
 
             $sequence += $data;
         }
@@ -335,22 +325,16 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
         $matches = [];
 
         $autoincrement = false;
-
-        if (
-            $tableColumn['default'] !== null
-            && preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches) === 1
-        ) {
+        if (preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches)) {
             $tableColumn['sequence'] = $matches[1];
             $tableColumn['default']  = null;
             $autoincrement           = true;
         }
 
-        if ($tableColumn['default'] !== null) {
-            if (preg_match("/^['(](.*)[')]::/", $tableColumn['default'], $matches) === 1) {
-                $tableColumn['default'] = $matches[1];
-            } elseif (preg_match('/^NULL::/', $tableColumn['default']) === 1) {
-                $tableColumn['default'] = null;
-            }
+        if (preg_match("/^['(](.*)[')]::/", $tableColumn['default'], $matches)) {
+            $tableColumn['default'] = $matches[1];
+        } elseif (preg_match('/^NULL::/', $tableColumn['default'])) {
+            $tableColumn['default'] = null;
         }
 
         $length = $tableColumn['length'] ?? null;
@@ -373,11 +357,7 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
         $jsonb     = null;
 
         $dbType = strtolower($tableColumn['type']);
-        if (
-            $tableColumn['domain_type'] !== null
-            && $tableColumn['domain_type'] !== ''
-            && ! $this->_platform->hasDoctrineTypeMappingFor($tableColumn['type'])
-        ) {
+        if (strlen($tableColumn['domain_type']) && ! $this->_platform->hasDoctrineTypeMappingFor($tableColumn['type'])) {
             $dbType                       = strtolower($tableColumn['domain_type']);
             $tableColumn['complete_type'] = $tableColumn['domain_complete_type'];
         }
@@ -503,7 +483,7 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
      */
     private function fixVersion94NegativeNumericDefaultValue($defaultValue)
     {
-        if ($defaultValue !== null && strpos($defaultValue, '(') === 0) {
+        if (strpos($defaultValue, '(') === 0) {
             return trim($defaultValue, '()');
         }
 
@@ -525,13 +505,13 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
-    public function listTableDetails($name): Table
+    public function listTableDetails($tableName): Table
     {
-        $table = parent::listTableDetails($name);
+        $table = parent::listTableDetails($tableName);
 
         $platform = $this->_platform;
         assert($platform instanceof PostgreSqlPlatform);
-        $sql = $platform->getListTableMetadataSQL($name);
+        $sql = $platform->getListTableMetadataSQL($tableName);
 
         $tableOptions = $this->_conn->fetchAssoc($sql);
 

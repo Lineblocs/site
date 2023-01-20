@@ -26,11 +26,11 @@ class DateIntervalType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $column['length'] = 255;
+        $fieldDeclaration['length'] = 255;
 
-        return $platform->getVarcharTypeDeclarationSQL($column);
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**

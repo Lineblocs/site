@@ -33,15 +33,9 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listServiceQuotasAsync(array $args = [])
  * @method \Aws\Result listServices(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listServicesAsync(array $args = [])
- * @method \Aws\Result listTagsForResource(array $args = [])
- * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result putServiceQuotaIncreaseRequestIntoTemplate(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putServiceQuotaIncreaseRequestIntoTemplateAsync(array $args = [])
  * @method \Aws\Result requestServiceQuotaIncrease(array $args = [])
  * @method \GuzzleHttp\Promise\Promise requestServiceQuotaIncreaseAsync(array $args = [])
- * @method \Aws\Result tagResource(array $args = [])
- * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
- * @method \Aws\Result untagResource(array $args = [])
- * @method \GuzzleHttp\Promise\Promise untagResourceAsync(array $args = [])
  */
 class ServiceQuotasClient extends AwsClient {}

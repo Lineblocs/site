@@ -41,14 +41,14 @@ Take a look at the following code snippet:
 In this snippet you can see a variety of different docblock annotations:
 
 - Documentation annotations such as ``@var`` and ``@author``. These
-  annotations are ignored and never considered for throwing an
+  annotations are on a blacklist and never considered for throwing an
   exception due to wrongly used annotations.
 - Annotations imported through use statements. The statement ``use
   Doctrine\ORM\Mapping AS ORM`` makes all classes under that namespace
   available as ``@ORM\ClassName``. Same goes for the import of
   ``@Assert``.
 - The ``@dummy`` annotation. It is not a documentation annotation and
-  not ignored. For Doctrine Annotations it is not entirely clear how
+  not blacklisted. For Doctrine Annotations it is not entirely clear how
   to handle this annotation. Depending on the configuration an exception
   (unknown annotation) will be thrown when parsing this annotation.
 - The fully qualified annotation ``@MyProject\Annotations\Foobarable``.
@@ -116,20 +116,39 @@ This creates a simple annotation reader with no caching other than in
 memory (in php arrays). Since parsing docblocks can be expensive you
 should cache this process by using a caching reader.
 
-To cache annotations, you can create a ``Doctrine\Common\Annotations\PsrCachedReader``.
-This reader decorates the original reader and stores all annotations in a PSR-6
-cache:
+You can use a file caching reader, but please note it is deprecated to
+do so:
+
+.. code-block:: php
+
+    use Doctrine\Common\Annotations\FileCacheReader;
+    use Doctrine\Common\Annotations\AnnotationReader;
+
+    $reader = new FileCacheReader(
+        new AnnotationReader(),
+        "/path/to/cache",
+        $debug = true
+    );
+
+If you set the ``debug`` flag to ``true`` the cache reader will check
+for changes in the original files, which is very important during
+development. If you don't set it to ``true`` you have to delete the
+directory to clear the cache. This gives faster performance, however
+should only be used in production, because of its inconvenience during
+development.
+
+You can also use one of the ``Doctrine\Common\Cache\Cache`` cache
+implementations to cache the annotations:
 
 .. code-block:: php
 
     use Doctrine\Common\Annotations\AnnotationReader;
-    use Doctrine\Common\Annotations\PsrCachedReader;
+    use Doctrine\Common\Annotations\CachedReader;
+    use Doctrine\Common\Cache\ApcCache;
 
-    $cache = ... // instantiate a PSR-6 Cache pool
-
-    $reader = new PsrCachedReader(
+    $reader = new CachedReader(
         new AnnotationReader(),
-        $cache,
+        new ApcCache(),
         $debug = true
     );
 
@@ -222,7 +241,7 @@ Ignoring missing exceptions
 By default an exception is thrown from the ``AnnotationReader`` if an
 annotation was found that:
 
-- is not part of the list of ignored "documentation annotations";
+- is not part of the blacklist of ignored "documentation annotations";
 - was not imported through a use statement;
 - is not a fully qualified class that exists.
 
