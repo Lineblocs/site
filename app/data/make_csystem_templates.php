@@ -5,16 +5,7 @@ use App\CallSystemTemplate;
 use App\Helpers\MainHelper;
 
 $flows = [
-
-          [
-            'name' => 'Cold Transfer',
-            'template' => 'Cold Transfer'
-          ],
-          [
-            'name' => 'Check Voicemail',
-            'template' => 'Check Voicemail'
-          ],
-
+/*
           [
             'name' => 'Simple IVR',
             'template' => 'Simple IVR'
@@ -23,6 +14,7 @@ $flows = [
             'name' => 'Call Forward',
             'template' => 'Call Forward'
           ]
+          */
        ];
 
 
@@ -39,17 +31,6 @@ $flows = [
           ]
         ];
         $codes = [
-          [
-            'code' => '*72',
-          'name' => 'Cold Transfer',
-          'flow_name' => 'Cold Transfer',
-          ],
-          [
-            'code' => '*97',
-          'name' => 'Check Voicemail',
-          'flow_name' => 'Check Voicemail'
-          ],
-
         ];        
         $template = array(
           "extensions" => $extensions,
@@ -58,7 +39,7 @@ $flows = [
         );
         CallSystemTemplate::create([
           'name' => 'Basic Call System',
-          'description' => 'Includes 2 extensions, call forwarding, cold transfers and a simple IVR setup',
+          'description' => 'Includes 2 extensions, call forwarding and a simple IVR setup',
           'data' => json_encode($template)
         ]);
 

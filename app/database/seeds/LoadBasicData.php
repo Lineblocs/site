@@ -18,9 +18,6 @@ class LoadBasicData extends Seeder
         require_once($dir1."make_csystem_templates.php");
         echo "loading macro data.." .PHP_EOL;
         require_once($dir1."make_macro_templates.php");
-        echo "loading macro tempaltes.." .PHP_EOL;
-        require_once($dir1."make_macro_templates.php");
-
         echo "loading SIP providers.." .PHP_EOL;
         require_once($dir2."load_sip_providers.php");
 

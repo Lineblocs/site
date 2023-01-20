@@ -11,6 +11,10 @@ class Customizations extends Model {
 
   protected $guarded  = array('id');
   protected $table ='customizations';
+  protected $casts = array(
+    "payment_gateway_enabled" => "boolean",
+    "custom_code_containers_enabled" => "boolean"
+  );
   public static function getRecord() {
     return Customizations::all()[0];
   }

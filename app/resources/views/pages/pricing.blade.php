@@ -323,8 +323,8 @@
             <td>Voicemail</td>
             <td>1GB</td>
             <td>2GB</td>
-            <td>32</td>
-            <td>128</td>
+            <td>32GB</td>
+            <td>128GB</td>
           </tr>
           <tr>
             <td>Inbound calling</td>

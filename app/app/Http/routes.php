@@ -177,6 +177,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('routerServer', 'Admin\SIPRouterController');
 
 
+    # DNSRecords
+    Route::get('dns/data', 'Admin\DNSRecordController@data');
+    Route::get('dns/{dns}/show', 'Admin\DNSRecordController@show');
+    Route::get('dns/{dns}/edit', 'Admin\DNSRecordController@edit');
+    Route::get('dns/{dns}/delete', 'Admin\DNSRecordController@delete');
+    Route::resource('dns', 'Admin\DNSRecordController');
+
+
     # MediaServers
     Route::get('server/data', 'Admin\MediaServerController@data');
     Route::get('server/{server}/show', 'Admin\MediaServerController@show');

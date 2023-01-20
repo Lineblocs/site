@@ -13,6 +13,7 @@ use App\Customizations;
 use Config;
 use Auth;
 use DB;
+use Log;
 
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
@@ -24,6 +25,7 @@ use DateTime;
 use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
+use App\SIPRouter;
 use App\CallRate;
 use App\CallRateDialPrefix;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
@@ -117,31 +119,61 @@ final class MainHelper {
   }
   public static function getHostIPForUser($region, $user) {
       $info = User::whereNotNull('region')->get();
-      $mothernode = Config::get("mothernodes");
-      $info = $mothernode['regions'][$region]['options'][0];
-      $proxy= $mothernode['regions'][$region]['proxy'];
+      $mothernode = Config::get("routerdata");
+      $routers = SIPRouter::all();
+      $proxy = '';
+      foreach ( $routers as $router ) {
+        if ( $router->region == $region ) {
+          $proxy=$router->ip_address;
+        }
+      }
+
+      // todo this should be handled before this step but remember to look into
+      // $proxy variable possibly being unset here. if possible improve this workflow
+      if ( empty ( $proxy )) { // region not available
+      }
       return array(
           "region" => $region,
           "main" => $info,
-          "proxy" => $proxy,
-          "reservedInfo" => $info['hosts'][0]
+          "proxy" => $proxy
        );
       return FALSE;
   }
-  public static function reservedIPsForHost() {
+  public static function createDNSRecordsForRouters() {
       $data = array();
-      $info = User::whereNotNull('region')->get();
-      $config = Config::get("mothernodes");
-      foreach ($info as $item) {
-        $workspace = Workspace::where('creator_id', '=', $item->id)->first();
-        if ($workspace) {
-          $region = $config['regions'][$item->region];
-          $data[] = [
-            'user' => $item,
-            'workspace' => $workspace,
-            'proxy_ip' => $region['proxy']['publicIp']
-          ];
+      //$info = User::whereNotNull('region')->get();
+      $config = Config::get("siprouter");
+      $workspaces = Workspace::all();
+      $routers = SIPRouter::all();
+      foreach ($workspaces as $item) {
+        if ( empty( $region ) ) {
+          Log::error('region was empty..');
+          continue;
         }
+        $router = NULL;
+        foreach ( $routers as $item ) {
+          if ( $router->region == $item->region ) {
+            $router = $item;
+          }
+        }
+        if ( empty( $router ) ) {
+          Log::error('SIP router not found for workspace region ' . $item->region);
+          continue;
+        }
+        $user = User::find($workspace->creator_id);
+        //$regions = WorkspaceRegion::where('workspace_id', $item->id)->get()->toArray();
+        $regions = [
+          [
+            'internal_code' => $item['region'],
+            'router_ip' => $item['public_i[']
+          ]
+          ];
+        $data[] = [
+          'user' => $user,
+          'workspace' => $workspace,
+          'proxy_ip' => $router['ip_address'],
+          'regions' => $regions
+        ];
       }
       return $data;
   }
@@ -153,7 +185,7 @@ final class MainHelper {
         return $data;
     }
 
-    public static function createUserWithoutStripe($data, $needsPasswordSet=FALSE) {
+    public static function createUserWithoutPaymentGateway($data, $needsPasswordSet=FALSE) {
         $verifiedHash = MainHelper::emailVerifyHash($data['email']);
         $password = uniqid(TRUE);
         if (isset($data['password'])) {
@@ -185,24 +217,29 @@ final class MainHelper {
     }
   public static function createUser($data) {
       $key = Config::get("stripe.secret_key");
-        \Stripe\Stripe::setApiKey($key);
+      $customization = Customizations::getRecord();
+      $user = MainHelper::createUserWithoutPaymentGateway($data);
+      if ( $customization->payment_gateway_enabled ) {
+        if ( $customization->payment_gateway == 'stripe' ) {
+          \Stripe\Stripe::setApiKey($key);
 
-        $container = uniqid(TRUE);
-        $customer = \Stripe\Customer::create([
-          "description" => "Customer for " . $data['email']
-        ]);
-        $verifiedHash = MainHelper::emailVerifyHash($data['email']);
-        $user = MainHelper::createUserWithoutStripe($data);
-       
+          $container = uniqid(TRUE);
+          $customer = \Stripe\Customer::create([
+            "description" => "Customer for " . $data['email']
+          ]);
+          $verifiedHash = MainHelper::emailVerifyHash($data['email']);
+        
           $key = Config::get("stripe.secret_key");
-        \Stripe\Stripe::setApiKey($key);
+          \Stripe\Stripe::setApiKey($key);
 
-        $customer = \Stripe\Customer::create([
-          "description" => "Customer for " . $data['email']
-        ]);
-        $user->update(['stripe_id' => $customer->id]);
-        $user->update(['free_trial_started' => new DateTime()]);
-        return $user;
+          $customer = \Stripe\Customer::create([
+            "description" => "Customer for " . $data['email']
+          ]);
+          $user->update(['stripe_id' => $customer->id]);
+        }
+      }
+      $user->update(['free_trial_started' => new DateTime()]);
+      return $user;
 
   }
   public static function addSearch($request, $resource, $filters)
@@ -675,12 +712,16 @@ final class MainHelper {
   public static function getRegions() {
     $nodes = \Config::get("mothernodes");
     $results = [];
-    foreach ($nodes['regions'] as $code => $item) {
+    $routers = SIPRouter::all();
+    foreach ($routers as $item) {
       $results[] = [
-        'name' => $item['name'],
-        'internal_code' => $item['internal_code'],
-        'aws_code' => $code,
-        'proxy' => $item['proxy']
+        'name' => $item->name,
+        'internal_code' => $item->region,
+        'aws_code' => $item->name,
+	'proxy' => [
+		'publicIp' => $item->public_ip,
+		'privateIp' => $item->private_ip,
+	]
       ];
     }
     return $results;

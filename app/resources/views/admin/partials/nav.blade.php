@@ -98,7 +98,7 @@
                     <ul class="nav collapse">
                         <li>
                             <a href="{{url('admin/settings')}}">
-                                <i class="glyphicon glyphicon-list"></i>  API details
+                                <i class="glyphicon glyphicon-list"></i>  API credentials
                             </a>
                         </li>
                         <li>
@@ -111,6 +111,11 @@
                 <li>
                     <a href="{{url('admin/rate')}}">
                         <i class="glyphicon glyphicon-user"></i> Call Rates
+                    </a>
+                </li>
+                <li>
+                    <a href="{{url('admin/dns')}}">
+                        <i class="glyphicon glyphicon-user"></i> DNS Records
                     </a>
                 </li>
                 <li>
