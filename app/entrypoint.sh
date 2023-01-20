@@ -1,7 +1,7 @@
 #! /bin/bash
 ## generate keys
 echo "Generating app keys..."
-php artisan key:generate
+KEY=$(php artisan key:generate --show) && echo "APP_KEY=${KEY}" >>  .env 
 
 echo "Refreshing all caches..."
 ./clear_caches.sh
