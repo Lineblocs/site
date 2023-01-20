@@ -32,9 +32,6 @@
 
 namespace Google\ApiCore;
 
-/**
- * @internal
- */
 trait PollingTrait
 {
     /**
@@ -88,9 +85,9 @@ trait PollingTrait
     /**
      * Protected to allow overriding for tests
      *
-     * @param int $millis
+     * @param float $millis
      */
-    protected function sleepMillis(int $millis)
+    protected function sleepMillis($millis)
     {
         usleep($millis * 1000);
     }

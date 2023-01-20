@@ -96,7 +96,6 @@ class DescriptorPool
             $descriptor->getClass();
         $this->class_to_desc[$descriptor->getClass()] = $descriptor;
         $this->class_to_desc[$descriptor->getLegacyClass()] = $descriptor;
-        $this->class_to_desc[$descriptor->getPreviouslyUnreservedClass()] = $descriptor;
         foreach ($descriptor->getNestedType() as $nested_type) {
             $this->addDescriptor($nested_type);
         }
@@ -153,22 +152,16 @@ class DescriptorPool
             switch ($field->getType()) {
                 case GPBType::MESSAGE:
                     $proto = $field->getMessageType();
-                    if ($proto[0] == '.') {
-                      $proto = substr($proto, 1);
-                    }
                     $subdesc = $this->getDescriptorByProtoName($proto);
                     if (is_null($subdesc)) {
                         trigger_error(
                             'proto not added: ' . $proto
-                            . " for " . $desc->getFullName(), E_USER_ERROR);
+                            . " for " . $desc->getFullName(), E_ERROR);
                     }
                     $field->setMessageType($subdesc);
                     break;
                 case GPBType::ENUM:
                     $proto = $field->getEnumType();
-                    if ($proto[0] == '.') {
-                      $proto = substr($proto, 1);
-                    }
                     $field->setEnumType(
                         $this->getEnumDescriptorByProtoName($proto));
                     break;

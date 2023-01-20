@@ -14,11 +14,10 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '(?:40|72)\\d{4}|8\\d{5}(?:\\d{3})?',
+    'NationalNumberPattern' => '(?:[45]0|68|72|8\\d)\\d{4}',
     'PossibleLength' => 
     array (
       0 => 6,
-      1 => 9,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -26,11 +25,10 @@ return array (
   ),
   'fixedLine' => 
   array (
-    'NationalNumberPattern' => '72\\d{4}',
-    'ExampleNumber' => '721234',
+    'NationalNumberPattern' => '(?:50|68|72)\\d{4}',
+    'ExampleNumber' => '501234',
     'PossibleLength' => 
     array (
-      0 => 6,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -38,11 +36,10 @@ return array (
   ),
   'mobile' => 
   array (
-    'NationalNumberPattern' => '(?:72|8[23])\\d{4}',
-    'ExampleNumber' => '821234',
+    'NationalNumberPattern' => '(?:50|68|72|8[23])\\d{4}',
+    'ExampleNumber' => '501234',
     'PossibleLength' => 
     array (
-      0 => 6,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -50,11 +47,9 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '80[0-5]\\d{6}',
-    'ExampleNumber' => '800012345',
     'PossibleLength' => 
     array (
-      0 => 9,
+      0 => -1,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -126,7 +121,6 @@ return array (
     'ExampleNumber' => '401234',
     'PossibleLength' => 
     array (
-      0 => 6,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -154,19 +148,7 @@ return array (
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
-        0 => '[478]',
-      ),
-      'nationalPrefixFormattingRule' => '',
-      'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
-    ),
-    1 => 
-    array (
-      'pattern' => '(\\d{3})(\\d{2})(\\d{2})(\\d{2})',
-      'format' => '$1 $2 $3 $4',
-      'leadingDigitsPatterns' => 
-      array (
-        0 => '8',
+        0 => '[4-8]',
       ),
       'nationalPrefixFormattingRule' => '',
       'domesticCarrierCodeFormattingRule' => '',
@@ -177,5 +159,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => false,
 );

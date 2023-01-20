@@ -20,7 +20,12 @@ use Pagerfanta\Pagerfanta;
  */
 class PagerfantaPaginatorAdapter implements PaginatorInterface
 {
-    protected Pagerfanta $paginator;
+    /**
+     * The paginator instance.
+     *
+     * @var \Pagerfanta\Pagerfanta
+     */
+    protected $paginator;
 
     /**
      * The route generator.
@@ -29,66 +34,98 @@ class PagerfantaPaginatorAdapter implements PaginatorInterface
      */
     protected $routeGenerator;
 
-    public function __construct(Pagerfanta $paginator, callable $routeGenerator)
+    /**
+     * Create a new pagerfanta pagination adapter.
+     *
+     * @param \Pagerfanta\Pagerfanta $paginator
+     * @param callable               $routeGenerator
+     *
+     * @return void
+     */
+    public function __construct(Pagerfanta $paginator, $routeGenerator)
     {
         $this->paginator = $paginator;
         $this->routeGenerator = $routeGenerator;
     }
 
     /**
-     * {@inheritDoc}
+     * Get the current page.
+     *
+     * @return int
      */
-    public function getCurrentPage(): int
+    public function getCurrentPage()
     {
         return $this->paginator->getCurrentPage();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the last page.
+     *
+     * @return int
      */
-    public function getLastPage(): int
+    public function getLastPage()
     {
         return $this->paginator->getNbPages();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the total.
+     *
+     * @return int
      */
-    public function getTotal(): int
+    public function getTotal()
     {
         return count($this->paginator);
     }
 
     /**
-     * {@inheritDoc}
+     * Get the count.
+     *
+     * @return int
      */
-    public function getCount(): int
+    public function getCount()
     {
         return count($this->paginator->getCurrentPageResults());
     }
 
     /**
-     * {@inheritDoc}
+     * Get the number per page.
+     *
+     * @return int
      */
-    public function getPerPage(): int
+    public function getPerPage()
     {
         return $this->paginator->getMaxPerPage();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the url for the given page.
+     *
+     * @param int $page
+     *
+     * @return string
      */
-    public function getUrl(int $page): string
+    public function getUrl($page)
     {
         return call_user_func($this->routeGenerator, $page);
     }
 
-    public function getPaginator(): Pagerfanta
+    /**
+     * Get the paginator instance.
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getPaginator()
     {
         return $this->paginator;
     }
 
-    public function getRouteGenerator(): callable
+    /**
+     * Get the the route generator.
+     *
+     * @return callable
+     */
+    public function getRouteGenerator()
     {
         return $this->routeGenerator;
     }

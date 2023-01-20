@@ -36,30 +36,27 @@ use Google\ApiCore\ValidationException;
 
 /**
  * Collection of methods for parsing Segments.
- *
- * @internal
  */
 class Parser
 {
     /**
      * Parses a path into an array of segments.
      *
-     * @param string|null $path
+     * @param string $path
      * @return array
      * @throws ValidationException
      */
-    public static function parseSegments(string $path = null)
+    public static function parseSegments($path)
     {
         if (empty($path)) {
             throw new ValidationException("Cannot parse empty path");
         }
         $segments = [];
         $index = 0;
-        $nextLiteral = '';
-        $segments[] = self::parseSegmentFromPath($path, $nextLiteral, $index);
+        $segments[] = self::parseSegmentFromPath($path, $index);
         while ($index < strlen($path)) {
-            self::parseLiteralFromPath($nextLiteral, $path, $index);
-            $segments[] = self::parseSegmentFromPath($path, $nextLiteral, $index);
+            self::parseLiteralFromPath('/', $path, $index);
+            $segments[] = self::parseSegmentFromPath($path, $index);
         }
         return $segments;
     }
@@ -69,12 +66,11 @@ class Parser
      * the index.
      *
      * @param string $path
-     * @param string $nextLiteral
      * @param int $index
      * @return Segment
      * @throws ValidationException
      */
-    private static function parseSegmentFromPath(string $path, string &$nextLiteral, int &$index)
+    private static function parseSegmentFromPath($path, &$index)
     {
         if ($index >= strlen($path)) {
             // A trailing '/' has caused the index to exceed the bounds
@@ -95,32 +91,13 @@ class Parser
             $segmentStringLengthWithoutBraces = $closingBraceIndex - $index - 1;
             $segmentStringWithoutBraces = substr($path, $index + 1, $segmentStringLengthWithoutBraces);
             $index = $closingBraceIndex + 1;
-
-            $nextLiteral = '/';
-            $remainingPath = substr($path, $index);
-            if (!empty($remainingPath)) {
-                // Find the firstnon-slash separator seen, if any.
-                $nextSlashIndex = strpos($remainingPath, '/', 0);
-                $nonSlashSeparators = ['-', '_', '~', '.'];
-                foreach ($nonSlashSeparators as $nonSlashSeparator) {
-                    $nonSlashSeparatorIndex = strpos($remainingPath, $nonSlashSeparator, 0);
-                    $nextOpenBraceIndex = strpos($remainingPath, '{', 0);
-                    if ($nonSlashSeparatorIndex !== false && $nonSlashSeparatorIndex === $nextOpenBraceIndex - 1) {
-                        $index += $nonSlashSeparatorIndex;
-                        $nextLiteral = $nonSlashSeparator;
-                        break;
-                    }
-                }
-            }
-
-            return self::parseVariableSegment($segmentStringWithoutBraces, $nextLiteral);
+            return self::parseVariableSegment($segmentStringWithoutBraces);
         } else {
             $nextSlash = strpos($path, '/', $index);
             if ($nextSlash === false) {
                 $nextSlash = strlen($path);
             }
             $segmentString = substr($path, $index, $nextSlash - $index);
-            $nextLiteral = '/';
             $index = $nextSlash;
             return self::parse($segmentString, $path, $index);
         }
@@ -133,7 +110,7 @@ class Parser
      * @return Segment
      * @throws ValidationException
      */
-    private static function parse(string $segmentString, string $path, int $index)
+    private static function parse($segmentString, $path, $index)
     {
         if ($segmentString === '*') {
             return new Segment(Segment::WILDCARD_SEGMENT);
@@ -154,11 +131,10 @@ class Parser
 
     /**
      * @param string $segmentStringWithoutBraces
-     * @param string $separatorLiteral
      * @return Segment
      * @throws ValidationException
      */
-    private static function parseVariableSegment(string $segmentStringWithoutBraces, string $separatorLiteral)
+    private static function parseVariableSegment($segmentStringWithoutBraces)
     {
         // Validate there are no nested braces
         $nestedOpenBracket = strpos($segmentStringWithoutBraces, '{');
@@ -184,7 +160,7 @@ class Parser
                 "Unexpected characters in variable name $variableKey"
             );
         }
-        return new Segment(Segment::VARIABLE_SEGMENT, null, $variableKey, $nestedResource, $separatorLiteral);
+        return new Segment(Segment::VARIABLE_SEGMENT, null, $variableKey, $nestedResource);
     }
 
     /**
@@ -194,7 +170,7 @@ class Parser
      * @return string
      * @throws ValidationException
      */
-    private static function parseLiteralFromPath(string $literal, string $path, int &$index)
+    private static function parseLiteralFromPath($literal, $path, &$index)
     {
         $literalLength = strlen($literal);
         if (strlen($path) < ($index + $literalLength)) {
@@ -208,7 +184,7 @@ class Parser
         return $consumedLiteral;
     }
 
-    private static function parseError(string $path, int $index, string $reason)
+    private static function parseError($path, $index, $reason)
     {
         return new ValidationException("Error parsing '$path' at index $index: $reason");
     }
@@ -220,7 +196,7 @@ class Parser
      * @param string $literal
      * @return bool
      */
-    private static function isValidLiteral(string $literal)
+    private static function isValidLiteral($literal)
     {
         return preg_match("/^[0-9a-zA-Z\\.\\-~_]+$/", $literal) === 1;
     }

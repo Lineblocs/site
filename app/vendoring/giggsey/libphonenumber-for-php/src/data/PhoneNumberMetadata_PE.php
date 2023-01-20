@@ -152,8 +152,7 @@ return array (
   ),
   'id' => 'PE',
   'countryCode' => 51,
-  'internationalPrefix' => '00|19(?:1[124]|77|90)00',
-  'preferredInternationalPrefix' => '00',
+  'internationalPrefix' => '19(?:1[124]|77|90)00',
   'nationalPrefix' => '0',
   'preferredExtnPrefix' => ' Anexo ',
   'nationalPrefixForParsing' => '0',
@@ -213,5 +212,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => true,
 );

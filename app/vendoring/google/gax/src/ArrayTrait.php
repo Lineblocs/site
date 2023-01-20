@@ -34,8 +34,6 @@ namespace Google\ApiCore;
 
 /**
  * Provides basic array helper methods.
- *
- * @internal
  */
 trait ArrayTrait
 {
@@ -48,7 +46,7 @@ trait ArrayTrait
      * @return mixed|null
      * @throws \InvalidArgumentException
      */
-    private function pluck(string $key, array &$arr, bool $isRequired = true)
+    private function pluck($key, array &$arr, $isRequired = true)
     {
         if (!array_key_exists($key, $arr)) {
             if ($isRequired) {
@@ -72,7 +70,7 @@ trait ArrayTrait
      * @param array $arr
      * @return array
      */
-    private function pluckArray(array $keys, array &$arr)
+    private function pluckArray(array $keys, &$arr)
     {
         $values = [];
 
@@ -120,7 +118,7 @@ trait ArrayTrait
      * @param array $arr
      * @return array
      */
-    private function subsetArray(array $keys, array $arr)
+    private function subsetArray(array $keys, $arr)
     {
         return array_intersect_key(
             $arr,

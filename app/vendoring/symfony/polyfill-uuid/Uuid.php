@@ -18,31 +18,31 @@ namespace Symfony\Polyfill\Uuid;
  */
 final class Uuid
 {
-    public const UUID_VARIANT_NCS = 0;
-    public const UUID_VARIANT_DCE = 1;
-    public const UUID_VARIANT_MICROSOFT = 2;
-    public const UUID_VARIANT_OTHER = 3;
-    public const UUID_TYPE_DEFAULT = 0;
-    public const UUID_TYPE_TIME = 1;
-    public const UUID_TYPE_MD5 = 3;
-    public const UUID_TYPE_DCE = 4; // Deprecated alias
-    public const UUID_TYPE_NAME = 1; // Deprecated alias
-    public const UUID_TYPE_RANDOM = 4;
-    public const UUID_TYPE_SHA1 = 5;
-    public const UUID_TYPE_NULL = -1;
-    public const UUID_TYPE_INVALID = -42;
+    const UUID_VARIANT_NCS = 0;
+    const UUID_VARIANT_DCE = 1;
+    const UUID_VARIANT_MICROSOFT = 2;
+    const UUID_VARIANT_OTHER = 3;
+    const UUID_TYPE_DEFAULT = 0;
+    const UUID_TYPE_TIME = 1;
+    const UUID_TYPE_MD5 = 3;
+    const UUID_TYPE_DCE = 4; // Deprecated alias
+    const UUID_TYPE_NAME = 1; // Deprecated alias
+    const UUID_TYPE_RANDOM = 4;
+    const UUID_TYPE_SHA1 = 5;
+    const UUID_TYPE_NULL = -1;
+    const UUID_TYPE_INVALID = -42;
 
     // https://tools.ietf.org/html/rfc4122#section-4.1.4
     // 0x01b21dd213814000 is the number of 100-ns intervals between the
     // UUID epoch 1582-10-15 00:00:00 and the Unix epoch 1970-01-01 00:00:00.
-    public const TIME_OFFSET_INT = 0x01B21DD213814000;
-    public const TIME_OFFSET_BIN = "\x01\xb2\x1d\xd2\x13\x81\x40\x00";
-    public const TIME_OFFSET_COM = "\xfe\x4d\xe2\x2d\xec\x7e\xc0\x00";
+    const TIME_OFFSET_INT = 0x01b21dd213814000;
+    const TIME_OFFSET_BIN = "\x01\xb2\x1d\xd2\x13\x81\x40\x00";
+    const TIME_OFFSET_COM = "\xfe\x4d\xe2\x2d\xec\x7e\xc0\x00";
 
-    public static function uuid_create($uuid_type = \UUID_TYPE_DEFAULT)
+    public static function uuid_create($uuid_type = UUID_TYPE_DEFAULT)
     {
-        if (!is_numeric($uuid_type) && null !== $uuid_type) {
-            trigger_error(sprintf('uuid_create() expects parameter 1 to be int, %s given', \gettype($uuid_type)), \E_USER_WARNING);
+        if (!\is_numeric($uuid_type) && null !== $uuid_type) {
+            trigger_error(sprintf('uuid_create() expects parameter 1 to be int, %s given', \gettype($uuid_type)), E_USER_WARNING);
 
             return null;
         }
@@ -56,7 +56,7 @@ final class Uuid
             case self::UUID_TYPE_DEFAULT:
                 return self::uuid_generate_random();
             default:
-                trigger_error(sprintf("Unknown/invalid UUID type '%d' requested, using default type instead", $uuid_type), \E_USER_WARNING);
+                trigger_error(sprintf("Unknown/invalid UUID type '%d' requested, using default type instead", $uuid_type), E_USER_WARNING);
 
                 return self::uuid_generate_random();
         }
@@ -65,23 +65,19 @@ final class Uuid
     public static function uuid_generate_md5($uuid_ns, $name)
     {
         if (!\is_string($uuid_ns = self::toString($uuid_ns))) {
-            trigger_error(sprintf('uuid_generate_md5() expects parameter 1 to be string, %s given', \gettype($uuid_ns)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_generate_md5() expects parameter 1 to be string, %s given', \gettype($uuid_ns)), E_USER_WARNING);
 
             return null;
         }
 
         if (!\is_string($name = self::toString($name))) {
-            trigger_error(sprintf('uuid_generate_md5() expects parameter 2 to be string, %s given', \gettype($name)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_generate_md5() expects parameter 2 to be string, %s given', \gettype($name)), E_USER_WARNING);
 
             return null;
         }
 
         if (!self::isValid($uuid_ns)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_generate_md5(): Argument #1 ($uuid_ns) UUID expected');
+            return false;
         }
 
         $hash = md5(hex2bin(str_replace('-', '', $uuid_ns)).$name);
@@ -97,7 +93,7 @@ final class Uuid
             // 16 bits:
             // * 8 bits for "clk_seq_hi_res",
             // * 8 bits for "clk_seq_low",
-            hexdec(substr($hash, 16, 4)) & 0x3FFF | 0x8000,
+            hexdec(substr($hash, 16, 4)) & 0x3fff | 0x8000,
             // 48 bits for "node"
             substr($hash, 20, 12)
         );
@@ -106,23 +102,19 @@ final class Uuid
     public static function uuid_generate_sha1($uuid_ns, $name)
     {
         if (!\is_string($uuid_ns = self::toString($uuid_ns))) {
-            trigger_error(sprintf('uuid_generate_sha1() expects parameter 1 to be string, %s given', \gettype($uuid_ns)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_generate_sha1() expects parameter 1 to be string, %s given', \gettype($uuid_ns)), E_USER_WARNING);
 
             return null;
         }
 
         if (!\is_string($name = self::toString($name))) {
-            trigger_error(sprintf('uuid_generate_sha1() expects parameter 2 to be string, %s given', \gettype($name)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_generate_sha1() expects parameter 2 to be string, %s given', \gettype($name)), E_USER_WARNING);
 
             return null;
         }
 
         if (!self::isValid($uuid_ns)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_generate_sha1(): Argument #1 ($uuid_ns) UUID expected');
+            return false;
         }
 
         $hash = sha1(hex2bin(str_replace('-', '', $uuid_ns)).$name);
@@ -140,7 +132,7 @@ final class Uuid
             // * 8 bits for "clk_seq_low",
             // WARNING: On old libuuid version, there is a bug. 0x0fff is used instead of 0x3fff
             // See https://github.com/karelzak/util-linux/commit/d6ddf07d31dfdc894eb8e7e6842aa856342c526e
-            hexdec(substr($hash, 16, 4)) & 0x3FFF | 0x8000,
+            hexdec(substr($hash, 16, 4)) & 0x3fff | 0x8000,
             // 48 bits for "node"
             substr($hash, 20, 12)
         );
@@ -149,7 +141,7 @@ final class Uuid
     public static function uuid_is_valid($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_is_valid() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_is_valid() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
         }
@@ -160,31 +152,23 @@ final class Uuid
     public static function uuid_compare($uuid1, $uuid2)
     {
         if (!\is_string($uuid1 = self::toString($uuid1))) {
-            trigger_error(sprintf('uuid_compare() expects parameter 1 to be string, %s given', \gettype($uuid1)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_compare() expects parameter 1 to be string, %s given', \gettype($uuid1)), E_USER_WARNING);
 
             return null;
         }
 
         if (!\is_string($uuid2 = self::toString($uuid2))) {
-            trigger_error(sprintf('uuid_compare() expects parameter 2 to be string, %s given', \gettype($uuid2)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_compare() expects parameter 2 to be string, %s given', \gettype($uuid2)), E_USER_WARNING);
 
             return null;
         }
 
         if (!self::isValid($uuid1)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_compare(): Argument #1 ($uuid1) UUID expected');
+            return false;
         }
 
         if (!self::isValid($uuid2)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_compare(): Argument #2 ($uuid2) UUID expected');
+            return false;
         }
 
         return strcasecmp($uuid1, $uuid2);
@@ -193,12 +177,9 @@ final class Uuid
     public static function uuid_is_null($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_is_null() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_is_null() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
-        }
-        if (80000 <= \PHP_VERSION_ID && !self::isValid($uuid)) {
-            throw new \ValueError('uuid_is_null(): Argument #1 ($uuid) UUID expected');
         }
 
         return '00000000-0000-0000-0000-000000000000' === $uuid;
@@ -207,7 +188,7 @@ final class Uuid
     public static function uuid_type($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_type() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_type() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
         }
@@ -217,11 +198,7 @@ final class Uuid
         }
 
         if (null === $parsed = self::parse($uuid)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_type(): Argument #1 ($uuid) UUID expected');
+            return false;
         }
 
         return $parsed['version'];
@@ -230,7 +207,7 @@ final class Uuid
     public static function uuid_variant($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_variant() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_variant() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
         }
@@ -240,11 +217,7 @@ final class Uuid
         }
 
         if (null === $parsed = self::parse($uuid)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_variant(): Argument #1 ($uuid) UUID expected');
+            return false;
         }
 
         if (($parsed['clock_seq'] & 0x8000) === 0) {
@@ -263,26 +236,25 @@ final class Uuid
     public static function uuid_time($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_time() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_time() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
         }
 
-        $parsed = self::parse($uuid);
-
-        if (self::UUID_TYPE_TIME !== ($parsed['version'] ?? null)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_time(): Argument #1 ($uuid) UUID DCE TIME expected');
+        if (null === $parsed = self::parse($uuid)) {
+            return false;
         }
+
+        if (self::UUID_TYPE_TIME !== $parsed['version']) {
+            return false;
+        }
+
 
         if (\PHP_INT_SIZE >= 8) {
             return intdiv(hexdec($parsed['time']) - self::TIME_OFFSET_INT, 10000000);
         }
 
-        $time = str_pad(hex2bin($parsed['time']), 8, "\0", \STR_PAD_LEFT);
+        $time = str_pad(hex2bin($parsed['time']), 8, "\0", STR_PAD_LEFT);
         $time = self::binaryAdd($time, self::TIME_OFFSET_COM);
         $time[0] = $time[0] & "\x7F";
 
@@ -292,19 +264,17 @@ final class Uuid
     public static function uuid_mac($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_mac() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_mac() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
         }
 
-        $parsed = self::parse($uuid);
+        if (null === $parsed = self::parse($uuid)) {
+            return false;
+        }
 
-        if (self::UUID_TYPE_TIME !== ($parsed['version'] ?? null)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_mac(): Argument #1 ($uuid) UUID DCE TIME expected');
+        if (self::UUID_TYPE_TIME !== $parsed['version']) {
+            return false;
         }
 
         return strtr($parsed['node'], 'ABCDEF', 'abcdef');
@@ -313,17 +283,13 @@ final class Uuid
     public static function uuid_parse($uuid)
     {
         if (!\is_string($uuid = self::toString($uuid))) {
-            trigger_error(sprintf('uuid_parse() expects parameter 1 to be string, %s given', \gettype($uuid)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_parse() expects parameter 1 to be string, %s given', \gettype($uuid)), E_USER_WARNING);
 
             return null;
         }
 
         if (!self::isValid($uuid)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_parse(): Argument #1 ($uuid) UUID expected');
+            return false;
         }
 
         return hex2bin(str_replace('-', '', $uuid));
@@ -332,17 +298,13 @@ final class Uuid
     public static function uuid_unparse($bytes)
     {
         if (!\is_string($bytes = self::toString($bytes))) {
-            trigger_error(sprintf('uuid_unparse() expects parameter 1 to be string, %s given', \gettype($bytes)), \E_USER_WARNING);
+            trigger_error(sprintf('uuid_unparse() expects parameter 1 to be string, %s given', \gettype($bytes)), E_USER_WARNING);
 
             return null;
         }
 
         if (16 !== \strlen($bytes)) {
-            if (80000 > \PHP_VERSION_ID) {
-                return false;
-            }
-
-            throw new \ValueError('uuid_unparse(): Argument #1 ($uuid) UUID expected');
+            return false;
         }
 
         $uuid = bin2hex($bytes);
@@ -369,7 +331,7 @@ final class Uuid
             // * 8 bits for "clk_seq_hi_res",
             // * 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            hexdec(substr($uuid, 16, 4)) & 0x3FFF | 0x8000,
+            hexdec(substr($uuid, 16, 4)) & 0x3fff | 0x8000,
             // 48 bits for "node"
             substr($uuid, 20, 12)
         );
@@ -384,9 +346,9 @@ final class Uuid
         $time = substr($time, 11).substr($time, 2, 7);
 
         if (\PHP_INT_SIZE >= 8) {
-            $time = str_pad(dechex($time + self::TIME_OFFSET_INT), 16, '0', \STR_PAD_LEFT);
+            $time = str_pad(dechex($time + self::TIME_OFFSET_INT), 16, '0', STR_PAD_LEFT);
         } else {
-            $time = str_pad(self::toBinary($time), 8, "\0", \STR_PAD_LEFT);
+            $time = str_pad(self::toBinary($time), 8, "\0", STR_PAD_LEFT);
             $time = self::binaryAdd($time, self::TIME_OFFSET_BIN);
             $time = bin2hex($time);
         }
@@ -394,7 +356,7 @@ final class Uuid
         // https://tools.ietf.org/html/rfc4122#section-4.1.5
         // We are using a random data for the sake of simplicity: since we are
         // not able to get a super precise timeOfDay as a unique sequence
-        $clockSeq = random_int(0, 0x3FFF);
+        $clockSeq = random_int(0, 0x3fff);
 
         static $node;
         if (null === $node) {
@@ -402,15 +364,15 @@ final class Uuid
                 $node = apcu_fetch('__symfony_uuid_node');
                 if (false === $node) {
                     $node = sprintf('%06x%06x',
-                        random_int(0, 0xFFFFFF) | 0x010000,
-                        random_int(0, 0xFFFFFF)
+                        random_int(0, 0xffffff) | 0x010000,
+                        random_int(0, 0xffffff)
                     );
                     apcu_store('__symfony_uuid_node', $node);
                 }
             } else {
                 $node = sprintf('%06x%06x',
-                    random_int(0, 0xFFFFFF) | 0x010000,
-                    random_int(0, 0xFFFFFF)
+                    random_int(0, 0xffffff) | 0x010000,
+                    random_int(0, 0xffffff)
                 );
             }
         }
@@ -448,17 +410,17 @@ final class Uuid
             return null;
         }
 
-        return [
+        return array(
             'time' => '0'.$matches['time_hi'].$matches['time_mid'].$matches['time_low'],
             'version' => hexdec($matches['version']),
             'clock_seq' => hexdec($matches['clock_seq']),
             'node' => $matches['node'],
-        ];
+        );
     }
 
     private static function toString($v)
     {
-        if (\is_string($v) || null === $v || (\is_object($v) ? method_exists($v, '__toString') : \is_scalar($v))) {
+        if (\is_string($v) || null === $v || (\is_object($v) ? method_exists($v, '__toString') : is_scalar($v))) {
             return (string) $v;
         }
 
@@ -471,7 +433,7 @@ final class Uuid
         $count = \strlen($digits);
 
         while ($count) {
-            $quotient = [];
+            $quotient = array();
             $remainder = 0;
 
             for ($i = 0; $i !== $count; ++$i) {
@@ -497,7 +459,7 @@ final class Uuid
         $bytes = array_values(unpack('C*', $bytes));
 
         while ($count = \count($bytes)) {
-            $quotient = [];
+            $quotient = array();
             $remainder = 0;
 
             for ($i = 0; $i !== $count; ++$i) {

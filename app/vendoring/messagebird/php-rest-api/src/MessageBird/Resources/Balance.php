@@ -2,8 +2,8 @@
 
 namespace MessageBird\Resources;
 
-use MessageBird\Common;
 use MessageBird\Objects;
+use MessageBird\Common;
 
 /**
  * Class Balance
@@ -12,11 +12,15 @@ use MessageBird\Objects;
  */
 class Balance extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Balance();
+        $this->setObject(new Objects\Balance);
         $this->setResourceName('balance');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

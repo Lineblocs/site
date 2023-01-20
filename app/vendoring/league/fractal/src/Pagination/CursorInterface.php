@@ -23,7 +23,6 @@ interface CursorInterface
      *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getCurrent();
 
     /**
@@ -31,7 +30,6 @@ interface CursorInterface
      *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getPrev();
 
     /**
@@ -39,11 +37,12 @@ interface CursorInterface
      *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getNext();
 
     /**
      * Returns the total items in the current cursor.
+     *
+     * @return int
      */
-    public function getCount(): ?int;
+    public function getCount();
 }

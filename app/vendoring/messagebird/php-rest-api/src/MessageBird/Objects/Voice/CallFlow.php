@@ -6,13 +6,21 @@ use MessageBird\Objects\Base;
 
 class CallFlow extends Base
 {
+
+    /**
+     * The unique ID of the call
+     *
+     * @var string
+     */
+    protected $id;
+
     /**
      * The title of the call flow
      *
      * @var string
-     * @deprecated
      */
     public $title;
+
     /**
      * An array of step objects.
      *
@@ -22,12 +30,7 @@ class CallFlow extends Base
      * @var Step[]
      */
     public $steps;
-    /**
-     * The unique ID of the call
-     *
-     * @var string
-     */
-    protected $id;
+
     /**
      * The date and time the call flow was created
      *
@@ -42,40 +45,46 @@ class CallFlow extends Base
      */
     protected $updatedAt;
 
-    function __construct() {
-        if ($this->title == null) {
-            unset($this->title);
-        }
-    }
-
     /**
      * @inheritdoc
      */
-    public function loadFromArray($object): self
+    public function loadFromArray($object)
     {
         parent::loadFromArray($object);
 
-        foreach ($this->steps as &$item) {
-            $step = new Step();
-            $step->loadFromArray($item);
+        if (!empty($this->steps)) {
+            foreach ($this->steps as &$item) {
+                $step = new Step();
+                $step->loadFromArray($item);
+                $step->options = (array) $step->options;
 
-            $item = $step;
+                $item = $step;
+            }
         }
 
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): string
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): string
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }

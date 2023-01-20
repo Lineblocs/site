@@ -32,7 +32,6 @@
 namespace Google\ApiCore;
 
 use Generator;
-use Google\Protobuf\Internal\MapField;
 use Google\Protobuf\Internal\Message;
 use IteratorAggregate;
 
@@ -49,7 +48,7 @@ class Page implements IteratorAggregate
     private $options;
     private $pageStreamingDescriptor;
 
-    private $pageToken; // @phpstan-ignore-line
+    private $pageToken;
 
     private $response;
 
@@ -110,7 +109,7 @@ class Page implements IteratorAggregate
      * @throws ApiException if the call to fetch the next page fails.
      * @return Page
      */
-    public function getNextPage(int $pageSize = null)
+    public function getNextPage($pageSize = null)
     {
         if (!$this->hasNextPage()) {
             throw new ValidationException(
@@ -170,17 +169,11 @@ class Page implements IteratorAggregate
      *
      * @return Generator
      */
-    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $resourcesGetMethod = $this->pageStreamingDescriptor->getResourcesGetMethod();
-        $items = $this->getResponseObject()->$resourcesGetMethod();
-        foreach ($items as $key => $element) {
-            if ($items instanceof MapField) {
-                yield $key => $element;
-            } else {
-                yield $element;
-            }
+        foreach ($this->getResponseObject()->$resourcesGetMethod() as $element) {
+            yield $element;
         }
     }
 
@@ -189,7 +182,7 @@ class Page implements IteratorAggregate
      * Additional Page objects are retrieved lazily via API calls until
      * all elements have been retrieved.
      *
-     * @return Generator|array<Page>
+     * @return Generator|Page[]
      * @throws ValidationException
      * @throws ApiException
      */
@@ -235,7 +228,7 @@ class Page implements IteratorAggregate
      * if the collectionSize parameter is less than the page size that
      * has been set.
      *
-     * @param int $collectionSize
+     * @param $collectionSize int
      * @throws ValidationException if a FixedSizeCollection of the specified size cannot be constructed
      * @return FixedSizeCollection
      */

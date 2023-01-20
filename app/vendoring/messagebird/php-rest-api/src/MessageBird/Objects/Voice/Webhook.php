@@ -7,11 +7,19 @@ use MessageBird\Objects\Base;
 class Webhook extends Base
 {
     /**
+     * The unique ID of the webhook
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
      * The callback URL that will be requested when the MessageBird platform sends a webhook.
      *
      * @var string
      */
     public $url;
+
     /**
      * The secret used for signing webhook requests.
      *
@@ -19,12 +27,7 @@ class Webhook extends Base
      * @see https://developers.messagebird.com/docs/voice-calling#handle-callbacks
      */
     public $token;
-    /**
-     * The unique ID of the webhook
-     *
-     * @var string
-     */
-    protected $id;
+
     /**
      * The date and time the webhook was created
      *
@@ -39,17 +42,26 @@ class Webhook extends Base
      */
     protected $updatedAt;
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): string
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): string
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }

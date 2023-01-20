@@ -9,4 +9,5 @@ namespace MessageBird\Exceptions;
  */
 class HttpException extends MessageBirdException
 {
+
 }

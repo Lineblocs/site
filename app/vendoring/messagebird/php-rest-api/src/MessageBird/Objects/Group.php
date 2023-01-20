@@ -1,8 +1,7 @@
 <?php
 
-namespace MessageBird\Objects;
 
-use stdClass;
+namespace MessageBird\Objects;
 
 /**
  * Class Group
@@ -11,13 +10,6 @@ use stdClass;
  */
 class Group extends Base
 {
-    /**
-     * The name of the group.
-     *
-     * @var int
-     */
-    public $name;
-
     /**
      * An unique random ID which is created on the MessageBird
      * platform and is returned upon creation of the object.
@@ -34,11 +26,18 @@ class Group extends Base
     protected $href;
 
     /**
+     * The name of the group.
+     *
+     * @var int
+     */
+    public $name;
+
+    /**
      * The hash with the contacts in group.
      *
-     * @var ?stdClass
+     * @var array
      */
-    protected $contacts = null;
+    protected $contacts = array ();
 
     /**
      * The date and time of the creation of the group in RFC3339 format (Y-m-d\TH:i:sP)
@@ -56,55 +55,62 @@ class Group extends Base
 
     /**
      * Get the created id
+     *
+     * @return mixed
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->id;
     }
 
     /**
      * Get the created href
+     *
+     * @return string
      */
-    public function getHref(): string
+    public function getHref()
     {
         return $this->href;
     }
 
     /**
      * Get the $createdDatetime value
+     *
+     * @return string
      */
-    public function getCreatedDatetime(): string
+    public function getCreatedDatetime()
     {
         return $this->createdDatetime;
     }
 
     /**
      * Get the $updatedDatetime value
+     *
+     * @return string
      */
-    public function getUpdatedDatetime(): ?string
+    public function getUpdatedDatetime()
     {
         return $this->createdDatetime;
     }
 
-    public function getContacts(): stdClass
-    {
-        return $this->contacts;
-    }
-
     /**
-     * @deprecated 2.2.0 No longer used by internal code, please switch to {@see self::loadFromStdclass()}
-     * 
-     * @param mixed $object
+     * @param $object
      *
      * @return $this|void
      */
-    public function loadFromArray($object): self
+    public function loadFromArray ($object)
     {
-        return parent::loadFromArray($object);
-    }
+        parent::loadFromArray($object);
 
-    public function loadFromStdclass(stdClass $object): self
-    {
-        return parent::loadFromStdclass($object);
+        if (!empty($object->items)) {
+            foreach($object->items AS &$item) {
+                $Contact = new Contact();
+                $Contact->loadFromArray($item);
+
+                $item = $Contact;
+            }
+        }
+
+        return $object;
     }
 }

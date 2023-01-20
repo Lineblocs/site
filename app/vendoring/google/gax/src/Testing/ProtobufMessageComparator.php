@@ -22,14 +22,11 @@ use SebastianBergmann\Comparator\Comparator;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Exporter\Exporter;
 
-/**
- * @internal
- */
 class ProtobufMessageComparator extends Comparator
 {
     /** @var Exporter */
     protected $exporter;
-
+    
     public function __construct()
     {
         parent::__construct();

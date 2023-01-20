@@ -20,7 +20,10 @@ class HttpException extends RequestException
     protected $response;
 
     /**
-     * @param string $message
+     * @param string            $message
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param \Exception|null   $previous
      */
     public function __construct(
         $message,

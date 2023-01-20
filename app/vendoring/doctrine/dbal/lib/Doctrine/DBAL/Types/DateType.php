@@ -22,9 +22,9 @@ class DateType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $platform->getDateTypeDeclarationSQL($column);
+        return $platform->getDateTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**
@@ -54,11 +54,7 @@ class DateType extends Type
 
         $val = DateTime::createFromFormat('!' . $platform->getDateFormatString(), $value);
         if (! $val) {
-            throw ConversionException::conversionFailedFormat(
-                $value,
-                $this->getName(),
-                $platform->getDateFormatString()
-            );
+            throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateFormatString());
         }
 
         return $val;

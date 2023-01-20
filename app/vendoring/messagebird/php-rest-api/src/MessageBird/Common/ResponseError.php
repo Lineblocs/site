@@ -11,26 +11,28 @@ use MessageBird\Exceptions;
  */
 class ResponseError
 {
-    public const EXCEPTION_MESSAGE = 'Got error response from the server: %s';
+    const EXCEPTION_MESSAGE = 'Got error response from the server: %s';
 
-    public const SUCCESS = 1;
+    const SUCCESS = 1;
 
-    public const REQUEST_NOT_ALLOWED = 2;
+    const REQUEST_NOT_ALLOWED = 2;
 
-    public const MISSING_PARAMS = 9;
-    public const INVALID_PARAMS = 10;
+    const MISSING_PARAMS = 9;
+    const INVALID_PARAMS = 10;
 
-    public const NOT_FOUND = 20;
+    const NOT_FOUND = 20;
 
-    public const NOT_ENOUGH_CREDIT = 25;
+    const NOT_ENOUGH_CREDIT = 25;
 
-    public $errors = [];
+    const CHAT_API_AUTH_ERROR = 1001;
+
+    public $errors = array();
 
     /**
      * Load the error data into an array.
      * Throw an exception when important errors are found.
      *
-     * @param mixed $body
+     * @param $body
      *
      * @throws Exceptions\AuthenticateException
      * @throws Exceptions\BalanceException
@@ -38,7 +40,7 @@ class ResponseError
     public function __construct($body)
     {
         if (!empty($body->errors)) {
-            foreach ($body->errors as $error) {
+            foreach ($body->errors AS $error) {
                 // Voice API returns errors with a "message" field instead of "description".
                 // This ensures all errors have a description set.
                 if (!empty($error->message)) {
@@ -50,6 +52,8 @@ class ResponseError
                     throw new Exceptions\BalanceException($this->getExceptionMessage($error));
                 } elseif ($error->code === self::REQUEST_NOT_ALLOWED) {
                     throw new Exceptions\AuthenticateException($this->getExceptionMessage($error));
+                } elseif ($error->code === self::CHAT_API_AUTH_ERROR) {
+                    throw new Exceptions\AuthenticateException($this->getExceptionMessage($error));
                 }
 
                 $this->errors[] = $error;
@@ -60,7 +64,7 @@ class ResponseError
     /**
      * Get the exception message for the provided error.
      *
-     * @param mixed $error
+     * @param $error
      *
      * @return string
      */
@@ -76,9 +80,9 @@ class ResponseError
      */
     public function getErrorString()
     {
-        $errorDescriptions = [];
+        $errorDescriptions = array();
 
-        foreach ($this->errors as $error) {
+        foreach ($this->errors AS $error) {
             $errorDescriptions[] = $error->description;
         }
 

@@ -2,8 +2,8 @@
 
 namespace MessageBird\Resources;
 
-use MessageBird\Common;
 use MessageBird\Objects;
+use MessageBird\Common;
 
 /**
  * Class Hlr
@@ -12,11 +12,15 @@ use MessageBird\Objects;
  */
 class Hlr extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Hlr();
+        $this->setObject(new Objects\Hlr);
         $this->setResourceName('hlr');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

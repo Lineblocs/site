@@ -2,8 +2,6 @@
 
 namespace MessageBird\Objects;
 
-use stdClass;
-
 /**
  * Class Lookup
  *
@@ -11,19 +9,19 @@ use stdClass;
  */
 class Lookup extends Base
 {
-    public const TYPE_FIXED_LINE = "fixed line";
-    public const TYPE_MOBILE = "mobile";
-    public const TYPE_FIXED_LINE_OR_MOBILE = "fixed line or mobile";
-    public const TYPE_TOLL_FREE = "toll free";
-    public const TYPE_PREMIUM_RATE = "premium rate";
-    public const TYPE_SHARED_COST = "shared cost";
-    public const TYPE_VOIP = "voip";
-    public const TYPE_PERSONAL_NUMBER = "personal number";
-    public const TYPE_PAGER = "pager";
-    public const TYPE_UNIVERSAL_ACCESS_NUMBER = "universal access number";
-    public const TYPE_VOICE_MAIL = "voice mail";
-    public const TYPE_UNKNOWN = "unknown";
-
+    const TYPE_FIXED_LINE = "fixed line";
+    const TYPE_MOBILE = "mobile";
+    const TYPE_FIXED_LINE_OR_MOBILE = "fixed line or mobile";
+    const TYPE_TOLL_FREE = "toll free";
+    const TYPE_PREMIUM_RATE = "premium rate";
+    const TYPE_SHARED_COST = "shared cost";
+    const TYPE_VOIP = "voip";
+    const TYPE_PERSONAL_NUMBER = "personal number";
+    const TYPE_PAGER = "pager";
+    const TYPE_UNIVERSAL_ACCESS_NUMBER = "universal access number";
+    const TYPE_VOICE_MAIL = "voice mail";
+    const TYPE_UNKNOWN = "unknown";
+       
     /**
      * The URL of the created object.
      *
@@ -52,12 +50,12 @@ class Lookup extends Base
     protected $phoneNumber;
 
     /**
-     * The type of number. This can be fixed line, mobile, fixed line or mobile, toll free, premium rate, shared cost, voip, personal number, pager, universal access number, voice mail or unknown*
+     * The type of number. This can be fixed line, mobile, fixed line or mobile, toll free, premium rate, shared cost, voip, personal number, pager, universal access number, voice mail or unknown* 
      * @var string
      */
     protected $type;
 
-    /**
+    /** 
      * An associative array containing references to this phone number in several different formats.
      *
      * @var array
@@ -72,7 +70,7 @@ class Lookup extends Base
     /**
      * The most recent HLR object. If no such HLR objects exists, this array won't be returned.
      *
-     * @var array
+     * @var array 
      *
      * id(string): An unique random ID which is created on the MessageBird platform.
      * network(int): The MCCMNC code of the network provider.
@@ -83,57 +81,84 @@ class Lookup extends Base
      */
     protected $hlr;
 
-    public function getHref(): ?string
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getHref()
     {
         return $this->href;
     }
 
-    public function getCountryCode(): ?string
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getCountryCode()
     {
         return $this->countryCode;
     }
 
-    public function getCountryPrefix(): ?int
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getCountryPrefix()
     {
         return $this->countryPrefix;
     }
 
-    public function getPhoneNumber(): ?int
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getPhoneNumber()
     {
         return $this->phoneNumber;
     }
 
-    public function getType(): ?string
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getType()
     {
         return $this->type;
     }
 
-    public function getFormats(): ?array
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getFormats()
     {
         return $this->formats;
     }
 
-    public function getHLR(): ?array
+    /**
+     * Get the href
+     *
+     * @return mixed
+     */
+    public function getHLR()
     {
         return $this->hlr;
     }
 
     /**
-     * @deprecated 2.2.0 No longer used by internal code, please switch to {@see self::loadFromStdclass()}
-     * 
-     * @param mixed $object
+     * @param $object
      *
      * @return $this
      */
-    public function loadFromArray($object): self
+    public function loadFromArray($object)
     {
         unset($this->hlr);
         return parent::loadFromArray($object);
-    }
-
-    public function loadFromStdclass(stdClass $object): self
-    {
-        unset($this->hlr);
-        return parent::loadFromStdclass($object);
     }
 }

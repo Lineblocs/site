@@ -50,7 +50,7 @@ class RequestParamsHeaderDescriptor
      * @param array $requestParams An associative array which contains request params header data in
      * a form ['field_name.subfield_name' => value].
      */
-    public function __construct(array $requestParams)
+    public function __construct($requestParams)
     {
         $headerKey = self::HEADER_KEY;
 
@@ -59,8 +59,13 @@ class RequestParamsHeaderDescriptor
             if ('' !== $headerValue) {
                 $headerValue .= '&';
             }
+            $headerValue .= $key . '=' . strval($value);
+        }
 
-            $headerValue .= $key . '=' . urlencode(strval($value));
+        // If the value contains non-ASCII characters, suffix the header key with `-bin`.
+        // see https://grpc.github.io/grpc/python/glossary.html#term-metadata
+        if (preg_match('/[^\x00-\x7F]/', $headerValue) !== 0) {
+            $headerKey = $headerKey . '-bin';
         }
 
         $this->header = [$headerKey => [$headerValue]];

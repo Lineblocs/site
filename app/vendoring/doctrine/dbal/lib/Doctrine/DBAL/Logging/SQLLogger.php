@@ -2,8 +2,6 @@
 
 namespace Doctrine\DBAL\Logging;
 
-use Doctrine\DBAL\Types\Type;
-
 /**
  * Interface for SQL loggers.
  */
@@ -12,9 +10,9 @@ interface SQLLogger
     /**
      * Logs a SQL statement somewhere.
      *
-     * @param string                                                                    $sql    SQL statement
-     * @param array<int, mixed>|array<string, mixed>|null                               $params Statement parameters
-     * @param array<int, Type|int|string|null>|array<string, Type|int|string|null>|null $types  Parameter types
+     * @param string                 $sql    The SQL to be executed.
+     * @param mixed[]|null           $params The SQL parameters.
+     * @param array<int|string|null> $types  The SQL parameter types.
      *
      * @return void
      */

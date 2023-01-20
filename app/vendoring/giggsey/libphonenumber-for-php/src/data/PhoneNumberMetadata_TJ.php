@@ -14,7 +14,7 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '(?:00|[1-57-9]\\d)\\d{7}',
+    'NationalNumberPattern' => '(?:00|11|[3-57-9]\\d)\\d{7}',
     'PossibleLength' => 
     array (
       0 => 9,
@@ -44,7 +44,7 @@ return array (
   ),
   'mobile' => 
   array (
-    'NationalNumberPattern' => '41[18]\\d{6}|(?:[034]0|1[017]|2[02]|5[05]|7[0178]|8[078]|9\\d)\\d{7}',
+    'NationalNumberPattern' => '41[18]\\d{6}|(?:[04]0|11|5[05]|7[07]|88|9\\d)\\d{7}',
     'ExampleNumber' => '917123456',
     'PossibleLength' => 
     array (
@@ -55,9 +55,10 @@ return array (
   ),
   'tollFree' => 
   array (
+    'NationalNumberPattern' => '800\\d{6}',
+    'ExampleNumber' => '800123456',
     'PossibleLength' => 
     array (
-      0 => -1,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -147,6 +148,8 @@ return array (
   'countryCode' => 992,
   'internationalPrefix' => '810',
   'preferredInternationalPrefix' => '8~10',
+  'nationalPrefix' => '8',
+  'nationalPrefixForParsing' => '8',
   'sameMobileAndFixedLinePattern' => false,
   'numberFormat' => 
   array (
@@ -161,7 +164,7 @@ return array (
       ),
       'nationalPrefixFormattingRule' => '',
       'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
+      'nationalPrefixOptionalWhenFormatting' => true,
     ),
     1 => 
     array (
@@ -173,7 +176,7 @@ return array (
       ),
       'nationalPrefixFormattingRule' => '',
       'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
+      'nationalPrefixOptionalWhenFormatting' => true,
     ),
     2 => 
     array (
@@ -181,11 +184,11 @@ return array (
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
-        0 => '3[1-5]',
+        0 => '3',
       ),
       'nationalPrefixFormattingRule' => '',
       'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
+      'nationalPrefixOptionalWhenFormatting' => true,
     ),
     3 => 
     array (
@@ -193,16 +196,17 @@ return array (
       'format' => '$1 $2 $3',
       'leadingDigitsPatterns' => 
       array (
-        0 => '[0-57-9]',
+        0 => '[0457-9]|11',
       ),
       'nationalPrefixFormattingRule' => '',
       'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
+      'nationalPrefixOptionalWhenFormatting' => true,
     ),
   ),
   'intlNumberFormat' => 
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => false,
 );

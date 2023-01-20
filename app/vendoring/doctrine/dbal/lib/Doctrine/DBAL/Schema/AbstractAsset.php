@@ -24,14 +24,14 @@ use function substr;
 abstract class AbstractAsset
 {
     /** @var string */
-    protected $_name = '';
+    protected $_name;
 
     /**
      * Namespace of the asset. If none isset the default namespace is assumed.
      *
      * @var string|null
      */
-    protected $_namespace;
+    protected $_namespace = null;
 
     /** @var bool */
     protected $_quoted = false;
@@ -102,7 +102,7 @@ abstract class AbstractAsset
     }
 
     /**
-     * The normalized name is full-qualified and lower-cased. Lower-casing is
+     * The normalized name is full-qualified and lowerspaced. Lowerspacing is
      * actually wrong, but we have to do it to keep our sanity. If you are
      * using database objects that only differentiate in the casing (FOO vs
      * Foo) then you will NOT be able to use Doctrine Schema abstraction.

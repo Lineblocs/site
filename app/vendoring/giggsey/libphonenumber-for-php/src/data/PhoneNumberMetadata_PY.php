@@ -14,15 +14,13 @@
 return array (
   'generalDesc' => 
   array (
-    'NationalNumberPattern' => '59\\d{4,6}|9\\d{5,10}|(?:[2-46-8]\\d|5[0-8])\\d{4,7}',
+    'NationalNumberPattern' => '59\\d{4,6}|(?:[2-46-9]\\d|5[0-8])\\d{4,7}',
     'PossibleLength' => 
     array (
       0 => 6,
       1 => 7,
       2 => 8,
       3 => 9,
-      4 => 10,
-      5 => 11,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -59,13 +57,9 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '9800\\d{5,7}',
-    'ExampleNumber' => '98000123456',
     'PossibleLength' => 
     array (
-      0 => 9,
-      1 => 10,
-      2 => 11,
+      0 => -1,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -129,10 +123,6 @@ return array (
     'ExampleNumber' => '201234567',
     'PossibleLength' => 
     array (
-      0 => 6,
-      1 => 7,
-      2 => 8,
-      3 => 9,
     ),
     'PossibleLengthLocalOnly' => 
     array (
@@ -232,7 +222,7 @@ return array (
       'format' => '$1 $2',
       'leadingDigitsPatterns' => 
       array (
-        0 => '9(?:[5-79]|8[1-6])',
+        0 => '9',
       ),
       'nationalPrefixFormattingRule' => '0$1',
       'domesticCarrierCodeFormattingRule' => '',
@@ -250,22 +240,11 @@ return array (
       'domesticCarrierCodeFormattingRule' => '',
       'nationalPrefixOptionalWhenFormatting' => false,
     ),
-    7 => 
-    array (
-      'pattern' => '(\\d{4})(\\d{3})(\\d{4})',
-      'format' => '$1 $2 $3',
-      'leadingDigitsPatterns' => 
-      array (
-        0 => '9',
-      ),
-      'nationalPrefixFormattingRule' => '',
-      'domesticCarrierCodeFormattingRule' => '',
-      'nationalPrefixOptionalWhenFormatting' => false,
-    ),
   ),
   'intlNumberFormat' => 
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => true,
 );

@@ -4,44 +4,39 @@ namespace MessageBird\Resources\Conversation;
 
 use MessageBird\Common\HttpClient;
 use MessageBird\Exceptions;
-use MessageBird\Objects\Balance;
 use MessageBird\Objects\Conversation\Conversation;
 use MessageBird\Objects\Conversation\Message;
-use MessageBird\Objects\Hlr;
-use MessageBird\Objects\Lookup;
-use MessageBird\Objects\Verify;
-use MessageBird\Objects\VoiceMessage;
 use MessageBird\Resources\Base;
 
 class Conversations extends Base
 {
-    public const RESOURCE_NAME = 'conversations';
+    const RESOURCE_NAME = 'conversations';
 
     public function __construct(HttpClient $httpClient)
     {
         parent::__construct($httpClient);
 
-        $this->object = new Conversation();
+        $this->setObject(new Conversation());
         $this->setResourceName(self::RESOURCE_NAME);
     }
 
     /**
      * Starts a conversation by sending an initial message.
-     *
+     * 
      * @param Message $object
      * @param array|null $query
      *
-     * @return Conversation|Balance|Hlr|Lookup|\MessageBird\Objects\Message|Verify|VoiceMessage|null
-     *
+     * @return Conversation
+     * 
      * @throws Exceptions\HttpException
      * @throws Exceptions\RequestException
      * @throws Exceptions\ServerException
      */
     public function start($object, $query = null)
     {
-        $body = json_encode($object, \JSON_THROW_ON_ERROR);
-
-        [, , $body] = $this->httpClient->performHttpRequest(
+        $body = json_encode($object);
+        
+        list(, , $body) = $this->HttpClient->performHttpRequest(
             HttpClient::REQUEST_POST,
             $this->getStartUrl(),
             $query,
@@ -54,27 +49,27 @@ class Conversations extends Base
     /**
      * Conversations API uses a special URL scheme for starting a conversation.
      */
-    private function getStartUrl(): string
+    private function getStartUrl()
     {
         return $this->resourceName . '/start';
     }
 
     /**
      * Starts a conversation without sending an initial message.
-     *
-     * @param int $object
-     *
-     * @return Conversation|Balance|Hlr|Lookup|\MessageBird\Objects\Message|Verify|VoiceMessage|null
-     *
+     * 
+     * @param int $contactId
+     * 
+     * @return Conversation
+     * 
      * @throws Exceptions\HttpException
      * @throws Exceptions\RequestException
      * @throws Exceptions\ServerException
      */
-    public function create($object, array $query = null)
+    public function create($contactId, $query = null)
     {
-        $body = json_encode(['contactId' => $object], \JSON_THROW_ON_ERROR);
+        $body = json_encode(array('contactId' => $contactId));
 
-        [, , $body] = $this->httpClient->performHttpRequest(
+        list(, , $body) = $this->HttpClient->performHttpRequest(
             HttpClient::REQUEST_POST,
             $this->resourceName,
             $query,
@@ -85,28 +80,28 @@ class Conversations extends Base
     }
 
     /**
-     * @param mixed $object
-     * @param mixed $id
+     * @param $object
+     * @param $id
      *
-     * @return Conversation|Balance|Hlr|Lookup|\MessageBird\Objects\Message|Verify|VoiceMessage|null ->object
+     * @return $this ->Object
      *
      * @internal param array $parameters
      */
     public function update($object, $id)
     {
         $objVars = get_object_vars($object);
-        $body = [];
+        $body = array();
 
         foreach ($objVars as $key => $value) {
-            if ($value !== null) {
+            if (null !== $value) {
                 $body[$key] = $value;
             }
         }
 
         $resourceName = $this->resourceName . ($id ? '/' . $id : null);
-        $body = json_encode($body, \JSON_THROW_ON_ERROR);
+        $body = json_encode($body);
 
-        [, , $body] = $this->httpClient->performHttpRequest(HttpClient::REQUEST_PATCH, $resourceName, false, $body);
+        list(, , $body) = $this->HttpClient->performHttpRequest(HttpClient::REQUEST_PATCH, $resourceName, false, $body);
 
         return $this->processRequest($body);
     }

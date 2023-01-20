@@ -14,9 +14,6 @@ use Psr\Http\Message\RequestInterface;
  */
 final class HttpClientNoMatchException extends TransferException
 {
-    /**
-     * @var RequestInterface
-     */
     private $request;
 
     public function __construct(string $message, RequestInterface $request, \Exception $previous = null)

@@ -8,10 +8,10 @@ require(__DIR__ . '/../../autoload.php');
 $messageBird = new \MessageBird\Client('YOUR_ACCESS_KEY'); // Set your own API access key here.
 
 // Take 10 objects, but skip the first 5.
-$optionalParameters = [
+$optionalParameters = array(
     'limit' => '10',
     'offset' => '5',
-];
+);
 
 try {
     $conversations = $messageBird->conversations->getList($optionalParameters);

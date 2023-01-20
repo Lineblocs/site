@@ -26,7 +26,7 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '9(?:0|11|22|66|77|9[09])',
+    'NationalNumberPattern' => '9(?:0|11)',
     'ExampleNumber' => '90',
     'PossibleLength' => 
     array (
@@ -47,7 +47,7 @@ return array (
   ),
   'emergency' => 
   array (
-    'NationalNumberPattern' => '9(?:0|11|90)',
+    'NationalNumberPattern' => '9(?:0|11)',
     'ExampleNumber' => '90',
     'PossibleLength' => 
     array (
@@ -58,7 +58,7 @@ return array (
   ),
   'shortCode' => 
   array (
-    'NationalNumberPattern' => '9(?:0|11|22|66|77|9[09])',
+    'NationalNumberPattern' => '9(?:0|11)',
     'ExampleNumber' => '90',
     'PossibleLength' => 
     array (
@@ -108,5 +108,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => false,
 );

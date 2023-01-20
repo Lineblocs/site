@@ -2,8 +2,6 @@
 
 namespace MessageBird\Objects;
 
-use stdClass;
-
 /**
  * Class Message
  *
@@ -12,11 +10,27 @@ use stdClass;
  */
 class Message extends Base
 {
-    public const TYPE_SMS = 'sms';
-    public const TYPE_BINARY = 'binary';
+    const TYPE_SMS = 'sms';
+    const TYPE_BINARY = 'binary';
+    const TYPE_PREMIUM = 'premium';
 
-    public const DATACODING_UNICODE = 'unicode';
-    public const DATACODING_PLAIN = 'plain';
+    const DATACODING_UNICODE = 'unicode';
+    const DATACODING_PLAIN = 'plain';
+
+    /**
+     * An unique random ID which is created on the MessageBird
+     * platform and is returned upon creation of the object.
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * The URL of the created object.
+     *
+     * @var string
+     */
+    protected $href;
 
     /**
      * Tells you if the message is sent or received.
@@ -81,7 +95,7 @@ class Message extends Base
      *
      * @var array
      */
-    public $typeDetails = [];
+    public $typeDetails = array ();
 
     /**
      * The datacoding used, can be plain or unicode
@@ -103,18 +117,7 @@ class Message extends Base
      * @var string
      */
     public $scheduledDatetime;
-    /**
-     * An array of recipients
-     *
-     * @var array
-     */
-    public $recipients = [];
-    /**
-     * The URL to send status delivery reports for the message to
-     *
-     * @var string
-     */
-    public $reportUrl;
+
     /**
      * The date and time of the creation of the message in RFC3339 format (Y-m-d\TH:i:sP)
      * @var string
@@ -122,20 +125,59 @@ class Message extends Base
     protected $createdDatetime;
 
     /**
-     * @param mixed $header
-     * @param mixed $body
+     * An array of recipients
+     *
+     * @var array
      */
-    public function setBinarySms($header, $body): void
+    public $recipients = array ();
+
+    /**
+     * The URL to send status delivery reports for the message to
+     *
+     * @var string
+     */
+    public $reportUrl;
+
+
+    /**
+     * Send a premium SMS
+     *
+     * @param $shortcode
+     * @param $keyword
+     * @param $tariff
+     * @param $mid
+     * @param $member
+     */
+    public function setPremiumSms($shortcode, $keyword, $tariff, $mid = null, $member = null)
     {
-        $this->typeDetails['udh'] = $header;
-        $this->body = $body;
-        $this->type = self::TYPE_BINARY;
+        $this->typeDetails['shortcode'] = $shortcode;
+        $this->typeDetails['keyword']   = $keyword;
+        $this->typeDetails['tariff']    = $tariff;
+        if ($mid != null) {
+            $this->typeDetails['mid'] = $mid;
+        }
+        if ($member != null) {
+            $this->typeDetails['member'] = $member;
+        }
+
+        $this->type = self::TYPE_PREMIUM;
     }
 
     /**
-     * @param mixed $bool
+     * @param $header
+     * @param $body
      */
-    public function setFlash($bool): void
+    public function setBinarySms($header, $body)
+    {
+        $this->typeDetails['udh'] = $header;
+        $this->body               = $body;
+        $this->type               = self::TYPE_BINARY;
+    }
+
+    /**
+     * @param $bool
+     */
+    public function setFlash($bool)
     {
         if ($bool === true) {
             $this->mclass = 0;
@@ -145,50 +187,50 @@ class Message extends Base
     }
 
     /**
+     * Get the created id
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the created href
+     *
+     * @return string
+     */
+    public function getHref()
+    {
+        return $this->href;
+    }
+
+    /**
      * Get the $createdDatetime value
-     *     */
-    public function getCreatedDatetime(): string
+     *
+     * @return string
+     */
+    public function getCreatedDatetime()
     {
         return $this->createdDatetime;
     }
 
     /**
-     * @deprecated 2.2.0 No longer used by internal code, please switch to {@see self::loadFromStdclass()}
-     * 
-     * @param mixed $object
-     * 
-     * @return self
+     * @param $object
+     *
+     * @return $this|void
      */
-    public function loadFromArray($object): self
+    public function loadFromArray ($object)
     {
         parent::loadFromArray($object);
 
         if (!empty($this->recipients->items)) {
-            foreach ($this->recipients->items as &$item) {
-                $recipient = new Recipient();
-                $recipient->loadFromArray($item);
+            foreach($this->recipients->items AS &$item) {
+                $Recipient = new Recipient();
+                $Recipient->loadFromArray($item);
 
-                $item = $recipient;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param stdClass $object 
-     * @return self 
-     */
-    public function loadFromStdclass(stdClass $object): self
-    {
-        parent::loadFromStdclass($object);
-
-        if (!empty($this->recipients->items)) {
-            foreach ($this->recipients->items as &$item) {
-                $recipient = new Recipient();
-                $recipient->loadFromStdclass($item);
-
-                $item = $recipient;
+                $item = $Recipient;
             }
         }
 

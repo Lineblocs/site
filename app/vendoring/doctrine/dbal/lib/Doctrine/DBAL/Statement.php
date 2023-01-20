@@ -3,22 +3,15 @@
 namespace Doctrine\DBAL;
 
 use Doctrine\DBAL\Abstraction\Result;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Driver\DriverException;
 use Doctrine\DBAL\Driver\Statement as DriverStatement;
-use Doctrine\DBAL\Exception\NoKeyValue;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Result as BaseResult;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\Deprecations\Deprecation;
 use IteratorAggregate;
 use PDO;
-use PDOStatement;
-use ReturnTypeWillChange;
 use Throwable;
 use Traversable;
 
-use function array_shift;
-use function func_get_args;
 use function is_array;
 use function is_string;
 
@@ -73,8 +66,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     /**
      * Creates a new <tt>Statement</tt> for the given SQL and <tt>Connection</tt>.
      *
-     * @internal The statement can be only instantiated by {@link Connection}.
-     *
      * @param string     $sql  The SQL of the statement.
      * @param Connection $conn The connection on which the statement should be executed.
      */
@@ -94,16 +85,16 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      * type and the value undergoes the conversion routines of the mapping type before
      * being bound.
      *
-     * @param string|int $param The name or position of the parameter.
+     * @param string|int $name  The name or position of the parameter.
      * @param mixed      $value The value of the parameter.
      * @param mixed      $type  Either a PDO binding type or a DBAL mapping type name or instance.
      *
      * @return bool TRUE on success, FALSE on failure.
      */
-    public function bindValue($param, $value, $type = ParameterType::STRING)
+    public function bindValue($name, $value, $type = ParameterType::STRING)
     {
-        $this->params[$param] = $value;
-        $this->types[$param]  = $type;
+        $this->params[$name] = $value;
+        $this->types[$name]  = $type;
         if ($type !== null) {
             if (is_string($type)) {
                 $type = Type::getType($type);
@@ -116,10 +107,10 @@ class Statement implements IteratorAggregate, DriverStatement, Result
                 $bindingType = $type;
             }
 
-            return $this->stmt->bindValue($param, $value, $bindingType);
+            return $this->stmt->bindValue($name, $value, $bindingType);
         }
 
-        return $this->stmt->bindValue($param, $value);
+        return $this->stmt->bindValue($name, $value);
     }
 
     /**
@@ -127,45 +118,33 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      *
      * Binding a parameter by reference does not support DBAL mapping types.
      *
-     * @param string|int $param    The name or position of the parameter.
-     * @param mixed      $variable The reference to the variable to bind.
-     * @param int        $type     The PDO binding type.
-     * @param int|null   $length   Must be specified when using an OUT bind
-     *                             so that PHP allocates enough memory to hold the returned value.
+     * @param string|int $name   The name or position of the parameter.
+     * @param mixed      $var    The reference to the variable to bind.
+     * @param int        $type   The PDO binding type.
+     * @param int|null   $length Must be specified when using an OUT bind
+     *                           so that PHP allocates enough memory to hold the returned value.
      *
      * @return bool TRUE on success, FALSE on failure.
      */
-    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($name, &$var, $type = ParameterType::STRING, $length = null)
     {
-        $this->params[$param] = $variable;
-        $this->types[$param]  = $type;
+        $this->params[$name] = $var;
+        $this->types[$name]  = $type;
 
-        if ($this->stmt instanceof PDOStatement) {
-            $length = $length ?? 0;
-        }
-
-        return $this->stmt->bindParam($param, $variable, $type, $length);
+        return $this->stmt->bindParam($name, $var, $type, $length);
     }
 
     /**
      * Executes the statement with the currently bound parameters.
      *
-     * @deprecated Statement::execute() is deprecated, use Statement::executeQuery() or executeStatement() instead
-     *
      * @param mixed[]|null $params
      *
      * @return bool TRUE on success, FALSE on failure.
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function execute($params = null)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4580',
-            'Statement::execute() is deprecated, use Statement::executeQuery() or Statement::executeStatement() instead'
-        );
-
         if (is_array($params)) {
             $this->params = $params;
         }
@@ -182,50 +161,22 @@ class Statement implements IteratorAggregate, DriverStatement, Result
                 $logger->stopQuery();
             }
 
-            $this->conn->handleExceptionDuringQuery($ex, $this->sql, $this->params, $this->types);
+            throw DBALException::driverExceptionDuringQuery(
+                $this->conn->getDriver(),
+                $ex,
+                $this->sql,
+                $this->conn->resolveParams($this->params, $this->types)
+            );
         }
 
         if ($logger) {
             $logger->stopQuery();
         }
 
+        $this->params = [];
+        $this->types  = [];
+
         return $stmt;
-    }
-
-    /**
-     * Executes the statement with the currently bound parameters and return result.
-     *
-     * @param mixed[] $params
-     *
-     * @throws Exception
-     */
-    public function executeQuery(array $params = []): BaseResult
-    {
-        if ($params === []) {
-            $params = null; // Workaround as long execute() exists and used internally.
-        }
-
-        $this->execute($params);
-
-        return new ForwardCompatibility\Result($this);
-    }
-
-    /**
-     * Executes the statement with the currently bound parameters and return affected rows.
-     *
-     * @param mixed[] $params
-     *
-     * @throws Exception
-     */
-    public function executeStatement(array $params = []): int
-    {
-        if ($params === []) {
-            $params = null; // Workaround as long execute() exists and used internally.
-        }
-
-        $this->execute($params);
-
-        return $this->rowCount();
     }
 
     /**
@@ -237,12 +188,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function closeCursor()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4049',
-            'Statement::closeCursor() is deprecated, use Result::free() instead.'
-        );
-
         return $this->stmt->closeCursor();
     }
 
@@ -265,12 +210,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function errorCode()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3507',
-            'Connection::errorCode() is deprecated, use getCode() or getSQLState() on Exception instead.'
-        );
-
         return $this->stmt->errorCode();
     }
 
@@ -281,12 +220,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function errorInfo()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3507',
-            'Connection::errorInfo() is deprecated, use getCode() or getSQLState() on Exception instead.'
-        );
-
         return $this->stmt->errorInfo();
     }
 
@@ -297,12 +230,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Statement::setFetchMode() is deprecated, use explicit Result::fetch*() APIs instead.'
-        );
-
         if ($arg2 === null) {
             return $this->stmt->setFetchMode($fetchMode);
         }
@@ -321,16 +248,8 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      *
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Statement::getIterator() is deprecated, use Result::iterateNumeric(), iterateAssociative() ' .
-            'or iterateColumn() instead.'
-        );
-
         return $this->stmt;
     }
 
@@ -341,13 +260,7 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Statement::fetch() is deprecated, use Result::fetchNumeric(), fetchAssociative() or fetchOne() instead.'
-        );
-
-        return $this->stmt->fetch(...func_get_args());
+        return $this->stmt->fetch($fetchMode);
     }
 
     /**
@@ -357,22 +270,7 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Statement::fetchAll() is deprecated, use Result::fetchAllNumeric(), fetchAllAssociative() or ' .
-            'fetchFirstColumn() instead.'
-        );
-
-        if ($ctorArgs !== null) {
-            return $this->stmt->fetchAll($fetchMode, $fetchArgument, $ctorArgs);
-        }
-
-        if ($fetchArgument !== null) {
-            return $this->stmt->fetchAll($fetchMode, $fetchArgument);
-        }
-
-        return $this->stmt->fetchAll($fetchMode);
+        return $this->stmt->fetchAll($fetchMode, $fetchArgument, $ctorArgs);
     }
 
     /**
@@ -382,263 +280,126 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     public function fetchColumn($columnIndex = 0)
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Statement::fetchColumn() is deprecated, use Result::fetchOne() instead.'
-        );
-
         return $this->stmt->fetchColumn($columnIndex);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use Result::fetchNumeric() instead
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchNumeric()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 return $this->stmt->fetchNumeric();
             }
 
             return $this->stmt->fetch(FetchMode::NUMERIC);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use Result::fetchAssociative() instead
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchAssociative()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 return $this->stmt->fetchAssociative();
             }
 
             return $this->stmt->fetch(FetchMode::ASSOCIATIVE);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritDoc}
      *
-     * @deprecated Use Result::fetchOne() instead
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchOne()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 return $this->stmt->fetchOne();
             }
 
             return $this->stmt->fetch(FetchMode::COLUMN);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use Result::fetchAllNumeric() instead
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchAllNumeric(): array
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 return $this->stmt->fetchAllNumeric();
             }
 
             return $this->stmt->fetchAll(FetchMode::NUMERIC);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use Result::fetchAllAssociative() instead
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchAllAssociative(): array
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 return $this->stmt->fetchAllAssociative();
             }
 
             return $this->stmt->fetchAll(FetchMode::ASSOCIATIVE);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
-    }
-
-    /**
-     * Returns an associative array with the keys mapped to the first column and the values mapped to the second column.
-     *
-     * The result must contain at least two columns.
-     *
-     * @deprecated Use Result::fetchAllKeyValue() instead
-     *
-     * @return array<mixed,mixed>
-     *
-     * @throws Exception
-     */
-    public function fetchAllKeyValue(): array
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
-        $this->ensureHasKeyValue();
-
-        $data = [];
-
-        foreach ($this->fetchAllNumeric() as [$key, $value]) {
-            $data[$key] = $value;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Returns an associative array with the keys mapped to the first column and the values being
-     * an associative array representing the rest of the columns and their values.
-     *
-     * @deprecated Use Result::fetchAllAssociativeIndexed() instead
-     *
-     * @return array<mixed,array<string,mixed>>
-     *
-     * @throws Exception
-     */
-    public function fetchAllAssociativeIndexed(): array
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
-        $data = [];
-
-        foreach ($this->fetchAll(FetchMode::ASSOCIATIVE) as $row) {
-            $data[array_shift($row)] = $row;
-        }
-
-        return $data;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use Result::fetchFirstColumn() instead
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchFirstColumn(): array
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 return $this->stmt->fetchFirstColumn();
             }
 
             return $this->stmt->fetchAll(FetchMode::COLUMN);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritDoc}
      *
-     * @deprecated Use Result::iterateNumeric() instead
-     *
      * @return Traversable<int,array<int,mixed>>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function iterateNumeric(): Traversable
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 while (($row = $this->stmt->fetchNumeric()) !== false) {
@@ -649,30 +410,20 @@ class Statement implements IteratorAggregate, DriverStatement, Result
                     yield $row;
                 }
             }
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritDoc}
      *
-     * @deprecated Use Result::iterateAssociative() instead
-     *
      * @return Traversable<int,array<string,mixed>>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function iterateAssociative(): Traversable
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 while (($row = $this->stmt->fetchAssociative()) !== false) {
@@ -683,84 +434,20 @@ class Statement implements IteratorAggregate, DriverStatement, Result
                     yield $row;
                 }
             }
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
-        }
-    }
-
-    /**
-     * Returns an iterator over the result set with the keys mapped to the first column
-     * and the values mapped to the second column.
-     *
-     * The result must contain at least two columns.
-     *
-     * @deprecated Use Result::iterateKeyValue() instead
-     *
-     * @return Traversable<mixed,mixed>
-     *
-     * @throws Exception
-     */
-    public function iterateKeyValue(): Traversable
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
-        $this->ensureHasKeyValue();
-
-        foreach ($this->iterateNumeric() as [$key, $value]) {
-            yield $key => $value;
-        }
-    }
-
-    /**
-     * Returns an iterator over the result set with the keys mapped to the first column and the values being
-     * an associative array representing the rest of the columns and their values.
-     *
-     * @deprecated Use Result::iterateAssociativeIndexed() instead
-     *
-     * @return Traversable<mixed,array<string,mixed>>
-     *
-     * @throws Exception
-     */
-    public function iterateAssociativeIndexed(): Traversable
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
-        while (($row = $this->stmt->fetch(FetchMode::ASSOCIATIVE)) !== false) {
-            yield array_shift($row) => $row;
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * {@inheritDoc}
      *
-     * @deprecated Use Result::iterateColumn() instead
-     *
      * @return Traversable<int,mixed>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function iterateColumn(): Traversable
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
         try {
             if ($this->stmt instanceof Result) {
                 while (($value = $this->stmt->fetchOne()) !== false) {
@@ -771,15 +458,15 @@ class Statement implements IteratorAggregate, DriverStatement, Result
                     yield $value;
                 }
             }
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
+        } catch (DriverException $e) {
+            throw DBALException::driverException($this->conn->getDriver(), $e);
         }
     }
 
     /**
      * Returns the number of rows affected by the last execution of this statement.
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      */
     public function rowCount()
     {
@@ -805,14 +492,5 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     public function getWrappedStatement()
     {
         return $this->stmt;
-    }
-
-    private function ensureHasKeyValue(): void
-    {
-        $columnCount = $this->columnCount();
-
-        if ($columnCount < 2) {
-            throw NoKeyValue::fromColumnCount($columnCount);
-        }
     }
 }

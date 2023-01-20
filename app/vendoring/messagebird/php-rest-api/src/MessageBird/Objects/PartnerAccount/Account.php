@@ -16,21 +16,19 @@ class Account extends Base
 
     public $signingKey;
 
-    /**
-     * @return false|string
-     * @throws \JsonException
-     */
     public function loadToJson()
     {
         return json_encode([
             'name' => $this->name,
-        ], \JSON_THROW_ON_ERROR);
+        ]);
     }
 
     /**
-     * @param mixed $object
+     * @param $object
+     *
+     * @return $this|void
      */
-    public function loadFromArray($object): Account
+    public function loadFromArray($object)
     {
         parent::loadFromArray($object);
 
@@ -38,7 +36,7 @@ class Account extends Base
             return $this;
         }
 
-        foreach ($this->accessKeys as &$item) {
+        foreach($this->accessKeys as &$item) {
             $accessKey = new AccessKey();
             $item = $accessKey->loadFromArray($item);
         }

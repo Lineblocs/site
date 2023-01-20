@@ -35,7 +35,9 @@ class Payload implements \ArrayAccess
     {
         $this->claims = $claims;
 
-        $validator->setRefreshFlow($refreshFlow)->check($this->toArray());
+				if ($refreshFlow) {
+        	$validator->setRefreshFlow($refreshFlow)->check($this->toArray());
+				}
     }
 
     /**

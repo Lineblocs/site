@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Type;
 
 use function array_change_key_case;
 use function array_shift;
+use function array_values;
 use function assert;
 use function explode;
 use function is_string;
@@ -90,10 +91,7 @@ class MySqlSchemaManager extends AbstractSchemaManager
                 $v['flags'] = ['SPATIAL'];
             }
 
-            // Ignore prohibited prefix `length` for spatial index
-            if (strpos($v['index_type'], 'SPATIAL') === false) {
-                $v['length'] = isset($v['sub_part']) ? (int) $v['sub_part'] : null;
-            }
+            $v['length'] = isset($v['sub_part']) ? (int) $v['sub_part'] : null;
 
             $tableIndexes[$k] = $v;
         }
@@ -305,9 +303,9 @@ class MySqlSchemaManager extends AbstractSchemaManager
         $result = [];
         foreach ($list as $constraint) {
             $result[] = new ForeignKeyConstraint(
-                $constraint['local'],
+                array_values($constraint['local']),
                 $constraint['foreignTable'],
-                $constraint['foreign'],
+                array_values($constraint['foreign']),
                 $constraint['name'],
                 [
                     'onDelete' => $constraint['onDelete'],
@@ -322,13 +320,13 @@ class MySqlSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
-    public function listTableDetails($name)
+    public function listTableDetails($tableName)
     {
-        $table = parent::listTableDetails($name);
+        $table = parent::listTableDetails($tableName);
 
         $platform = $this->_platform;
         assert($platform instanceof MySqlPlatform);
-        $sql = $platform->getListTableMetadataSQL($name);
+        $sql = $platform->getListTableMetadataSQL($tableName);
 
         $tableOptions = $this->_conn->fetchAssociative($sql);
 

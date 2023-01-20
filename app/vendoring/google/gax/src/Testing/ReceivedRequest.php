@@ -34,8 +34,6 @@ namespace Google\ApiCore\Testing;
 /**
  * Class ReceivedRequest used to hold the function name and request object of a call
  * make to a mock gRPC stub.
- *
- * @internal
  */
 class ReceivedRequest
 {

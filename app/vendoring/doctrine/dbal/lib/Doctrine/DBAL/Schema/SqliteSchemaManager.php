@@ -2,16 +2,16 @@
 
 namespace Doctrine\DBAL\Schema;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\TextType;
 use Doctrine\DBAL\Types\Type;
 
 use function array_change_key_case;
 use function array_map;
-use function array_merge;
 use function array_reverse;
+use function array_values;
 use function explode;
 use function file_exists;
 use function preg_match;
@@ -51,12 +51,13 @@ class SqliteSchemaManager extends AbstractSchemaManager
      */
     public function createDatabase($database)
     {
-        $params = $this->_conn->getParams();
-
-        $params['path'] = $database;
-        unset($params['memory']);
-
-        $conn = DriverManager::getConnection($params);
+        $params  = $this->_conn->getParams();
+        $driver  = $params['driver'];
+        $options = [
+            'driver' => $driver,
+            'path' => $database,
+        ];
+        $conn    = DriverManager::getConnection($options);
         $conn->connect();
         $conn->close();
     }
@@ -143,13 +144,10 @@ class SqliteSchemaManager extends AbstractSchemaManager
             }
 
             foreach ($tableForeignKeys as $key => $value) {
-                $id = $value['id'];
-
-                $tableForeignKeys[$key] = array_merge($tableForeignKeys[$key], [
-                    'constraint_name' => isset($names[$id]) && $names[$id] !== '' ? $names[$id] : $id,
-                    'deferrable'      => isset($deferrable[$id]) && strtolower($deferrable[$id]) === 'deferrable',
-                    'deferred'        => isset($deferred[$id]) && strtolower($deferred[$id]) === 'deferred',
-                ]);
+                $id                                        = $value['id'];
+                $tableForeignKeys[$key]['constraint_name'] = isset($names[$id]) && $names[$id] !== '' ? $names[$id] : $id;
+                $tableForeignKeys[$key]['deferrable']      = isset($deferrable[$id]) && strtolower($deferrable[$id]) === 'deferrable';
+                $tableForeignKeys[$key]['deferred']        = isset($deferred[$id]) && strtolower($deferred[$id]) === 'deferred';
             }
         }
 
@@ -179,23 +177,15 @@ class SqliteSchemaManager extends AbstractSchemaManager
             $this->_conn->quote($tableName)
         ));
 
-        usort(
-            $indexArray,
-            /**
-             * @param array<string,mixed> $a
-             * @param array<string,mixed> $b
-             */
-            static function (array $a, array $b): int {
-                if ($a['pk'] === $b['pk']) {
-                    return $a['cid'] - $b['cid'];
-                }
-
-                return $a['pk'] - $b['pk'];
+        usort($indexArray, static function ($a, $b) {
+            if ($a['pk'] === $b['pk']) {
+                return $a['cid'] - $b['cid'];
             }
-        );
 
+            return $a['pk'] - $b['pk'];
+        });
         foreach ($indexArray as $indexColumnRow) {
-            if ($indexColumnRow['pk'] === 0 || $indexColumnRow['pk'] === '0') {
+            if ($indexColumnRow['pk'] === '0') {
                 continue;
             }
 
@@ -261,7 +251,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
         $autoincrementCount  = 0;
 
         foreach ($tableColumns as $tableColumn) {
-            if ($tableColumn['pk'] === 0 || $tableColumn['pk'] === '0') {
+            if ($tableColumn['pk'] === '0') {
                 continue;
             }
 
@@ -290,10 +280,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
             $type = $column->getType();
 
             if ($type instanceof StringType || $type instanceof TextType) {
-                $column->setPlatformOption(
-                    'collation',
-                    $this->parseColumnCollationFromSQL($columnName, $createSql) ?: 'BINARY'
-                );
+                $column->setPlatformOption('collation', $this->parseColumnCollationFromSQL($columnName, $createSql) ?: 'BINARY');
             }
 
             $comment = $this->parseColumnCommentFromSQL($columnName, $createSql);
@@ -383,7 +370,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
 
         $options = [
             'length'   => $length,
-            'unsigned' => $unsigned,
+            'unsigned' => (bool) $unsigned,
             'fixed'    => $fixed,
             'notnull'  => $notnull,
             'default'  => $default,
@@ -433,21 +420,16 @@ class SqliteSchemaManager extends AbstractSchemaManager
                 ];
             }
 
-            $list[$name]['local'][] = $value['from'];
-
-            if ($value['to'] === null) {
-                continue;
-            }
-
+            $list[$name]['local'][]   = $value['from'];
             $list[$name]['foreign'][] = $value['to'];
         }
 
         $result = [];
         foreach ($list as $constraint) {
             $result[] = new ForeignKeyConstraint(
-                $constraint['local'],
+                array_values($constraint['local']),
                 $constraint['foreignTable'],
-                $constraint['foreign'],
+                array_values($constraint['foreign']),
                 $constraint['name'],
                 [
                     'onDelete' => $constraint['onDelete'],
@@ -466,7 +448,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
      *
      * @return TableDiff
      *
-     * @throws Exception
+     * @throws DBALException
      */
     private function getTableDiffForAlterForeignKey($table)
     {
@@ -474,9 +456,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
             $tableDetails = $this->tryMethod('listTableDetails', $table);
 
             if ($tableDetails === false) {
-                throw new Exception(
-                    sprintf('Sqlite schema manager requires to modify foreign keys table definition "%s".', $table)
-                );
+                throw new DBALException(sprintf('Sqlite schema manager requires to modify foreign keys table definition "%s".', $table));
             }
 
             $table = $tableDetails;
@@ -490,8 +470,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
 
     private function parseColumnCollationFromSQL(string $column, string $sql): ?string
     {
-        $pattern = '{(?:\W' . preg_quote($column) . '\W|\W'
-            . preg_quote($this->_platform->quoteSingleIdentifier($column))
+        $pattern = '{(?:\W' . preg_quote($column) . '\W|\W' . preg_quote($this->_platform->quoteSingleIdentifier($column))
             . '\W)[^,(]+(?:\([^()]+\)[^,]*)?(?:(?:DEFAULT|CHECK)\s*(?:\(.*?\))?[^,]*)*COLLATE\s+["\']?([^\s,"\')]+)}is';
 
         if (preg_match($pattern, $sql, $match) !== 1) {
@@ -522,8 +501,8 @@ CREATE\sTABLE # Match "CREATE TABLE"
 
     private function parseColumnCommentFromSQL(string $column, string $sql): ?string
     {
-        $pattern = '{[\s(,](?:\W' . preg_quote($this->_platform->quoteSingleIdentifier($column))
-            . '\W|\W' . preg_quote($column) . '\W)(?:\([^)]*?\)|[^,(])*?,?((?:(?!\n))(?:\s*--[^\n]*\n?)+)}i';
+        $pattern = '{[\s(,](?:\W' . preg_quote($this->_platform->quoteSingleIdentifier($column)) . '\W|\W' . preg_quote($column)
+            . '\W)(?:\([^)]*?\)|[^,(])*?,?((?:(?!\n))(?:\s*--[^\n]*\n?)+)}i';
 
         if (preg_match($pattern, $sql, $match) !== 1) {
             return null;
@@ -555,15 +534,15 @@ SQL
     }
 
     /**
-     * @param string $name
+     * @param string $tableName
      */
-    public function listTableDetails($name): Table
+    public function listTableDetails($tableName): Table
     {
-        $table = parent::listTableDetails($name);
+        $table = parent::listTableDetails($tableName);
 
-        $tableCreateSql = $this->getCreateTableSQL($name) ?? '';
+        $tableCreateSql = $this->getCreateTableSQL($tableName) ?? '';
 
-        $comment = $this->parseTableCommentFromSQL($name, $tableCreateSql);
+        $comment = $this->parseTableCommentFromSQL($tableName, $tableCreateSql);
 
         if ($comment !== null) {
             $table->addOption('comment', $comment);

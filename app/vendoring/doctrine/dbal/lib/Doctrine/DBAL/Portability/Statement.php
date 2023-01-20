@@ -10,7 +10,6 @@ use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\ParameterType;
 use IteratorAggregate;
 use PDO;
-use ReturnTypeWillChange;
 
 use function array_change_key_case;
 use function assert;
@@ -28,7 +27,7 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     /** @var DriverStatement|ResultStatement */
     private $stmt;
 
-    /** @var int|null */
+    /** @var int */
     private $case;
 
     /** @var int */
@@ -49,11 +48,11 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     /**
      * {@inheritdoc}
      */
-    public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null)
+    public function bindParam($column, &$variable, $type = ParameterType::STRING, $length = null)
     {
         assert($this->stmt instanceof DriverStatement);
 
-        return $this->stmt->bindParam($param, $variable, $type, $length);
+        return $this->stmt->bindParam($column, $variable, $type, $length);
     }
 
     /**
@@ -123,11 +122,11 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      *
      * @deprecated Use one of the fetch- or iterate-related methods.
      */
-    public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)
+    public function setFetchMode($fetchMode, $arg1 = null, $arg2 = null)
     {
         $this->defaultFetchMode = $fetchMode;
 
-        return $this->stmt->setFetchMode($fetchMode, $arg2, $arg3);
+        return $this->stmt->setFetchMode($fetchMode, $arg1, $arg2);
     }
 
     /**
@@ -135,7 +134,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      *
      * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new StatementIterator($this);
@@ -152,11 +150,8 @@ class Statement implements IteratorAggregate, DriverStatement, Result
 
         $row = $this->stmt->fetch($fetchMode);
 
-        $iterateRow = (
-            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
-        ) !== 0;
-
-        $fixCase = $this->case !== null
+        $iterateRow = ($this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)) !== 0;
+        $fixCase    = $this->case !== null
             && ($fetchMode === FetchMode::ASSOCIATIVE || $fetchMode === FetchMode::MIXED)
             && ($this->portability & Connection::PORTABILITY_FIX_CASE);
 
@@ -295,11 +290,8 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     private function fixResult($result, bool $fixCase)
     {
-        $iterateRow = (
-            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
-        ) !== 0;
-
-        $fixCase = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
+        $iterateRow = ($this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)) !== 0;
+        $fixCase    = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
 
         return $this->fixRow($result, $iterateRow, $fixCase);
     }
@@ -311,11 +303,8 @@ class Statement implements IteratorAggregate, DriverStatement, Result
      */
     private function fixResultSet(array $resultSet, bool $fixCase, bool $isArray): array
     {
-        $iterateRow = (
-            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
-        ) !== 0;
-
-        $fixCase = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
+        $iterateRow = ($this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)) !== 0;
+        $fixCase    = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
 
         if (! $iterateRow && ! $fixCase) {
             return $resultSet;
@@ -354,7 +343,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         }
 
         if ($fixCase) {
-            assert($this->case !== null);
             $row = array_change_key_case($row, $this->case);
         }
 

@@ -34,8 +34,6 @@ namespace Google\ApiCore;
 
 /**
  * Provides helper methods for gRPC support.
- *
- * @internal
  */
 trait GrpcSupportTrait
 {

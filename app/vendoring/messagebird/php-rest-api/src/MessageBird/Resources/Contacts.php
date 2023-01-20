@@ -2,11 +2,9 @@
 
 namespace MessageBird\Resources;
 
-use InvalidArgumentException;
-use MessageBird\Common;
-use MessageBird\Exceptions;
 use MessageBird\Objects;
-use MessageBird\Resources\Messages;
+use MessageBird\Common;
+use InvalidArgumentException;
 
 /**
  * Class Contacts
@@ -15,88 +13,72 @@ use MessageBird\Resources\Messages;
  */
 class Contacts extends Base
 {
-    /**
-     * @var Messages
-     */
-    private $messagesObject;
 
-    public function __construct(Common\HttpClient $httpClient)
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Contact();
+        $this->setObject(new Objects\Contact());
         $this->setResourceName('contacts');
 
-        $this->messagesObject = new Messages($httpClient);
-
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 
     /**
-     * @param mixed $object
-     * @param mixed $id
+     * @param $object
+     * @param $id
      *
-     * @return Objects\Balance|Objects\Conversation\Conversation|Objects\Hlr|Objects\Lookup|Objects\Message|Objects\Verify|Objects\VoiceMessage|null ->object
-     *
-     * @throws \JsonException
-     * @throws Exceptions\AuthenticateException
-     * @throws Exceptions\HttpException
-     * @throws Exceptions\RequestException
-     * @throws Exceptions\ServerException
+     * @return $this ->Object
      *
      * @internal param array $parameters
      */
     public function update($object, $id)
     {
         $objVars = get_object_vars($object);
-        $body = [];
+        $body = array();
         foreach ($objVars as $key => $value) {
-            if ($value !== null) {
+            if (null !== $value) {
                 $body[$key] = $value;
             }
         }
 
-        $resourceName = $this->resourceName . ($id ? '/' . $id : null);
-        $body = json_encode($body, \JSON_THROW_ON_ERROR);
+        $ResourceName = $this->resourceName . ($id ? '/' . $id : null);
+        $body = json_encode($body);
 
-        [, , $body] = $this->httpClient->performHttpRequest(
-            Common\HttpClient::REQUEST_PATCH,
-            $resourceName,
-            false,
-            $body
-        );
+        list(, , $body) = $this->HttpClient->performHttpRequest(Common\HttpClient::REQUEST_PATCH, $ResourceName, false,
+            $body);
         return $this->processRequest($body);
     }
 
     /**
-     * @param mixed $id
+     * @param $id
      * @param array|null $parameters
-     *
-     * @return Objects\Balance|Objects\BaseList|Objects\Conversation\Conversation|Objects\Hlr|Objects\Lookup|Objects\Message|Objects\Verify|Objects\VoiceMessage|null ->object
-     * @throws \JsonException
+     * @return $this ->Object
      */
-    public function getMessages($id, ?array $parameters = [])
+    public function getMessages($id, $parameters = array())
     {
-        if ($id === null) {
+        if (is_null($id)) {
             throw new InvalidArgumentException('No contact id provided.');
         }
 
-        $this->messagesObject->setResourceName($this->resourceName . '/' . $id . '/messages');
-        return $this->messagesObject->getList($parameters);
+        $this->setObject(new Objects\Message());
+        $this->setResourceName($this->resourceName . '/' . $id . '/messages');
+        return $this->getList($parameters);
     }
 
     /**
-     * @param mixed $id
+     * @param $id
      * @param array|null $parameters
-     *
-     * @return Objects\Balance|Objects\BaseList|Objects\Conversation\Conversation|Objects\Hlr|Objects\Lookup|Objects\Message|Objects\Verify|Objects\VoiceMessage|null ->object
-     * @throws \JsonException
+     * @return $this ->Object
      */
-    public function getGroups($id, ?array $parameters = [])
+    public function getGroups($id, $parameters = array())
     {
-        if ($id === null) {
+        if (is_null($id)) {
             throw new InvalidArgumentException('No contact id provided.');
         }
 
-        $this->object = new Objects\Group();
+        $this->setObject(new Objects\Group());
         $this->setResourceName($this->resourceName . '/' . $id . '/groups');
         return $this->getList($parameters);
     }

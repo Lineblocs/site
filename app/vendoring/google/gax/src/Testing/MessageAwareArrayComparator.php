@@ -19,9 +19,6 @@ namespace Google\ApiCore\Testing;
 
 use SebastianBergmann\Comparator\ArrayComparator;
 
-/**
- * @internal
- */
 class MessageAwareArrayComparator extends ArrayComparator
 {
     public function __construct()

@@ -3,9 +3,8 @@
 namespace Http\Message\StreamFactory;
 
 use Http\Message\StreamFactory;
-use Laminas\Diactoros\Stream as LaminasStream;
 use Psr\Http\Message\StreamInterface;
-use Zend\Diactoros\Stream as ZendStream;
+use Zend\Diactoros\Stream;
 
 /**
  * Creates Diactoros streams.
@@ -26,19 +25,10 @@ final class DiactorosStreamFactory implements StreamFactory
         }
 
         if (is_resource($body)) {
-            if (class_exists(LaminasStream::class)) {
-                return new LaminasStream($body);
-            }
-
-            return new ZendStream($body);
+            return new Stream($body);
         }
 
-        if (class_exists(LaminasStream::class)) {
-            $stream = new LaminasStream('php://memory', 'rw');
-        } else {
-            $stream = new ZendStream('php://memory', 'rw');
-        }
-
+        $stream = new Stream('php://memory', 'rw');
         if (null !== $body && '' !== $body) {
             $stream->write((string) $body);
         }

@@ -3,8 +3,6 @@ namespace Aws;
 
 use Aws\Endpoint\PartitionEndpointProvider;
 use Aws\Endpoint\PartitionInterface;
-use Aws\EndpointV2\EndpointProviderV2;
-use Aws\EndpointV2\EndpointDefinitionProvider;
 
 class MultiRegionClient implements AwsClientInterface
 {
@@ -24,8 +22,6 @@ class MultiRegionClient implements AwsClientInterface
     private $handlerList;
     /** @var array */
     private $aliases;
-    /** @var callable */
-    private $customHandler;
 
     public static function getArguments()
     {
@@ -82,12 +78,9 @@ class MultiRegionClient implements AwsClientInterface
                             . ' or "aws-us-gov").'
                         );
                     }
-                    $ruleset = EndpointDefinitionProvider::getEndpointRuleset(
-                        $args['service'],
-                        isset($args['version']) ? $args['version'] : 'latest'
-                    );
-                    $partitions = EndpointDefinitionProvider::getPartitions();
-                    $args['endpoint_provider'] = new EndpointProviderV2($ruleset, $partitions);
+
+                    $args['partition'] = $value;
+                    $args['endpoint_provider'] = $value;
                 }
             ],
         ];
@@ -119,11 +112,6 @@ class MultiRegionClient implements AwsClientInterface
             list($region, $args) = $this->getRegionFromArgs($command->toArray());
             $command = $this->getClientFromPool($region)
                 ->getCommand($command->getName(), $args);
-
-            if ($this->isUseCustomHandler()) {
-                $command->getHandlerList()->setHandler($this->customHandler);
-            }
-
             return $this->executeAsync($command);
         });
 
@@ -201,16 +189,6 @@ class MultiRegionClient implements AwsClientInterface
     public function getEndpoint()
     {
         return $this->getClientFromPool()->getEndpoint();
-    }
-
-    public function useCustomHandler(callable $handler)
-    {
-        $this->customHandler = $handler;
-    }
-
-    private function isUseCustomHandler()
-    {
-        return isset($this->customHandler);
     }
 
     /**

@@ -41,27 +41,42 @@ class Transcription extends Base
      */
     protected $updatedAt;
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getRecordingId(): string
+    /**
+     * @return string
+     */
+    public function getRecordingId()
     {
         return $this->recordingId;
     }
 
-    public function getError(): string
+    /**
+     * @return string
+     */
+    public function getError()
     {
         return $this->error;
     }
 
-    public function getCreatedAt(): string
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): string
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }

@@ -4,30 +4,27 @@ namespace Doctrine\DBAL;
 
 use Closure;
 use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Abstraction\Result;
 use Doctrine\DBAL\Cache\ArrayStatement;
 use Doctrine\DBAL\Cache\CacheException;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Cache\ResultCacheStatement;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
-use Doctrine\DBAL\Driver\PDO\Statement as PDODriverStatement;
 use Doctrine\DBAL\Driver\PingableConnection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Exception\ConnectionLost;
+use Doctrine\DBAL\Driver\Statement as DriverStatement;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
-use Doctrine\DBAL\Exception\NoKeyValue;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\Deprecations\Deprecation;
-use PDO;
+use Exception;
 use Throwable;
 use Traversable;
 
 use function array_key_exists;
-use function array_shift;
 use function assert;
 use function func_get_args;
 use function implode;
@@ -39,9 +36,6 @@ use function key;
  * A wrapper around a Doctrine\DBAL\Driver\Connection that adds features like
  * events, transaction isolation levels, configuration, emulated transaction nesting,
  * lazy connecting and more.
- *
- * @psalm-import-type Params from DriverManager
- * @psalm-consistent-constructor
  */
 class Connection implements DriverConnection
 {
@@ -105,6 +99,13 @@ class Connection implements DriverConnection
     protected $_expr;
 
     /**
+     * Whether or not a connection has been established.
+     *
+     * @var bool
+     */
+    private $isConnected = false;
+
+    /**
      * The current auto-commit mode of this connection.
      *
      * @var bool
@@ -119,9 +120,9 @@ class Connection implements DriverConnection
     private $transactionNestingLevel = 0;
 
     /**
-     * The currently active transaction isolation level or NULL before it has been determined.
+     * The currently active transaction isolation level.
      *
-     * @var int|null
+     * @var int
      */
     private $transactionIsolationLevel;
 
@@ -135,16 +136,15 @@ class Connection implements DriverConnection
     /**
      * The parameters used during creation of the Connection instance.
      *
-     * @var array<string,mixed>
-     * @phpstan-var array<string,mixed>
-     * @psalm-var Params
+     * @var mixed[]
      */
-    private $params;
+    private $params = [];
 
     /**
-     * The database platform object used by the connection or NULL before it's initialized.
+     * The DatabasePlatform object that provides information about the
+     * database platform used by the connection.
      *
-     * @var AbstractPlatform|null
+     * @var AbstractPlatform
      */
     private $platform;
 
@@ -175,16 +175,12 @@ class Connection implements DriverConnection
     /**
      * Initializes a new instance of the Connection class.
      *
-     * @internal The connection can be only instantiated by the driver manager.
+     * @param mixed[]            $params       The connection parameters.
+     * @param Driver             $driver       The driver to use.
+     * @param Configuration|null $config       The configuration, optional.
+     * @param EventManager|null  $eventManager The event manager, optional.
      *
-     * @param array<string,mixed> $params       The connection parameters.
-     * @param Driver              $driver       The driver to use.
-     * @param Configuration|null  $config       The configuration, optional.
-     * @param EventManager|null   $eventManager The event manager, optional.
-     * @psalm-param Params $params
-     * @phpstan-param array<string,mixed> $params
-     *
-     * @throws Exception
+     * @throws DBALException
      */
     public function __construct(
         array $params,
@@ -196,24 +192,14 @@ class Connection implements DriverConnection
         $this->params  = $params;
 
         if (isset($params['pdo'])) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/pull/3554',
-                'Passing a user provided PDO instance directly to Doctrine is deprecated.'
-            );
-
-            if (! $params['pdo'] instanceof PDO) {
-                throw Exception::invalidPdoInstance();
-            }
-
-            $this->_conn = $params['pdo'];
-            $this->_conn->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDODriverStatement::class, []]);
+            $this->_conn       = $params['pdo'];
+            $this->isConnected = true;
             unset($this->params['pdo']);
         }
 
         if (isset($params['platform'])) {
             if (! $params['platform'] instanceof Platforms\AbstractPlatform) {
-                throw Exception::invalidPlatformType($params['platform']);
+                throw DBALException::invalidPlatformType($params['platform']);
             }
 
             $this->platform = $params['platform'];
@@ -239,11 +225,7 @@ class Connection implements DriverConnection
     /**
      * Gets the parameters used during instantiation.
      *
-     * @internal
-     *
-     * @return array<string,mixed>
-     * @psalm-return Params
-     * @phpstan-return array<string,mixed>
+     * @return mixed[]
      */
     public function getParams()
     {
@@ -269,13 +251,6 @@ class Connection implements DriverConnection
      */
     public function getHost()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Connection::getHost() is deprecated, get the database server host from application config ' .
-            'or as a last resort from internal Connection::getParams() API.'
-        );
-
         return $this->params['host'] ?? null;
     }
 
@@ -288,13 +263,6 @@ class Connection implements DriverConnection
      */
     public function getPort()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Connection::getPort() is deprecated, get the database server port from application config ' .
-            'or as a last resort from internal Connection::getParams() API.'
-        );
-
         return $this->params['port'] ?? null;
     }
 
@@ -307,13 +275,6 @@ class Connection implements DriverConnection
      */
     public function getUsername()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Connection::getUsername() is deprecated, get the username from application config ' .
-            'or as a last resort from internal Connection::getParams() API.'
-        );
-
         return $this->params['user'] ?? null;
     }
 
@@ -326,13 +287,6 @@ class Connection implements DriverConnection
      */
     public function getPassword()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Connection::getPassword() is deprecated, get the password from application config ' .
-            'or as a last resort from internal Connection::getParams() API.'
-        );
-
         return $this->params['password'] ?? null;
     }
 
@@ -371,13 +325,12 @@ class Connection implements DriverConnection
      *
      * @return AbstractPlatform
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function getDatabasePlatform()
     {
         if ($this->platform === null) {
-            $this->platform = $this->detectDatabasePlatform();
-            $this->platform->setEventManager($this->_eventManager);
+            $this->detectDatabasePlatform();
         }
 
         return $this->platform;
@@ -401,7 +354,7 @@ class Connection implements DriverConnection
      */
     public function connect()
     {
-        if ($this->_conn !== null) {
+        if ($this->isConnected) {
             return false;
         }
 
@@ -409,7 +362,8 @@ class Connection implements DriverConnection
         $user          = $this->params['user'] ?? null;
         $password      = $this->params['password'] ?? null;
 
-        $this->_conn = $this->_driver->connect($this->params, $user, $password, $driverOptions);
+        $this->_conn       = $this->_driver->connect($this->params, $user, $password, $driverOptions);
+        $this->isConnected = true;
 
         $this->transactionNestingLevel = 0;
 
@@ -430,19 +384,21 @@ class Connection implements DriverConnection
      *
      * Evaluates custom platform class and version in order to set the correct platform.
      *
-     * @throws Exception If an invalid platform was specified for this connection.
+     * @throws DBALException If an invalid platform was specified for this connection.
      */
-    private function detectDatabasePlatform(): AbstractPlatform
+    private function detectDatabasePlatform(): void
     {
         $version = $this->getDatabasePlatformVersion();
 
         if ($version !== null) {
             assert($this->_driver instanceof VersionAwarePlatformDriver);
 
-            return $this->_driver->createDatabasePlatformForVersion($version);
+            $this->platform = $this->_driver->createDatabasePlatformForVersion($version);
+        } else {
+            $this->platform = $this->_driver->getDatabasePlatform();
         }
 
-        return $this->_driver->getDatabasePlatform();
+        $this->platform->setEventManager($this->_eventManager);
     }
 
     /**
@@ -455,7 +411,7 @@ class Connection implements DriverConnection
      *
      * @return string|null
      *
-     * @throws Throwable
+     * @throws Exception
      */
     private function getDatabasePlatformVersion()
     {
@@ -480,21 +436,23 @@ class Connection implements DriverConnection
 
                 // The database to connect to might not yet exist.
                 // Retry detection without database name connection parameter.
-                $params = $this->params;
-
-                unset($this->params['dbname']);
+                $databaseName           = $this->params['dbname'];
+                $this->params['dbname'] = null;
 
                 try {
                     $this->connect();
                 } catch (Throwable $fallbackException) {
                     // Either the platform does not support database-less connections
                     // or something else went wrong.
+                    // Reset connection parameters and rethrow the original exception.
+                    $this->params['dbname'] = $databaseName;
+
                     throw $originalException;
-                } finally {
-                    $this->params = $params;
                 }
 
-                $serverVersion = $this->getServerVersion();
+                // Reset connection parameters.
+                $this->params['dbname'] = $databaseName;
+                $serverVersion          = $this->getServerVersion();
 
                 // Close "temporary" connection to allow connecting to the real database again.
                 $this->close();
@@ -564,7 +522,7 @@ class Connection implements DriverConnection
         $this->autoCommit = $autoCommit;
 
         // Commit all currently active transactions if any when switching auto-commit mode.
-        if ($this->_conn === null || $this->transactionNestingLevel === 0) {
+        if ($this->isConnected !== true || $this->transactionNestingLevel === 0) {
             return;
         }
 
@@ -582,12 +540,6 @@ class Connection implements DriverConnection
      */
     public function setFetchMode($fetchMode)
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Default Fetch Mode configuration is deprecated, use explicit Connection::fetch*() APIs instead.'
-        );
-
         $this->defaultFetchMode = $fetchMode;
     }
 
@@ -595,48 +547,36 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the first row of the result
      * as an associative array.
      *
-     * @deprecated Use fetchAssociative()
+     * @deprecated Use fetchAllAssociative()
      *
-     * @param string                                                               $sql    SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string         $statement The SQL query.
+     * @param mixed[]        $params    The query parameters.
+     * @param int[]|string[] $types     The query parameter types.
      *
-     * @return array<string, mixed>|false False is returned if no rows are found.
+     * @return mixed[]|false False is returned if no rows are found.
      *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function fetchAssoc($sql, array $params = [], array $types = [])
+    public function fetchAssoc($statement, array $params = [], array $types = [])
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Connection::fetchAssoc() is deprecated, use Connection::fetchAssociative() API instead.'
-        );
-
-        return $this->executeQuery($sql, $params, $types)->fetch(FetchMode::ASSOCIATIVE);
+        return $this->executeQuery($statement, $params, $types)->fetch(FetchMode::ASSOCIATIVE);
     }
 
     /**
      * Prepares and executes an SQL query and returns the first row of the result
      * as a numerically indexed array.
      *
-     * @deprecated Use fetchNumeric()
+     * @deprecated Use fetchAllNumeric()
      *
-     * @param string                                                               $sql    SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string         $statement The SQL query to be executed.
+     * @param mixed[]        $params    The prepared statement params.
+     * @param int[]|string[] $types     The query parameter types.
      *
-     * @return array<int, mixed>|false False is returned if no rows are found.
+     * @return mixed[]|false False is returned if no rows are found.
      */
-    public function fetchArray($sql, array $params = [], array $types = [])
+    public function fetchArray($statement, array $params = [], array $types = [])
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Connection::fetchArray() is deprecated, use Connection::fetchNumeric() API instead.'
-        );
-
-        return $this->executeQuery($sql, $params, $types)->fetch(FetchMode::NUMERIC);
+        return $this->executeQuery($statement, $params, $types)->fetch(FetchMode::NUMERIC);
     }
 
     /**
@@ -645,48 +585,44 @@ class Connection implements DriverConnection
      *
      * @deprecated Use fetchOne() instead.
      *
-     * @param string                                                               $sql    SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param int                                                                  $column 0-indexed column number
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string         $statement The SQL query to be executed.
+     * @param mixed[]        $params    The prepared statement params.
+     * @param int            $column    The 0-indexed column number to retrieve.
+     * @param int[]|string[] $types     The query parameter types.
      *
      * @return mixed|false False is returned if no rows are found.
      *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function fetchColumn($sql, array $params = [], $column = 0, array $types = [])
+    public function fetchColumn($statement, array $params = [], $column = 0, array $types = [])
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Connection::fetchColumn() is deprecated, use Connection::fetchOne() API instead.'
-        );
-
-        return $this->executeQuery($sql, $params, $types)->fetchColumn($column);
+        return $this->executeQuery($statement, $params, $types)->fetchColumn($column);
     }
 
     /**
      * Prepares and executes an SQL query and returns the first row of the result
      * as an associative array.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The prepared statement params.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return array<string, mixed>|false False is returned if no rows are found.
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchAssociative(string $query, array $params = [], array $types = [])
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            return $stmt->fetchAssociative();
+            if ($stmt instanceof Result) {
+                return $stmt->fetchAssociative();
+            }
+
+            return $stmt->fetch(FetchMode::ASSOCIATIVE);
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
@@ -694,24 +630,26 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the first row of the result
      * as a numerically indexed array.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query to be executed.
+     * @param array<int, mixed>|array<string, mixed>           $params The prepared statement params.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return array<int, mixed>|false False is returned if no rows are found.
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchNumeric(string $query, array $params = [], array $types = [])
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            return $stmt->fetchNumeric();
+            if ($stmt instanceof Result) {
+                return $stmt->fetchNumeric();
+            }
+
+            return $stmt->fetch(FetchMode::NUMERIC);
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
@@ -719,24 +657,26 @@ class Connection implements DriverConnection
      * Prepares and executes an SQL query and returns the value of a single column
      * of the first row of the result.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query to be executed.
+     * @param array<int, mixed>|array<string, mixed>           $params The prepared statement params.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return mixed|false False is returned if no rows are found.
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchOne(string $query, array $params = [], array $types = [])
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            return $stmt->fetchOne();
+            if ($stmt instanceof Result) {
+                return $stmt->fetchOne();
+            }
+
+            return $stmt->fetch(FetchMode::COLUMN);
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
@@ -747,7 +687,7 @@ class Connection implements DriverConnection
      */
     public function isConnected()
     {
-        return $this->_conn !== null;
+        return $this->isConnected;
     }
 
     /**
@@ -761,24 +701,24 @@ class Connection implements DriverConnection
     }
 
     /**
-     * Adds condition based on the criteria to the query components
+     * Adds identifier condition to the query components
      *
-     * @param array<string,mixed> $criteria   Map of key columns to their values
-     * @param string[]            $columns    Column names
-     * @param mixed[]             $values     Column values
-     * @param string[]            $conditions Key conditions
+     * @param mixed[]  $identifier Map of key columns to their values
+     * @param string[] $columns    Column names
+     * @param mixed[]  $values     Column values
+     * @param string[] $conditions Key conditions
      *
-     * @throws Exception
+     * @throws DBALException
      */
-    private function addCriteriaCondition(
-        array $criteria,
+    private function addIdentifierCondition(
+        array $identifier,
         array &$columns,
         array &$values,
         array &$conditions
     ): void {
         $platform = $this->getDatabasePlatform();
 
-        foreach ($criteria as $columnName => $value) {
+        foreach ($identifier as $columnName => $value) {
             if ($value === null) {
                 $conditions[] = $platform->getIsNullExpression($columnName);
                 continue;
@@ -795,26 +735,27 @@ class Connection implements DriverConnection
      *
      * Table expression and columns are not escaped and are not safe for user-input.
      *
-     * @param string                                                               $table    Table name
-     * @param array<string, mixed>                                                 $criteria Deletion criteria
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types    Parameter types
+     * @param string         $tableExpression The expression of the table on which to delete.
+     * @param mixed[]        $identifier      The deletion criteria. An associative array containing column-value pairs.
+     * @param int[]|string[] $types           The types of identifiers.
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
-     * @throws Exception
+     * @throws DBALException
+     * @throws InvalidArgumentException
      */
-    public function delete($table, array $criteria, array $types = [])
+    public function delete($tableExpression, array $identifier, array $types = [])
     {
-        if (empty($criteria)) {
+        if (empty($identifier)) {
             throw InvalidArgumentException::fromEmptyCriteria();
         }
 
         $columns = $values = $conditions = [];
 
-        $this->addCriteriaCondition($criteria, $columns, $values, $conditions);
+        $this->addIdentifierCondition($identifier, $columns, $values, $conditions);
 
-        return $this->executeStatement(
-            'DELETE FROM ' . $table . ' WHERE ' . implode(' AND ', $conditions),
+        return $this->executeUpdate(
+            'DELETE FROM ' . $tableExpression . ' WHERE ' . implode(' AND ', $conditions),
             $values,
             is_string(key($types)) ? $this->extractTypeValues($columns, $types) : $types
         );
@@ -828,6 +769,8 @@ class Connection implements DriverConnection
     public function close()
     {
         $this->_conn = null;
+
+        $this->isConnected = false;
     }
 
     /**
@@ -835,13 +778,13 @@ class Connection implements DriverConnection
      *
      * @param int $level The level to set.
      *
-     * @return int|string
+     * @return int
      */
     public function setTransactionIsolation($level)
     {
         $this->transactionIsolationLevel = $level;
 
-        return $this->executeStatement($this->getDatabasePlatform()->getSetTransactionIsolationSQL($level));
+        return $this->executeUpdate($this->getDatabasePlatform()->getSetTransactionIsolationSQL($level));
     }
 
     /**
@@ -863,16 +806,16 @@ class Connection implements DriverConnection
      *
      * Table expression and columns are not escaped and are not safe for user-input.
      *
-     * @param string                                                               $table    Table name
-     * @param array<string, mixed>                                                 $data     Column-value pairs
-     * @param array<string, mixed>                                                 $criteria Update criteria
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types    Parameter types
+     * @param string         $tableExpression The expression of the table to update quoted or unquoted.
+     * @param mixed[]        $data            An associative array containing column-value pairs.
+     * @param mixed[]        $identifier      The update criteria. An associative array containing column-value pairs.
+     * @param int[]|string[] $types           Types of the merged $data and $identifier arrays in that order.
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function update($table, array $data, array $criteria, array $types = [])
+    public function update($tableExpression, array $data, array $identifier, array $types = [])
     {
         $columns = $values = $conditions = $set = [];
 
@@ -882,16 +825,16 @@ class Connection implements DriverConnection
             $set[]     = $columnName . ' = ?';
         }
 
-        $this->addCriteriaCondition($criteria, $columns, $values, $conditions);
+        $this->addIdentifierCondition($identifier, $columns, $values, $conditions);
 
         if (is_string(key($types))) {
             $types = $this->extractTypeValues($columns, $types);
         }
 
-        $sql = 'UPDATE ' . $table . ' SET ' . implode(', ', $set)
+        $sql = 'UPDATE ' . $tableExpression . ' SET ' . implode(', ', $set)
                 . ' WHERE ' . implode(' AND ', $conditions);
 
-        return $this->executeStatement($sql, $values, $types);
+        return $this->executeUpdate($sql, $values, $types);
     }
 
     /**
@@ -899,18 +842,18 @@ class Connection implements DriverConnection
      *
      * Table expression and columns are not escaped and are not safe for user-input.
      *
-     * @param string                                                               $table Table name
-     * @param array<string, mixed>                                                 $data  Column-value pairs
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types Parameter types
+     * @param string         $tableExpression The expression of the table to insert data into, quoted or unquoted.
+     * @param mixed[]        $data            An associative array containing column-value pairs.
+     * @param int[]|string[] $types           Types of the inserted data.
      *
-     * @return int|string The number of affected rows.
+     * @return int The number of affected rows.
      *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function insert($table, array $data, array $types = [])
+    public function insert($tableExpression, array $data, array $types = [])
     {
         if (empty($data)) {
-            return $this->executeStatement('INSERT INTO ' . $table . ' () VALUES ()');
+            return $this->executeUpdate('INSERT INTO ' . $tableExpression . ' () VALUES ()');
         }
 
         $columns = [];
@@ -923,8 +866,8 @@ class Connection implements DriverConnection
             $set[]     = '?';
         }
 
-        return $this->executeStatement(
-            'INSERT INTO ' . $table . ' (' . implode(', ', $columns) . ')' .
+        return $this->executeUpdate(
+            'INSERT INTO ' . $tableExpression . ' (' . implode(', ', $columns) . ')' .
             ' VALUES (' . implode(', ', $set) . ')',
             $values,
             is_string(key($types)) ? $this->extractTypeValues($columns, $types) : $types
@@ -934,10 +877,10 @@ class Connection implements DriverConnection
     /**
      * Extract ordered type list from an ordered column list and type map.
      *
-     * @param array<int, string>                                                   $columnList
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types
+     * @param int[]|string[] $columnList
+     * @param int[]|string[] $types
      *
-     * @return array<int, int|string|Type|null>|array<string, int|string|Type|null>
+     * @return int[]|string[]
      */
     private function extractTypeValues(array $columnList, array $types)
     {
@@ -971,15 +914,12 @@ class Connection implements DriverConnection
 
     /**
      * {@inheritDoc}
-     *
-     * @param mixed                $value
-     * @param int|string|Type|null $type
      */
-    public function quote($value, $type = ParameterType::STRING)
+    public function quote($input, $type = ParameterType::STRING)
     {
         $connection = $this->getWrappedConnection();
 
-        [$value, $bindingType] = $this->getBindingInfo($value, $type);
+        [$value, $bindingType] = $this->getBindingInfo($input, $type);
 
         return $connection->quote($value, $bindingType);
     }
@@ -1003,261 +943,180 @@ class Connection implements DriverConnection
     /**
      * Prepares and executes an SQL query and returns the result as an array of numeric arrays.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return array<int,array<int,mixed>>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchAllNumeric(string $query, array $params = [], array $types = []): array
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            return $stmt->fetchAllNumeric();
+            if ($stmt instanceof Result) {
+                return $stmt->fetchAllNumeric();
+            }
+
+            return $stmt->fetchAll(FetchMode::NUMERIC);
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
     /**
      * Prepares and executes an SQL query and returns the result as an array of associative arrays.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return array<int,array<string,mixed>>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchAllAssociative(string $query, array $params = [], array $types = []): array
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            return $stmt->fetchAllAssociative();
+            if ($stmt instanceof Result) {
+                return $stmt->fetchAllAssociative();
+            }
+
+            return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
-    }
-
-    /**
-     * Prepares and executes an SQL query and returns the result as an associative array with the keys
-     * mapped to the first column and the values mapped to the second column.
-     *
-     * @param string                                           $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
-     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
-     *
-     * @return array<mixed,mixed>
-     *
-     * @throws Exception
-     */
-    public function fetchAllKeyValue(string $query, array $params = [], array $types = []): array
-    {
-        $stmt = $this->executeQuery($query, $params, $types);
-
-        $this->ensureHasKeyValue($stmt);
-
-        $data = [];
-
-        foreach ($stmt->fetchAll(FetchMode::NUMERIC) as [$key, $value]) {
-            $data[$key] = $value;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Prepares and executes an SQL query and returns the result as an associative array with the keys mapped
-     * to the first column and the values being an associative array representing the rest of the columns
-     * and their values.
-     *
-     * @param string                                           $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
-     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
-     *
-     * @return array<mixed,array<string,mixed>>
-     *
-     * @throws Exception
-     */
-    public function fetchAllAssociativeIndexed(string $query, array $params = [], array $types = []): array
-    {
-        $stmt = $this->executeQuery($query, $params, $types);
-
-        $data = [];
-
-        foreach ($stmt->fetchAll(FetchMode::ASSOCIATIVE) as $row) {
-            $data[array_shift($row)] = $row;
-        }
-
-        return $data;
     }
 
     /**
      * Prepares and executes an SQL query and returns the result as an array of the first column values.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return array<int,mixed>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function fetchFirstColumn(string $query, array $params = [], array $types = []): array
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            return $stmt->fetchFirstColumn();
+            if ($stmt instanceof Result) {
+                return $stmt->fetchFirstColumn();
+            }
+
+            return $stmt->fetchAll(FetchMode::COLUMN);
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
     /**
      * Prepares and executes an SQL query and returns the result as an iterator over rows represented as numeric arrays.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return Traversable<int,array<int,mixed>>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function iterateNumeric(string $query, array $params = [], array $types = []): Traversable
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            yield from $stmt->iterateNumeric();
+            if ($stmt instanceof Result) {
+                yield from $stmt->iterateNumeric();
+            } else {
+                while (($row = $stmt->fetch(FetchMode::NUMERIC)) !== false) {
+                    yield $row;
+                }
+            }
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
     /**
-     * Prepares and executes an SQL query and returns the result as an iterator over rows represented
-     * as associative arrays.
+     * Prepares and executes an SQL query and returns the result as an iterator over rows represented as associative arrays.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return Traversable<int,array<string,mixed>>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function iterateAssociative(string $query, array $params = [], array $types = []): Traversable
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            yield from $stmt->iterateAssociative();
+            if ($stmt instanceof Result) {
+                yield from $stmt->iterateAssociative();
+            } else {
+                while (($row = $stmt->fetch(FetchMode::ASSOCIATIVE)) !== false) {
+                    yield $row;
+                }
+            }
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
-        }
-    }
-
-    /**
-     * Prepares and executes an SQL query and returns the result as an iterator with the keys
-     * mapped to the first column and the values mapped to the second column.
-     *
-     * @param string                                           $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
-     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
-     *
-     * @return Traversable<mixed,mixed>
-     *
-     * @throws Exception
-     */
-    public function iterateKeyValue(string $query, array $params = [], array $types = []): Traversable
-    {
-        $stmt = $this->executeQuery($query, $params, $types);
-
-        $this->ensureHasKeyValue($stmt);
-
-        while (($row = $stmt->fetch(FetchMode::NUMERIC)) !== false) {
-            yield $row[0] => $row[1];
-        }
-    }
-
-    /**
-     * Prepares and executes an SQL query and returns the result as an iterator with the keys mapped
-     * to the first column and the values being an associative array representing the rest of the columns
-     * and their values.
-     *
-     * @param string                                           $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>           $params Query parameters
-     * @param array<int, int|string>|array<string, int|string> $types  Parameter types
-     *
-     * @return Traversable<mixed,array<string,mixed>>
-     *
-     * @throws Exception
-     */
-    public function iterateAssociativeIndexed(string $query, array $params = [], array $types = []): Traversable
-    {
-        $stmt = $this->executeQuery($query, $params, $types);
-
-        while (($row = $stmt->fetch(FetchMode::ASSOCIATIVE)) !== false) {
-            yield array_shift($row) => $row;
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
     /**
      * Prepares and executes an SQL query and returns the result as an iterator over the first column values.
      *
-     * @param string                                                               $query  SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                                           $query  The SQL query.
+     * @param array<int, mixed>|array<string, mixed>           $params The query parameters.
+     * @param array<int, int|string>|array<string, int|string> $types  The query parameter types.
      *
      * @return Traversable<int,mixed>
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function iterateColumn(string $query, array $params = [], array $types = []): Traversable
     {
         try {
-            $stmt = $this->ensureForwardCompatibilityStatement(
-                $this->executeQuery($query, $params, $types)
-            );
+            $stmt = $this->executeQuery($query, $params, $types);
 
-            yield from $stmt->iterateColumn();
+            if ($stmt instanceof Result) {
+                yield from $stmt->iterateColumn();
+            } else {
+                while (($value = $stmt->fetch(FetchMode::COLUMN)) !== false) {
+                    yield $value;
+                }
+            }
         } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $query, $params, $types);
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $e, $query);
         }
     }
 
     /**
      * Prepares an SQL statement.
      *
-     * @param string $sql The SQL statement to prepare.
+     * @param string $statement The SQL statement to prepare.
      *
-     * @return Statement The prepared statement.
+     * @return DriverStatement The prepared statement.
      *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function prepare($sql)
+    public function prepare($statement)
     {
         try {
-            $stmt = new Statement($sql, $this);
-        } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $sql);
+            $stmt = new Statement($statement, $this);
+        } catch (Throwable $ex) {
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $ex, $statement);
         }
 
         $stmt->setFetchMode($this->defaultFetchMode);
@@ -1271,34 +1130,33 @@ class Connection implements DriverConnection
      * If the query is parametrized, a prepared statement is used.
      * If an SQLLogger is configured, the execution is logged.
      *
-     * @param string                                                               $sql    SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string                 $query  The SQL query to execute.
+     * @param mixed[]                $params The parameters to bind to the query, if any.
+     * @param int[]|string[]         $types  The types the previous parameters are in.
+     * @param QueryCacheProfile|null $qcp    The query cache profile, optional.
      *
-     * @return ForwardCompatibility\DriverStatement|ForwardCompatibility\DriverResultStatement
+     * @return ResultStatement The executed statement.
      *
-     * The executed statement or the cached result statement if a query cache profile is used
-     *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function executeQuery($sql, array $params = [], $types = [], ?QueryCacheProfile $qcp = null)
+    public function executeQuery($query, array $params = [], $types = [], ?QueryCacheProfile $qcp = null)
     {
         if ($qcp !== null) {
-            return $this->executeCacheQuery($sql, $params, $types, $qcp);
+            return $this->executeCacheQuery($query, $params, $types, $qcp);
         }
 
         $connection = $this->getWrappedConnection();
 
         $logger = $this->_config->getSQLLogger();
         if ($logger) {
-            $logger->startQuery($sql, $params, $types);
+            $logger->startQuery($query, $params, $types);
         }
 
         try {
             if ($params) {
-                [$sql, $params, $types] = SQLParserUtils::expandListParameters($sql, $params, $types);
+                [$query, $params, $types] = SQLParserUtils::expandListParameters($query, $params, $types);
 
-                $stmt = $connection->prepare($sql);
+                $stmt = $connection->prepare($query);
                 if ($types) {
                     $this->_bindTypedValues($stmt, $params, $types);
                     $stmt->execute();
@@ -1306,15 +1164,10 @@ class Connection implements DriverConnection
                     $stmt->execute($params);
                 }
             } else {
-                $stmt = $connection->query($sql);
+                $stmt = $connection->query($query);
             }
-        } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery(
-                $e,
-                $sql,
-                $params,
-                $types
-            );
+        } catch (Throwable $ex) {
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $ex, $query, $this->resolveParams($params, $types));
         }
 
         $stmt->setFetchMode($this->defaultFetchMode);
@@ -1323,21 +1176,22 @@ class Connection implements DriverConnection
             $logger->stopQuery();
         }
 
-        return $this->ensureForwardCompatibilityStatement($stmt);
+        return $stmt;
     }
 
     /**
      * Executes a caching query.
      *
-     * @param string                                                               $sql    SQL query
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param string            $query  The SQL query to execute.
+     * @param mixed[]           $params The parameters to bind to the query, if any.
+     * @param int[]|string[]    $types  The types the previous parameters are in.
+     * @param QueryCacheProfile $qcp    The query cache profile.
      *
-     * @return ForwardCompatibility\DriverResultStatement
+     * @return ResultStatement
      *
      * @throws CacheException
      */
-    public function executeCacheQuery($sql, $params, $types, QueryCacheProfile $qcp)
+    public function executeCacheQuery($query, $params, $types, QueryCacheProfile $qcp)
     {
         $resultCache = $qcp->getResultCacheDriver() ?? $this->_config->getResultCacheImpl();
 
@@ -1345,10 +1199,10 @@ class Connection implements DriverConnection
             throw CacheException::noResultDriverConfigured();
         }
 
-        $connectionParams = $this->params;
+        $connectionParams = $this->getParams();
         unset($connectionParams['platform']);
 
-        [$cacheKey, $realKey] = $qcp->generateCacheKeys($sql, $params, $types, $connectionParams);
+        [$cacheKey, $realKey] = $qcp->generateCacheKeys($query, $params, $types, $connectionParams);
 
         // fetch the row pointers entry
         $data = $resultCache->fetch($cacheKey);
@@ -1363,26 +1217,12 @@ class Connection implements DriverConnection
         }
 
         if (! isset($stmt)) {
-            $stmt = new ResultCacheStatement(
-                $this->executeQuery($sql, $params, $types),
-                $resultCache,
-                $cacheKey,
-                $realKey,
-                $qcp->getLifetime()
-            );
+            $stmt = new ResultCacheStatement($this->executeQuery($query, $params, $types), $resultCache, $cacheKey, $realKey, $qcp->getLifetime());
         }
 
         $stmt->setFetchMode($this->defaultFetchMode);
 
-        return $this->ensureForwardCompatibilityStatement($stmt);
-    }
-
-    /**
-     * @return ForwardCompatibility\Result
-     */
-    private function ensureForwardCompatibilityStatement(ResultStatement $stmt)
-    {
-        return ForwardCompatibility\Result::ensure($stmt);
+        return $stmt;
     }
 
     /**
@@ -1391,7 +1231,7 @@ class Connection implements DriverConnection
      *
      * @deprecated
      *
-     * @param string  $sql      The SQL query to execute.
+     * @param string  $query    The SQL query to execute.
      * @param mixed[] $params   The parameters, if any.
      * @param Closure $function The transformation function that is applied on each row.
      *                           The function receives a single parameter, an array, that
@@ -1399,16 +1239,10 @@ class Connection implements DriverConnection
      *
      * @return mixed[] The projected result of the query.
      */
-    public function project($sql, array $params, Closure $function)
+    public function project($query, array $params, Closure $function)
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3823',
-            'Connection::project() is deprecated without replacement, implement data projections in your own code.'
-        );
-
         $result = [];
-        $stmt   = $this->executeQuery($sql, $params);
+        $stmt   = $this->executeQuery($query, $params);
 
         while ($row = $stmt->fetch()) {
             $result[] = $function($row);
@@ -1422,20 +1256,12 @@ class Connection implements DriverConnection
     /**
      * Executes an SQL statement, returning a result set as a Statement object.
      *
-     * @deprecated Use {@link executeQuery()} instead.
-     *
      * @return \Doctrine\DBAL\Driver\Statement
      *
-     * @throws Exception
+     * @throws DBALException
      */
     public function query()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4163',
-            'Connection::query() is deprecated, use Connection::executeQuery() instead.'
-        );
-
         $connection = $this->getWrappedConnection();
 
         $args = func_get_args();
@@ -1447,8 +1273,8 @@ class Connection implements DriverConnection
 
         try {
             $statement = $connection->query(...$args);
-        } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $args[0]);
+        } catch (Throwable $ex) {
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $ex, $args[0]);
         }
 
         $statement->setFetchMode($this->defaultFetchMode);
@@ -1466,61 +1292,28 @@ class Connection implements DriverConnection
      *
      * This method supports PDO binding types as well as DBAL mapping types.
      *
-     * @deprecated Use {@link executeStatement()} instead.
+     * @param string                 $query  The SQL query.
+     * @param array<mixed>           $params The query parameters.
+     * @param array<int|string|null> $types  The parameter types.
      *
-     * @param string                                                               $sql    SQL statement
-     * @param array<int, mixed>|array<string, mixed>                               $params Statement parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @return int The number of affected rows.
      *
-     * @return int|string The number of affected rows.
-     *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function executeUpdate($sql, array $params = [], array $types = [])
-    {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4163',
-            'Connection::executeUpdate() is deprecated, use Connection::executeStatement() instead.'
-        );
-
-        return $this->executeStatement($sql, $params, $types);
-    }
-
-    /**
-     * Executes an SQL statement with the given parameters and returns the number of affected rows.
-     *
-     * Could be used for:
-     *  - DML statements: INSERT, UPDATE, DELETE, etc.
-     *  - DDL statements: CREATE, DROP, ALTER, etc.
-     *  - DCL statements: GRANT, REVOKE, etc.
-     *  - Session control statements: ALTER SESSION, SET, DECLARE, etc.
-     *  - Other statements that don't yield a row set.
-     *
-     * This method supports PDO binding types as well as DBAL mapping types.
-     *
-     * @param string                                                               $sql    SQL statement
-     * @param array<int, mixed>|array<string, mixed>                               $params Statement parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
-     *
-     * @return int|string The number of affected rows.
-     *
-     * @throws Exception
-     */
-    public function executeStatement($sql, array $params = [], array $types = [])
+    public function executeUpdate($query, array $params = [], array $types = [])
     {
         $connection = $this->getWrappedConnection();
 
         $logger = $this->_config->getSQLLogger();
         if ($logger) {
-            $logger->startQuery($sql, $params, $types);
+            $logger->startQuery($query, $params, $types);
         }
 
         try {
             if ($params) {
-                [$sql, $params, $types] = SQLParserUtils::expandListParameters($sql, $params, $types);
+                [$query, $params, $types] = SQLParserUtils::expandListParameters($query, $params, $types);
 
-                $stmt = $connection->prepare($sql);
+                $stmt = $connection->prepare($query);
 
                 if ($types) {
                     $this->_bindTypedValues($stmt, $params, $types);
@@ -1531,15 +1324,10 @@ class Connection implements DriverConnection
 
                 $result = $stmt->rowCount();
             } else {
-                $result = $connection->exec($sql);
+                $result = $connection->exec($query);
             }
-        } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery(
-                $e,
-                $sql,
-                $params,
-                $types
-            );
+        } catch (Throwable $ex) {
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $ex, $query, $this->resolveParams($params, $types));
         }
 
         if ($logger) {
@@ -1552,33 +1340,25 @@ class Connection implements DriverConnection
     /**
      * Executes an SQL statement and return the number of affected rows.
      *
-     * @deprecated Use {@link executeStatement()} instead.
+     * @param string $statement
      *
-     * @param string $sql
+     * @return int The number of affected rows.
      *
-     * @return int|string The number of affected rows.
-     *
-     * @throws Exception
+     * @throws DBALException
      */
-    public function exec($sql)
+    public function exec($statement)
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4163',
-            'Connection::exec() is deprecated, use Connection::executeStatement() instead.'
-        );
-
         $connection = $this->getWrappedConnection();
 
         $logger = $this->_config->getSQLLogger();
         if ($logger) {
-            $logger->startQuery($sql);
+            $logger->startQuery($statement);
         }
 
         try {
-            $result = $connection->exec($sql);
-        } catch (Throwable $e) {
-            $this->handleExceptionDuringQuery($e, $sql);
+            $result = $connection->exec($statement);
+        } catch (Throwable $ex) {
+            throw DBALException::driverExceptionDuringQuery($this->_driver, $ex, $statement);
         }
 
         if ($logger) {
@@ -1607,12 +1387,6 @@ class Connection implements DriverConnection
      */
     public function errorCode()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3507',
-            'Connection::errorCode() is deprecated, use getCode() or getSQLState() on Exception instead.'
-        );
-
         return $this->getWrappedConnection()->errorCode();
     }
 
@@ -1623,12 +1397,6 @@ class Connection implements DriverConnection
      */
     public function errorInfo()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3507',
-            'Connection::errorInfo() is deprecated, use getCode() or getSQLState() on Exception instead.'
-        );
-
         return $this->getWrappedConnection()->errorInfo();
     }
 
@@ -1640,13 +1408,13 @@ class Connection implements DriverConnection
      * because the underlying database may not even support the notion of AUTO_INCREMENT/IDENTITY
      * columns or sequences.
      *
-     * @param string|null $name Name of the sequence object from which the ID should be returned.
+     * @param string|null $seqName Name of the sequence object from which the ID should be returned.
      *
-     * @return string|int|false A string representation of the last inserted ID.
+     * @return string A string representation of the last inserted ID.
      */
-    public function lastInsertId($name = null)
+    public function lastInsertId($seqName = null)
     {
-        return $this->getWrappedConnection()->lastInsertId($name);
+        return $this->getWrappedConnection()->lastInsertId($seqName);
     }
 
     /**
@@ -1661,6 +1429,7 @@ class Connection implements DriverConnection
      *
      * @return mixed The value returned by $func
      *
+     * @throws Exception
      * @throws Throwable
      */
     public function transactional(Closure $func)
@@ -1671,6 +1440,10 @@ class Connection implements DriverConnection
             $this->commit();
 
             return $res;
+        } catch (Exception $e) {
+            $this->rollBack();
+
+            throw $e;
         } catch (Throwable $e) {
             $this->rollBack();
 
@@ -1889,13 +1662,11 @@ class Connection implements DriverConnection
      */
     public function createSavepoint($savepoint)
     {
-        $platform = $this->getDatabasePlatform();
-
-        if (! $platform->supportsSavepoints()) {
+        if (! $this->getDatabasePlatform()->supportsSavepoints()) {
             throw ConnectionException::savepointsNotSupported();
         }
 
-        $this->getWrappedConnection()->exec($platform->createSavePoint($savepoint));
+        $this->getWrappedConnection()->exec($this->platform->createSavePoint($savepoint));
     }
 
     /**
@@ -1909,17 +1680,15 @@ class Connection implements DriverConnection
      */
     public function releaseSavepoint($savepoint)
     {
-        $platform = $this->getDatabasePlatform();
-
-        if (! $platform->supportsSavepoints()) {
+        if (! $this->getDatabasePlatform()->supportsSavepoints()) {
             throw ConnectionException::savepointsNotSupported();
         }
 
-        if (! $platform->supportsReleaseSavepoints()) {
+        if (! $this->platform->supportsReleaseSavepoints()) {
             return;
         }
 
-        $this->getWrappedConnection()->exec($platform->releaseSavePoint($savepoint));
+        $this->getWrappedConnection()->exec($this->platform->releaseSavePoint($savepoint));
     }
 
     /**
@@ -1933,13 +1702,11 @@ class Connection implements DriverConnection
      */
     public function rollbackSavepoint($savepoint)
     {
-        $platform = $this->getDatabasePlatform();
-
-        if (! $platform->supportsSavepoints()) {
+        if (! $this->getDatabasePlatform()->supportsSavepoints()) {
             throw ConnectionException::savepointsNotSupported();
         }
 
-        $this->getWrappedConnection()->exec($platform->rollbackSavePoint($savepoint));
+        $this->getWrappedConnection()->exec($this->platform->rollbackSavePoint($savepoint));
     }
 
     /**
@@ -1950,8 +1717,6 @@ class Connection implements DriverConnection
     public function getWrappedConnection()
     {
         $this->connect();
-
-        assert($this->_conn !== null);
 
         return $this->_conn;
     }
@@ -2039,9 +1804,9 @@ class Connection implements DriverConnection
      * @internal Duck-typing used on the $stmt parameter to support driver statements as well as
      *           raw PDOStatement instances.
      *
-     * @param \Doctrine\DBAL\Driver\Statement                                      $stmt   Prepared statement
-     * @param array<int, mixed>|array<string, mixed>                               $params Statement parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param \Doctrine\DBAL\Driver\Statement $stmt   The statement to bind the values to.
+     * @param mixed[]                         $params The map/list of named/positional parameters.
+     * @param int[]|string[]                  $types  The parameter types (PDO binding types or DBAL mapping types).
      *
      * @return void
      */
@@ -2081,12 +1846,12 @@ class Connection implements DriverConnection
     /**
      * Gets the binding type of a given type. The given type can be a PDO or DBAL mapping type.
      *
-     * @param mixed                $value The value to bind.
-     * @param int|string|Type|null $type  The type to bind (PDO or DBAL).
+     * @param mixed           $value The value to bind.
+     * @param int|string|null $type  The type to bind (PDO or DBAL).
      *
-     * @return array{mixed, int} [0] => the (escaped) value, [1] => the binding type.
+     * @return mixed[] [0] => the (escaped) value, [1] => the binding type.
      */
-    private function getBindingInfo($value, $type): array
+    private function getBindingInfo($value, $type)
     {
         if (is_string($type)) {
             $type = Type::getType($type);
@@ -2096,7 +1861,7 @@ class Connection implements DriverConnection
             $value       = $type->convertToDatabaseValue($value, $this->getDatabasePlatform());
             $bindingType = $type->getBindingType();
         } else {
-            $bindingType = $type ?? ParameterType::STRING;
+            $bindingType = $type;
         }
 
         return [$value, $bindingType];
@@ -2108,10 +1873,10 @@ class Connection implements DriverConnection
      * @internal This is a purely internal method. If you rely on this method, you are advised to
      *           copy/paste the code as this method may change, or be removed without prior notice.
      *
-     * @param array<int, mixed>|array<string, mixed>                               $params Query parameters
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types  Parameter types
+     * @param mixed[]        $params
+     * @param int[]|string[] $types
      *
-     * @return array<int, int|string|Type|null>|array<string, int|string|Type|null>
+     * @return mixed[]
      */
     public function resolveParams(array $params, array $types)
     {
@@ -2167,8 +1932,6 @@ class Connection implements DriverConnection
      * It is responsibility of the developer to handle this case
      * and abort the request or reconnect manually:
      *
-     * @deprecated
-     *
      * @return bool
      *
      * @example
@@ -2185,12 +1948,6 @@ class Connection implements DriverConnection
      */
     public function ping()
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4119',
-            'Retry and reconnecting lost connections now happens automatically, ping() will be removed in DBAL 3.'
-        );
-
         $connection = $this->getWrappedConnection();
 
         if ($connection instanceof PingableConnection) {
@@ -2203,70 +1960,6 @@ class Connection implements DriverConnection
             return true;
         } catch (DBALException $e) {
             return false;
-        }
-    }
-
-    /**
-     * @internal
-     *
-     * @param array<int, mixed>|array<string, mixed>                               $params
-     * @param array<int, int|string|Type|null>|array<string, int|string|Type|null> $types
-     *
-     * @psalm-return never-return
-     *
-     * @throws Exception
-     */
-    public function handleExceptionDuringQuery(Throwable $e, string $sql, array $params = [], array $types = []): void
-    {
-        $this->throw(
-            Exception::driverExceptionDuringQuery(
-                $this->_driver,
-                $e,
-                $sql,
-                $this->resolveParams($params, $types)
-            )
-        );
-    }
-
-    /**
-     * @internal
-     *
-     * @psalm-return never-return
-     *
-     * @throws Exception
-     */
-    public function handleDriverException(Throwable $e): void
-    {
-        $this->throw(
-            Exception::driverException(
-                $this->_driver,
-                $e
-            )
-        );
-    }
-
-    /**
-     * @internal
-     *
-     * @psalm-return never-return
-     *
-     * @throws Exception
-     */
-    private function throw(Exception $e): void
-    {
-        if ($e instanceof ConnectionLost) {
-            $this->close();
-        }
-
-        throw $e;
-    }
-
-    private function ensureHasKeyValue(ResultStatement $stmt): void
-    {
-        $columnCount = $stmt->columnCount();
-
-        if ($columnCount < 2) {
-            throw NoKeyValue::fromColumnCount($columnCount);
         }
     }
 }

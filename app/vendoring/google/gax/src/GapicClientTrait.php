@@ -43,7 +43,6 @@ use Google\ApiCore\Transport\GrpcFallbackTransport;
 use Google\ApiCore\Transport\GrpcTransport;
 use Google\ApiCore\Transport\RestTransport;
 use Google\ApiCore\Transport\TransportInterface;
-use Google\Auth\CredentialsLoader;
 use Google\Auth\FetchAuthTokenInterface;
 use Google\LongRunning\Operation;
 use Google\Protobuf\Internal\Message;
@@ -53,15 +52,11 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 /**
  * Common functions used to work with various clients.
- *
- * @internal
  */
 trait GapicClientTrait
 {
     use ArrayTrait;
-    use ValidationTrait {
-        ValidationTrait::validate as traitValidate;
-    }
+    use ValidationTrait;
     use GrpcSupportTrait;
 
     /** @var TransportInterface */
@@ -128,7 +123,7 @@ trait GapicClientTrait
         }
     }
 
-    private static function initGrpcGcpConfig(string $hostName, string $confPath)
+    private static function initGrpcGcpConfig($hostName, $confPath)
     {
         $apiConfig = new ApiConfig();
         $apiConfig->mergeFromJsonString(file_get_contents($confPath));
@@ -163,50 +158,29 @@ trait GapicClientTrait
             'gapicVersion' => self::getGapicVersion($options),
             'libName' => null,
             'libVersion' => null,
-            'apiEndpoint' => null,
-            'clientCertSource' => null,
         ];
-
-        $supportedTransports = $this->supportedTransports();
-        foreach ($supportedTransports as $transportName) {
-            if (!array_key_exists($transportName, $defaultOptions['transportConfig'])) {
-                $defaultOptions['transportConfig'][$transportName] = [];
-            }
-        }
-        if (in_array('grpc', $supportedTransports)) {
-            $defaultOptions['transportConfig']['grpc'] = [
-                'stubOpts' => ['grpc.service_config_disable_resolution' => 1]
-            ];
-        }
+        $defaultOptions['transportConfig'] += [
+            'grpc' => ['stubOpts' => ['grpc.service_config_disable_resolution' => 1]],
+            'rest' => [],
+            'grpc-fallback' => [],
+        ];
 
         // Merge defaults into $options starting from top level
         // variables, then going into deeper nesting, so that
         // we will not encounter missing keys
         $options += $defaultOptions;
         $options['credentialsConfig'] += $defaultOptions['credentialsConfig'];
-        $options['transportConfig'] += $defaultOptions['transportConfig'];  // @phpstan-ignore-line
-        if (isset($options['transportConfig']['grpc'])) {
-            $options['transportConfig']['grpc'] += $defaultOptions['transportConfig']['grpc'];
-            $options['transportConfig']['grpc']['stubOpts'] += $defaultOptions['transportConfig']['grpc']['stubOpts'];
-        }
-        if (isset($options['transportConfig']['rest'])) {
-            $options['transportConfig']['rest'] += $defaultOptions['transportConfig']['rest'];
-        }
+        $options['transportConfig'] += $defaultOptions['transportConfig'];
+        $options['transportConfig']['grpc'] += $defaultOptions['transportConfig']['grpc'];
+        $options['transportConfig']['grpc']['stubOpts'] += $defaultOptions['transportConfig']['grpc']['stubOpts'];
+        $options['transportConfig']['rest'] += $defaultOptions['transportConfig']['rest'];
+        $options['transportConfig']['grpc-fallback'] += $defaultOptions['transportConfig']['grpc-fallback'];
 
         $this->modifyClientOptions($options);
 
         // serviceAddress is now deprecated and acts as an alias for apiEndpoint
         if (isset($options['serviceAddress'])) {
             $options['apiEndpoint'] = $this->pluck('serviceAddress', $options, false);
-        }
-
-        // If an API endpoint is set, ensure the "audience" does not conflict
-        // with the custom endpoint by setting "user defined" scopes.
-        if ($options['apiEndpoint'] != $defaultOptions['apiEndpoint']
-            && empty($options['credentialsConfig']['scopes'])
-            && !empty($options['credentialsConfig']['defaultScopes'])
-        ) {
-            $options['credentialsConfig']['scopes'] = $options['credentialsConfig']['defaultScopes'];
         }
 
         if (extension_loaded('sysvshm')
@@ -231,50 +205,7 @@ trait GapicClientTrait
             }
         }
 
-        // mTLS: detect and load the default clientCertSource if the environment variable
-        // "GOOGLE_API_USE_CLIENT_CERTIFICATE" is true, and the cert source is available
-        if (empty($options['clientCertSource']) && CredentialsLoader::shouldLoadClientCertSource()) {
-            if ($defaultCertSource = CredentialsLoader::getDefaultClientCertSource()) {
-                $options['clientCertSource'] = function () use ($defaultCertSource) {
-                    $cert = call_user_func($defaultCertSource);
-
-                    // the key and the cert are returned in one string
-                    return [$cert, $cert];
-                };
-            }
-        }
-
-        // mTLS: If no apiEndpoint has been supplied by the user, and either
-        // GOOGLE_API_USE_MTLS_ENDPOINT tells us to, or mTLS is available, use the mTLS endpoint.
-        if ($options['apiEndpoint'] === $defaultOptions['apiEndpoint']
-            && $this->shouldUseMtlsEndpoint($options)
-        ) {
-            $options['apiEndpoint'] = self::determineMtlsEndpoint($options['apiEndpoint']);
-        }
-
         return $options;
-    }
-
-    private function shouldUseMtlsEndpoint(array $options)
-    {
-        $mtlsEndpointEnvVar = getenv('GOOGLE_API_USE_MTLS_ENDPOINT');
-        if ('always' === $mtlsEndpointEnvVar) {
-            return true;
-        }
-        if ('never' === $mtlsEndpointEnvVar) {
-            return false;
-        }
-        // For all other cases, assume "auto" and return true if clientCertSource exists
-        return !empty($options['clientCertSource']);
-    }
-
-    private static function determineMtlsEndpoint(string $apiEndpoint)
-    {
-        $parts = explode('.', $apiEndpoint);
-        if (count($parts) < 3) {
-            return $apiEndpoint; // invalid endpoint!
-        }
-        return sprintf('%s.mtls.%s', array_shift($parts), implode('.', $parts));
     }
 
     /**
@@ -286,6 +217,9 @@ trait GapicClientTrait
      *     @type string $apiEndpoint
      *           The address of the API remote host, for example "example.googleapis.com. May also
      *           include the port, for example "example.googleapis.com:443"
+     *     @type string $serviceAddress
+     *           **Deprecated**. This option will be removed in the next major release. Please
+     *           utilize the `$apiEndpoint` option instead.
      *     @type bool $disableRetries
      *           Determines whether or not retries defined by the client configuration should be
      *           disabled. Defaults to `false`.
@@ -335,8 +269,6 @@ trait GapicClientTrait
      *           The version of the client application.
      *     @type string $gapicVersion
      *           The code generator version of the GAPIC library.
-     *     @type callable $clientCertSource
-     *           A callable which returns the client cert as a string.
      * }
      * @throws ValidationException
      */
@@ -355,7 +287,7 @@ trait GapicClientTrait
             'credentialsConfig',
             'transportConfig',
         ]);
-        $this->traitValidate($options, [
+        $this->validate($options, [
             'credentials',
             'transport',
             'gapicVersion',
@@ -373,18 +305,6 @@ trait GapicClientTrait
             $clientConfig,
             $options['disableRetries']
         );
-
-        // Edge case: If the client has the gRPC extension installed, but is
-        // a REST-only library, then the grpcVersion header should not be set.
-        if ($this->transport instanceof GrpcTransport) {
-            $options['grpcVersion'] = phpversion('grpc');
-            unset($options['restVersion']);
-        } elseif ($this->transport instanceof RestTransport
-            || $this->transport instanceof GrpcFallbackTransport) {
-            unset($options['grpcVersion']);
-            $options['restVersion'] = Version::getApiCoreVersion();
-        }
-
         $this->agentHeader = AgentHeader::buildAgentHeader(
             $this->pluckArray([
                 'libName',
@@ -404,12 +324,7 @@ trait GapicClientTrait
         $transport = $options['transport'] ?: self::defaultTransport();
         $this->transport = $transport instanceof TransportInterface
             ? $transport
-            : $this->createTransport(
-                $options['apiEndpoint'],
-                $transport,
-                $options['transportConfig'],
-                $options['clientCertSource']
-            );
+            : $this->createTransport($options['apiEndpoint'], $transport, $options['transportConfig']);
     }
 
     /**
@@ -443,34 +358,20 @@ trait GapicClientTrait
      * @param string $apiEndpoint
      * @param string $transport
      * @param array $transportConfig
-     * @param callable $clientCertSource
      * @return TransportInterface
      * @throws ValidationException
      */
-    private function createTransport(
-        string $apiEndpoint,
-        $transport,
-        array $transportConfig,
-        callable $clientCertSource = null
-    ) {
+    private function createTransport($apiEndpoint, $transport, array $transportConfig)
+    {
         if (!is_string($transport)) {
             throw new ValidationException(
                 "'transport' must be a string, instead got:" .
                 print_r($transport, true)
             );
         }
-        $supportedTransports = self::supportedTransports();
-        if (!in_array($transport, $supportedTransports)) {
-            throw new ValidationException(sprintf(
-                'Unexpected transport option "%s". Supported transports: %s',
-                $transport,
-                implode(', ', $supportedTransports)
-            ));
-        }
         $configForSpecifiedTransport = isset($transportConfig[$transport])
             ? $transportConfig[$transport]
             : [];
-        $configForSpecifiedTransport['clientCertSource'] = $clientCertSource;
         switch ($transport) {
             case 'grpc':
                 return GrpcTransport::build($apiEndpoint, $configForSpecifiedTransport);
@@ -504,15 +405,8 @@ trait GapicClientTrait
             'descriptorsConfigPath',
         ], $options);
 
-        // User-supplied operations client
-        if ($operationsClient = $this->pluck('operationsClient', $options, false)) {
-            return $operationsClient;
-        }
-
-        // operationsClientClass option
-        $operationsClientClass = $this->pluck('operationsClientClass', $options, false)
-            ?: OperationsCLient::class;
-        return new $operationsClientClass($options);
+        return $this->pluck('operationsClient', $options, false)
+            ?: new OperationsClient($options);
     }
 
     /**
@@ -525,157 +419,6 @@ trait GapicClientTrait
             : 'rest';
     }
 
-    private function validateCallConfig(string $methodName)
-    {
-        // Ensure a method descriptor exists for the target method.
-        if (!isset($this->descriptors[$methodName])) {
-            throw new ValidationException("Requested method '$methodName' does not exist in descriptor configuration.");
-        }
-        $methodDescriptors = $this->descriptors[$methodName];
-
-        // Ensure required descriptor configuration exists.
-        if (!isset($methodDescriptors['callType'])) {
-            throw new ValidationException("Requested method '$methodName' does not have a callType " .
-                "in descriptor configuration.");
-        }
-        $callType = $methodDescriptors['callType'];
-
-        // Validate various callType specific configurations.
-        if ($callType == Call::LONGRUNNING_CALL) {
-            if (!isset($methodDescriptors['longRunning'])) {
-                throw new ValidationException("Requested method '$methodName' does not have a longRunning config " .
-                    "in descriptor configuration.");
-            }
-            // @TODO: check if the client implements `OperationsClientInterface` instead
-            if (!method_exists($this, 'getOperationsClient')) {
-                throw new ValidationException("Client missing required getOperationsClient " .
-                    "for longrunning call '$methodName'");
-            }
-        } elseif ($callType == Call::PAGINATED_CALL) {
-            if (!isset($methodDescriptors['pageStreaming'])) {
-                throw new ValidationException("Requested method '$methodName' with callType PAGINATED_CALL does not " .
-                    "have a pageStreaming in descriptor configuration.");
-            }
-        }
-
-        // LRO are either Standard LRO response type or custom, which are handled by
-        // startOperationCall, so no need to validate responseType for those callType.
-        if ($callType != Call::LONGRUNNING_CALL) {
-            if (!isset($methodDescriptors['responseType'])) {
-                throw new ValidationException("Requested method '$methodName' does not have a responseType " .
-                    "in descriptor configuration.");
-            }
-        }
-
-        return $methodDescriptors;
-    }
-
-    /**
-     * @param string $methodName
-     * @param Message $request
-     * @param array $optionalArgs {
-     *     Call Options
-     *
-     *     @type array $headers                     [optional] key-value array containing headers
-     *     @type int $timeoutMillis                 [optional] the timeout in milliseconds for the call
-     *     @type array $transportOptions            [optional] transport-specific call options
-     *     @type RetrySettings|array $retrySettings [optional] A retry settings override for the call.
-     * }
-     *
-     * @experimental
-     *
-     * @return PromiseInterface
-     */
-    private function startAsyncCall(
-        string $methodName,
-        Message $request,
-        array $optionalArgs = []
-    ) {
-        // Convert method name to the UpperCamelCase of RPC names from lowerCamelCase of GAPIC method names
-        // in order to find the method in the descriptor config.
-        $methodName = ucfirst($methodName);
-        $methodDescriptors = $this->validateCallConfig($methodName);
-
-        $callType = $methodDescriptors['callType'];
-
-        switch ($callType) {
-            case Call::PAGINATED_CALL:
-                return $this->getPagedListResponseAsync(
-                    $methodName,
-                    $optionalArgs,
-                    $methodDescriptors['responseType'],
-                    $request,
-                    $methodDescriptors['interfaceOverride'] ?? $this->serviceName
-                );
-            case Call::SERVER_STREAMING_CALL:
-            case Call::CLIENT_STREAMING_CALL:
-            case Call::BIDI_STREAMING_CALL:
-                throw new ValidationException("Call type '$callType' of requested method " .
-                    "'$methodName' is not supported for async execution.");
-        }
-
-        return $this->startApiCall($methodName, $request, $optionalArgs);
-    }
-
-    /**
-     * @param string $methodName
-     * @param Message $request
-     * @param array $optionalArgs {
-     *     Call Options
-     *
-     *     @type array $headers [optional] key-value array containing headers
-     *     @type int $timeoutMillis [optional] the timeout in milliseconds for the call
-     *     @type array $transportOptions [optional] transport-specific call options
-     *     @type RetrySettings|array $retrySettings [optional] A retry settings
-     *           override for the call.
-     * }
-     *
-     * @experimental
-     *
-     * @return PromiseInterface|PagedListResponse|BidiStream|ClientStream|ServerStream
-     */
-    private function startApiCall(
-        string $methodName,
-        Message $request = null,
-        array $optionalArgs = []
-    ) {
-        $methodDescriptors =$this->validateCallConfig($methodName);
-        $callType = $methodDescriptors['callType'];
-
-        // Prepare request-based headers, merge with user-provided headers,
-        // which take precedence.
-        $headerParams = $methodDescriptors['headerParams'] ?? [];
-        $requestHeaders = $this->buildRequestParamsHeader($headerParams, $request);
-        $optionalArgs['headers'] = array_merge($requestHeaders, $optionalArgs['headers'] ?? []);
-
-        // Default the interface name, if not set, to the client's protobuf service name.
-        $interfaceName = $methodDescriptors['interfaceOverride'] ?? $this->serviceName;
-
-        // Handle call based on call type configured in the method descriptor config.
-        if ($callType == Call::LONGRUNNING_CALL) {
-            return $this->startOperationsCall(
-                $methodName,
-                $optionalArgs,
-                $request,
-                $this->getOperationsClient(),
-                $interfaceName,
-                // Custom operations will define their own operation response type, whereas standard
-                // LRO defaults to the same type.
-                $methodDescriptors['responseType'] ?? null
-            );
-        }
-
-        // Fully-qualified name of the response message PHP class.
-        $decodeType = $methodDescriptors['responseType'];
-
-        if ($callType == Call::PAGINATED_CALL) {
-            return $this->getPagedListResponse($methodName, $optionalArgs, $decodeType, $request, $interfaceName);
-        }
-
-        // Unary, and all Streaming types handled by startCall.
-        return $this->startCall($methodName, $decodeType, $optionalArgs, $request, $callType, $interfaceName);
-    }
-
     /**
      * @param string $methodName
      * @param string $decodeType
@@ -685,8 +428,8 @@ trait GapicClientTrait
      *     @type array $headers [optional] key-value array containing headers
      *     @type int $timeoutMillis [optional] the timeout in milliseconds for the call
      *     @type array $transportOptions [optional] transport-specific call options
-     *     @type RetrySettings|array $retrySettings [optional] A retry settings
-     *           override for the call.
+     *     @type RetrySettings $retrySettings [optional] A retry settings override
+     *           For the call.
      * }
      * @param Message $request
      * @param int $callType
@@ -695,12 +438,12 @@ trait GapicClientTrait
      * @return PromiseInterface|BidiStream|ClientStream|ServerStream
      */
     private function startCall(
-        string $methodName,
-        string $decodeType,
+        $methodName,
+        $decodeType,
         array $optionalArgs = [],
         Message $request = null,
-        int $callType = Call::UNARY_CALL,
-        string $interfaceName = null
+        $callType = Call::UNARY_CALL,
+        $interfaceName = null
     ) {
         $callStack = $this->createCallStack(
             $this->configureCallConstructionOptions($methodName, $optionalArgs)
@@ -728,9 +471,7 @@ trait GapicClientTrait
                 break;
         }
 
-        return $callStack($call, $optionalArgs + array_filter([
-            'audience' => self::getDefaultAudience()
-        ]));
+        return $callStack($call, $optionalArgs);
     }
 
     /**
@@ -745,26 +486,18 @@ trait GapicClientTrait
      */
     private function createCallStack(array $callConstructionOptions)
     {
-        $quotaProject = $this->credentialsWrapper->getQuotaProject();
-        $fixedHeaders = $this->agentHeader;
-        if ($quotaProject) {
-            $fixedHeaders += [
-                'X-Goog-User-Project' => [$quotaProject]
-            ];
-        }
         $callStack = function (Call $call, array $options) {
             $startCallMethod = $this->transportCallMethods[$call->getCallType()];
             return $this->transport->$startCallMethod($call, $options);
         };
         $callStack = new CredentialsWrapperMiddleware($callStack, $this->credentialsWrapper);
-        $callStack = new FixedHeaderMiddleware($callStack, $fixedHeaders, true);
+        $callStack = new FixedHeaderMiddleware($callStack, $this->agentHeader, true);
         $callStack = new RetryMiddleware($callStack, $callConstructionOptions['retrySettings']);
         $callStack = new OptionsFilterMiddleware($callStack, [
             'headers',
             'timeoutMillis',
             'transportOptions',
             'metadataCallback',
-            'audience',
         ]);
 
         return $callStack;
@@ -775,24 +508,20 @@ trait GapicClientTrait
      * @param array $optionalArgs {
      *     Optional arguments
      *
-     *     @type RetrySettings|array $retrySettings [optional] A retry settings
-     *           override for the call.
+     *     @type RetrySettings $retrySettings [optional] A retry settings override
+     *           For the call.
      * }
      *
      * @return array
      */
-    private function configureCallConstructionOptions(string $methodName, array $optionalArgs)
+    private function configureCallConstructionOptions($methodName, array $optionalArgs)
     {
         $retrySettings = $this->retrySettings[$methodName];
         // Allow for retry settings to be changed at call time
         if (isset($optionalArgs['retrySettings'])) {
-            if ($optionalArgs['retrySettings'] instanceof RetrySettings) {
-                $retrySettings = $optionalArgs['retrySettings'];
-            } else {
-                $retrySettings = $retrySettings->with(
-                    $optionalArgs['retrySettings']
-                );
-            }
+            $retrySettings = $retrySettings->with(
+                $optionalArgs['retrySettings']
+            );
         }
         return [
             'retrySettings' => $retrySettings,
@@ -809,52 +538,34 @@ trait GapicClientTrait
      *     @type array $transportOptions [optional] transport-specific call options
      * }
      * @param Message $request
-     * @param OperationsClient|object $client
+     * @param OperationsClient $client
      * @param string $interfaceName
-     * @param string $operationClass If provided, will be used instead of the default
-     *                               operation response class of {@see \Google\LongRunning\Operation}.
      *
      * @return PromiseInterface
      */
     private function startOperationsCall(
-        string $methodName,
+        $methodName,
         array $optionalArgs,
         Message $request,
-        $client,
-        string $interfaceName = null,
-        string $operationClass = null
+        OperationsClient $client,
+        $interfaceName = null
     ) {
         $callStack = $this->createCallStack(
             $this->configureCallConstructionOptions($methodName, $optionalArgs)
         );
-
         $descriptor = $this->descriptors[$methodName]['longRunning'];
-
-        // Call the methods supplied in "additionalArgumentMethods" on the request Message object
-        // to build the "additionalOperationArguments" option for the operation response.
-        if (isset($descriptor['additionalArgumentMethods'])) {
-            $additionalArgs = [];
-            foreach ($descriptor['additionalArgumentMethods'] as $additionalArgsMethodName) {
-                $additionalArgs[] = $request->$additionalArgsMethodName();
-            }
-            $descriptor['additionalOperationArguments'] = $additionalArgs;
-            unset($descriptor['additionalArgumentMethods']);
-        }
-
         $callStack = new OperationsMiddleware($callStack, $client, $descriptor);
 
         $call = new Call(
             $this->buildMethod($interfaceName, $methodName),
-            $operationClass ?: Operation::class,
+            Operation::class,
             $request,
             [],
             Call::UNARY_CALL
         );
 
         $this->modifyUnaryCallable($callStack);
-        return $callStack($call, $optionalArgs + array_filter([
-            'audience' => self::getDefaultAudience()
-        ]));
+        return $callStack($call, $optionalArgs);
     }
 
     /**
@@ -867,36 +578,11 @@ trait GapicClientTrait
      * @return PagedListResponse
      */
     private function getPagedListResponse(
-        string $methodName,
+        $methodName,
         array $optionalArgs,
-        string $decodeType,
+        $decodeType,
         Message $request,
-        string $interfaceName = null
-    ) {
-        return $this->getPagedListResponseAsync(
-            $methodName,
-            $optionalArgs,
-            $decodeType,
-            $request,
-            $interfaceName
-        )->wait();
-    }
-
-    /**
-     * @param string $methodName
-     * @param array $optionalArgs
-     * @param string $decodeType
-     * @param Message $request
-     * @param string $interfaceName
-     *
-     * @return PromiseInterface
-     */
-    private function getPagedListResponseAsync(
-        string $methodName,
-        array $optionalArgs,
-        string $decodeType,
-        Message $request,
-        string $interfaceName = null
+        $interfaceName = null
     ) {
         $callStack = $this->createCallStack(
             $this->configureCallConstructionOptions($methodName, $optionalArgs)
@@ -915,9 +601,7 @@ trait GapicClientTrait
         );
 
         $this->modifyUnaryCallable($callStack);
-        return $callStack($call, $optionalArgs + array_filter([
-            'audience' => self::getDefaultAudience()
-        ]));
+        return $callStack($call, $optionalArgs)->wait();
     }
 
     /**
@@ -926,92 +610,13 @@ trait GapicClientTrait
      *
      * @return string
      */
-    private function buildMethod(string $interfaceName = null, string $methodName = null)
+    private function buildMethod($interfaceName, $methodName)
     {
         return sprintf(
             '%s/%s',
             $interfaceName ?: $this->serviceName,
             $methodName
         );
-    }
-
-    /**
-     * @param array $headerParams
-     * @param Message|null $request
-     *
-     * @return array
-     */
-    private function buildRequestParamsHeader(array $headerParams, Message $request = null)
-    {
-        $headers = [];
-
-        // No request message means no request-based headers.
-        if (!$request) {
-            return $headers;
-        }
-
-        foreach ($headerParams as $headerParam) {
-            $msg = $request;
-            $value = null;
-            foreach ($headerParam['fieldAccessors'] as $accessor) {
-                $value = $msg->$accessor();
-
-                // In case the field in question is nested in another message,
-                // skip the header param when the nested message field is unset.
-                $msg = $value;
-                if (is_null($msg)) {
-                    break;
-                }
-            }
-
-            $keyName = $headerParam['keyName'];
-
-            // If there are value pattern matchers configured and the target
-            // field was set, evaluate the matchers in the order that they were
-            // annotated in with last one matching wins.
-            $original = $value;
-            $matchers = isset($headerParam['matchers']) && !is_null($value) ?
-                $headerParam['matchers'] :
-                [];
-            foreach ($matchers as $matcher) {
-                $matches = [];
-                if (preg_match($matcher, $original, $matches)) {
-                    $value = $matches[$keyName];
-                }
-            }
-
-            // If there are no matches or the target field was unset, skip this
-            // header param.
-            if (!$value) {
-                continue;
-            }
-
-            $headers[$keyName] = $value;
-        }
-
-        $requestParams = new RequestParamsHeaderDescriptor($headers);
-
-        return $requestParams->getHeader();
-    }
-
-    /**
-     * The SERVICE_ADDRESS constant is set by GAPIC clients
-     */
-    private static function getDefaultAudience()
-    {
-        if (!defined('self::SERVICE_ADDRESS')) {
-            return null;
-        }
-        return 'https://' . self::SERVICE_ADDRESS . '/'; // @phpstan-ignore-line
-    }
-
-    /**
-     * This defaults to all three transports, which One-Platform supports.
-     * Discovery clients should define this function and only return ['rest'].
-     */
-    private static function supportedTransports()
-    {
-        return ['grpc', 'grpc-fallback', 'rest'];
     }
 
     // Gapic Client Extension Points

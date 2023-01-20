@@ -21,6 +21,7 @@ class ExtensionRangeOptions extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
      */
     private $uninterpreted_option;
+    private $has_uninterpreted_option = false;
 
     /**
      * Constructor.
@@ -28,7 +29,7 @@ class ExtensionRangeOptions extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type array<\Google\Protobuf\Internal\UninterpretedOption>|\Google\Protobuf\Internal\RepeatedField $uninterpreted_option
+     *     @type \Google\Protobuf\Internal\UninterpretedOption[]|\Google\Protobuf\Internal\RepeatedField $uninterpreted_option
      *           The parser stores options it doesn't recognize here. See above.
      * }
      */
@@ -52,15 +53,21 @@ class ExtensionRangeOptions extends \Google\Protobuf\Internal\Message
      * The parser stores options it doesn't recognize here. See above.
      *
      * Generated from protobuf field <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
-     * @param array<\Google\Protobuf\Internal\UninterpretedOption>|\Google\Protobuf\Internal\RepeatedField $var
+     * @param \Google\Protobuf\Internal\UninterpretedOption[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setUninterpretedOption($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \Google\Protobuf\Internal\UninterpretedOption::class);
         $this->uninterpreted_option = $arr;
+        $this->has_uninterpreted_option = true;
 
         return $this;
+    }
+
+    public function hasUninterpretedOption()
+    {
+        return $this->has_uninterpreted_option;
     }
 
 }

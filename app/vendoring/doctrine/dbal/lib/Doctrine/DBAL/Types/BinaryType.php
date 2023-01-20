@@ -20,9 +20,9 @@ class BinaryType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $platform->getBinaryTypeDeclarationSQL($column);
+        return $platform->getBinaryTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**

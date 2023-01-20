@@ -45,7 +45,7 @@ return array (
   ),
   'mobile' => 
   array (
-    'NationalNumberPattern' => '5(?:(?:[02368]\\d|[19][2-9]|4[1-9])\\d|5(?:01|1[79]|2[2-9]|3[0-3]|4[34]|5[015689]|6[6-8]|7[0-267]|8[7-9]|9[1-9]))\\d{5}',
+    'NationalNumberPattern' => '5(?:(?:[02368]\\d|[19][2-9]|4[1-9])\\d|5(?:01|1[79]|2[2-8]|3[23]|44|5[05689]|6[6-8]|7[0-267]|8[7-9]|9[1-9]))\\d{5}',
     'ExampleNumber' => '502345678',
     'PossibleLength' => 
     array (
@@ -70,7 +70,7 @@ return array (
   ),
   'premiumRate' => 
   array (
-    'NationalNumberPattern' => '1212\\d{4}|1(?:200|9(?:0[0-2]|19))\\d{6}',
+    'NationalNumberPattern' => '1212\\d{4}|1(?:200|9(?:0[01]|19))\\d{6}',
     'ExampleNumber' => '1919123456',
     'PossibleLength' => 
     array (
@@ -105,7 +105,7 @@ return array (
   ),
   'voip' => 
   array (
-    'NationalNumberPattern' => '7(?:380|8(?:33|55|77|81))\\d{5}|7(?:18|2[23]|3[237]|47|6[258]|7\\d|82|9[2-9])\\d{6}',
+    'NationalNumberPattern' => '78(?:33|55|77|81)\\d{5}|7(?:18|2[23]|3[237]|47|6[58]|7\\d|82|9[235-9])\\d{6}',
     'ExampleNumber' => '771234567',
     'PossibleLength' => 
     array (
@@ -270,5 +270,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => true,
 );

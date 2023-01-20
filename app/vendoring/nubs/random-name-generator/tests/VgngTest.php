@@ -1,14 +1,14 @@
 <?php
 namespace Nubs\RandomNameGenerator;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 use Cinam\Randomizer\Randomizer;
 
 /**
  * @coversDefaultClass \Nubs\RandomNameGenerator\Vgng
  * @covers ::<protected>
  */
-class VgngTest extends TestCase
+class VgngTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Verify that getName returns the expected name.

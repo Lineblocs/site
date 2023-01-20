@@ -45,7 +45,7 @@ interface TransportInterface
      * Starts a bidi streaming call.
      *
      * @param Call $call
-     * @param array<mixed> $options
+     * @param array $options
      *
      * @return BidiStream
      */
@@ -55,7 +55,7 @@ interface TransportInterface
      * Starts a client streaming call.
      *
      * @param Call $call
-     * @param array<mixed> $options
+     * @param array $options
      *
      * @return ClientStream
      */
@@ -65,7 +65,7 @@ interface TransportInterface
      * Starts a server streaming call.
      *
      * @param Call $call
-     * @param array<mixed> $options
+     * @param array $options
      *
      * @return ServerStream
      */
@@ -75,7 +75,7 @@ interface TransportInterface
      * Returns a promise used to execute network requests.
      *
      * @param Call $call
-     * @param array<mixed> $options
+     * @param array $options
      *
      * @return PromiseInterface
      * @throws ValidationException
@@ -84,8 +84,6 @@ interface TransportInterface
 
     /**
      * Closes the connection, if one exists.
-     *
-     * @return void
      */
     public function close();
 }

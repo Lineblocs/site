@@ -4,10 +4,8 @@ namespace Http\Message\MessageFactory;
 
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory\DiactorosStreamFactory;
-use Laminas\Diactoros\Request as LaminasRequest;
-use Laminas\Diactoros\Response as LaminasResponse;
-use Zend\Diactoros\Request as ZendRequest;
-use Zend\Diactoros\Response as ZendResponse;
+use Zend\Diactoros\Request;
+use Zend\Diactoros\Response;
 
 /**
  * Creates Diactoros messages.
@@ -38,16 +36,7 @@ final class DiactorosMessageFactory implements MessageFactory
         $body = null,
         $protocolVersion = '1.1'
     ) {
-        if (class_exists(LaminasRequest::class)) {
-            return (new LaminasRequest(
-                $uri,
-                $method,
-                $this->streamFactory->createStream($body),
-                $headers
-            ))->withProtocolVersion($protocolVersion);
-        }
-
-        return (new ZendRequest(
+        return (new Request(
             $uri,
             $method,
             $this->streamFactory->createStream($body),
@@ -65,15 +54,7 @@ final class DiactorosMessageFactory implements MessageFactory
         $body = null,
         $protocolVersion = '1.1'
     ) {
-        if (class_exists(LaminasResponse::class)) {
-            return (new LaminasResponse(
-                $this->streamFactory->createStream($body),
-                $statusCode,
-                $headers
-            ))->withProtocolVersion($protocolVersion);
-        }
-
-        return (new ZendResponse(
+        return (new Response(
             $this->streamFactory->createStream($body),
             $statusCode,
             $headers

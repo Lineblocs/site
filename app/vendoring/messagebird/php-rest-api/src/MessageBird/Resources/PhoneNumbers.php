@@ -2,8 +2,8 @@
 
 namespace MessageBird\Resources;
 
-use MessageBird\Common\HttpClient;
 use MessageBird\Objects;
+use MessageBird\Common;
 
 /**
  * Class PhoneNumbers
@@ -12,52 +12,46 @@ use MessageBird\Objects;
  */
 class PhoneNumbers extends Base
 {
+
     /**
-     * @var HttpClient
+     * @var \MessageBird\Common\HttpClient
      */
-    protected $httpClient;
+    protected $HttpClient;
 
-    public function __construct(HttpClient $httpClient)
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Number();
+        $this->HttpClient = $HttpClient;
+        $this->setObject(new Objects\Number());
         $this->setResourceName('phone-numbers');
-
-        parent::__construct($httpClient);
     }
 
     /**
-     * @param mixed $object
-     * @param mixed $id
+     * @param $object
+     * @param $id
      *
-     * @return Objects\Balance|Objects\Conversation\Conversation|Objects\Hlr|Objects\Lookup|Objects\Message|Objects\Verify|Objects\VoiceMessage|null
+     * @return Objects\Number
      *
-     * @throws \JsonException
-     * @throws \MessageBird\Exceptions\AuthenticateException
-     * @throws \MessageBird\Exceptions\HttpException
-     * @throws \MessageBird\Exceptions\RequestException
-     * @throws \MessageBird\Exceptions\ServerException
      * @internal param array $parameters
      */
-    public function update($object, $id)
+    public function update($object, $id): Objects\Number
     {
         $objVars = get_object_vars($object);
         $body = [];
         foreach ($objVars as $key => $value) {
-            if ($value !== null) {
+            if (null !== $value) {
                 $body[$key] = $value;
             }
         }
 
-        $resourceName = $this->resourceName . ($id ? '/' . $id : null);
-        $body = json_encode($body, \JSON_THROW_ON_ERROR);
+        $ResourceName = $this->resourceName . ($id ? '/' . $id : null);
+        $body = json_encode($body);
 
         // This override is only needed to use the PATCH http method
-        [, , $body] = $this->httpClient->performHttpRequest(
-            HttpClient::REQUEST_PATCH,
-            $resourceName,
-            false,
-            $body
-        );
+        list(, , $body) = $this->HttpClient->performHttpRequest(Common\HttpClient::REQUEST_PATCH, $ResourceName, false, $body);
         return $this->processRequest($body);
     }
 }
+?>

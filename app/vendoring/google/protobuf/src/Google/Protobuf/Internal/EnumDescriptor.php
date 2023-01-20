@@ -101,8 +101,7 @@ class EnumDescriptor
             $enum_name_without_package,
             $classname,
             $legacy_classname,
-            $fullname,
-            $unused_previous_classname);
+            $fullname);
         $desc->setFullName($fullname);
         $desc->setClass($classname);
         $desc->setLegacyClass($legacy_classname);

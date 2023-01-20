@@ -5,7 +5,6 @@ namespace Doctrine\DBAL\Tools\Console\Command;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Tools\Console\ConnectionProvider;
 use Doctrine\DBAL\Tools\Dumper;
-use Doctrine\Deprecations\Deprecation;
 use Exception;
 use LogicException;
 use RuntimeException;
@@ -19,6 +18,9 @@ use function assert;
 use function is_numeric;
 use function is_string;
 use function stripos;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Task for executing arbitrary SQL that can come from a file or directly from
@@ -37,11 +39,7 @@ class RunSqlCommand extends Command
             return;
         }
 
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/3956',
-            'Not passing a connection provider as the first constructor argument is deprecated'
-        );
+        @trigger_error('Not passing a connection provider as the first constructor argument is deprecated', E_USER_DEPRECATED);
     }
 
     /** @return void */
@@ -53,7 +51,7 @@ class RunSqlCommand extends Command
         ->setDefinition([
             new InputOption('connection', null, InputOption::VALUE_REQUIRED, 'The named database connection'),
             new InputArgument('sql', InputArgument::REQUIRED, 'The SQL statement to execute.'),
-            new InputOption('depth', null, InputOption::VALUE_REQUIRED, 'Dumping depth of result set.', '7'),
+            new InputOption('depth', null, InputOption::VALUE_REQUIRED, 'Dumping depth of result set.', 7),
             new InputOption('force-fetch', null, InputOption::VALUE_NONE, 'Forces fetching the result.'),
         ])
         ->setHelp(<<<EOT
@@ -67,8 +65,6 @@ EOT
 
     /**
      * {@inheritdoc}
-     *
-     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -91,7 +87,7 @@ EOT
         if (stripos($sql, 'select') === 0 || $input->getOption('force-fetch')) {
             $resultSet = $conn->fetchAllAssociative($sql);
         } else {
-            $resultSet = $conn->executeStatement($sql);
+            $resultSet = $conn->executeUpdate($sql);
         }
 
         $output->write(Dumper::dump($resultSet, (int) $depth));

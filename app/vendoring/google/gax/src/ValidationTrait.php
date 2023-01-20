@@ -31,9 +31,6 @@
  */
 namespace Google\ApiCore;
 
-/**
- * @internal
- */
 trait ValidationTrait
 {
     /**
@@ -41,7 +38,7 @@ trait ValidationTrait
      * @param array $requiredKeys List of keys to check for in $arr
      * @return array Returns $arr for fluent use
      */
-    public static function validate(array $arr, array $requiredKeys)
+    public static function validate($arr, $requiredKeys)
     {
         return self::validateImpl($arr, $requiredKeys, true);
     }
@@ -51,7 +48,7 @@ trait ValidationTrait
      * @param array $requiredKeys List of keys to check for in $arr
      * @return array Returns $arr for fluent use
      */
-    public static function validateNotNull(array $arr, array $requiredKeys)
+    public static function validateNotNull($arr, $requiredKeys)
     {
         return self::validateImpl($arr, $requiredKeys, false);
     }
@@ -72,7 +69,7 @@ trait ValidationTrait
      * @param string $filePath
      * @throws ValidationException
      */
-    private static function validateFileExists(string $filePath)
+    private static function validateFileExists($filePath)
     {
         if (!file_exists($filePath)) {
             throw new ValidationException("Could not find specified file: $filePath");

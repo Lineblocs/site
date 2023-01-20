@@ -10,13 +10,16 @@ use MessageBird\Objects;
  *
  * @package MessageBird\Resources
  */
-class MmsMessages extends Base
-{
-    public function __construct(Common\HttpClient $httpClient)
+class MmsMessages extends Base {
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\MmsMessage();
+        $this->setObject(new Objects\MmsMessage());
         $this->setResourceName('mms');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

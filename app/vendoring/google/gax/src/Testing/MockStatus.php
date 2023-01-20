@@ -33,18 +33,14 @@
 namespace Google\ApiCore\Testing;
 
 use Google\Rpc\Code;
-use stdClass;
 
-/**
- * @internal
- */
-class MockStatus extends stdClass
+class MockStatus
 {
-    /** @var Code|int $code */
+    /** @var Code $code */
     public $code;
     public $details;
     public $metadata;
-    public function __construct($code, string $details = null, array $metadata = [])
+    public function __construct($code, $details = null, $metadata = null)
     {
         $this->code = $code;
         $this->details = $details;

@@ -43,8 +43,6 @@ class Call
     const BIDI_STREAMING_CALL = 1;
     const CLIENT_STREAMING_CALL = 2;
     const SERVER_STREAMING_CALL = 3;
-    const LONGRUNNING_CALL = 4;
-    const PAGINATED_CALL = 5;
 
     private $method;
     private $callType;
@@ -56,15 +54,15 @@ class Call
      * @param string $method
      * @param string $decodeType
      * @param mixed|Message $message
-     * @param array|null $descriptor
+     * @param array $descriptor
      * @param int $callType
      */
     public function __construct(
-        string $method,
-        string $decodeType = null,
+        $method,
+        $decodeType,
         $message = null,
         $descriptor = [],
-        int $callType = Call::UNARY_CALL
+        $callType = Call::UNARY_CALL
     ) {
         $this->method = $method;
         $this->decodeType = $decodeType;
@@ -119,7 +117,6 @@ class Call
      */
     public function withMessage($message)
     {
-        // @phpstan-ignore-next-line
         return new static(
             $this->method,
             $this->decodeType,

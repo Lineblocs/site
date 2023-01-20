@@ -11,7 +11,6 @@ Faker is heavily inspired by Perl's [Data::Faker](http://search.cpan.org/~jasonk
 
 Faker requires PHP >= 5.3.3.
 
-**Faker is archived**. Read the reasons behind this decision here: [https://marmelab.com/blog/2020/10/21/sunsetting-faker.html](https://marmelab.com/blog/2020/10/21/sunsetting-faker.html) 
 
 # Table of Contents
 
@@ -388,7 +387,7 @@ print_r($values); // [0, 4, 8, 4, 2, 6, 0, 8, 8, 6]
 // just like unique(), valid() throws an overflow exception when it can't generate a valid value
 $values = array();
 try {
-  $faker->valid($evenValidator)->randomElement([1, 3, 5, 7, 9]);
+  $faker->valid($evenValidator)->randomElement(1, 3, 5, 7, 9);
 } catch (\OverflowException $e) {
   echo "Can't pick an even number in that set!";
 }

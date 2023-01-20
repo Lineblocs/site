@@ -4,7 +4,6 @@ namespace MessageBird\Objects\Conversation;
 
 use JsonSerializable;
 use MessageBird\Objects\Base;
-use stdClass;
 
 /**
  * Message that is send via the /send endpoint of the Conversations API
@@ -14,14 +13,14 @@ class SendMessage extends Base implements JsonSerializable
     /**
      * Either a channel-specific identifier for the receiver (e.g. MSISDN for SMS or WhatsApp channels),
      * or the ID of a MessageBird Contact.
-     *
+     * 
      * @var string
      */
     public $to;
 
     /**
      * The ID that identifies the channel over which the message should be sent.
-     *
+     * 
      * @var string
      */
     public $from;
@@ -29,14 +28,14 @@ class SendMessage extends Base implements JsonSerializable
     /**
      * Type of this message's content. Possible values: "text", "image",
      * "audio", "video", "file", "location".
-     *
+     * 
      * @var string
      */
     public $type;
 
     /**
      * Content of the message. Implementation dependent on this message's type.
-     *
+     * 
      * @var Content
      */
     public $content;
@@ -57,8 +56,8 @@ class SendMessage extends Base implements JsonSerializable
 
     /**
      * The source of the response/action that sent the message.
-     *
-     * @var stdClass
+     * 
+     * @var \stdClass
      */
     public $source;
 
@@ -73,10 +72,10 @@ class SendMessage extends Base implements JsonSerializable
     /**
      * Serialize only non empty fields.
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
-        $json = [];
-
+        $json = array();
+        
         foreach (get_object_vars($this) as $key => $value) {
             if (!empty($value)) {
                 $json[$key] = $value;

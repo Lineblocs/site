@@ -2,8 +2,8 @@
 
 namespace MessageBird\Resources;
 
-use MessageBird\Common;
 use MessageBird\Objects;
+use MessageBird\Common;
 
 /**
  * Class VoiceMessage
@@ -12,11 +12,15 @@ use MessageBird\Objects;
  */
 class VoiceMessage extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\VoiceMessage();
+        $this->setObject(new Objects\VoiceMessage);
         $this->setResourceName('voicemessages');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

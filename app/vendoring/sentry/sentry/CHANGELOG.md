@@ -2,36 +2,6 @@
 
 ## Unreleased
 
-### 2.5.2 (2021-02-02)
-
-- Allow jean85/pretty-package-versions 2.0 (#1171, backport of #1170 from 3.x)
-
-### 2.5.1 (2020-12-11)
-
-- Fix regression introduced in #1129 (#1143)
-- Fix capturing of the request body in the `RequestIntegration` integration when the stream is empty (#1129)
-- Fix wrong deprecation message when using the `MissingPublicKeyCredentialException` class (#1155)
-
-### 2.5.0 (2020-09-14)
-
-- Support the `timeout` and `proxy` options for the Symfony HTTP Client (#1084)
-
-### 2.4.3 (2020-08-13)
-
-- Fix `Options::setEnvironment` method not accepting `null` values (#1057)
-- Fix the capture of the request body in the `RequestIntegration` integration when the stream size is unknown (#1064)
-
-### 2.4.2 (2020-07-24)
-
-- Fix typehint errors while instantiating the Httplug cURL client by forcing the usage of PSR-17 complaint factories (#1052)
-
-### 2.4.1 (2020-07-03)
-
-- Fix HTTP client connection timeouts not being applied if an HTTP proxy is specified (#1033)
-- [BC CHANGE] Revert "Add support for iterables in the serializer (#991)" (#1030)
-
-### 2.4.0 (2020-05-21)
-
 - Enforce a timeout for connecting to the server and for the requests instead of waiting indefinitely (#979)
 - Add `RequestFetcherInterface` to allow customizing the request data attached to the logged event (#984)
 - Log internal debug and error messages to a PSR-3 compatible logger (#989)
@@ -41,7 +11,6 @@
 - Support passing either a Httplug or PSR-17 stream factory to the `GzipEncoderPlugin` class (#1012)
 - Add the `FrameContextifierIntegration` integration (#1011)
 - Add missing validation for the `context_lines` option and fix its behavior when passing `null` to make it working as described in the documentation (#1003)
-- Trim the file path from the anonymous class name in the stacktrace according to the `prefixes` option (#1016)
 
 ## 2.3.2 (2020-03-06)
 

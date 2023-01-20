@@ -41,14 +41,11 @@ use Google\ApiCore\Transport\TransportInterface;
 use Google\Rpc\Code;
 use GuzzleHttp\Promise\Promise;
 
-/**
- * @internal
- */
 class MockTransport implements TransportInterface
 {
     use MockStubTrait;
 
-    private $agentHeaderDescriptor; // @phpstan-ignore-line
+    private $agentHeaderDescriptor;
 
     public function setAgentHeaderDescriptor($agentHeaderDescriptor)
     {
@@ -93,7 +90,7 @@ class MockTransport implements TransportInterface
         return new ServerStream($response, $call->getDescriptor());
     }
 
-    public function __call(string $name, array $arguments)
+    public function __call($name, $arguments)
     {
         $call = $arguments[0];
         $options = $arguments[1];

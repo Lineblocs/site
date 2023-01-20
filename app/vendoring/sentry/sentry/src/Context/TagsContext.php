@@ -49,7 +49,7 @@ class TagsContext extends Context
      */
     public function offsetSet($offset, $value): void
     {
-        if (!\is_string($value) && is_numeric($value)) {
+        if (is_numeric($value)) {
             $value = (string) $value;
         }
 
@@ -63,7 +63,7 @@ class TagsContext extends Context
     /**
      * Sanitizes the given data by converting numeric values to strings.
      *
-     * @param mixed[] $data The data to sanitize
+     * @param array<string, string> $data The data to sanitize
      *
      * @return array<string, string>
      *

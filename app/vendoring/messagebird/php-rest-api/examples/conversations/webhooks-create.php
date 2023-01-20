@@ -13,14 +13,14 @@ try {
     $webhook = new \MessageBird\Objects\Conversation\Webhook();
     $webhook->channelId = 'CHANNEL_ID';
     $webhook->url = 'https://example.com/webhook';
-    $webhook->events = [
+    $webhook->events = array(
         \MessageBird\Objects\Conversation\Webhook::EVENT_CONVERSATION_CREATED,
         \MessageBird\Objects\Conversation\Webhook::EVENT_MESSAGE_CREATED,
 
         // Other options:
         // \MessageBird\Objects\Conversation\Webhook::EVENT_CONVERSATION_UPDATED,
         // \MessageBird\Objects\Conversation\Webhook::EVENT_MESSAGE_UPDATED,
-    ];
+    );
 
     $messageBird->conversationWebhooks->create($webhook);
 } catch (\Exception $e) {

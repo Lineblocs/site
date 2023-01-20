@@ -35,15 +35,12 @@ use DomainException;
 use Exception;
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\Cache\MemoryCacheItemPool;
-use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\Auth\CredentialsLoader;
 use Google\Auth\FetchAuthTokenCache;
 use Google\Auth\FetchAuthTokenInterface;
-use Google\Auth\GetQuotaProjectInterface;
 use Google\Auth\HttpHandler\Guzzle5HttpHandler;
 use Google\Auth\HttpHandler\Guzzle6HttpHandler;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
-use Google\Auth\UpdateMetadataInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
@@ -56,9 +53,6 @@ class CredentialsWrapper
     /** @var FetchAuthTokenInterface $credentialsFetcher */
     private $credentialsFetcher;
     private $authHttpHandler;
-
-    /** @var int */
-    private static $eagerRefreshThresholdSeconds = 10;
 
     /**
      * CredentialsWrapper constructor.
@@ -97,14 +91,6 @@ class CredentialsWrapper
      *           A cache for storing access tokens. Defaults to a simple in memory implementation.
      *     @type array $authCacheOptions
      *           Cache configuration options.
-     *     @type string $quotaProject
-     *           Specifies a user project to bill for access charges associated with the request.
-     *     @type string[] $defaultScopes
-     *           A string array of default scopes to use when acquiring
-     *           credentials.
-     *     @type bool $useJwtAccessWithScope
-     *           Ensures service account credentials use JWT Access (also known as self-signed
-     *           JWTs), even when user-defined scopes are supplied.
      * }
      * @return CredentialsWrapper
      * @throws ValidationException
@@ -118,9 +104,6 @@ class CredentialsWrapper
             'enableCaching'     => true,
             'authCache'         => null,
             'authCacheOptions'  => [],
-            'quotaProject'      => null,
-            'defaultScopes'     => null,
-            'useJwtAccessWithScope' => true,
         ];
         $keyFile = $args['keyFile'];
         $authHttpHandler = $args['authHttpHandler'] ?: self::buildHttpHandlerFactory();
@@ -128,11 +111,7 @@ class CredentialsWrapper
         if (is_null($keyFile)) {
             $loader = self::buildApplicationDefaultCredentials(
                 $args['scopes'],
-                $authHttpHandler,
-                null,
-                null,
-                $args['quotaProject'],
-                $args['defaultScopes']
+                $authHttpHandler
             );
         } else {
             if (is_string($keyFile)) {
@@ -142,21 +121,7 @@ class CredentialsWrapper
                 $keyFile = json_decode(file_get_contents($keyFile), true);
             }
 
-            if (isset($args['quotaProject'])) {
-                $keyFile['quota_project_id'] = $args['quotaProject'];
-            }
-
-            $loader = CredentialsLoader::makeCredentials(
-                $args['scopes'],
-                $keyFile,
-                $args['defaultScopes']
-            );
-        }
-
-        if ($loader instanceof ServiceAccountCredentials && $args['useJwtAccessWithScope']) {
-            // Ensures the ServiceAccountCredentials uses JWT Access, also known
-            // as self-signed JWTs, even when user-defined scopes are supplied.
-            $loader->useJwtAccessWithScope();
+            $loader = CredentialsLoader::makeCredentials($args['scopes'], $keyFile);
         }
 
         if ($args['enableCaching']) {
@@ -172,18 +137,6 @@ class CredentialsWrapper
     }
 
     /**
-     * @return string|null The quota project associated with the credentials.
-     */
-    public function getQuotaProject()
-    {
-        if ($this->credentialsFetcher instanceof GetQuotaProjectInterface) {
-            return $this->credentialsFetcher->getQuotaProject();
-        }
-        return null;
-    }
-
-    /**
-     * @deprecated
      * @return string Bearer string containing access token.
      */
     public function getBearerString()
@@ -193,10 +146,9 @@ class CredentialsWrapper
     }
 
     /**
-     * @param string $audience optional audience for self-signed JWTs.
      * @return callable Callable function that returns an authorization header.
      */
-    public function getAuthorizationHeaderCallback($audience = null)
+    public function getAuthorizationHeaderCallback()
     {
         $credentialsFetcher = $this->credentialsFetcher;
         $authHttpHandler = $this->authHttpHandler;
@@ -204,26 +156,9 @@ class CredentialsWrapper
         // NOTE: changes to this function should be treated carefully and tested thoroughly. It will
         // be passed into the gRPC c extension, and changes have the potential to trigger very
         // difficult-to-diagnose segmentation faults.
-        return function () use ($credentialsFetcher, $authHttpHandler, $audience) {
-            $token = $credentialsFetcher->getLastReceivedToken();
-            if (self::isExpired($token)) {
-                // Call updateMetadata to take advantage of self-signed JWTs
-                if ($credentialsFetcher instanceof UpdateMetadataInterface) {
-                    return $credentialsFetcher->updateMetadata([], $audience);
-                }
-
-                // In case a custom fetcher is provided (unlikely) which doesn't
-                // implement UpdateMetadataInterface
-                $token = $credentialsFetcher->fetchAuthToken($authHttpHandler);
-                if (!self::isValid($token)) {
-                    return [];
-                }
-            }
-            $tokenString = $token['access_token'];
-            if (!empty($tokenString)) {
-                return ['authorization' => ["Bearer $tokenString"]];
-            }
-            return [];
+        return function () use ($credentialsFetcher, $authHttpHandler) {
+            $token = self::getToken($credentialsFetcher, $authHttpHandler);
+            return empty($token) ? [] : ['authorization' => ["Bearer $token"]];
         };
     }
 
@@ -245,34 +180,28 @@ class CredentialsWrapper
      * @param callable $authHttpHandler
      * @param array $authCacheOptions
      * @param CacheItemPoolInterface $authCache
-     * @param string $quotaProject
-     * @param array $defaultScopes
-     * @return FetchAuthTokenInterface
+     * @return CredentialsLoader
      * @throws ValidationException
      */
     private static function buildApplicationDefaultCredentials(
         array $scopes = null,
         callable $authHttpHandler = null,
         array $authCacheOptions = null,
-        CacheItemPoolInterface $authCache = null,
-        $quotaProject = null,
-        array $defaultScopes = null
+        CacheItemPoolInterface $authCache = null
     ) {
         try {
             return ApplicationDefaultCredentials::getCredentials(
                 $scopes,
                 $authHttpHandler,
                 $authCacheOptions,
-                $authCache,
-                $quotaProject,
-                $defaultScopes
+                $authCache
             );
         } catch (DomainException $ex) {
             throw new ValidationException("Could not construct ApplicationDefaultCredentials", $ex->getCode(), $ex);
         }
     }
 
-    private static function getToken(FetchAuthTokenInterface $credentialsFetcher, callable $authHttpHandler)
+    private static function getToken(FetchAuthTokenInterface $credentialsFetcher, $authHttpHandler)
     {
         $token = $credentialsFetcher->getLastReceivedToken();
         if (self::isExpired($token)) {
@@ -284,22 +213,16 @@ class CredentialsWrapper
         return $token['access_token'];
     }
 
-    /**
-     * @param mixed $token
-     */
     private static function isValid($token)
     {
         return is_array($token)
             && array_key_exists('access_token', $token);
     }
 
-    /**
-     * @param mixed $token
-     */
     private static function isExpired($token)
     {
         return !(self::isValid($token)
             && array_key_exists('expires_at', $token)
-            && $token['expires_at'] > time() + self::$eagerRefreshThresholdSeconds);
+            && $token['expires_at'] > time());
     }
 }

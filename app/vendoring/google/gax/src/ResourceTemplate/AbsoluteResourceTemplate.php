@@ -48,8 +48,6 @@ use Google\ApiCore\ValidationException;
  * for details. A template consists of a sequence of literals, wildcards, and variable bindings,
  * where each binding can have a sub-path. A string representation can be parsed into an
  * instance of AbsoluteResourceTemplate, which can then be used to perform matching and instantiation.
- *
- * @internal
  */
 class AbsoluteResourceTemplate implements ResourceTemplateInterface
 {
@@ -64,10 +62,10 @@ class AbsoluteResourceTemplate implements ResourceTemplateInterface
      * @param string $path
      * @throws ValidationException
      */
-    public function __construct(string $path)
+    public function __construct($path)
     {
         if (empty($path)) {
-            throw new ValidationException('Cannot construct AbsoluteResourceTemplate from empty string');
+            throw new ValidationException("Cannot construct AbsoluteResourceTemplate from empty string");
         }
         if ($path[0] !== '/') {
             throw new ValidationException(
@@ -98,7 +96,7 @@ class AbsoluteResourceTemplate implements ResourceTemplateInterface
     /**
      * @inheritdoc
      */
-    public function matches(string $path)
+    public function matches($path)
     {
         try {
             $this->match($path);
@@ -111,7 +109,7 @@ class AbsoluteResourceTemplate implements ResourceTemplateInterface
     /**
      * @inheritdoc
      */
-    public function match(string $path)
+    public function match($path)
     {
         if (empty($path)) {
             throw $this->matchException($path, "path cannot be empty");
@@ -126,7 +124,7 @@ class AbsoluteResourceTemplate implements ResourceTemplateInterface
         return $this->resourceTemplate->match(substr($path, 1, $verbSeparatorPos - 1));
     }
 
-    private function matchException(string $path, string $reason)
+    private function matchException($path, $reason)
     {
         return new ValidationException("Could not match path '$path' to template '$this': $reason");
     }
@@ -136,7 +134,7 @@ class AbsoluteResourceTemplate implements ResourceTemplateInterface
         return $this->verb ? ':' . $this->verb : '';
     }
 
-    private function verbSeparatorPos(string $path)
+    private function verbSeparatorPos($path)
     {
         $finalSeparatorPos = strrpos($path, '/');
         $verbSeparatorPos = strrpos($path, ':', $finalSeparatorPos);

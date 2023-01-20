@@ -97,7 +97,7 @@ final class CookiePlugin implements Plugin
     {
         $parts = array_map('trim', explode(';', $setCookieHeader));
 
-        if ('' === $parts[0] || false === strpos($parts[0], '=')) {
+        if (empty($parts) || !strpos($parts[0], '=')) {
             return null;
         }
 
@@ -117,7 +117,7 @@ final class CookiePlugin implements Plugin
             switch (strtolower($key)) {
                 case 'expires':
                     try {
-                        $expires = CookieUtil::parseDate((string) $value);
+                        $expires = CookieUtil::parseDate($value);
                     } catch (UnexpectedValueException $e) {
                         throw new TransferException(
                             sprintf(
@@ -167,13 +167,13 @@ final class CookiePlugin implements Plugin
      *
      * @param string $part A single cookie value in format key=value
      *
-     * @return array{0:string, 1:?string}
+     * @return string[]
      */
     private function createValueKey(string $part): array
     {
         $parts = explode('=', $part, 2);
         $key = trim($parts[0]);
-        $value = isset($parts[1]) ? trim($parts[1]) : null;
+        $value = isset($parts[1]) ? trim($parts[1]) : true;
 
         return [$key, $value];
     }

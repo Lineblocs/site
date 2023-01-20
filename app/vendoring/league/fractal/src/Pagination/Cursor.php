@@ -42,8 +42,10 @@ class Cursor implements CursorInterface
 
     /**
      * Items being held for the current cursor position.
+     *
+     * @var int
      */
-    protected ?int $count;
+    protected $count;
 
     /**
      * Create a new Cursor instance.
@@ -51,8 +53,11 @@ class Cursor implements CursorInterface
      * @param mixed $current
      * @param mixed $prev
      * @param mixed $next
+     * @param int   $count
+     *
+     * @return void
      */
-    public function __construct($current = null, $prev = null, $next = null, ?int $count = null)
+    public function __construct($current = null, $prev = null, $next = null, $count = null)
     {
         $this->current = $current;
         $this->prev = $prev;
@@ -61,9 +66,10 @@ class Cursor implements CursorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get the current cursor value.
+     *
+     * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getCurrent()
     {
         return $this->current;
@@ -73,8 +79,10 @@ class Cursor implements CursorInterface
      * Set the current cursor value.
      *
      * @param mixed $current
+     *
+     * @return Cursor
      */
-    public function setCurrent($current): self
+    public function setCurrent($current)
     {
         $this->current = $current;
 
@@ -82,9 +90,10 @@ class Cursor implements CursorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get the prev cursor value.
+     *
+     * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getPrev()
     {
         return $this->prev;
@@ -94,8 +103,10 @@ class Cursor implements CursorInterface
      * Set the prev cursor value.
      *
      * @param mixed $prev
+     *
+     * @return Cursor
      */
-    public function setPrev($prev): self
+    public function setPrev($prev)
     {
         $this->prev = $prev;
 
@@ -103,9 +114,10 @@ class Cursor implements CursorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get the next cursor value.
+     *
+     * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function getNext()
     {
         return $this->next;
@@ -115,8 +127,10 @@ class Cursor implements CursorInterface
      * Set the next cursor value.
      *
      * @param mixed $next
+     *
+     * @return Cursor
      */
-    public function setNext($next): self
+    public function setNext($next)
     {
         $this->next = $next;
 
@@ -124,17 +138,23 @@ class Cursor implements CursorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the total items in the current cursor.
+     *
+     * @return int
      */
-    public function getCount(): ?int
+    public function getCount()
     {
         return $this->count;
     }
 
     /**
      * Set the total items in the current cursor.
+     *
+     * @param int $count
+     *
+     * @return Cursor
      */
-    public function setCount(int $count): self
+    public function setCount($count)
     {
         $this->count = $count;
 

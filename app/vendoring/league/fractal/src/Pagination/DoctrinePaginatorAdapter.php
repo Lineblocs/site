@@ -45,57 +45,73 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get the current page.
+     *
+     * @return int
      */
-    public function getCurrentPage(): int
+    public function getCurrentPage()
     {
-        return (int) ($this->paginator->getQuery()->getFirstResult() / $this->paginator->getQuery()->getMaxResults()) + 1;
+        return ($this->paginator->getQuery()->getFirstResult() / $this->paginator->getQuery()->getMaxResults()) + 1;
     }
 
     /**
-     * {@inheritDoc}
+     * Get the last page.
+     *
+     * @return int
      */
-    public function getLastPage(): int
+    public function getLastPage()
     {
         return (int) ceil($this->getTotal() / $this->paginator->getQuery()->getMaxResults());
     }
 
     /**
-     * {@inheritDoc}
+     * Get the total.
+     *
+     * @return int
      */
-    public function getTotal(): int
+    public function getTotal()
     {
         return count($this->paginator);
     }
 
     /**
-     * {@inheritDoc}
+     * Get the count.
+     *
+     * @return int
      */
-    public function getCount(): int
+    public function getCount()
     {
         return $this->paginator->getIterator()->count();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the number per page.
+     *
+     * @return int
      */
-    public function getPerPage(): int
+    public function getPerPage()
     {
         return $this->paginator->getQuery()->getMaxResults();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the url for the given page.
+     *
+     * @param int $page
+     *
+     * @return string
      */
-    public function getUrl(int $page): string
+    public function getUrl($page)
     {
         return call_user_func($this->getRouteGenerator(), $page);
     }
 
     /**
      * Get the the route generator.
+     *
+     * @return callable
      */
-    private function getRouteGenerator(): callable
+    private function getRouteGenerator()
     {
         return $this->routeGenerator;
     }

@@ -9,16 +9,17 @@ namespace MessageBird\Objects;
  */
 class BaseList extends Base
 {
+
     public $limit;
     public $offset;
     public $count;
     public $totalCount;
-    public $links = [
-        'first' => null,
+    public $links = array (
+        'first'    => null,
         'previous' => null,
-        'next' => null,
-        'last' => null,
-    ];
+        'next'     => null,
+        'last'     => null,
+    );
 
-    public $items = [];
+    public $items = array ();
 }

@@ -3,9 +3,8 @@
 namespace Http\Message\UriFactory;
 
 use Http\Message\UriFactory;
-use Laminas\Diactoros\Uri as LaminasUri;
 use Psr\Http\Message\UriInterface;
-use Zend\Diactoros\Uri as ZendUri;
+use Zend\Diactoros\Uri;
 
 /**
  * Creates Diactoros URI.
@@ -24,11 +23,7 @@ final class DiactorosUriFactory implements UriFactory
         if ($uri instanceof UriInterface) {
             return $uri;
         } elseif (is_string($uri)) {
-            if (class_exists(LaminasUri::class)) {
-                return new LaminasUri($uri);
-            }
-
-            return new ZendUri($uri);
+            return new Uri($uri);
         }
 
         throw new \InvalidArgumentException('URI must be a string or UriInterface');

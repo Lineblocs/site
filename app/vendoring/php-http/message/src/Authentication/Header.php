@@ -13,13 +13,10 @@ class Header implements Authentication
     private $name;
 
     /**
-     * @var string|string[]
+     * @var string|array
      */
     private $value;
 
-    /**
-     * @param string|string[] $value
-     */
     public function __construct(string $name, $value)
     {
         $this->name = $name;

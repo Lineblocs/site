@@ -55,7 +55,6 @@ class Serializer
         'google.rpc.badrequest-bin' => \Google\Rpc\BadRequest::class,
         'google.rpc.requestinfo-bin' => \Google\Rpc\RequestInfo::class,
         'google.rpc.resourceinfo-bin' => \Google\Rpc\ResourceInfo::class,
-        'google.rpc.errorinfo-bin' => \Google\Rpc\ErrorInfo::class,
         'google.rpc.help-bin' => \Google\Rpc\Help::class,
         'google.rpc.localizedmessage-bin' => \Google\Rpc\LocalizedMessage::class,
     ];
@@ -118,7 +117,7 @@ class Serializer
      * @return mixed
      * @throws ValidationException
      */
-    public function decodeMessage($message, array $data)
+    public function decodeMessage($message, $data)
     {
         // Get message descriptor
         $pool = DescriptorPool::getGeneratedPool();
@@ -139,7 +138,7 @@ class Serializer
      * @return string Json representation of $message
      * @throws ValidationException
      */
-    public static function serializeToJson(Message $message)
+    public static function serializeToJson($message)
     {
         return json_encode(self::serializeToPhpArray($message), JSON_PRETTY_PRINT);
     }
@@ -149,7 +148,7 @@ class Serializer
      * @return array PHP array representation of $message
      * @throws ValidationException
      */
-    public static function serializeToPhpArray(Message $message)
+    public static function serializeToPhpArray($message)
     {
         return self::getPhpArraySerializer()->encodeMessage($message);
     }
@@ -160,9 +159,9 @@ class Serializer
      * @param array $metadata
      * @return array
      */
-    public static function decodeMetadata(array $metadata)
+    public static function decodeMetadata($metadata)
     {
-        if (count($metadata) == 0) {
+        if (is_null($metadata) || count($metadata) == 0) {
             return [];
         }
         $result = [];
@@ -205,7 +204,7 @@ class Serializer
     /**
      * Decode an array of Any messages into a printable PHP array.
      *
-     * @param iterable $anyArray
+     * @param $anyArray
      * @return array
      */
     public static function decodeAnyMessages($anyArray)
@@ -231,8 +230,8 @@ class Serializer
 
     /**
      * @param FieldDescriptor $field
-     * @param Message|array|string $data
-     * @return mixed
+     * @param $data
+     * @return mixed array
      * @throws \Exception
      */
     private function encodeElement(FieldDescriptor $field, $data)
@@ -290,7 +289,7 @@ class Serializer
      * @return array
      * @throws \Exception
      */
-    private function encodeMessageImpl(Message $message, Descriptor $messageType)
+    private function encodeMessageImpl($message, Descriptor $messageType)
     {
         $data = [];
 
@@ -379,7 +378,7 @@ class Serializer
      * @return mixed
      * @throws \Exception
      */
-    private function decodeMessageImpl(Message $message, Descriptor $messageType, array $data)
+    private function decodeMessageImpl($message, Descriptor $messageType, $data)
     {
         list($fieldsByName, $_) = $this->getDescriptorMaps($messageType);
         foreach ($data as $key => $v) {
@@ -395,7 +394,7 @@ class Serializer
                 ));
             }
 
-            /** @var FieldDescriptor $field */
+            /** @var $field FieldDescriptor */
             $field = $fieldsByName[$fieldName];
 
             if ($field->isMap()) {
@@ -431,7 +430,7 @@ class Serializer
      * @param string $name
      * @return string Getter function
      */
-    public static function getGetter(string $name)
+    public static function getGetter($name)
     {
         return 'get' . ucfirst(self::toCamelCase($name));
     }
@@ -440,7 +439,7 @@ class Serializer
      * @param string $name
      * @return string Setter function
      */
-    public static function getSetter(string $name)
+    public static function getSetter($name)
     {
         return 'set' . ucfirst(self::toCamelCase($name));
     }
@@ -451,7 +450,7 @@ class Serializer
      * @param string $key
      * @return string
      */
-    public static function toSnakeCase(string $key)
+    public static function toSnakeCase($key)
     {
         return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $key));
     }
@@ -462,12 +461,12 @@ class Serializer
      * @param string $key
      * @return string
      */
-    public static function toCamelCase(string $key)
+    public static function toCamelCase($key)
     {
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
     }
 
-    private static function hasBinaryHeaderSuffix(string $key)
+    private static function hasBinaryHeaderSuffix($key)
     {
         return substr_compare($key, "-bin", strlen($key) - 4) === 0;
     }

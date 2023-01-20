@@ -146,10 +146,6 @@ final class Deferred implements Promise
             return $this->value;
         }
 
-        if (null === $this->failure) {
-            throw new \RuntimeException('Internal Error: Promise is not fulfilled but has no exception stored');
-        }
-
         throw $this->failure;
     }
 }

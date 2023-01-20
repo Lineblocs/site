@@ -32,8 +32,9 @@
 namespace Google\ApiCore\Middleware;
 
 use Google\ApiCore\Call;
+use Google\ApiCore\LongRunning\OperationsClient;
 use Google\ApiCore\OperationResponse;
-use Google\Protobuf\Internal\Message;
+use Google\LongRunning\Operation;
 
 /**
  * Middleware which wraps the response in an OperationResponse object.
@@ -43,19 +44,19 @@ class OperationsMiddleware
     /** @var callable */
     private $nextHandler;
 
-    /** @var object */
-    private $operationsClient;
+    /** @var OperationsClient */
+    private $client;
 
     /** @var array */
     private $descriptor;
 
     public function __construct(
         callable $nextHandler,
-        $operationsClient,
+        OperationsClient $client,
         array $descriptor
     ) {
         $this->nextHandler = $nextHandler;
-        $this->operationsClient = $operationsClient;
+        $this->client = $client;
         $this->descriptor = $descriptor;
     }
 
@@ -65,14 +66,11 @@ class OperationsMiddleware
         return $next(
             $call,
             $options
-        )->then(function (Message $response) {
+        )->then(function (Operation $response) {
             $options = $this->descriptor + [
                 'lastProtoResponse' => $response
             ];
-            $operationNameMethod = isset($options['operationNameMethod'])
-                ? $options['operationNameMethod'] : 'getName';
-            $operationName = call_user_func([$response, $operationNameMethod]);
-            return new OperationResponse($operationName, $this->operationsClient, $options);
+            return new OperationResponse($response->getName(), $this->client, $options);
         });
     }
 }

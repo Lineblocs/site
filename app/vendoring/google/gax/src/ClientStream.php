@@ -32,7 +32,6 @@
 namespace Google\ApiCore;
 
 use Google\Rpc\Code;
-use Grpc\ClientStreamingCall;
 
 /**
  * ClientStream is the response object from a gRPC client streaming API call.
@@ -44,13 +43,11 @@ class ClientStream
     /**
      * ClientStream constructor.
      *
-     * @param ClientStreamingCall $clientStreamingCall The gRPC client streaming call object
+     * @param \Grpc\ClientStreamingCall $clientStreamingCall The gRPC client streaming call object
      * @param array $streamingDescriptor
      */
-    public function __construct(  // @phpstan-ignore-line
-        ClientStreamingCall $clientStreamingCall,
-        array $streamingDescriptor = []
-    ) {
+    public function __construct($clientStreamingCall, array $streamingDescriptor = [])
+    {
         $this->call = $clientStreamingCall;
     }
 
@@ -87,7 +84,7 @@ class ClientStream
      * @param mixed[] $requests An iterator of request objects to write to the server
      * @return mixed The response object from the server
      */
-    public function writeAllAndReadResponse(array $requests)
+    public function writeAllAndReadResponse($requests)
     {
         foreach ($requests as $request) {
             $this->write($request);

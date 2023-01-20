@@ -32,8 +32,7 @@
 
 namespace Google\ApiCore;
 
-use GuzzleHttp\Psr7\Query;
-use GuzzleHttp\Psr7\Utils;
+use GuzzleHttp\Psr7;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -61,9 +60,9 @@ trait UriTrait
             }
         }
 
-        return Utils::uriFor($uri)
+        return Psr7\uri_for($uri)
             ->withQuery(
-                Query::build($query)
+                Psr7\build_query($query)
             );
     }
 }

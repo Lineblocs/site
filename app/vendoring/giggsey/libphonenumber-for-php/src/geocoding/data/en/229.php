@@ -47,5 +47,4 @@ return array (
   2292380 => 'Djougou',
   2292382 => 'Natitingou',
   2292383 => 'Tanguiéta',
-  22924 => 'Tanguiéta',
 );

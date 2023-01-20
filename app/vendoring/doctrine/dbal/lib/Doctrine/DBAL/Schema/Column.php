@@ -3,11 +3,14 @@
 namespace Doctrine\DBAL\Schema;
 
 use Doctrine\DBAL\Types\Type;
-use Doctrine\Deprecations\Deprecation;
 
 use function array_merge;
 use function is_numeric;
 use function method_exists;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Object representation of a database column.
@@ -18,7 +21,7 @@ class Column extends AbstractAsset
     protected $_type;
 
     /** @var int|null */
-    protected $_length;
+    protected $_length = null;
 
     /** @var int */
     protected $_precision = 10;
@@ -36,7 +39,7 @@ class Column extends AbstractAsset
     protected $_notnull = true;
 
     /** @var string|null */
-    protected $_default;
+    protected $_default = null;
 
     /** @var bool */
     protected $_autoincrement = false;
@@ -45,10 +48,10 @@ class Column extends AbstractAsset
     protected $_platformOptions = [];
 
     /** @var string|null */
-    protected $_columnDefinition;
+    protected $_columnDefinition = null;
 
     /** @var string|null */
-    protected $_comment;
+    protected $_comment = null;
 
     /** @var mixed[] */
     protected $_customSchemaOptions = [];
@@ -56,12 +59,12 @@ class Column extends AbstractAsset
     /**
      * Creates a new Column.
      *
-     * @param string  $name
+     * @param string  $columnName
      * @param mixed[] $options
      */
-    public function __construct($name, Type $type, array $options = [])
+    public function __construct($columnName, Type $type, array $options = [])
     {
-        $this->_setName($name);
+        $this->_setName($columnName);
         $this->setType($type);
         $this->setOptions($options);
     }
@@ -77,13 +80,11 @@ class Column extends AbstractAsset
             $method = 'set' . $name;
             if (! method_exists($this, $method)) {
                 // next major: throw an exception
-                Deprecation::trigger(
-                    'doctrine/dbal',
-                    'https://github.com/doctrine/dbal/pull/2846',
+                @trigger_error(sprintf(
                     'The "%s" column option is not supported,' .
-                    ' setting unknown options is deprecated and will cause an error in Doctrine DBAL 3.0',
+                    ' setting it is deprecated and will cause an error in Doctrine DBAL 3.0',
                     $name
-                );
+                ), E_USER_DEPRECATED);
 
                 continue;
             }

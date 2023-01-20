@@ -7,7 +7,7 @@ use Doctrine\DBAL\Schema\Table;
 use InvalidArgumentException;
 
 /**
- * Event Arguments used when the SQL query for dropping tables are generated inside {@link AbstractPlatform}.
+ * Event Arguments used when the SQL query for dropping tables are generated inside Doctrine\DBAL\Platform\AbstractPlatform.
  */
 class SchemaDropTableEventArgs extends SchemaEventArgs
 {
@@ -18,7 +18,7 @@ class SchemaDropTableEventArgs extends SchemaEventArgs
     private $platform;
 
     /** @var string|null */
-    private $sql;
+    private $sql = null;
 
     /**
      * @param string|Table $table

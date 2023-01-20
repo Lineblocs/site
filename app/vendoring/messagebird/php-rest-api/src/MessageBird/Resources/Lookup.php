@@ -2,13 +2,9 @@
 
 namespace MessageBird\Resources;
 
-use InvalidArgumentException;
-use MessageBird\Common;
-use MessageBird\Exceptions\AuthenticateException;
-use MessageBird\Exceptions\HttpException;
-use MessageBird\Exceptions\RequestException;
-use MessageBird\Exceptions\ServerException;
 use MessageBird\Objects;
+use MessageBird\Common;
+use InvalidArgumentException;
 
 /**
  * Class Verify
@@ -17,38 +13,39 @@ use MessageBird\Objects;
  */
 class Lookup extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Lookup();
+        $this->setObject(new Objects\Lookup);
         $this->setResourceName('lookup');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 
     /**
-     * @no-named-arguments
-     *
      * @param string|int $phoneNumber
-     * @param string|null $countryCode
+     * @param string     $countryCode
      *
-     * @return Objects\Balance|Objects\Conversation\Conversation|Objects\Hlr|Objects\Lookup|Objects\Message|Objects\Verify|Objects\VoiceMessage|null
+     * @return $this->Object
      *
-     * @throws HttpException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws AuthenticateException
+     * @throws \MessageBird\Exceptions\HttpException
+     * @throws \MessageBird\Exceptions\RequestException
+     * @throws \MessageBird\Exceptions\ServerException
      */
-    public function read($phoneNumber = null, ?string $countryCode = null)
+    public function read($phoneNumber = null, $countryCode = null)
     {
-        if (empty($phoneNumber)) {
+        if(empty($phoneNumber)) {
             throw new InvalidArgumentException('The phone number cannot be empty.');
         }
         $query = null;
-        if ($countryCode !== null) {
-            $query = ["countryCode" => $countryCode];
+        if ($countryCode != null) {
+            $query = array("countryCode" => $countryCode);
         }
-        $resourceName = $this->resourceName . '/' . $phoneNumber;
-        [, , $body] = $this->httpClient->performHttpRequest(Common\HttpClient::REQUEST_GET, $resourceName, $query);
+        $ResourceName = $this->resourceName . '/' . $phoneNumber;
+        list(, , $body) = $this->HttpClient->performHttpRequest(Common\HttpClient::REQUEST_GET, $ResourceName, $query);
         return $this->processRequest($body);
     }
 }

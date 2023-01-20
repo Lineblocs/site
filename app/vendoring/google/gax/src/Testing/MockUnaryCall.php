@@ -33,8 +33,6 @@
 namespace Google\ApiCore\Testing;
 
 use Google\Rpc\Code;
-use Google\Protobuf\Internal\Message;
-use stdClass;
 
 /**
  * The MockUnaryCall class is used to mock out the \Grpc\UnaryCall class
@@ -43,8 +41,6 @@ use stdClass;
  * The MockUnaryCall object is constructed with a response object, an optional deserialize
  * method, and an optional status. The response object and status are returned immediately from the
  * wait() method.
- *
- * @internal
  */
 class MockUnaryCall extends \Grpc\UnaryCall
 {
@@ -55,11 +51,11 @@ class MockUnaryCall extends \Grpc\UnaryCall
 
     /**
      * MockUnaryCall constructor.
-     * @param Message|string|null $response The response object.
-     * @param callable|array|null $deserialize An optional deserialize method for the response object.
-     * @param stdClass|null $status An optional status object. If set to null, a status of OK is used.
+     * @param \Google\Protobuf\Internal\Message $response The response object.
+     * @param callable|null $deserialize An optional deserialize method for the response object.
+     * @param MockStatus|null $status An optional status object. If set to null, a status of OK is used.
      */
-    public function __construct($response = null, $deserialize = null, stdClass $status = null)
+    public function __construct($response, $deserialize = null, $status = null)
     {
         $this->response = $response;
         $this->deserialize = $deserialize;

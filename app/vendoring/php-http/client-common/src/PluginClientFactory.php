@@ -16,7 +16,7 @@ use Psr\Http\Client\ClientInterface;
 final class PluginClientFactory
 {
     /**
-     * @var (callable(ClientInterface|HttpAsyncClient, Plugin[], array): PluginClient)|null
+     * @var callable|null
      */
     private static $factory;
 
@@ -28,10 +28,8 @@ final class PluginClientFactory
      * application execution.
      *
      * @internal
-     *
-     * @param callable(ClientInterface|HttpAsyncClient, Plugin[], array): PluginClient $factory
      */
-    public static function setFactory(callable $factory): void
+    public static function setFactory(callable $factory)
     {
         static::$factory = $factory;
     }
@@ -39,22 +37,16 @@ final class PluginClientFactory
     /**
      * @param ClientInterface|HttpAsyncClient $client
      * @param Plugin[]                        $plugins
-     * @param array{'client_name'?: string}   $options
+     * @param array                           $options {
      *
-     * Configuration options:
-     *   - client_name: to give client a name which may be used when displaying client information
-     *     like in the HTTPlugBundle profiler
+     *     @var string $client_name to give client a name which may be used when displaying client information  like in
+     *         the HTTPlugBundle profiler.
+     * }
      *
      * @see PluginClient constructor for PluginClient specific $options.
      */
     public function createClient($client, array $plugins = [], array $options = []): PluginClient
     {
-        if (!$client instanceof ClientInterface && !$client instanceof HttpAsyncClient) {
-            throw new \TypeError(
-                sprintf('%s::createClient(): Argument #1 ($client) must be of type %s|%s, %s given', self::class, ClientInterface::class, HttpAsyncClient::class, get_debug_type($client))
-            );
-        }
-
         if (static::$factory) {
             $factory = static::$factory;
 

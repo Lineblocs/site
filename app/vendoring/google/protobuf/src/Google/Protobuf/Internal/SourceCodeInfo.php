@@ -64,6 +64,7 @@ class SourceCodeInfo extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>repeated .google.protobuf.SourceCodeInfo.Location location = 1;</code>
      */
     private $location;
+    private $has_location = false;
 
     /**
      * Constructor.
@@ -71,7 +72,7 @@ class SourceCodeInfo extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type array<\Google\Protobuf\Internal\SourceCodeInfo\Location>|\Google\Protobuf\Internal\RepeatedField $location
+     *     @type \Google\Protobuf\Internal\SourceCodeInfo\Location[]|\Google\Protobuf\Internal\RepeatedField $location
      *           A Location identifies a piece of source code in a .proto file which
      *           corresponds to a particular definition.  This information is intended
      *           to be useful to IDEs, code indexers, documentation generators, and similar
@@ -215,15 +216,21 @@ class SourceCodeInfo extends \Google\Protobuf\Internal\Message
      *   be recorded in the future.
      *
      * Generated from protobuf field <code>repeated .google.protobuf.SourceCodeInfo.Location location = 1;</code>
-     * @param array<\Google\Protobuf\Internal\SourceCodeInfo\Location>|\Google\Protobuf\Internal\RepeatedField $var
+     * @param \Google\Protobuf\Internal\SourceCodeInfo\Location[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setLocation($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \Google\Protobuf\Internal\SourceCodeInfo\Location::class);
         $this->location = $arr;
+        $this->has_location = true;
 
         return $this;
+    }
+
+    public function hasLocation()
+    {
+        return $this->has_location;
     }
 
 }

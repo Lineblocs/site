@@ -14,13 +14,6 @@ Hr's:
 <hr class="foo"
     id="bar" >
 
-Details and Summary:
-
-<details>
-  <summary>Some details</summary>
-  <p>More info about the details.</p>
-</details>
-
 Regression:
 
 <pre>

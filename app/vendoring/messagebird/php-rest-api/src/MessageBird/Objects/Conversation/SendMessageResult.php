@@ -20,9 +20,9 @@ class SendMessageResult extends Base implements JsonSerializable
     /**
      * Serialize only non empty fields.
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
-        $json = [];
+        $json = array();
 
         foreach (get_object_vars($this) as $key => $value) {
             if (!empty($value)) {

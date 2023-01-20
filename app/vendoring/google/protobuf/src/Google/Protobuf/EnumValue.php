@@ -20,13 +20,13 @@ class EnumValue extends \Google\Protobuf\Internal\Message
      *
      * Generated from protobuf field <code>string name = 1;</code>
      */
-    protected $name = '';
+    private $name = '';
     /**
      * Enum value number.
      *
      * Generated from protobuf field <code>int32 number = 2;</code>
      */
-    protected $number = 0;
+    private $number = 0;
     /**
      * Protocol buffer options.
      *
@@ -44,7 +44,7 @@ class EnumValue extends \Google\Protobuf\Internal\Message
      *           Enum value name.
      *     @type int $number
      *           Enum value number.
-     *     @type array<\Google\Protobuf\Option>|\Google\Protobuf\Internal\RepeatedField $options
+     *     @type \Google\Protobuf\Option[]|\Google\Protobuf\Internal\RepeatedField $options
      *           Protocol buffer options.
      * }
      */
@@ -120,7 +120,7 @@ class EnumValue extends \Google\Protobuf\Internal\Message
      * Protocol buffer options.
      *
      * Generated from protobuf field <code>repeated .google.protobuf.Option options = 3;</code>
-     * @param array<\Google\Protobuf\Option>|\Google\Protobuf\Internal\RepeatedField $var
+     * @param \Google\Protobuf\Option[]|\Google\Protobuf\Internal\RepeatedField $var
      * @return $this
      */
     public function setOptions($var)

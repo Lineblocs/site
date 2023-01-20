@@ -29,7 +29,7 @@ final class IgnoreErrorsIntegration implements IntegrationInterface
      * @param array<string, mixed> $options The options
      *
      * @psalm-param array{
-     *     ignore_exceptions?: list<class-string<\Throwable>>
+     *     ignore_exceptions?: bool
      * } $options
      */
     public function __construct(array $options = [])

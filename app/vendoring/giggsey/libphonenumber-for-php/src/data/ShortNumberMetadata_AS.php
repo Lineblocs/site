@@ -26,7 +26,7 @@ return array (
   ),
   'tollFree' => 
   array (
-    'NationalNumberPattern' => '9(?:11|88)',
+    'NationalNumberPattern' => '911',
     'ExampleNumber' => '911',
     'PossibleLength' => 
     array (
@@ -60,7 +60,7 @@ return array (
   ),
   'shortCode' => 
   array (
-    'NationalNumberPattern' => '40404|9(?:11|88)',
+    'NationalNumberPattern' => '40404|911',
     'ExampleNumber' => '911',
     'PossibleLength' => 
     array (
@@ -112,5 +112,6 @@ return array (
   array (
   ),
   'mainCountryForCode' => false,
+  'leadingZeroPossible' => false,
   'mobileNumberPortableRegion' => false,
 );

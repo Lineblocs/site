@@ -61,7 +61,7 @@ class OracleSessionInit implements EventSubscriber
         }
 
         $sql = 'ALTER SESSION SET ' . implode(' ', $vars);
-        $args->getConnection()->executeStatement($sql);
+        $args->getConnection()->executeUpdate($sql);
     }
 
     /**

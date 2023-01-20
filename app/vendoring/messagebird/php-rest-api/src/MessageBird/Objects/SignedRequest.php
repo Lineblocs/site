@@ -3,7 +3,6 @@
 namespace MessageBird\Objects;
 
 use MessageBird\Exceptions\ValidationException;
-use MessageBird\RequestValidator;
 
 /**
  * Class SignedRequest
@@ -11,7 +10,6 @@ use MessageBird\RequestValidator;
  * @package MessageBird\Objects
  *
  * @link https://developers.messagebird.com/docs/verify-http-requests
- * @deprecated Use {@link RequestValidator} instead.
  */
 class SignedRequest extends Base
 {
@@ -34,7 +32,7 @@ class SignedRequest extends Base
      *
      * @var array
      */
-    public $queryParameters = [];
+    public $queryParameters = array();
 
     /**
      * The signature passed in the MessageBird-Signature header of the request.
@@ -46,18 +44,19 @@ class SignedRequest extends Base
     /**
      * Create a new SignedRequest from PHP globals.
      *
+     * @return SignedRequest
      * @throws ValidationException when a required parameter is missing.
-     * @deprecated Use {@link RequestValidator::validateRequestFromGlobals()} instead.
      */
-    public static function createFromGlobals(): SignedRequest
+    public static function createFromGlobals()
     {
         $body = file_get_contents('php://input');
         $queryParameters = $_GET;
         $requestTimestamp = isset($_SERVER['HTTP_MESSAGEBIRD_REQUEST_TIMESTAMP']) ?
             (int)$_SERVER['HTTP_MESSAGEBIRD_REQUEST_TIMESTAMP'] : null;
-        $signature = $_SERVER['HTTP_MESSAGEBIRD_SIGNATURE'] ?? null;
+        $signature = isset($_SERVER['HTTP_MESSAGEBIRD_SIGNATURE']) ?
+            $_SERVER['HTTP_MESSAGEBIRD_SIGNATURE'] : null;
 
-        $signedRequest = new self();
+        $signedRequest = new SignedRequest();
         $signedRequest->loadFromArray(compact('body', 'queryParameters', 'requestTimestamp', 'signature'));
 
         return $signedRequest;
@@ -72,18 +71,17 @@ class SignedRequest extends Base
      * @param string $body The request body
      * @return SignedRequest
      * @throws ValidationException when a required parameter is missing.
-     * @deprecated Use {@link RequestValidator::validateSignature()} instead.
      */
-    public static function create($query, string $signature, int $requestTimestamp, string $body): SignedRequest
+    public static function create($query, $signature, $requestTimestamp, $body)
     {
         if (is_string($query)) {
-            $queryParameters = [];
+            $queryParameters = array();
             parse_str($query, $queryParameters);
         } else {
             $queryParameters = $query;
         }
 
-        $signedRequest = new self();
+        $signedRequest = new SignedRequest();
         $signedRequest->loadFromArray(compact('body', 'queryParameters', 'requestTimestamp', 'signature'));
 
         return $signedRequest;
@@ -93,24 +91,24 @@ class SignedRequest extends Base
      * {@inheritdoc}
      * @throws ValidationException when a required parameter is missing.
      */
-    public function loadFromArray($object): self
+    public function loadFromArray($params)
     {
-        if (!isset($object['requestTimestamp']) || !\is_int($object['requestTimestamp'])) {
+        if (!isset($params['requestTimestamp']) || !is_int($params['requestTimestamp'])) {
             throw new ValidationException('The "requestTimestamp" value is missing or invalid.');
         }
 
-        if (!isset($object['signature']) || !\is_string($object['signature'])) {
+        if (!isset($params['signature']) || !is_string($params['signature'])) {
             throw new ValidationException('The "signature" parameter is missing.');
         }
 
-        if (!isset($object['queryParameters']) || !\is_array($object['queryParameters'])) {
+        if (!isset($params['queryParameters']) || !is_array($params['queryParameters'])) {
             throw new ValidationException('The "queryParameters" parameter is missing or invalid.');
         }
 
-        if (!isset($object['body']) || !\is_string($object['body'])) {
+        if (!isset($params['body']) || !is_string($params['body'])) {
             throw new ValidationException('The "body" parameter is missing.');
         }
 
-        return parent::loadFromArray($object);
+        return parent::loadFromArray($params);
     }
 }

@@ -7,29 +7,33 @@ use MessageBird\Objects\Base;
 class Call extends Base
 {
     /**
+     * The unique ID of the call
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
      * The caller ID of the call
      *
      * @var string
      */
     public $source;
+
     /**
      * The number/address to be called.
      *
      * @var string
      */
     public $destination;
+
     /**
      * The call flow object to be executed when the call is answered.
      *
      * @var CallFlow
      */
     public $callFlow;
-    /**
-     * The unique ID of the call
-     *
-     * @var string
-     */
-    protected $id;
+
     /**
      * The unique ID of the number that is/was called
      *
@@ -68,7 +72,7 @@ class Call extends Base
     /**
      * @inheritdoc
      */
-    public function loadFromArray($object): self
+    public function loadFromArray($object)
     {
         parent::loadFromArray($object);
 
@@ -80,32 +84,50 @@ class Call extends Base
         return $this;
     }
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNumberId(): string
+    /**
+     * @return string
+     */
+    public function getNumberId()
     {
         return $this->numberId;
     }
 
-    public function getStatus(): string
+    /**
+     * @return string
+     */
+    public function getStatus()
     {
         return $this->status;
     }
 
-    public function getCreatedAt(): string
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): string
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
-    public function getEndedAt(): string
+    /**
+     * @return string
+     */
+    public function getEndedAt()
     {
         return $this->endedAt;
     }

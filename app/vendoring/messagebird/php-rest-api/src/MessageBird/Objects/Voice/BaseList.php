@@ -11,10 +11,11 @@ use MessageBird\Objects\Base;
  */
 class BaseList extends Base
 {
+
     public $totalCount;
     public $pageCount;
     public $currentPage;
     public $perPage;
 
-    public $items = [];
+    public $items = array ();
 }

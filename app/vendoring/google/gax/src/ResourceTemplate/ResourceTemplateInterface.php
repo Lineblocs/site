@@ -50,8 +50,6 @@ use Google\ApiCore\ValidationException;
  * for details. A template consists of a sequence of literals, wildcards, and variable bindings,
  * where each binding can have a sub-path. A string representation can be parsed into an
  * instance of AbsoluteResourceTemplate, which can then be used to perform matching and instantiation.
- *
- * @internal
  */
 interface ResourceTemplateInterface
 {
@@ -76,7 +74,7 @@ interface ResourceTemplateInterface
      * @param string $path A resource string.
      * @return bool
      */
-    public function matches(string $path);
+    public function matches($path);
 
     /**
      * Matches a given $path to a resource template, and returns an array of bindings between
@@ -87,5 +85,5 @@ interface ResourceTemplateInterface
      * @throws ValidationException if path can't be matched to the template.
      * @return array Array matching var names to binding values.
      */
-    public function match(string $path);
+    public function match($path);
 }

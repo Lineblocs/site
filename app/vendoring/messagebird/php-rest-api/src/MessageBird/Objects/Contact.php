@@ -1,8 +1,7 @@
 <?php
 
-namespace MessageBird\Objects;
 
-use stdClass;
+namespace MessageBird\Objects;
 
 /**
  * Class Contact
@@ -12,71 +11,81 @@ use stdClass;
 class Contact extends Base
 {
     /**
-     * The phone number of contact.
-     *
-     * @var int
-     */
-    public $msisdn;
-    /**
-     * The first name of the contact.
-     *
-     * @var string
-     */
-    public $firstName;
-    /**
-     * The last name of the contact.
-     *
-     * @var string
-     */
-    public $lastName;
-    /**
-     * @var string
-     */
-    public $custom1;
-    /**
-     * @var string
-     */
-    public $custom2;
-    /**
-     * @var string
-     */
-    public $custom3;
-    /**
-     * @var string
-     */
-    public $custom4;
-    /**
      * An unique random ID which is created on the MessageBird
      * platform and is returned upon creation of the object.
      *
      * @var string
      */
     protected $id;
+
     /**
      * The URL of the created object.
      *
      * @var string
      */
     protected $href;
+
+    /**
+     * The phone number of contact.
+     *
+     * @var int
+     */
+    public $msisdn;
+
+    /**
+     * The first name of the contact.
+     *
+     * @var string
+     */
+    public $firstName;
+
+    /**
+     * The last name of the contact.
+     *
+     * @var string
+     */
+    public $lastName;
+
     /**
      * Custom fields of the contact.
      *
-     * @var stdClass
+     * @var array
      */
-    protected $customDetails = [];
+    protected $customDetails = array();
+
+    /**
+     * @var string
+     */
+    public $custom1;
+
+    /**
+     * @var string
+     */
+    public $custom2;
+
+    /**
+     * @var string
+     */
+    public $custom3;
+
+    /**
+     * @var string
+     */
+    public $custom4;
+
     /**
      * The hash of the group this contact belongs to.
      *
-     * @var ?stdClass
+     * @var array
      */
-    protected $groups = null;
+    protected $groups = array();
 
     /**
      * The hash with messages sent to contact.
      *
-     * @var ?stdClass
+     * @var array
      */
-    protected $messages = null;
+    protected $messages = array();
 
     /**
      * The date and time of the creation of the contact in RFC3339 format (Y-m-d\TH:i:sP)
@@ -88,96 +97,93 @@ class Contact extends Base
     /**
      * The date and time of the updated of the contact in RFC3339 format (Y-m-d\TH:i:sP)
      *
-     * @var string|null
+     * @var string
      */
     protected $updatedDatetime;
 
-    public function getId(): string
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getHref(): string
+    /**
+     * @return string
+     */
+    public function getHref()
     {
         return $this->href;
     }
 
-    public function getGroups(): stdClass
+    /**
+     * @return string
+     */
+    public function getGroups()
     {
         return $this->groups;
     }
 
-    public function getMessages(): stdClass
+    /**
+     * @return string
+     */
+    public function getMessages()
     {
         return $this->messages;
     }
 
-    public function getCreatedDatetime(): string
+    /**
+     * @return string
+     */
+    public function getCreatedDatetime()
     {
         return $this->createdDatetime;
     }
 
-    public function getUpdatedDatetime(): ?string
+    /**
+     * @return string
+     */
+    public function getUpdatedDatetime()
     {
         return $this->updatedDatetime;
     }
 
-    public function getCustomDetails(): stdClass
+    /**
+     * @return array
+     */
+    public function getCustomDetails()
     {
         return $this->customDetails;
     }
 
     /**
-     * @deprecated 2.2.0 No longer used by internal code, please switch to {@see self::loadFromStdclass()}
-     * 
-     * @param mixed $object
+     * @param $object
+     *
+     * @return $this
      */
-    public function loadFromArray($object): self
+    public function loadFromArray($object)
     {
         unset($this->custom1, $this->custom2, $this->custom3, $this->custom4);
-        
+
         return parent::loadFromArray($object);
     }
 
-    public function loadFromStdclass(stdClass $object): self
-    {
-        unset($this->custom1, $this->custom2, $this->custom3, $this->custom4);
-        
-        return parent::loadFromStdclass($object);
-    }
-
     /**
-     * @deprecated 2.2.0 No longer used by internal code, please switch to {@see self::loadFromStdclassForGroups()}
-     * 
-     * @param mixed $object
+     * @param $object
      *
-     * @return $this ->object
+     * @return $this ->Object
      */
     public function loadFromArrayForGroups($object)
     {
         parent::loadFromArray($object);
 
         if (!empty($object->items)) {
-            foreach ($object->items as &$item) {
-                $group = new Group();
-                $group->loadFromArray($item);
+            foreach($object->items AS &$item) {
+                $Group = new Group();
+                $Group->loadFromArray($item);
 
-                $item = $group;
-            }
-        }
-        return $object;
-    }
-
-    public function loadFromStdclassForGroups(stdClass $object)
-    {
-        parent::loadFromStdclass($object);
-
-        if (!empty($object->items)) {
-            foreach ($object->items as &$item) {
-                $group = new Group();
-                $group->loadFromStdclass($item);
-
-                $item = $group;
+                $item = $Group;
             }
         }
         return $object;

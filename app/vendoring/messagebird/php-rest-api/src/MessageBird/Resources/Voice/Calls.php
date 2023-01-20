@@ -12,11 +12,16 @@ use MessageBird\Objects;
  */
 class Calls extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Voice\Call();
+
+        $this->setObject(new Objects\Voice\Call());
         $this->setResourceName('calls');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

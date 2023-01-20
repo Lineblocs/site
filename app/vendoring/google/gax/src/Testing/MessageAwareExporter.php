@@ -20,9 +20,6 @@ namespace Google\ApiCore\Testing;
 use Google\Protobuf\Internal\Message;
 use SebastianBergmann\Exporter\Exporter;
 
-/**
- * @internal
- */
 class MessageAwareExporter extends Exporter
 {
     /**

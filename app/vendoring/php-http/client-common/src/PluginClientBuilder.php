@@ -30,9 +30,6 @@ final class PluginClientBuilder
         return $this;
     }
 
-    /**
-     * @param mixed $value
-     */
     public function setOption(string $name, $value): self
     {
         $this->options[$name] = $value;
@@ -48,14 +45,12 @@ final class PluginClientBuilder
     }
 
     /**
-     * @param ClientInterface|HttpAsyncClient $client
+     * @param ClientInterface | HttpAsyncClient $client
      */
     public function createClient($client): PluginClient
     {
         if (!$client instanceof ClientInterface && !$client instanceof HttpAsyncClient) {
-            throw new \TypeError(
-                sprintf('%s::createClient(): Argument #1 ($client) must be of type %s|%s, %s given', self::class, ClientInterface::class, HttpAsyncClient::class, get_debug_type($client))
-            );
+            throw new \RuntimeException('You must provide a valid http client');
         }
 
         $plugins = $this->plugins;

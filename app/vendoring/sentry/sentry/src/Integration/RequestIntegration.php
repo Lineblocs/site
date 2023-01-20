@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sentry\Integration;
 
-use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Sentry\Event;
@@ -37,17 +36,6 @@ final class RequestIntegration implements IntegrationInterface
     private const REQUEST_BODY_MEDIUM_MAX_CONTENT_LENGTH = 10 ** 4;
 
     /**
-     * This constant is a map of maximum allowed sizes for each value of the
-     * `max_request_body_size` option.
-     */
-    private const MAX_REQUEST_BODY_SIZE_OPTION_TO_MAX_LENGTH_MAP = [
-        'none' => 0,
-        'small' => self::REQUEST_BODY_SMALL_MAX_CONTENT_LENGTH,
-        'medium' => self::REQUEST_BODY_MEDIUM_MAX_CONTENT_LENGTH,
-        'always' => -1,
-    ];
-
-    /**
      * @var Options|null The client options
      */
     private $options;
@@ -66,7 +54,7 @@ final class RequestIntegration implements IntegrationInterface
     public function __construct(?Options $options = null, ?RequestFetcherInterface $requestFetcher = null)
     {
         if (null !== $options) {
-            @trigger_error(sprintf('Passing the options as argument of the constructor of the "%s" class is deprecated since version 2.1 and will not work in 3.0.', self::class), \E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing the options as argument of the constructor of the "%s" class is deprecated since version 2.1 and will not work in 3.0.', self::class), E_USER_DEPRECATED);
         }
 
         $this->options = $options;
@@ -106,7 +94,7 @@ final class RequestIntegration implements IntegrationInterface
      */
     public static function applyToEvent(self $self, Event $event, ?ServerRequestInterface $request = null): void
     {
-        @trigger_error(sprintf('The "%s" method is deprecated since version 2.1 and will be removed in 3.0.', __METHOD__), \E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" method is deprecated since version 2.1 and will be removed in 3.0.', __METHOD__), E_USER_DEPRECATED);
 
         if (null === $self->options) {
             throw new \BadMethodCallException('The options of the integration must be set.');
@@ -178,7 +166,7 @@ final class RequestIntegration implements IntegrationInterface
             static function (string $key) use ($keysToRemove): bool {
                 return !\in_array(strtolower($key), $keysToRemove, true);
             },
-            \ARRAY_FILTER_USE_KEY
+            ARRAY_FILTER_USE_KEY
         );
     }
 
@@ -188,23 +176,27 @@ final class RequestIntegration implements IntegrationInterface
      * the parsing fails then the raw data is returned. If there are submitted
      * fields or files, all of their information are parsed and returned.
      *
-     * @param Options                $options The options of the client
-     * @param ServerRequestInterface $request The server request
+     * @param Options                $options       The options of the client
+     * @param ServerRequestInterface $serverRequest The server request
      *
      * @return mixed
      */
-    private function captureRequestBody(Options $options, ServerRequestInterface $request)
+    private function captureRequestBody(Options $options, ServerRequestInterface $serverRequest)
     {
         $maxRequestBodySize = $options->getMaxRequestBodySize();
-        $requestBodySize = (int) $request->getHeaderLine('Content-Length');
+        $requestBody = $serverRequest->getBody();
 
-        if (!$this->isRequestBodySizeWithinReadBounds($requestBodySize, $maxRequestBodySize)) {
+        if (
+            'none' === $maxRequestBodySize ||
+            ('small' === $maxRequestBodySize && $requestBody->getSize() > self::REQUEST_BODY_SMALL_MAX_CONTENT_LENGTH) ||
+            ('medium' === $maxRequestBodySize && $requestBody->getSize() > self::REQUEST_BODY_MEDIUM_MAX_CONTENT_LENGTH)
+        ) {
             return null;
         }
 
-        $requestData = $request->getParsedBody();
+        $requestData = $serverRequest->getParsedBody();
         $requestData = array_merge(
-            $this->parseUploadedFiles($request->getUploadedFiles()),
+            $this->parseUploadedFiles($serverRequest->getUploadedFiles()),
             \is_array($requestData) ? $requestData : []
         );
 
@@ -212,17 +204,15 @@ final class RequestIntegration implements IntegrationInterface
             return $requestData;
         }
 
-        $requestBody = Utils::copyToString($request->getBody(), self::MAX_REQUEST_BODY_SIZE_OPTION_TO_MAX_LENGTH_MAP[$maxRequestBodySize]);
-
-        if ('application/json' === $request->getHeaderLine('Content-Type')) {
+        if ('application/json' === $serverRequest->getHeaderLine('Content-Type')) {
             try {
-                return JSON::decode($requestBody);
+                return JSON::decode($requestBody->getContents());
             } catch (JsonException $exception) {
                 // Fallback to returning the raw data from the request body
             }
         }
 
-        return $requestBody;
+        return $requestBody->getContents();
     }
 
     /**
@@ -252,26 +242,5 @@ final class RequestIntegration implements IntegrationInterface
         }
 
         return $result;
-    }
-
-    private function isRequestBodySizeWithinReadBounds(int $requestBodySize, string $maxRequestBodySize): bool
-    {
-        if ($requestBodySize <= 0) {
-            return false;
-        }
-
-        if ('none' === $maxRequestBodySize) {
-            return false;
-        }
-
-        if ('small' === $maxRequestBodySize && $requestBodySize > self::REQUEST_BODY_SMALL_MAX_CONTENT_LENGTH) {
-            return false;
-        }
-
-        if ('medium' === $maxRequestBodySize && $requestBodySize > self::REQUEST_BODY_MEDIUM_MAX_CONTENT_LENGTH) {
-            return false;
-        }
-
-        return true;
     }
 }

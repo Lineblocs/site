@@ -106,7 +106,7 @@ class RetryMiddleware
      * @return PromiseInterface
      * @throws ApiException
      */
-    private function retry(Call $call, array $options, string $status)
+    private function retry(Call $call, array $options, $status)
     {
         $delayMult = $this->retrySettings->getRetryDelayMultiplier();
         $maxDelayMs = $this->retrySettings->getMaxRetryDelayMillis();
@@ -127,6 +127,10 @@ class RetryMiddleware
             );
         }
 
+        // Don't sleep if the failure was a timeout
+        if ($status != ApiStatus::DEADLINE_EXCEEDED) {
+            usleep($delayMs * 1000);
+        }
         $delayMs = min($delayMs * $delayMult, $maxDelayMs);
         $timeoutMs = min(
             $timeoutMs * $timeoutMult,

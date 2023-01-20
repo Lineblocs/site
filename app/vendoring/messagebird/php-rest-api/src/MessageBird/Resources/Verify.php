@@ -2,12 +2,8 @@
 
 namespace MessageBird\Resources;
 
-use MessageBird\Common;
-use MessageBird\Exceptions\AuthenticateException;
-use MessageBird\Exceptions\HttpException;
-use MessageBird\Exceptions\RequestException;
-use MessageBird\Exceptions\ServerException;
 use MessageBird\Objects;
+use MessageBird\Common;
 
 /**
  * Class Verify
@@ -16,32 +12,32 @@ use MessageBird\Objects;
  */
 class Verify extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Verify();
+        $this->setObject(new Objects\Verify);
         $this->setResourceName('verify');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 
     /**
-     * @param mixed $id
-     * @param mixed $token
+     * @param $id
+     * @param $token
      *
-     * @return Objects\Balance|Objects\Conversation\Conversation|Objects\Hlr|Objects\Lookup|Objects\Message|Objects\Verify|Objects\VoiceMessage|null
+     * @return $this->Object
      *
-     * @throws HttpException
-     * @throws RequestException
-     * @throws ServerException|AuthenticateException
+     * @throws \MessageBird\Exceptions\HttpException
+     * @throws \MessageBird\Exceptions\RequestException
+     * @throws \MessageBird\Exceptions\ServerException
      */
     public function verify($id, $token)
     {
-        $resourceName = $this->resourceName . (($id) ? '/' . $id : null);
-        [, , $body] = $this->httpClient->performHttpRequest(
-            Common\HttpClient::REQUEST_GET,
-            $resourceName,
-            ['token' => $token]
-        );
+        $ResourceName = $this->resourceName . (($id) ? '/' . $id : null);
+        list(, , $body) = $this->HttpClient->performHttpRequest(Common\HttpClient::REQUEST_GET, $ResourceName, array('token' => $token));
         return $this->processRequest($body);
     }
 }

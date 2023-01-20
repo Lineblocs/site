@@ -1,4 +1,4 @@
-FROM php:7.4.0-apache
+FROM php:7.3.0-apache
 SHELL ["/bin/bash", "-c"]
 
 # Set working directory
@@ -18,6 +18,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl
+RUN apt-get install -y libmcrypt-dev && \
+    pecl install mcrypt-1.0.2 && \
+    docker-php-ext-enable mcrypt
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -61,13 +64,13 @@ COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # copy php.ini
 RUN mv php.ini "$PHP_INI_DIR/php.ini"
-#RUN mv .env.custom .env
+RUN mv .env.cop .env
 
 # Change current user to www
 # Expose port 9000 and start php-fpm server
 
 #RUN php -d memory_limit=-1 /usr/local/bin/composer install --no-scripts
-RUN mv vendoring vendor
+RUN mv vendor-loaded vendor
 #RUN php artisan key:generate
 #RUN php artisan migrate
 

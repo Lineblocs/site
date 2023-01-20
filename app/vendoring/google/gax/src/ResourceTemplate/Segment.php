@@ -37,7 +37,6 @@ use Google\ApiCore\ValidationException;
 /**
  * Represents a segment in a resource template. This is used internally by RelativeResourceTemplate,
  * but is not intended for public use and may change without notice.
- *
  * @internal
  */
 class Segment
@@ -62,30 +61,20 @@ class Segment
     /** @var string */
     private $stringRepr;
 
-    /** @var string */
-    private $separator;
-
     /**
      * Segment constructor.
      * @param int $segmentType
      * @param string|null $value
      * @param string|null $key
      * @param RelativeResourceTemplate|null $template
-     * @param string $separator The separator that belongs at the end of a segment. Ending segments should use '/'.
      * @throws ValidationException
      */
-    public function __construct(
-        int $segmentType,
-        string $value = null,
-        string $key = null,
-        RelativeResourceTemplate $template = null,
-        string $separator = '/'
-    ) {
+    public function __construct($segmentType, $value = null, $key = null, RelativeResourceTemplate $template = null)
+    {
         $this->segmentType = $segmentType;
         $this->value = $value;
         $this->key = $key;
         $this->template = $template;
-        $this->separator = $separator;
 
         switch ($this->segmentType) {
             case Segment::LITERAL_SEGMENT:
@@ -122,7 +111,7 @@ class Segment
      * @return bool
      * @throws ValidationException
      */
-    public function matches(string $value)
+    public function matches($value)
     {
         switch ($this->segmentType) {
             case Segment::LITERAL_SEGMENT:
@@ -173,21 +162,13 @@ class Segment
     }
 
     /**
-     * @return string
-     */
-    public function getSeparator()
-    {
-        return $this->separator;
-    }
-
-    /**
      * Check if $binding is a valid segment binding. Segment bindings may contain any characters
      * except a forward slash ('/'), and may not be empty.
      *
-     * @param string $binding
+     * @param $binding
      * @return bool
      */
-    private static function isValidBinding(string $binding)
+    private static function isValidBinding($binding)
     {
         return preg_match("-^[^/]+$-", $binding) === 1;
     }
@@ -196,10 +177,10 @@ class Segment
      * Check if $binding is a valid double wildcard binding. Segment bindings may contain any
      * characters, but may not be empty.
      *
-     * @param string $binding
+     * @param $binding
      * @return bool
      */
-    private static function isValidDoubleWildcardBinding(string $binding)
+    private static function isValidDoubleWildcardBinding($binding)
     {
         return preg_match("-^.+$-", $binding) === 1;
     }

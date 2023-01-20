@@ -23,5 +23,5 @@ return array (
   67837 => 'Luganville',
   67838 => 'Penama/Torba',
   6784 => 'Malampa',
-  67888 => 'Tafea',
+  6788 => 'Tafea',
 );

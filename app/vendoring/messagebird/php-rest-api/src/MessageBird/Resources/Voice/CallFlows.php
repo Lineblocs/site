@@ -12,11 +12,16 @@ use MessageBird\Objects;
  */
 class CallFlows extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Voice\CallFlow();
+
+        $this->setObject(new Objects\Voice\CallFlow());
         $this->setResourceName('call-flows');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

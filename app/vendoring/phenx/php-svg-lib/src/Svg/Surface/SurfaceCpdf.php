@@ -2,7 +2,7 @@
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
+ * @author  Fabien M�nager <fabien.menager@gmail.com>
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -415,19 +415,11 @@ class SurfaceCpdf implements SurfaceInterface
             $dashArray = preg_split('/\s*,\s*/', $style->strokeDasharray);
         }
 
-
-        $phase=0;
-        if ($style->strokeDashoffset) {
-           $phase = $style->strokeDashoffset;
-        }
-
-
         $canvas->setLineStyle(
             $style->strokeWidth,
             $style->strokeLinecap,
             $style->strokeLinejoin,
-            $dashArray,
-            $phase
+            $dashArray
         );
 
         $this->setFont($style->fontFamily, $style->fontStyle, $style->fontWeight);

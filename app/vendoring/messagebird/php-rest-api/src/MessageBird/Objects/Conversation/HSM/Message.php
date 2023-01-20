@@ -24,3 +24,5 @@ class Message
      */
     public $params;
 }
+
+

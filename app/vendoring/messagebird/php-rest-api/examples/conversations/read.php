@@ -8,13 +8,14 @@ $messageBird = new \MessageBird\Client('YOUR_ACCESS_KEY'); // Set your own API a
 
 // Setting the optional 'include' parameter to 'content' requests the API to
 // include the expanded Contact object in its response. Excluded by default.
-$optionalParameters = [
+$optionalParameters = array(
     'include' => 'content',
-];
+);
 
 try {
     $conversation = $messageBird->conversations->read(
-        'CONVERSATION_ID'
+        'CONVERSATION_ID',
+        $optionalParameters
     );
 
     var_dump($conversation);

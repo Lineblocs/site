@@ -12,11 +12,16 @@ use MessageBird\Objects;
  */
 class Webhooks extends Base
 {
-    public function __construct(Common\HttpClient $httpClient)
+
+    /**
+     * @param Common\HttpClient $HttpClient
+     */
+    public function __construct(Common\HttpClient $HttpClient)
     {
-        $this->object = new Objects\Voice\Webhook();
+
+        $this->setObject(new Objects\Voice\Webhook());
         $this->setResourceName('webhooks');
 
-        parent::__construct($httpClient);
+        parent::__construct($HttpClient);
     }
 }

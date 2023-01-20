@@ -6,12 +6,6 @@
 
 # Sentry SDK for PHP
 
-> Please note that the `2.x` branch of the Sentry PHP SDK is no longer actively maintained and will only receive bug-fix and security updates.
->
-> For the most recent Sentry PHP SDK see the [default branch](https://github.com/getsentry/sentry-php).
-
----
-
 [![Total Downloads](https://poser.pugx.org/sentry/sentry/downloads)](https://packagist.org/packages/sentry/sentry)
 [![Monthly Downloads](https://poser.pugx.org/sentry/sentry/d/monthly)](https://packagist.org/packages/sentry/sentry)
 [![Latest Stable Version](https://poser.pugx.org/sentry/sentry/v/stable)](https://packagist.org/packages/sentry/sentry)
@@ -20,7 +14,8 @@
 
 | Version | Build Status | Code Coverage |
 |:---------:|:-------------:|:-----:|
-| `2.x`| [![CI][2.x Build Status Image]][2.x Build Status] | [![Coverage Status][2.x Code Coverage Image]][2.x Code Coverage] |
+| `master`| [![Build Status][Travis Master Build Status Image]][Travis Build Status] [![Build Status][AppVeyor Master Build Status Image]][AppVeyor Build Status] | [![Coverage Status][Master Code Coverage Image]][Master Code Coverage] |
+| `develop` | [![Build Status][Travis Develop Build Status Image]][Travis Build Status] [![Build Status][AppVeyor Develop Build Status Image]][AppVeyor Build Status] | [![Coverage Status][Develop Code Coverage Image]][Develop Code Coverage] |
 
 The Sentry PHP error reporter tracks errors and exceptions that happen during the
 execution of your application and provides instant notification with detailed
@@ -35,7 +30,7 @@ This is our "core" SDK, meaning that all the important code regarding error hand
 If you are happy with using the HTTP client we recommend install the SDK like: [`sentry/sdk`](https://github.com/getsentry/sentry-php-sdk)
 
 ```bash
-composer require sentry/sdk
+php composer.phar require sentry/sdk
 ```
 
 This package (`sentry/sentry`) is not tied to any specific library that sends HTTP messages. Instead,
@@ -45,7 +40,7 @@ PSR-7 implementation and HTTP client they want to use.
 If you just want to get started quickly you should run the following command:
 
 ```bash
-composer require sentry/sentry php-http/curl-client
+php composer.phar require sentry/sentry php-http/curl-client
 ```
 
 This is basically what our metapackage (`sentry/sdk`) provides.
@@ -115,7 +110,13 @@ Tests can then be run via phpunit:
 $ vendor/bin/phpunit
 ```
 
-[2.x Build Status]: https://github.com/getsentry/sentry-php/actions?query=workflow%3ACI+branch%3A2.x
-[2.x Build Status Image]: https://github.com/getsentry/sentry-php/workflows/CI/badge.svg?branch=2.x
-[2.x Code Coverage]: https://codecov.io/gh/getsentry/sentry-php/branch/2.x
-[2.x Code Coverage Image]: https://img.shields.io/codecov/c/github/getsentry/sentry-php/2.x?logo=codecov
+[Travis Build Status]: http://travis-ci.org/getsentry/sentry-php
+[Travis Master Build Status Image]: https://img.shields.io/travis/getsentry/sentry-php/master?logo=travis
+[Travis Develop Build Status Image]: https://img.shields.io/travis/getsentry/sentry-php/develop?logo=travis
+[AppVeyor Build Status]: https://ci.appveyor.com/project/sentry/sentry-php
+[AppVeyor Master Build Status Image]: https://img.shields.io/appveyor/ci/sentry/sentry-php/master?logo=appveyor
+[AppVeyor Develop Build Status Image]: https://img.shields.io/appveyor/ci/sentry/sentry-php/develop?logo=appveyor
+[Master Code Coverage]: https://codecov.io/gh/getsentry/sentry-php/branch/master
+[Master Code Coverage Image]: https://img.shields.io/codecov/c/github/getsentry/sentry-php/master?logo=codecov
+[Develop Code Coverage]: https://codecov.io/gh/getsentry/sentry-php/branch/develop
+[Develop Code Coverage Image]: https://img.shields.io/codecov/c/github/getsentry/sentry-php/develop?logo=codecov

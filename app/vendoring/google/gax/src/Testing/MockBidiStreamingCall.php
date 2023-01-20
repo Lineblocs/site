@@ -36,13 +36,10 @@ use Google\ApiCore\ApiException;
 use Google\Protobuf\Internal\Message;
 use Google\Rpc\Code;
 use Grpc;
-use stdClass;
 
 /**
  * The MockBidiStreamingCall class is used to mock out the \Grpc\BidiStreamingCall class
  * (https://github.com/grpc/grpc/blob/master/src/php/lib/Grpc/BidiStreamingCall.php)
- *
- * @internal
  */
 class MockBidiStreamingCall extends Grpc\BidiStreamingCall
 {
@@ -56,10 +53,10 @@ class MockBidiStreamingCall extends Grpc\BidiStreamingCall
     /**
      * MockBidiStreamingCall constructor.
      * @param mixed[] $responses A list of response objects.
-     * @param mixed|null $deserialize An optional deserialize method for the response object.
-     * @param stdClass|null $status An optional status object. If set to null, a status of OK is used.
+     * @param callable|null $deserialize An optional deserialize method for the response object.
+     * @param MockStatus|null $status An optional status object. If set to null, a status of OK is used.
      */
-    public function __construct(array $responses, $deserialize = null, stdClass $status = null)
+    public function __construct($responses, $deserialize = null, $status = null)
     {
         $this->responses = $responses;
         $this->deserialize = $deserialize;
@@ -100,7 +97,7 @@ class MockBidiStreamingCall extends Grpc\BidiStreamingCall
     }
 
     /**
-     * @return stdClass|null
+     * @return MockStatus|null|\stdClass
      * @throws ApiException
      */
     public function getStatus()
@@ -124,7 +121,7 @@ class MockBidiStreamingCall extends Grpc\BidiStreamingCall
 
     /**
      * Save the request object, to be retrieved via getReceivedCalls()
-     * @param Message|mixed $request The request object
+     * @param \Google\Protobuf\Internal\Message|mixed $request The request object
      * @param array $options An array of options.
      * @throws ApiException
      */
