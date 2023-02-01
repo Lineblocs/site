@@ -36,6 +36,7 @@ class CreateServicePlans extends Migration
             // only one can be featured
             $table->boolean('featured_plan')->default(FALSE);
             $table->integer('monthly_charge_cents')->default(0);
+            $table->integer('base_costs')->default(0);
             $table->boolean('pay_as_you_go')->default(FALSE);
             $table->string('benefits')->default('');
         });
