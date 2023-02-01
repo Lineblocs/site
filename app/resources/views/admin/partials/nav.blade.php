@@ -114,6 +114,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/serviceplan')}}">
+                        <i class="glyphicon glyphicon-user"></i> Service Plan
+                    </a>
+                </li>
+                <li>
                     <a href="{{url('admin/dns')}}">
                         <i class="glyphicon glyphicon-user"></i> DNS Records
                     </a>

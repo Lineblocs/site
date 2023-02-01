@@ -67,6 +67,12 @@
                             document.location.href = next;
                             return;
                         }
+                        if ( !back ) {
+                            setTimeout(function () {
+                                parent.$.colorbox.close();
+                            }, 10);
+                            return;
+                        }
                         document.location.href = back;
                         /*
                         setTimeout(function () {

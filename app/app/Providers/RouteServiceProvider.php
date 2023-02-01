@@ -11,6 +11,7 @@ use \App\SIPProvider;
 use \App\SIPProviderHost;
 use \App\SIPProviderRate;
 use \App\DNSRecord;
+use \App\ServicePlan;
 use \App\WorkspaceRoutingFlow;
 use \App\SIPProviderWhitelistIp;
 use \App\SIPRouter;
@@ -73,6 +74,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('workspaceflow', WorkspaceRoutingFlow::class);
        \Route::model('trunk', SIPTrunk::class);
        \Route::model('dns', DNSRecord::class);
+       \Route::model('serviceplan',ServicePlan::class);
     }
 
     /**

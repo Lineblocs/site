@@ -233,6 +233,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('country', 'Admin\SIPCountryController');
     Route::resource('region', 'Admin\SIPCountryController');
 
+
+     # ServicePlans
+    Route::get('serviceplan/data', 'Admin\ServicePlanController@data');
+    Route::get('serviceplan/{serviceplan}/show', 'Admin\ServicePlanController@show');
+    Route::get('serviceplan/{serviceplan}/edit', 'Admin\ServicePlanController@edit');
+    Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
+    Route::resource('serviceplan', 'Admin\ServicePlanController');
+
     # system status
     Route::get('systemstatus/data', 'Admin\SystemStatusController@data');
     Route::get('systemstatus/{systemstatus}/show', 'Admin\SystemStatusController@show');
