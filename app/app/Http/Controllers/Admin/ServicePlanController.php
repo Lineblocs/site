@@ -153,9 +153,4 @@ class ServicePlanController extends AdminController
             ->make();
     }
 
-    public function import(Request $request)
-    {
-        return view('admin.number.import');
-    }
-
 }
