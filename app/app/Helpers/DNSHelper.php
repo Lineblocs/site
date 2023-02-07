@@ -12,6 +12,7 @@ use App\SipTrunkTermination;
 use App\Customizations;
 use App\ApiCredential;
 use App\DNSRecord;
+use App\Classes\GoDaddyDDNS;
 use Config;
 use Exception;
 
@@ -298,6 +299,33 @@ final class DNSHelper {
               return FALSE;
         }
       return TRUE;
+    } else if ( $dns_provider == 'godaddy' ) {
+        $update         =   array(
+            //array( 'type' => 'A' , 'name' => '@' , 'ttl' => '3600' ) , 
+            //array( 'type' => 'A' , 'name' => 'www' , 'ttl' => '3600' ) , 
+        );
+      $key = $api_credentials->godaddy_api_key;
+      $secret = $api_credentials->godaddy_api_secret;
+      $ddns = new GoDaddyDDNS( $domain, $key, $secret);
+
+      foreach ( $baseRecords as $record ) {
+        $update[] = [
+          'type' => $record['type'],
+          'name' => $record['host'],
+          'ttl' => $record['ttl']
+        ];
+      }
+      foreach ( $dnsRecords as $record ) {
+        $update[] = [
+          'type' => $record['type'],
+          'name' => $record['host'],
+          'ttl' => $record['ttl']
+        ];
+      }
+
+      foreach ( $update as $record ) {
+         $ddns->updateRecord( $record[ 'type' ] , $record[ 'name' ] , $external_ip , $record[ 'ttl' ] );
+      }
     } else if ( $dns_provider == 'self-managed' ) {
       // TODO implement
       return TRUE;
