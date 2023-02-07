@@ -120,6 +120,34 @@
                 </div>
             </div>
 
+            <div class="row">
+                <h3>Social media links</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <label for="facebook_url">Facebook URL</label>
+                <div class="controls">
+                    <input name="facebook_url" id="facebook_url" class="form-control" value="{{$record->facebook_url}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="twitter_url">Twitter URL</label>
+                <div class="controls">
+                    <input name="twitter_url" id="twitter_url" class="form-control" value="{{$record->twitter_url}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="linkedin_url">Linkedin URL</label>
+                <div class="controls">
+                    <input name="linkedin_url" id="linkedin_url" class="form-control" value="{{$record->linkedin_url}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="tiktok_url">Tiktok URL</label>
+                <div class="controls">
+                    <input name="tiktok_url" id="tiktok_url" class="form-control" value="{{$record->tiktok_url}}"/>
+                </div>
+            </div>
 
             <div class="row">
                 <h3>Preferences</h3>

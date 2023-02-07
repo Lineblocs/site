@@ -106,6 +106,16 @@
                                 <i class="glyphicon glyphicon-bullhorn"></i> Customizations
                             </a>
                         </li>
+                        <li>
+                            <a href="{{url('admin/faqs')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> FAQs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/resources')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Resource Articles
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>

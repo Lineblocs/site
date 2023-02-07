@@ -266,7 +266,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('customizations', 'Admin\CustomizationsController@view');
     Route::post('customizations', 'Admin\CustomizationsController@save');
 
-
+    Route::get('faqs', 'Admin\FAQsController@view');
+    Route::post('faqs', 'Admin\FAQsController@save');
 });
 // API routes
 $api = app('Dingo\Api\Routing\Router');
