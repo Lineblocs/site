@@ -1,4 +1,17 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+ */
 /****************   Model binding into route **************************/
 Route::pattern('id', '[0-9]+');
 Route::pattern('slug', '[0-9a-z-_]+');
@@ -76,10 +89,10 @@ Route::get('/status/{categoryId}', 'HomeController@status_category');
 Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //Route::post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
 
-Route::controllers([
-    'auth' => 'Auth\AuthController',
-    'password' => 'Auth\PasswordController',
-]);
+// Route::controllers([
+//     'auth' => 'Auth\AuthController',
+//     'password' => 'Auth\PasswordController',
+// ]);
 /***************    Admin routes  **********************************/
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 

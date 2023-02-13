@@ -1,89 +1,124 @@
 {
-    "name": "lineblocs/admin-site",
-    "description": "Lineblocs site for admins",
-    "keywords": ["lineblocs", "voip", "pbx", "kubernetes", "docker", "cloud native"],
-    "license": "MIT",
-    "type": "project",
-    "repositories": [
-        {
-             "type": "composer", 
-             "url": "https://packagist.org"
-        },
-        { "packagist": false }
+  "name": "lineblocs/admin-site",
+  "description": "Lineblocs site for admins",
+  "keywords": [
+    "api",
+    "dingo",
+    "lineblocs",
+    "voip",
+    "pbx",
+    "kubernetes",
+    "docker",
+    "cloud native"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packagist.org"
+    },
+    {
+      "packagist": false
+    }
+  ],
+  "require": {
+    "php": "^8.0.2",
+    "psr/log": "^1.0.1",
+    "dingo/blueprint": "^0.4.4",
+    "laravel/framework": "^9.0",
+    "laravel/tinker": "2.8.0",
+    "illuminate/support": "9.51.0",
+    "yajra/laravel-datatables-oracle": "10.3.0",
+    "laravelcollective/html": "6.3.*",
+    "cviebrock/eloquent-sluggable": "^9.0",
+    "doctrine/dbal": "^2.9",
+    "monolog/monolog": "^2.0",
+    "ramsey/uuid": "^4.7.3",
+    "telnyx/telnyx-php": "^0.0.1",
+    "stripe/stripe-php": "^6.43",
+    "nubs/random-name-generator": "^2.1",
+    "giggsey/libphonenumber-for-php": "^8.10",
+    "twilio/sdk": "^5.35",
+    "paypal/rest-api-sdk-php": "1.13.0",
+    "google/cloud": "^0.196.0",
+    "michelf/php-markdown": "^1.8",
+    "guzzlehttp/guzzle": "^7.5.0",
+    "mobiledetect/mobiledetectlib": "^2.8",
+    "nunomaduro/collision": "^6.1",
+    "pusher/pusher-php-server": "^5.0",
+    "spatie/laravel-ignition": "^1.0",
+    "google/apiclient": "^2.0",
+    "api-ecosystem-for-laravel/dingo-api":"4.0.2",
+    "php-open-source-saver/jwt-auth":"2.0.0",
+    "league/flysystem-aws-s3-v3": "3.12.2",
+    "hackzilla/password-generator": "dev-master",
+    "messagebird/php-rest-api": "dev-master",
+    "sentry/sentry-laravel": "3.2.0"
+  },
+  "require-dev": {
+    "fakerphp/faker": "^1.9.1",
+    "mockery/mockery": "^1.4.4",
+    "phpunit/phpunit": "^9.5.10",
+    "phpspec/phpspec": "7.3.0"
+  },
+  "autoload": {
+    "classmap": [
+      "database",
+      "app/Helpers"
     ],
-    "require": {
-        "php": ">=5.5.9",
-        "psr/log": "1.0.0",
-        "laravel/framework": "5.1.*",
-        "yajra/laravel-datatables-oracle" : "~5.0",
-        "barryvdh/laravel-debugbar": "^2.0@dev",
-        "laravelcollective/html": "5.1.*",
-        "cviebrock/eloquent-sluggable": "3.1.4",
-        "dingo/api": "1.0.x@dev",
-        "tymon/jwt-auth": "0.5.12",
-        "doctrine/dbal": "^2.9",
-        "ramsey/uuid": "^3.8.0",
-        "telnyx/telnyx-php": "^0.0.1",
-        "stripe/stripe-php": "^6.43",
-        "nubs/random-name-generator": "^2.1",
-        "giggsey/libphonenumber-for-php": "^8.10",
-        "twilio/sdk": "^5.35",
-        "paypal/rest-api-sdk-php": "1.13.0",
-        "google/cloud": "^0.112.0",
-        "michelf/php-markdown": "^1.8",
-        "guzzlehttp/guzzle": "^6.2",
-        "barryvdh/laravel-dompdf": "v0.8.2",
-        "mobiledetect/mobiledetectlib": "^2.8",
-        "google/apiclient": "^2.0",
-        "league/flysystem-aws-s3-v3": "~1.0",
-        "hackzilla/password-generator": "dev-master",
-        "messagebird/php-rest-api": "dev-master",
-        "fideloper/proxy": "^3.3",
-        "sentry/sentry-laravel": "1.8.0"
+    "psr-4": {
+      "App\\": "app/",
+      "Dingo\\Api\\": "src/"
     },
-    "require-dev": {
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1"
-    },
-    "autoload": {
-        "classmap": [
-            "database"
-        ],
-        "psr-4": {
-            "App\\": "app/"
-        }
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests/TestCase.php"
-        ]
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "php artisan clear-compiled",
-            "php artisan optimize"
-        ],
-        "pre-update-cmd": [
-            "php artisan clear-compiled"
-        ],
-        "post-update-cmd": [
-            "php artisan optimize"
-        ],
-        "post-root-package-install": [
-            "php -r \"copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "php artisan key:generate"
-        ]
-    },
-    "config": {
-        "preferred-install": "dist",
-        "allow-plugins": {
-            "kylekatarnls/update-helper": true,
-            "composer/package-versions-deprecated": true
-        }
-    },
-    "minimum-stability": "dev"
+    "laravel": {
+      "providers": [
+          "Dingo\\Api\\Provider\\LaravelServiceProvider"
+      ],
+      "aliases": {
+          "API": "Dingo\\Api\\Facade\\API"
+      }
+     },
+     "files": [
+ 
+      "app/Helpers/MainHelper.php"
+
+  ]
+
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dingo\\Api\\Tests\\": "tests/"
+  },
+    "classmap": [
+      "tests/TestCase.php"
+    ]
+  },
+  
+  "scripts": {
+    "post-install-cmd": [
+      "php artisan clear-compiled",
+      "php artisan optimize"
+    ],
+    "pre-update-cmd": [
+      "php artisan clear-compiled"
+    ],
+    "post-update-cmd": [
+      "php artisan optimize"
+    ],
+    "post-root-package-install": [
+      "php -r \"copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "php artisan key:generate"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "kylekatarnls/update-helper": true,
+      "composer/package-versions-deprecated": true
+    }
+  },
+  "minimum-stability": "dev"
 }

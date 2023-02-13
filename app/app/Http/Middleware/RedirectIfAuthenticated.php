@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Auth\Guard;
 
 class RedirectIfAuthenticated
 {
@@ -20,7 +19,7 @@ class RedirectIfAuthenticated
      * @param  Guard  $auth
      * @return void
      */
-    public function __construct(Guard $auth)
+    public function __construct($auth)
     {
         $this->auth = $auth;
     }

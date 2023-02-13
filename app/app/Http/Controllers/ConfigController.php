@@ -1,12 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\User;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiAuthController;
 use Config;
+use Illuminate\Http\Request;
 
 class ConfigController extends ApiAuthController
 {
