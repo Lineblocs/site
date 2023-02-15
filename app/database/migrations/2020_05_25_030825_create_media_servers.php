@@ -31,6 +31,6 @@ class CreateMediaServers extends Migration
      */
     public function down()
     {
-        Schema::drop('ip_pbx_servers');
+        //Schema::drop('ip_pbx_servers');
     }
 }

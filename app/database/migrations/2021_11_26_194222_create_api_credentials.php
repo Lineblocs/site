@@ -40,6 +40,6 @@ class CreateApiCredentials extends Migration
      */
     public function down()
     {
-        Schema::drop('api_credentials')->default('');
+        //Schema::drop('api_credentials')->default('');
     }
 }

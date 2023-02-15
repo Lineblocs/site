@@ -28,6 +28,6 @@ class CreateWorkspacesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('workspaces');
+       // Schema::drop('workspaces');
     }
 }

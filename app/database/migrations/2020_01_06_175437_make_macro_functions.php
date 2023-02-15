@@ -33,6 +33,6 @@ class MakeMacroFunctions extends Migration
      */
     public function down()
     {
-        Schema::drop('macro_functions');
+        //Schema::drop('macro_functions');
     }
 }

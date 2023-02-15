@@ -25,9 +25,9 @@ class CallRateToCallRate extends Migration
      */
     public function down()
     {
-        Schema::table('call_rates', function (Blueprint $table) {
+        /* Schema::table('call_rates', function (Blueprint $table) {
             //
             $table->decimal('call_rate', 8, 8);
-        });
+        }); */
     }
 }

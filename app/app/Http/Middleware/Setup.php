@@ -3,11 +3,11 @@
 use App\ApiCredential;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Support\Facades\Auth;
 use Route;
 
-class Setup implements Middleware
+class Setup
 {
 
     /**
@@ -43,17 +43,27 @@ class Setup implements Middleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$guards)
     {
-        $creds = ApiCredential::getRecord();
-        $route = Route::getCurrentRoute();
-        $excluded = [
-            'setup/alreadycomplete',
-            'setup/restart',
-        ];
-        if ($creds->setup_complete && !in_array($route->getPath(), $excluded)) {
-            return $this->response->redirectTo('/setup/alreadycomplete');
+
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+
+                $creds = ApiCredential::getRecord();
+                $route = Route::getCurrentRoute();
+                $excluded = [
+                    'setup/alreadycomplete',
+                    'setup/restart',
+                ];
+                if ($creds->setup_complete && !in_array($route->getPath(), $excluded)) {
+                    return $this->response->redirectTo('/setup/alreadycomplete');
+                }
+
+            }
         }
+
         return $next($request);
     }
 

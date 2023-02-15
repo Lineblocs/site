@@ -2,10 +2,11 @@
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class Admin implements Middleware
+class Admin
 {
 
     /**
@@ -13,7 +14,7 @@ class Admin implements Middleware
      *
      * @var Guard
      */
-    protected $auth;
+    // protected $auth;
 
     /**
      * The response factory implementation.
@@ -29,11 +30,11 @@ class Admin implements Middleware
      * @param  ResponseFactory  $response
      * @return void
      */
-    public function __construct($auth,
-        ResponseFactory $response) {
-        $this->auth = $auth;
-        $this->response = $response;
-    }
+    // public function __construct($auth,
+    //     ResponseFactory $response) {
+    //     $this->auth = $auth;
+    //     $this->response = $response;
+    // }
     /**
      * Handle an incoming request.
      *
@@ -41,19 +42,24 @@ class Admin implements Middleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$guards)
     {
-        if ($this->auth->check()) {
-            $admin = 0;
-            if ($this->auth->user()->admin == 1) {
-                $admin = 1;
+        $guards = empty($guards) ? [null] : $guards;
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                $admin = 0;
+                if (Auth::user()->admin == 1) {
+                    $admin = 1;
+                }
+                if ($admin == 0) {
+                    return $this->response->redirectTo('/');
+                }
+                return $next($request);
             }
-            if ($admin == 0) {
-                return $this->response->redirectTo('/');
-            }
-            return $next($request);
+
         }
-        return $this->response->redirectTo('/');
+        return $next($request);
+        //return $this->response->redirectTo('/');
     }
 
 }

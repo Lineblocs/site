@@ -32,6 +32,6 @@ class SipProviders extends Migration
      */
     public function down()
     {
-        Schema::drop('sip_providers');
+       // Schema::drop('sip_providers');
     }
 }

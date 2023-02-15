@@ -1,35 +1,32 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\AdminController;
-use App\User;
-use App\SIPRouter;
-use App\Workspace;
-use App\PortNumber;
-use App\MediaServer;
-use App\Http\Requests\Admin\SIPRouterRequest;
 use App\Helpers\MainHelper;
+use App\Http\Controllers\AdminController;
+use App\Http\Requests\Admin\SIPRouterRequest;
+use App\MediaServer;
+use App\SIPRouter;
 use App\SIPRouterMediaServer;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
 use Illuminate\Http\Request;
 
 class SIPRouterController extends AdminController
 {
     public function __construct()
     {
-        view()->share('type', 'router');
+        parent::__construct();
+        view()->share('type', '');
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
+
         return view('admin.siprouter.index');
     }
 
@@ -53,7 +50,7 @@ class SIPRouterController extends AdminController
     public function store(SIPRouterRequest $request)
     {
 
-        $router = new SIPRouter ($request->all());
+        $router = new SIPRouter($request->all());
         $router->save();
         header("X-Goto-URL: /admin/router/" . $router->id . "/edit");
     }
@@ -73,7 +70,7 @@ class SIPRouterController extends AdminController
         $servers->join('media_servers', 'media_servers.id', '=', 'sip_routers_media_servers.server_id');
         $servers->where('sip_routers_media_servers.router_id', '=', $router->id);
         $servers = $servers->get();
-        
+
         return view('admin.siprouter.create_edit', compact('router', 'servers', 'ranges', 'regions'));
     }
 
@@ -112,7 +109,6 @@ class SIPRouterController extends AdminController
         $router->delete();
     }
 
-
     public function add_server(SIPRouter $router)
     {
         $servers = MediaServer::asSelect();
@@ -124,19 +120,17 @@ class SIPRouterController extends AdminController
         $data = $request->all();
         $server = SIPRouterMediaServer::create(array_merge([
             'router_id' => $router->id,
-            'server_id' => $data['server_id']
+            'server_id' => $data['server_id'],
         ]));
         return response("");
     }
 
-
     public function del_server(Request $request, SIPRouter $router, SIPRouterMediaServer $server)
     {
         $server->delete();
-            
+
         return response("");
     }
-
 
     /**
      * Show a list of all the languages posts formatted for Datatables.
@@ -145,7 +139,7 @@ class SIPRouterController extends AdminController
      */
     public function data()
     {
-        $routers = SIPRouter::select(array('sip_routers.id', 'sip_routers.name','sip_routers.active', 'sip_routers.region', 'sip_routers.created_at'));
+        $routers = SIPRouter::select(array('sip_routers.id', 'sip_routers.name', 'sip_routers.active', 'sip_routers.region', 'sip_routers.created_at'));
 
         return Datatables::of($routers)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
@@ -154,11 +148,12 @@ class SIPRouterController extends AdminController
             ->remove_column('id')
             ->make();
     }
-    public function routerTypes() {
+    public function routerTypes()
+    {
         return [
             'inbound' => 'inbound',
             'outbound' => 'outbound',
-            'both' => 'both'
+            'both' => 'both',
         ];
     }
 }

@@ -80,7 +80,7 @@ Route::get('/alternative/ringcentral', 'HomeController@alternative_ringcentral')
 Route::get('/alternative/nextiva', 'HomeController@alternative_nextiva');
 Route::get('/alternative/dialpad', 'HomeController@alternative_dialpad');
 Route::get('/alternative/grasshopper', 'HomeController@alternative_grasshopper');
-Route::get('/ucaas/', 'HomeController@ucaas');
+Route::get('/ucaas', 'HomeController@ucaas');
 Route::get('/ucaas/{countryId}', 'HomeController@ucaas_country');
 Route::get('/ucaas/{countryId}/{regionId}', 'HomeController@ucaas_services');
 
@@ -93,6 +93,11 @@ Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //     'auth' => 'Auth\AuthController',
 //     'password' => 'Auth\PasswordController',
 // ]);
+
+Route::resource('auth', 'Auth\AuthController');
+Route::resource('password', 'Auth\PasswordController');
+Route::get('auth/login', 'Auth\AuthController@show')->name('login');
+Route::post('auth/login', 'Auth\AuthController@login');
 /***************    Admin routes  **********************************/
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
@@ -631,3 +636,5 @@ $api->version('v1', function ($api) {
         $api->post("/extensionCodes", "ExtensionCodeController@postExtensionCodes");
     });
 });
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

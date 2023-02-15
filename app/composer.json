@@ -54,7 +54,8 @@
     "league/flysystem-aws-s3-v3": "3.12.2",
     "hackzilla/password-generator": "dev-master",
     "messagebird/php-rest-api": "dev-master",
-    "sentry/sentry-laravel": "3.2.0"
+    "sentry/sentry-laravel": "3.2.0",
+    "laravel/ui": "^5.0@dev"
   },
   "require-dev": {
     "fakerphp/faker": "^1.9.1",

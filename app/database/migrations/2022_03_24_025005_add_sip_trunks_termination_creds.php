@@ -29,6 +29,6 @@ class AddSipTrunksTerminationCreds extends Migration
      */
     public function down()
     {
-        Schema::drop('sip_trunks_termination_creds');
+        Schema::drop('sip_trunks_termination_credentials');
     }
 }
