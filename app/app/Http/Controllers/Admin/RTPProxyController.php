@@ -70,7 +70,7 @@ class RTPProxyController extends AdminController
 
         $rtpproxy = new RTPProxy ($request->all());
         $rtpproxy->save();
-        SIPRouterHelper::addRTPProxy($rtpproxy->rtpproxy_sock, $rtpproxy->id);
+        SIPRouterHelper::addRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
 
@@ -95,7 +95,7 @@ class RTPProxyController extends AdminController
     public function update(RTPProxyRequest $request, RTPProxy $rtpproxy)
     {
         $rtpproxy->update($request->all());
-        SIPRouterHelper::updateRTPProxy($rtpproxy->rtpproxy_sock, $rtpproxy->id);
+        SIPRouterHelper::updateRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
 
