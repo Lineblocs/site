@@ -11,7 +11,7 @@
             {!! trans("admin/rtpproxies.rtp_proxies") !!}
             <div class="pull-right">
                 <div class="pull-right">
-                    <a href="{!! url('admin/server/create') !!}"
+                    <a href="{!! url('admin/rtpproxy/create') !!}"
                        class="btn btn-sm  btn-primary iframe"><span
                                 class="glyphicon glyphicon-plus-sign"></span> {{
 					trans("admin/modal.new") }}</a>
