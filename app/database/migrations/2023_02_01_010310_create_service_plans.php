@@ -41,6 +41,7 @@ class CreateServicePlans extends Migration
 
             $table->boolean('247_support')->default(FALSE);
             $table->boolean('ai_calls')->default(FALSE);
+            $table->boolean('registration_plan')->default(FALSE);
             $table->string('benefits')->default('');
         });
     }

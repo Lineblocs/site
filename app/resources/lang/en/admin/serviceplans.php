@@ -19,4 +19,5 @@ return [
     'featured_plan' => 'Featured Plan',
     'monthly_charge_cents' => 'Monthly charge',
     'pay_as_you_go' => 'Pay as you go plan',
+    'registration_plan' => 'Registration plan'
 ];

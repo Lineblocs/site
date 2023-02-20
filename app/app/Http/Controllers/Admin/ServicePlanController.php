@@ -53,14 +53,19 @@ class ServicePlanController extends AdminController
         $data = $request->all();
         $serviceplan = new ServicePlan ($data);
         $serviceplan->save();
-        $this->updatePlansForFeaturedSetting( $serviceplan );
+        $this->ensurePlansDontContainConflictingValues($serviceplan);
     }
 
     // make all plans featured except selected one
-    private function updatePlansForFeaturedSetting( $serviceplan ) {
+    private function ensurePlansDontContainConflictingValues( $serviceplan ) {
         if ( $serviceplan->featured_plan ) {
             DB::table('service_plans')->where('id', '!=', $serviceplan->id)->update([
                 'featured_plan' => '0'
+            ]);
+        }
+        if ( $serviceplan->registration_plan ) {
+            DB::table('service_plans')->where('id', '!=', $serviceplan->id)->update([
+                'registration_plan' => '0'
             ]);
         }
     }
@@ -97,6 +102,7 @@ class ServicePlanController extends AdminController
             $this->createFeatureOption('bring_carrier'),
             $this->createFeatureOption('featured_plan'),
             $this->createFeatureOption('pay_as_you_go'),
+            $this->createFeatureOption('registration_plan'),
         ];
     }
     /**
@@ -109,7 +115,7 @@ class ServicePlanController extends AdminController
     {
         $data = $request->all();
         $serviceplan->update($data);
-        $this->updatePlansForFeaturedSetting( $serviceplan );
+        $this->ensurePlansDontContainConflictingValues($serviceplan);
     }
 
     /**
