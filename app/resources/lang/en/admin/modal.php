@@ -29,5 +29,6 @@ return [
     'routing_flows' => 'Routing flows',
     'origination' => 'Origination',
     'termination' => 'Termination',
-    'did_numbers' => 'DID Numbers'
+    'did_numbers' => 'DID Numbers',
+    'rtpproxies' => 'RTP proxies'
 ];

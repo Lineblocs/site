@@ -8,5 +8,6 @@ return [
     'cpu_used' =>   'CPU used',
     'cpu_pct' =>   'CPU used',
     'mem_pct' =>   'MEM used',
-    'priority' =>   'Priority'
+    'priority' =>   'Priority',
+    'router' =>   'Router'
 ];

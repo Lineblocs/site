@@ -41,6 +41,13 @@
             </div>
 
         </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('router_id', trans("admin/rtpproxies.router"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::select('router_id', $routers, null, array('class' => 'form-control')) !!}
+                    <span class="help-block">{{ $errors->first('router', ':message') }}</span>
+                </div>
+        </div>
         <div class="form-group">
         <button type="submit" class="btn btn-sm btn-success">
             <span class="glyphicon glyphicon-ok-circle"></span>

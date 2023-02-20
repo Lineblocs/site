@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\RTPProxy;
+use App\SIPRouter;
 use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\RTPProxyRequest;
@@ -42,7 +43,8 @@ class RTPProxyController extends AdminController
     public function create()
     {
         $ranges = $this->getPriorityRanges();
-        return view('admin.rtpproxy.create_edit', compact('ranges'));
+        $routers = SIProuter::asSelect();
+        return view('admin.rtpproxy.create_edit', compact('ranges', 'routers'));
     }
 
     private function getPriorityRanges() {
@@ -83,7 +85,8 @@ class RTPProxyController extends AdminController
     public function edit(RTPProxy $rtpproxy)
     {
         $ranges = $this->getPriorityRanges();
-        return view('admin.rtpproxy.create_edit', compact('rtpproxy', 'ranges'));
+        $routers = SIProuter::asSelect();
+        return view('admin.rtpproxy.create_edit', compact('rtpproxy', 'ranges', 'routers'));
     }
 
     /**
