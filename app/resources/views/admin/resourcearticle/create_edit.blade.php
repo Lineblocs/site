@@ -19,6 +19,14 @@
         <div class="tab-content">
             <!-- General tab -->
             <div class="tab-pane active" id="tab-general">
+
+                <div class="form-group  {{ $errors->has('name') ? 'has-error' : '' }}">
+                    {!! Form::label('key_name', trans("admin/resourcearticles.key_name"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::text('key_name', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('key_name', ':message') }}</span>
+                    </div>
+                </div>
                 <div class="form-group  {{ $errors->has('name') ? 'has-error' : '' }}">
                     {!! Form::label('name', trans("admin/resourcearticles.name"), array('class' => 'control-label')) !!}
                     <div class="controls">
