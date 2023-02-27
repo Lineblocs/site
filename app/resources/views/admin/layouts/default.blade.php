@@ -37,6 +37,7 @@
 <script type="text/javascript">
     @if(isset($type))
     var oTable;
+    var params = {!! json_encode( Request::all() ) !!};
     $(document).ready(function () {
         oTable = $('#table').DataTable({
             "pageLength": 20,
@@ -62,7 +63,14 @@
             "processing": true,
             "serverSide": true,
             "order": [],
-            "ajax": "{{ url('admin/'.$type.'/data') }}",
+            "ajax": {
+                "url": "{{ url('admin/'.$type.'/data') }}",
+                "data": function ( d ) {
+                    for ( var index in params ) {
+                        d[index] = params[index];
+                    }
+                }
+            },
             "pagingType": "full_numbers",
             "fnDrawCallback": function (oSettings) {
                 $(".iframe").colorbox({

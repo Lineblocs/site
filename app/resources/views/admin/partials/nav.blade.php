@@ -111,13 +111,22 @@
                                 <i class="glyphicon glyphicon-bullhorn"></i> FAQs
                             </a>
                         </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> Resources
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav collapse">
                         <li>
-                            <a href="{{url('admin/resources')}}">
-                                <i class="glyphicon glyphicon-bullhorn"></i> Resource Articles
+                            <a href="{{url('admin/resourcesection')}}">
+                                <i class="glyphicon glyphicon-list"></i>  Sections
                             </a>
                         </li>
                     </ul>
                 </li>
+
                 <li>
                     <a href="{{url('admin/rate')}}">
                         <i class="glyphicon glyphicon-user"></i> Call Rates

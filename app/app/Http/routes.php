@@ -241,6 +241,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
     Route::resource('serviceplan', 'Admin\ServicePlanController');
 
+     # ResourceSections
+    Route::get('resourcesection/data', 'Admin\ResourceSectionController@data');
+    Route::get('resourcesection/{resourcesection}/show', 'Admin\ResourceSectionController@show');
+    Route::get('resourcesection/{resourcesection}/edit', 'Admin\ResourceSectionController@edit');
+    Route::get('resourcesection/{resourcesection}/delete', 'Admin\ResourceSectionController@delete');
+    Route::resource('resourcesection', 'Admin\ResourceSectionController');
+
+     # ResourceArticles
+    Route::get('resourcearticle/data', 'Admin\ResourceArticleController@data');
+    Route::get('resourcearticle/{resourcearticle}/show', 'Admin\ResourceArticleController@show');
+    Route::get('resourcearticle/{resourcearticle}/edit', 'Admin\ResourceArticleController@edit');
+    Route::get('resourcearticle/{resourcearticle}/delete', 'Admin\ResourceArticleController@delete');
+    Route::resource('resourcearticle', 'Admin\ResourceArticleController');
+
     # system status
     Route::get('systemstatus/data', 'Admin\SystemStatusController@data');
     Route::get('systemstatus/{systemstatus}/show', 'Admin\SystemStatusController@show');

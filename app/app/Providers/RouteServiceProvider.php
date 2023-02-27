@@ -30,6 +30,9 @@ use \App\SIPTrunk;
 use \App\SIPTrunkOrigination;
 use \App\SIPTrunkOriginationEndpoint;
 use \App\SIPTrunkTermination;
+use \App\ResourceSection;
+use \App\ResourceArticle;
+
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -75,6 +78,9 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('trunk', SIPTrunk::class);
        \Route::model('dns', DNSRecord::class);
        \Route::model('serviceplan',ServicePlan::class);
+
+       \Route::model('resourcearticle',ResourceArticle::class);
+       \Route::model('resourcesection',ResourceSection::class);
     }
 
     /**

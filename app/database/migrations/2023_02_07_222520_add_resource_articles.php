@@ -15,12 +15,18 @@ class AddResourceArticles extends Migration
         Schema::create('resource_articles', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('title');
+            $table->string('name');
             $table->string('description');
             $table->string('seo_tags');
             $table->text('content');
             $table->integer('section_id')->unsigned()->nullable();
             $table->foreign('section_id')->references('id')->on('resource_articles_sections')->onDelete('CASCADE');
+            $table->boolean('active')->default(FALSE);
+            $table->boolean('featured')->default(FALSE);
+            $table->boolean('important')->default(FALSE);
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
+            $table->integer('hits')->default(0);
         });
     }
 
