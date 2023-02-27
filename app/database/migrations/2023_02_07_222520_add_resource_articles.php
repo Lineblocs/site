@@ -15,6 +15,7 @@ class AddResourceArticles extends Migration
         Schema::create('resource_articles', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->string('key_name');
             $table->string('name');
             $table->string('description');
             $table->string('seo_tags');

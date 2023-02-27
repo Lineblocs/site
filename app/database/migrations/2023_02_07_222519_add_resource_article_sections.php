@@ -16,6 +16,7 @@ class AddResourceArticleSections extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('title');
+            $table->string('key_name')->default('');
             $table->string('name')->default('');
             $table->string('link')->default('');
             $table->string('description')->default('');
