@@ -123,7 +123,7 @@ class ResourcesController extends BaseController {
     $file = base_path("yaml/resources.yaml");
     $data = Yaml::parse(file_get_contents($file));
     $info = $this->getSection($section);
-    $info2 = $this->getSection2($section);
+    //$info2 = $this->getSection2($section);
     $sectionName = $info['name'];
     $results = $info['results'];
     return view('resources.section', compact('section', 'sectionName', 'results'));
