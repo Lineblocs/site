@@ -26,6 +26,8 @@ class CreateRtpproxyTbl extends Migration
             $table->integer('priority')->default(0);
             $table->string('region')->default('');
 
+            $table->integer('router_id')->nullable()->unsigned();
+            $table->foreign('router_id')->references('id')->on('sip_routers')->onDelete('CASCADE');
         });
     }
 

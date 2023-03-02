@@ -8,6 +8,9 @@ use DB;
 use Illuminate\Http\Request;
 use Michelf\Markdown;
 use Symfony\Component\Yaml\Yaml;
+
+use App\ResourceArticle;
+use App\ResourceSection;
 use View;
 use Config;
 class ResourcesController extends BaseController {
@@ -26,8 +29,23 @@ class ResourcesController extends BaseController {
       }
     }
     return ['name' => $sectionName, 'results' => $results];
+    // new code
+    //$sections =ResourceArticle::select(array('resource_articles.name', ))
 
   }
+
+  private function getSection2($section) {
+    $section = ResourceSection::where('key_name', $section)->firstOrFail();
+    $items = ResourceArticle::where('section_id', $section->id)->get();
+    $sectionArr = $section->toArray();
+    $results = [];
+    foreach ($items as $item) {
+        $results[] = ['section' => $sectionArr, 'item' => $item->toArray()];
+    }
+    return ['name' => $section['name'], 'results' => $results];
+  }
+
+
   public function createACOptions() {
     $file = base_path("yaml/resources.yaml");
     $data = Yaml::parse(file_get_contents($file));
@@ -105,6 +123,7 @@ class ResourcesController extends BaseController {
     $file = base_path("yaml/resources.yaml");
     $data = Yaml::parse(file_get_contents($file));
     $info = $this->getSection($section);
+    //$info2 = $this->getSection2($section);
     $sectionName = $info['name'];
     $results = $info['results'];
     return view('resources.section', compact('section', 'sectionName', 'results'));
@@ -134,6 +153,27 @@ class ResourcesController extends BaseController {
     $title = $thisItem['name'];
     $tags = $thisItem['tags'];
     $description = $thisItem['description'];
+    View::share('title', $title);
+    View::share('tags', $tags);
+    View::share('description', $description);
+    return view('resources.item', compact('html', 'related', 'title', 'theSection'));
+  }
+  public function sectionItem2(Request $request, $section, $item)
+  {
+    $section = ResourceSection::where('name',$section)->firstOrFail();
+    $item= ResourceArticle::where('key_name',$item)->firstOrFail();
+    $markdown = $item->content;
+    $html = Markdown::defaultTransform($markdown); 
+    $related = [];
+    $related= ResourceArticle::where('section_id', $item->section_id)
+        ->where('id', '!=', $item->id)
+        ->orderBy('hits', 'DESC')
+        ->get();
+
+    $title = $item['name'];
+    $tags = $item['seo_tags'];
+    $description = $item['description'];
+    $theSection = $section->toArray();
     View::share('title', $title);
     View::share('tags', $tags);
     View::share('description', $description);

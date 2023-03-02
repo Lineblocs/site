@@ -87,6 +87,25 @@ final class SIPRouterHelper {
     $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
   }
 
+  public static function addRTPProxy($lineblocsId, $socketAddr) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('INSERT INTO `rtpproxy_sockets` (`rtpproxy_sock`, `lineblocs_id`) VALUES (?, ?)', [$socketAddr, $lineblocsId]);
+  }
+
+  public static function updateRTPProxy($lineblocsId, $socketAddr) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('UPDATE `rtpproxy_sockets`  SET rtpproxy_sock = ? WHERE `lineblocs_id` = ?', [$socketAddr, $lineblocsId]);
+  }
+
+  public static function removeRTPProxy($lineblocsId) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('DELETE FROM `rtpproxy_sockets` WHERE `lineblocs_id` = ?', [$lineblocsId]);
+  }
+
+
+
+
+
   public static function removeDomain($user, $domain) {
     $conn = DB::connection('mysql-opensips');
     $conn->delete('DELETE FROM `domain` WHERE `domain` = ?', [$domain]);

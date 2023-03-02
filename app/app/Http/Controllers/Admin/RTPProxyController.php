@@ -3,10 +3,12 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\RTPProxy;
+use App\SIPRouter;
 use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\RTPProxyRequest;
 use App\Helpers\MainHelper;
+use App\Helpers\SIPRouterHelper;
 use App\RTPProxyHost;
 use App\RTPProxyWhitelistIp;
 use Datatables;
@@ -40,9 +42,26 @@ class RTPProxyController extends AdminController
      */
     public function create()
     {
-        return view('admin.rtpproxy.create_edit');
+        $ranges = $this->getPriorityRanges();
+        $routers = SIProuter::asSelect();
+        return view('admin.rtpproxy.create_edit', compact('ranges', 'routers'));
     }
 
+    private function getPriorityRanges() {
+        $ranges = [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+        ];
+        return $ranges;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -53,7 +72,8 @@ class RTPProxyController extends AdminController
 
         $rtpproxy = new RTPProxy ($request->all());
         $rtpproxy->save();
-        header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
+        SIPRouterHelper::addRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
+        //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
 
     /**
@@ -64,7 +84,9 @@ class RTPProxyController extends AdminController
      */
     public function edit(RTPProxy $rtpproxy)
     {
-        return view('admin.rtpproxy.create_edit');
+        $ranges = $this->getPriorityRanges();
+        $routers = SIProuter::asSelect();
+        return view('admin.rtpproxy.create_edit', compact('rtpproxy', 'ranges', 'routers'));
     }
 
     /**
@@ -76,7 +98,8 @@ class RTPProxyController extends AdminController
     public function update(RTPProxyRequest $request, RTPProxy $rtpproxy)
     {
         $rtpproxy->update($request->all());
-        header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
+        SIPRouterHelper::updateRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
+        //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
 
     /**
@@ -88,6 +111,7 @@ class RTPProxyController extends AdminController
 
     public function delete(RTPProxy $rtpproxy)
     {
+
         return view('admin.rtpproxy.delete', compact('rtpproxy'));
     }
 
@@ -100,6 +124,7 @@ class RTPProxyController extends AdminController
     public function destroy(RTPProxy $rtpproxy)
     {
         $rtpproxy->delete();
+        SIPRouterHelper::removeRTPProxy($rtpproxy->id);
     }
 
     /**

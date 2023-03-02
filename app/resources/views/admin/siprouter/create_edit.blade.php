@@ -9,6 +9,10 @@
      <li><a href="#tab-servers" data-toggle="tab"> {{
             trans("admin/modal.servers") }}</a></li>
             @endif
+            @if (!empty($rtpproxies))
+     <li><a href="#tab-rtpproxies" data-toggle="tab"> {{
+            trans("admin/modal.rtpproxies") }}</a></li>
+            @endif
 
 </ul>
 <!-- ./ tabs -->
@@ -61,7 +65,7 @@
                 </div>
             </div>
         </div>
-<div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
                 {!! Form::label('region', trans("admin/siprouters.region"), array('class' => 'control-label')) !!}
                 <div class="controls">
                     {!! Form::select('region', $regions, null, array('class' => 'form-control')) !!}
@@ -119,6 +123,30 @@
                                 <td>
                                     <button type="button" class="btn btn-danger del-server" data-id="{{$server->id}}">Delete</button>
                                 </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            @endif
+    @if (isset($router))
+    <div class="tab-pane" id="tab-rtpproxies">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Socket address</th>
+                        <th>Set ID</th>
+                        <th>Priority</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($rtpproxies as $proxy)
+                            <tr>
+                                <td>{{$proxy->rtpproxy_sock}}</td>
+                                <td>{{$proxy->set_id}}</td>
+                                <td>{{$proxy->priority}}</td>
                             </tr>
                         @endforeach
                         </tbody>

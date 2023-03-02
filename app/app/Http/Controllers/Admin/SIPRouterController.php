@@ -2,6 +2,12 @@
 
 use App\Helpers\MainHelper;
 use App\Http\Controllers\AdminController;
+use App\User;
+use App\SIPRouter;
+use App\RTPProxy;
+use App\Workspace;
+use App\PortNumber;
+use App\MediaServer;
 use App\Http\Requests\Admin\SIPRouterRequest;
 use App\MediaServer;
 use App\SIPRouter;
@@ -70,8 +76,9 @@ class SIPRouterController extends AdminController
         $servers->join('media_servers', 'media_servers.id', '=', 'sip_routers_media_servers.server_id');
         $servers->where('sip_routers_media_servers.router_id', '=', $router->id);
         $servers = $servers->get();
-
         return view('admin.siprouter.create_edit', compact('router', 'servers', 'ranges', 'regions'));
+        $rtpproxies = RTPProxy::where('router_id', $router->id)->get();
+        return view('admin.siprouter.create_edit', compact('router', 'servers', 'ranges', 'regions', 'rtpproxies'));
     }
 
     /**
