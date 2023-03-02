@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\ApiResource;
 use App\Helpers\MainHelper;
 
-class Call extends ApiResource {
+class Call extends Model {
   protected $dates = ['created_at', 'updated_at', 'started_at', 'ended_at'];
 
   protected $guarded  = array('id');

@@ -634,7 +634,7 @@ class MergedController extends ApiAuthController
             $copy['data'] = $params;
             $updated_models[] = $copy;
         }
-        \Log::info(json_encode($updated_models));
+        Log::info(json_encode($updated_models));
 
         $json['models'] = $updated_models;
         $flow->update([

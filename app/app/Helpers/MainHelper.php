@@ -19,6 +19,7 @@ use Config;
 use DateTime;
 use DB;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
+use Illuminate\Support\Str;
 use JWTAuth;
 use Log;
 use Mail;
@@ -45,8 +46,8 @@ final class MainHelper
     }
     public static function createApiId($prefix = "")
     {
-        $uuid4 = Uuid::uuid4();
-        return sprintf("%s-%s", $prefix, $uuid4->toString());
+        return $uuid4 = Str::uuid()->toString();
+        //return sprintf("%s-%s", $prefix, $uuid4->toString());
     }
     public static function toDollars($cents)
     {
