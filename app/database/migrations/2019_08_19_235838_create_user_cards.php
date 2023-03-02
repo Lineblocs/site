@@ -28,6 +28,6 @@ class CreateUserCards extends Migration
      */
     public function down()
     {
-        Schema::drop('users_cards');
+        //Schema::drop('users_cards');
     }
 }

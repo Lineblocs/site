@@ -1,21 +1,17 @@
 <?php
 namespace App\Http\Controllers\JWT;
 
-use Illuminate\Http\Request;
-use JWTAuth;
-use JWTFactory;
-use Auth;
-use Hash;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Http\Controllers\Api\ApiController;
+use App\Helpers\MainHelper;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\User;
-use App\Workspace;
 use App\UserDevice;
+use App\Workspace;
+use Auth;
 use Config;
+use Illuminate\Http\Request;
+use JWTAuth;
 use Mail;
-use Exception;
-use App\Helpers\MainHelper;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 
 class AuthenticateController extends ApiAuthController
 {
@@ -27,15 +23,15 @@ class AuthenticateController extends ApiAuthController
         $user = User::findOrFail($workspace->creator_id);
         //$user = Auth::attempt($credentials);
 /*
-      $user = User::where('email', $credentials['email'])
-      ->first();
+$user = User::where('email', $credentials['email'])
+->first();
 
-      $validCredentials = Hash::check($credentials['password'], $user->getAuthPassword());
+$validCredentials = Hash::check($credentials['password'], $user->getAuthPassword());
 
-      if (!$validCredentials) {
-        return $this->errorInternal();
-      }
-*/
+if (!$validCredentials) {
+return $this->errorInternal();
+}
+ */
         try {
             // attempt to verify the credentials and create a token for the user
             if (!$token = MainHelper::createJWTTokenArrFromUser($user, $workspace)) {
@@ -56,17 +52,17 @@ class AuthenticateController extends ApiAuthController
         $credentials = $request->only('email', 'password');
         //$user = Auth::attempt($credentials);
 /*
-      $user = User::where('email', $credentials['email'])
-      ->first();
+$user = User::where('email', $credentials['email'])
+->first();
 
-      $validCredentials = Hash::check($credentials['password'], $user->getAuthPassword());
+$validCredentials = Hash::check($credentials['password'], $user->getAuthPassword());
 
-      if (!$validCredentials) {
-        return $this->errorInternal();
-      }
-*/
+if (!$validCredentials) {
+return $this->errorInternal();
+}
+ */
 
-          \Log::info("trying to authenticate user: " . $credentials['email']);
+        \Log::info("trying to authenticate user: " . $credentials['email']);
         try {
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
@@ -80,18 +76,16 @@ class AuthenticateController extends ApiAuthController
         $currentUser = Auth::user();
         $now = new \DateTime();
 
-        $challenge=  $request->get('challenge');
+        $challenge = $request->get('challenge');
         if ($challenge) {
-          if (!MainHelper::checkUserInWorkspace($challenge, $currentUser)) {
-            return $this->errorInternal($request, 'workspace challenge failed.');
+            if (!MainHelper::checkUserInWorkspace($challenge, $currentUser)) {
+                return $this->errorInternal($request, 'workspace challenge failed.');
 
-          }
+            }
         }
 
-
-
         $currentUser->update([
-            'last_login' => $now
+            'last_login' => $now,
         ]);
         $detect = new \Mobile_Detect();
         $userAgent = $detect->getUserAgent();
@@ -101,12 +95,12 @@ class AuthenticateController extends ApiAuthController
             UserDevice::create([
                 'user_id' => $currentUser->id,
                 'user_agent' => $userAgent,
-                'trusted' => FALSE,
-                'last_login' => $now
+                'trusted' => false,
+                'last_login' => $now,
             ]);
             $data = [
                 'detect' => $detect,
-                'user' => $currentUser
+                'user' => $currentUser,
             ];
             $mail = Config::get('mail');
             Mail::send('emails.unknown_device_login', $data, function ($message) use ($currentUser, $mail) {
@@ -123,6 +117,6 @@ class AuthenticateController extends ApiAuthController
     }
     public function heartbeat(Request $request)
     {
-      return $this->response->noContent();
+        return $this->response->noContent();
     }
 }

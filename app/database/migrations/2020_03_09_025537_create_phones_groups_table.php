@@ -32,6 +32,6 @@ class CreatePhonesGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('phones_groups');
+        //Schema::drop('phones_groups');
     }
 }

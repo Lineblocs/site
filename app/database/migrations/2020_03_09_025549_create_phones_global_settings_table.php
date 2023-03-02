@@ -37,6 +37,6 @@ class CreatePhonesGlobalSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('phones_global_settings');
+       // Schema::drop('phones_global_settings');
     }
 }

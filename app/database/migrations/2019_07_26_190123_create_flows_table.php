@@ -30,6 +30,6 @@ class CreateFlowsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('flows');
+        //Schema::drop('flows');
     }
 }

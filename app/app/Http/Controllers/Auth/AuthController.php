@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use  Illuminate\Http\Request;
-use App\Http\Controllers\Auth\Request as AuthRequest;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class AuthController extends Controller
 {
@@ -21,11 +19,11 @@ class AuthController extends Controller
     | authentication of existing users. By default, this controller uses
     | a simple trait to add these behaviors. Why don't you explore it?
     |
-    */
+     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    //use AuthenticatesAndRegistersUsers, ThrottlesLogins;
     protected $redirectTo = '/admin/dashboard';
-   	protected $redirectAfterLogout = 'auth/login';
+    protected $redirectAfterLogout = 'auth/login';
 
     /**
      * Create a new authentication controller instance.
@@ -38,18 +36,49 @@ class AuthController extends Controller
     }
 
     /**
+     * Display login page.
+     *
+     * @return Renderable
+     */
+    public function show()
+    {
+
+        return view('auth.login');
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(Request $request, array $data)
     {
-        return Validator::make($data, [
+        return $request->validate($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
+    }
+
+    public function login(Request $request)
+    {
+
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+
+            if (Auth::user()->admin == 1) {
+                return redirect()->intended('admin/dashboard')
+                    ->withSuccess('You have Successfully loggedin');
+            }
+        }
+
+        return redirect("auth/login")->withSuccess('Oppes! You have entered invalid credentials');
     }
 
     /**
@@ -67,12 +96,11 @@ class AuthController extends Controller
         ]);
     }
 
-
     protected function authenticated(Request $request, $user)
     {
-      if ( $user->admin ) {// do your margic here
+        if ($user->admin) { // do your margic here
             return redirect('/admin/dashboard');
-      }
-      return redirect('/');
+        }
+        return redirect('/');
     }
 }

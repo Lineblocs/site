@@ -34,8 +34,8 @@ public function run()
       'api_secret' => MainHelper::createAPISecret(),
       'plan' => 'ultimate'
     ]);
-WorkspaceUser::createSuperAdmin($workspace, $admin);
-  SIPRouterHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
+  //WorkspaceUser::createSuperAdmin($workspace, $admin);
+  //SIPRouterHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
 
 
   $user = \App\User::create([
@@ -58,11 +58,11 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
         'api_secret' => MainHelper::createAPISecret(),
         'plan' => 'ultimate'
     ]);
-    WorkspaceUser::createSuperAdmin($workspace, $user);
-        PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);
-    SIPRouterHelper::addUserToProxy($user->toArray(), $workspace->toArray());
-    Customizations::create();
-    ApiCredential::create();
+    //WorkspaceUser::createSuperAdmin($workspace, $user);
+     //   PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);
+    //SIPRouterHelper::addUserToProxy($user->toArray(), $workspace->toArray());
+   // Customizations::create();
+   // ApiCredential::create();
 	}
 
 }

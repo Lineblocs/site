@@ -31,6 +31,6 @@ class CreateRouterFlows extends Migration
      */
     public function down()
     {
-        Schema::drop('router_flows');
+        //Schema::drop('router_flows');
     }
 }

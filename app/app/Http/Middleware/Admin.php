@@ -2,19 +2,19 @@
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-use App\AssignedRoles;
-
-class Admin implements Middleware {
+class Admin
+{
 
     /**
      * The Guard implementation.
      *
      * @var Guard
      */
-    protected $auth;
+    // protected $auth;
 
     /**
      * The response factory implementation.
@@ -30,34 +30,36 @@ class Admin implements Middleware {
      * @param  ResponseFactory  $response
      * @return void
      */
-    public function __construct(Guard $auth,
-                                ResponseFactory $response)
-    {
-        $this->auth = $auth;
-        $this->response = $response;
-    }
+    // public function __construct($auth,
+    //     ResponseFactory $response) {
+    //     $this->auth = $auth;
+    //     $this->response = $response;
+    // }
     /**
-	 * Handle an incoming request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
-	 * @return mixed
-	 */
-	public function handle($request, Closure $next)
-	{
-        if ($this->auth->check())
-        {
-            $admin = 0;
-            if($this->auth->user()->admin==1)
-            {
-                $admin=1;
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next, ...$guards)
+    {
+        $guards = empty($guards) ? [null] : $guards;
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                $admin = 0;
+                if (Auth::user()->admin == 1) {
+                    $admin = 1;
+                }
+                if ($admin == 0) {
+                    return $this->response->redirectTo('/');
+                }
+                return $next($request);
             }
-            if($admin==0){
-                return $this->response->redirectTo('/');
-            }
-            return $next($request);
+
         }
-        return $this->response->redirectTo('/');
-	}
+        return $next($request);
+        //return $this->response->redirectTo('/');
+    }
 
 }

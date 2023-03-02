@@ -34,6 +34,6 @@ class AddSipTrunks extends Migration
      */
     public function down()
     {
-        Schema::drop('sip_trunks');
+       // Schema::drop('sip_trunks');
     }
 }

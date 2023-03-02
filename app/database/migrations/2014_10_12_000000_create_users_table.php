@@ -23,6 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('confirmation_code');
             $table->boolean('confirmed')->default(false);
             $table->boolean('admin')->default(false);
+			
+			
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
@@ -36,7 +38,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('users');
+        //Schema::drop('users');
     }
 
 }
