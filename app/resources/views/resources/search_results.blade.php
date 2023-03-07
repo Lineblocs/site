@@ -15,10 +15,10 @@
                 @if ( count( $results ) >  0)
                     <div class="cards">
                         @foreach ($results as $result)
-                            <a href="/resources/{{$result['section']['link']}}/{{$result['item']['link']}}" class="card h-100 justify-content-center">
+                            <a href="/resources/{{$result['section_key_name']}}/{{$result['key_name']}}" class="card h-100 justify-content-center">
                                 <div class="content">
-                                    {{$result['item']['name']}}
-                                    <p>{{$result['item']['description']}}</p>
+                                    {{$result['name']}}
+                                    <p>{{$result['description']}}</p>
                                 </div>
                                 <span class="arrow"></span>
                             </a>

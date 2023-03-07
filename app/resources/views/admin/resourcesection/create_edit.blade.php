@@ -9,11 +9,9 @@
         </ul>
         <!-- ./ tabs -->
         @if (isset($resourcesection))
-        {!! Form::model($resourcesection, array('url' => url('admin/resourcesection') . '/' . $resourcesection->id, 'method' => 'put', 'class' =>
-        'bf',
-        'files'=> true)) !!}
+        {!! Form::model($resourcesection, array('url' => url('admin/resourcesection') . '/' . $resourcesection->id, 'method' => 'put', 'id' => 'fupload', 'class' => 'bf', 'files'=> true)) !!}
         @else
-        {!! Form::open(array('url' => url('admin/resourcesection'), 'method' => 'post', 'class' => 'bf', 'files'=> true)) !!}
+        {!! Form::open(array('url' => url('admin/resourcesection'), 'method' => 'post', 'class' => 'bf', 'files'=> true, 'id' => 'fupload')) !!}
         @endif
         <!-- Tabs Content -->
         <div class="tab-content">
@@ -39,6 +37,14 @@
                     <div class="controls">
                         {!! Form::text('description', null, array('class' => 'form-control')) !!}
                         <span class="help-block">{{ $errors->first('description', ':message') }}</span>
+                    </div>
+                </div>
+
+                <div class="form-group  {{ $errors->has('image') ? 'has-error' : '' }}">
+                    {!! Form::label('image', trans("admin/resourcesections.image"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::file('image', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('image', ':message') }}</span>
                     </div>
                 </div>
 

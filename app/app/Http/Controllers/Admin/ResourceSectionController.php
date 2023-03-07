@@ -49,9 +49,37 @@ class ResourceSectionController extends AdminController
      */
     public function store(ResourceSectionRequest $request)
     {
+        $image = $request->file('image');
         $data = $request->all();
         $resourcesection = new ResourceSection ($data);
         $resourcesection->save();
+        $this->uploadImageIfNeeded($request, $resourcesection);
+    }
+
+    private function uploadImageIfNeeded($request, $section) {
+        $file = $request->file('image');
+        if (empty( $file )) {
+            return;
+        }
+        $size = $file->getSize();
+        $mime = $file->getMimeType();
+        $path = $file->getPathName();
+        $extension = $file->getClientOriginalExtension();
+        $file_name = str_random(30) . '.' . $file->getClientOriginalExtension();
+        $new_path = public_path("/images/resources/" . $file_name);
+        $old_path = $file->getRealPath();
+        if ( !move_uploaded_file( $old_path, $new_path ) ) {
+            throw new Exception("could not upload image file");
+        }
+        $currentImg = $section['image_icon'];
+        \Log::info("current image is: " . json_encode( $section->toArray()));
+        $section->update([
+            'image_icon' => $file_name
+        ]);
+        if ( !empty( $currentImg )) {
+            $current_path = public_path("/images/resources/" . $currentImg);
+            unlink( $current_path );
+        }
     }
 
     /**
@@ -75,6 +103,7 @@ class ResourceSectionController extends AdminController
     {
         $data = $request->all();
         $resourcesection->update($data);
+        $this->uploadImageIfNeeded($request, $resourcesection);
     }
 
     /**
@@ -86,7 +115,7 @@ class ResourceSectionController extends AdminController
 
     public function delete(ResourceSection $resourcesection)
     {
-        return view('admin.resourcesection.delete', compact('plan'));
+        return view('admin.resourcesection.delete', compact('resourcesection'));
     }
 
     /**

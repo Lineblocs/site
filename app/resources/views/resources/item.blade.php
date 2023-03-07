@@ -6,7 +6,7 @@
         <div class="row breadcrumbs">
             <div class="col s12">
                 <a href="/resources">Resources</a> <a
-                    href="/resources/{{$theSection['link']}}">{{$theSection['name']}}</a>  <span>{{$title}}</span>
+                    href="/resources/{{$section['key_name']}}">{{$section['name']}}</a>  <span>{{$title}}</span>
             </div>
         </div>
         <div class="row">
@@ -28,7 +28,7 @@
                             @foreach ($related as $item)
                             <li>
                                 <a
-                                    href="/resources/{{$item['section']['link']}}/{{$item['item']['link']}}">{{$item['item']['name']}}</a>
+                                    href="/resources/{{$item['item']['section_key_name']}}/{{$item['item']['key_name']}}">{{$item['item']['name']}}</a>
                             </li>
                             @endforeach
                         </ul>

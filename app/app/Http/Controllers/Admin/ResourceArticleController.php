@@ -89,7 +89,7 @@ class ResourceArticleController extends AdminController
 
     public function delete(ResourceArticle $resourcearticle)
     {
-        return view('admin.resourcearticle.delete');
+        return view('admin.resourcearticle.delete', compact('resourcearticle'));
     }
 
     /**

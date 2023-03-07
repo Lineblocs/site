@@ -36,12 +36,7 @@ class ResourcesController extends BaseController {
 
   private function getSection2($section) {
     $section = ResourceSection::where('key_name', $section)->firstOrFail();
-    $items = ResourceArticle::where('section_id', $section->id)->get();
-    $sectionArr = $section->toArray();
-    $results = [];
-    foreach ($items as $item) {
-        $results[] = ['section' => $sectionArr, 'item' => $item->toArray()];
-    }
+    $results = $this->getResourceArticles( $section->id );
     return ['name' => $section['name'], 'results' => $results];
   }
 
@@ -53,6 +48,7 @@ class ResourcesController extends BaseController {
     $links = [];
     $url = Config::get("app.url");
 
+    /*
     foreach ($data['sections'] as $sectionArr) {
       foreach ($sectionArr['items'] as $item) {
         $name = $item['name'];
@@ -61,7 +57,25 @@ class ResourcesController extends BaseController {
           $links[$name] = $link;
       }
     }
+    */
+    $articles = $this->getResourceArticles();
+    foreach ( $articles as $item ) {
+        $name = $item['name'];
+        $link = sprintf("%s/resources/%s/%s", $url, $item['key_name'], $item['section_key_name']);
+          $options[$name] = null;
+          $links[$name] = $link;
+    }
     return compact('options', 'links');
+  }
+
+  private function getResourceArticles($section_id=null) {
+    $articles = ResourceArticle::select(array('resource_articles.*', DB::raw( 'resource_sections.key_name AS section_key_name')));
+    $articles->join('resource_sections', 'resource_sections.id', '=', 'resource_articles.section_id');
+    if ( !empty( $section_id )) {
+      $articles->where('section_id', $section_id);
+    }
+    $articles = $articles->get();
+    return $articles;
   }
 
   /**
@@ -73,7 +87,9 @@ class ResourcesController extends BaseController {
   {
     $search = $request->get("search");
     $file = base_path("yaml/resources.yaml");
+    $resourceSections = ResourceSection::all();
     $dataBefore = Yaml::parse(file_get_contents($file));
+    $articles = $this->getResourceArticles();
     $searched = FALSE;
     $results = [];
     $data = [
@@ -86,9 +102,15 @@ class ResourcesController extends BaseController {
         $data['sections'][] = $new_entry;
     }
 
+
+    foreach ( $resourceSections as $item ) {
+        $data['sections'][] = $item->toArray();
+    }
+
     if (!empty($search)) {
         $searched = TRUE;
         $lower1 = strtolower($search);
+        /*
         foreach ($dataBefore['sections'] as $section) {
           foreach ($section['items'] as $item) {
             $lower2 = strtolower($item['name']);
@@ -107,6 +129,23 @@ class ResourcesController extends BaseController {
             }
           }
         }
+        */
+        foreach ($articles as $item) {
+          $lower2 = strtolower($item['name']);
+          $lower3 = strtolower($item['description']);
+          $quoted = preg_quote($lower1);
+          $match = preg_match("/" . $quoted . "/", $lower2, $matches);
+          //if (strpos($lower2, $lower1) != FALSE) {
+          if ($match) {
+            $results[] = $item;
+            continue;
+          }
+
+          if (strpos($lower3, $lower1) != FALSE) {
+            $results[] = $item;
+            continue;
+          }
+        }
 
     }
 
@@ -122,17 +161,23 @@ class ResourcesController extends BaseController {
   {
     $file = base_path("yaml/resources.yaml");
     $data = Yaml::parse(file_get_contents($file));
-    $info = $this->getSection($section);
-    //$info2 = $this->getSection2($section);
+    //$info = $this->getSection($section);
+    $info = $this->getSection2($section);
     $sectionName = $info['name'];
     $results = $info['results'];
     return view('resources.section', compact('section', 'sectionName', 'results'));
   }
   public function sectionItem(Request $request, $section, $item)
   {
-    $markdown = file_get_contents( base_path("/docs/$section/$item.md") );
+    $article = ResourceArticle::where('key_name', '=', $item)->firstOrFail();
+    $section =  ResourceSection::where('key_name', '=', $section)->firstOrFail();
+
+    //$markdown = file_get_contents( base_path("/docs/$section/$item.md") );
+    $markdown = (string) $article->content;
     $html = Markdown::defaultTransform($markdown); 
+
     $related = [];
+    /*
     $file = base_path("yaml/resources.yaml");
     $data = Yaml::parse(file_get_contents($file));
     $thisItem = null;
@@ -150,13 +195,18 @@ class ResourcesController extends BaseController {
         }
       }
     }
-    $title = $thisItem['name'];
-    $tags = $thisItem['tags'];
-    $description = $thisItem['description'];
+    */
+    $relatedArticles = $this->getResourceArticles( $section->id );
+    foreach ( $relatedArticles as $item ) {
+              $related[] = ['section' => $section->toArray(), 'item' => $item->toArray()];
+    }
+    $title = $article['name'];
+    $tags = $article['seo_tags'];
+    $description = $article['description'];
     View::share('title', $title);
     View::share('tags', $tags);
     View::share('description', $description);
-    return view('resources.item', compact('html', 'related', 'title', 'theSection'));
+    return view('resources.item', compact('html', 'related', 'title', 'section'));
   }
   public function sectionItem2(Request $request, $section, $item)
   {

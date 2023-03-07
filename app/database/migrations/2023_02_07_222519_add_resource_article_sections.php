@@ -20,6 +20,7 @@ class AddResourceArticleSections extends Migration
             $table->string('name')->default('');
             $table->string('link')->default('');
             $table->string('description')->default('');
+            $table->string('image_icon')->default('');
             $table->string('size')->default('full'); // translate to 's12 l6' for bootstrap framework
             $table->boolean('show_desc')->default(FALSE);
             $table->boolean('active')->default(FALSE);
