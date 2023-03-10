@@ -138,6 +138,68 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row form-group">
+            <h1>SSO credentials</h1>
+</div>
+            <hr/>
+
+            <div class="row form-group">
+            <h3>Google details</h3>
+</div>
+            <div class="row form-group">
+                <label for="google_signin_developer_key">Developer key</label>
+                <div class="controls">
+                    <input id="google_signin_developer_key" class="form-control" name="google_signin_developer_key" value="{{$creds->google_signin_developer_key}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="google_signin_app_id">App ID</label>
+                <div class="controls">
+                    <input id="google_signin_app_id" class="form-control" name="google_signin_app_id" value="{{$creds->google_signin_app_id}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="google_signin_client_id">Client ID</label>
+                <div class="controls">
+                    <input id="google_signin_client_id" class="form-control" name="google_signin_client_id" value="{{$creds->google_signin_client_id}}" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+            <h3>Microsoft details</h3>
+</div>
+            <div class="row form-group">
+                <label for="msft_signin_client_id">Client ID</label>
+                <div class="controls">
+                    <input id="msft_signin_client_id" class="form-control" name="msft_signin_client_id" value="{{$creds->msft_signin_client_id}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="msft_signin_client_secret">Client secret</label>
+                <div class="controls">
+                    <input id="msft_signin_client_secret" class="form-control" name="msft_signin_client_secret" value="{{$creds->msft_signin_client_secret}}" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+            <h3>Apple details</h3>
+</div>
+            <div class="row form-group">
+                <label for="apple_signin_client_id">Client ID</label>
+                <div class="controls">
+                    <input id="apple_signin_client_id" class="form-control" name="apple_signin_client_id" value="{{$creds->apple_signin_client_id}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="apple_signin_client_secret">Client secret</label>
+                <div class="controls">
+                    <input id="apple_signin_client_secret" class="form-control" name="apple_signin_client_secret" value="{{$creds->apple_signin_client_secret}}" />
+                </div>
+            </div>
+
+
+
             <div class="row form-group">
                 <input type="hidden" name="_token" value="{{csrf_token()}}"/>
                 <button type="submit" class="btn btn-success">Save</button>

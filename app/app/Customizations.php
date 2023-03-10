@@ -13,7 +13,10 @@ class Customizations extends Model {
   protected $table ='customizations';
   protected $casts = array(
     "payment_gateway_enabled" => "boolean",
-    "custom_code_containers_enabled" => "boolean"
+    "custom_code_containers_enabled" => "boolean",
+    "enable_google_signin" => "boolean",
+    "enable_msft_signin" => "boolean",
+    "enable_apple_signin" => "boolean",
   );
   public static function getRecord() {
     return Customizations::all()[0];

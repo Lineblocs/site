@@ -97,6 +97,23 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
 
+		$enable_google_signin = false;
+
+		if ( !empty( $update_params['enable_google_signin'] ) ) {
+			$enable_google_signin = true;
+		}
+		$update_params['enable_google_signin'] = $enable_google_signin;
+
+		if ( !empty( $update_params['enable_msft_signin'] ) ) {
+			$enable_msft_signin = true;
+		}
+		$update_params['enable_msft_signin'] = $enable_msft_signin;
+
+		if ( !empty( $update_params['enable_apple_signin'] ) ) {
+			$enable_apple_signin = true;
+		}
+		$update_params['enable_apple_signin'] = $enable_apple_signin;
+
 		$custom_code_containers_enabled = false;
 
 		if ( $update_params['custom_code_containers_enabled'] =='yes') {

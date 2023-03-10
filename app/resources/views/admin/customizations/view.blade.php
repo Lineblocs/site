@@ -171,6 +171,35 @@
             </div>
 
             <div class="row form-group">
+                <label for="mail_provider">SSO options</label>
+                <div class="controls">
+                    @if ( $record->enable_google_signin )
+                        <input id="enable_google_signin" type="checkbox"  name="enable_google_signin" checked/>
+                    @else
+                        <input id="enable_google_signin" type="checkbox"  name="enable_google_signin"/>
+                    @endif
+                    <label>Enable Google</label>
+                </div>
+                <div class="controls">
+                    @if ( $record->enable_msft_signin )
+                        <input id="enable_msft_signin" type="checkbox"  name="enable_msft_signin" checked/>
+                    @else
+                        <input id="enable_msft_signin" type="checkbox"  name="enable_msft_signin"/>
+                    @endif
+                    <label>Enable Microsoft</label>
+                </div>
+                <div class="controls">
+                    @if ( $record->enable_apple_signin )
+                        <input id="enable_apple_signin" type="checkbox"  name="enable_apple_signin" checked/>
+                    @else
+                        <input id="enable_apple_signin" type="checkbox"  name="enable_apple_signin"/>
+                    @endif
+                    <label>Enable Apple</label>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="payments_enabled">Payments enabled</label>
                 <div class="controls">
                     <select name="payment_gateway_enabled" class="form-control" id="payment_gateway_enabled">

@@ -57,7 +57,14 @@ class SettingsController extends AdminController {
         'smtp_port',
         'smtp_user',
         'smtp_password',
-        'smtp_tls'
+        'smtp_tls',
+        'google_signin_developer_key',
+        'google_signin_client_id',
+        'google_signin_app_id',
+        'msft_signin_client_id',
+        'msft_signin_client_secret',
+        'apple_signin_client_id',
+        'apple_signin_client_secret',
         ];
         $update = [];
         foreach ( $keys as $key ) {
