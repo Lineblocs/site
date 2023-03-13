@@ -198,6 +198,33 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+                <label for="mail_provider">Search options</label>
+                <div class="controls">
+                    @if ( $record->search_include_portal_views )
+                        <input id="search_include_portal_views" type="checkbox"  name="search_include_portal_views" checked/>
+                    @else
+                        <input id="search_include_portal_views" type="checkbox"  name="search_include_portal_views"/>
+                    @endif
+                    <label>Portal pages</label>
+                </div>
+                <div class="controls">
+                    @if ( $record->search_include_resource_articles )
+                        <input id="search_include_resource_articles" type="checkbox"  name="search_include_resource_articles" checked/>
+                    @else
+                        <input id="search_include_resource_articles" type="checkbox"  name="search_include_resource_articles"/>
+                    @endif
+                    <label>Resource articles</label>
+                </div>
+                <div class="controls">
+                    @if ( $record->search_include_blog_views )
+                        <input id="search_include_blog_views" type="checkbox"  name="search_include_blog_views" checked/>
+                    @else
+                        <input id="search_include_blog_views" type="checkbox"  name="search_include_blog_views"/>
+                    @endif
+                    <label>Blog posts</label>
+                </div>
+            </div>
 
             <div class="row form-group">
                 <label for="payments_enabled">Payments enabled</label>
