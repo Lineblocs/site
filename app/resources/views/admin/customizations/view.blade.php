@@ -200,6 +200,7 @@
 
             <div class="row form-group">
                 <label for="mail_provider">Search options</label>
+                <small>Please select any sections you want to add to the portal search results</small>
                 <div class="controls">
                     @if ( $record->search_include_portal_views )
                         <input id="search_include_portal_views" type="checkbox"  name="search_include_portal_views" checked/>
@@ -209,10 +210,10 @@
                     <label>Portal pages</label>
                 </div>
                 <div class="controls">
-                    @if ( $record->search_include_resource_articles )
-                        <input id="search_include_resource_articles" type="checkbox"  name="search_include_resource_articles" checked/>
+                    @if ( $record->search_include_resources )
+                        <input id="search_include_resources" type="checkbox"  name="search_include_resources" checked/>
                     @else
-                        <input id="search_include_resource_articles" type="checkbox"  name="search_include_resource_articles"/>
+                        <input id="search_include_resources" type="checkbox"  name="search_include_resources"/>
                     @endif
                     <label>Resource articles</label>
                 </div>

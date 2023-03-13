@@ -114,6 +114,26 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['enable_apple_signin'] = $enable_apple_signin;
 
+		$search_include_portal_views = false;
+		$search_include_blog_views = false;
+		$search_include_resources = false;
+
+		if ( !empty( $update_params['search_include_portal_views'] ) ) {
+			$search_include_portal_views = true;
+		}
+		$update_params['search_include_portal_views'] = $search_include_portal_views;
+
+		if ( !empty( $update_params['search_include_resources'] ) ) {
+			$search_include_resources = true;
+		}
+		$update_params['search_include_resources'] = $search_include_resources;
+
+		if ( !empty( $update_params['search_include_blog_views'] ) ) {
+			$search_include_blog_views = true;
+		}
+		$update_params['search_include_blog_views'] = $search_include_blog_views;
+		
+
 		$custom_code_containers_enabled = false;
 
 		if ( $update_params['custom_code_containers_enabled'] =='yes') {
