@@ -417,6 +417,9 @@ $api->version('v1', function($api) {
   $api->post('updateWorkspace', '\App\Http\Controllers\RegisterController@updateWorkspace');
   $api->post('updateWorkspace2', '\App\Http\Controllers\MergedController@updateWorkspace2');
   $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');
+  $api->get('search', '\App\Http\Controllers\MergedController@search');
+
+
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');
   $api->get('getBillingHistory', '\App\Http\Controllers\BillingController@getBillingHistory');
   $api->get('downloadBillingHistory', '\App\Http\Controllers\BillingController@downloadBillingHistory');

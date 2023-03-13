@@ -845,5 +845,9 @@ final class MainHelper {
     public static function createPortalLink($path) {
       return sprintf("https://app.%s/%s", \Config::get("app.deployment_domain"), $path);
     }
+    public static function createResourceArticleUrl($article_key, $section_key) {
+      return sprintf("https://%s/resources/%s/%s", \Config::get("app.deployment_domain"), $section_key, $article_key);
+    }
+
 
 }

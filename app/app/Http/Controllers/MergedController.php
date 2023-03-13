@@ -39,6 +39,8 @@ use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
 
+use App\Helpers\PortalSearchHelper;
+
 use App\PhoneGlobalSetting;
 use App\PhoneGlobalSettingValue;
 use App\PhoneIndividualSetting;
@@ -651,11 +653,19 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
   public function getAllSettings(Request $request) {
 
-        $customizations = Customizations::getRecord();
+        $customizations = customizations::getrecord();
         $result = [
-          'customizations' => $customizations->toArray()
+          'customizations' => $customizations->toarray()
         ];
         return $this->response->array($result);
       }
+
+  public function search(Request $request) {
+      $query = $request->get("query");
+      $result = PortalSearchHelper::search( $query );
+      return $this->response->array($result);
+  }
+
+
 
 }
