@@ -16,6 +16,7 @@ use Config;
 use Mail;
 use Exception;
 use App\Helpers\MainHelper;
+use App\Helpers\EmailHelper;
 
 class AuthenticateController extends ApiAuthController
 {
@@ -108,13 +109,18 @@ class AuthenticateController extends ApiAuthController
                 'detect' => $detect,
                 'user' => $currentUser
             ];
+
             $mail = Config::get('mail');
+            $subject = "Lineblocs.com - Unknown Device Login";
+            $result = EmailHelper::sendEmail($currentUser->email, 'unknown_device_login', $data);
+            /*
             Mail::send('emails.unknown_device_login', $data, function ($message) use ($currentUser, $mail) {
                 $message->to($currentUser->email);
                 $message->subject("Lineblocs.com - Unknown Device Login");
                 $from = $mail['from'];
                 $message->from($from['address'], $from['name']);
             });
+            */
         }
         // add subdomain matching
         $workspace = Workspace::where('creator_id', '=', $currentUser->id)->first();

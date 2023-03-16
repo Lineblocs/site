@@ -11,15 +11,16 @@ use Log;
 use Exception;
 use Mail;
 final class EmailHelper {
-  public static function sendEmail($to, $template, $data) {
+  public static function sendEmail($subject, $to, $template, $data) {
     $customizations = Customizations::getRecord();
     $dns_provider = $customizations->dns_provider;
     $mail = Config::get('mail');
     if ( $customizations->mail_provider == 'smtp-gateway') {
       try {
-        Mail::send('emails.'.$template, $data, function ($message) use ($user, $mail) {
+        Mail::send('emails.'.$template, $data, function ($message) use ($subject, $user, $mail) {
             $message->to($user->email);
-            $message->subject("Lineblocs.com - Verify Your Email");
+            //$message->subject("Lineblocs.com - Verify Your Email");
+            $message->subject($subject);
             $from = $mail['from'];
             $message->from($from['address'], $from['name']);
         });

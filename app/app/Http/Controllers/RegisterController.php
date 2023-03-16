@@ -278,7 +278,8 @@ class RegisterController extends ApiAuthController
             'user' => $user,
             'link' => $link
           ];
-          $result = EmailHelper::sendEmail($user->email, 'verify-email', $data);
+          $subject = "Lineblocs.com - Verify Your Email";
+          $result = EmailHelper::sendEmail($subject, $user->email, 'verify-email', $data);
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
 
