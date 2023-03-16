@@ -418,6 +418,7 @@ $api->version('v1', function($api) {
   $api->post('updateWorkspace2', '\App\Http\Controllers\MergedController@updateWorkspace2');
   $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');
   $api->get('search', '\App\Http\Controllers\MergedController@search');
+  $api->post('billing/discontinue', '\App\Http\Controllers\MergedController@billingDiscontinue');
 
 
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');

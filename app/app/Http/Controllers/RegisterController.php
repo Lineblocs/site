@@ -25,6 +25,7 @@ use App\UsageTrigger;
 use App\Helpers\WorkspaceHelper;
 use App\Workspace;
 use App\WorkspaceUser;
+use App\WorkspaceEvent;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
@@ -81,6 +82,7 @@ class RegisterController extends ApiAuthController
         'trial_mode' => $trialMode
       ]);
       WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
+      WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),

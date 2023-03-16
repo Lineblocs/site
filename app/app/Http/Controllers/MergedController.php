@@ -9,6 +9,7 @@ use App\UsageTrigger;
 use App\DIDNumber;
 use App\CallSystemTemplate;
 use App\Workspace;
+use App\WorkspaceEvent;
 use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
@@ -180,6 +181,12 @@ class MergedController extends ApiAuthController
       $workspace->update([
         'plan' => $selected['key_name']
       ]);
+    $props = array(
+      "billing_status" => "pending_processing",
+      "new_plan" => $plan
+    );
+    WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
+
         return $this->response->noContent();
     }
 
@@ -666,6 +673,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->array($result);
   }
 
+  public function billingDiscontinuea(Request $request) {
+    // downgrade plan to pay as you go
+    $workspace = $this->getWorkspace($request);
+    $workspace->update([
+      'plan' => $plan,
+    ]);
+    $props = array(
+      "billing_status" => "pending_processing"
+    );
+    WorkspaceEvent::addEvent($workspace, 'PLAN_CANCELLED', $props);
+  }
 
 
 }
