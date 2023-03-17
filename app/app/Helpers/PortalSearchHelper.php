@@ -198,7 +198,7 @@ final class PortalSearchHelper {
               'results' => []
         ];
         $resource_articles = [
-              'key' => 'portal_views',
+              'key' => 'resource_articles',
               'results' => []
         ];
         foreach ( $views as $view ) {
@@ -223,12 +223,12 @@ final class PortalSearchHelper {
             $section_key = $item['section_key_name'];
             $url = MainHelper::createResourceArticleUrl($article_key, $section_key);
             $tags = explode(",", $item['seo_tags']);
-            $result = [
+            $resource_result = [
                 'title' => $item['name'],
                 'url' => $url,
                 'tags' => $tags
             ];
-            $resource_articles['results'][] = $result;
+            $resource_articles['results'][] = $resource_result;
         }
         $result['categories'][] = $portal_views;
         $result['categories'][] = $resource_articles;

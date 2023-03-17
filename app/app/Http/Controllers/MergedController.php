@@ -26,6 +26,7 @@ use App\BlockedNumber;
 use App\VerifiedCallerId;
 
 use App\Customizations;
+use App\ApiCredential;
 use App\Phone;
 
 use App\PhoneGroup;
