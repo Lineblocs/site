@@ -13,6 +13,18 @@ class ApiCredential extends Model {
   public static function getRecord() {
     return ApiCredential::all()[0];
   }
+  public static function getFrontendValuesOnly() {
+    extract( self::getRecord()->toArray() );
+    return compact(
+'google_signin_developer_key',
+'google_signin_client_id',
+'google_signin_app_id',
+'msft_signin_client_id',
+'msft_signin_client_secret',
+'apple_signin_client_id',
+'apple_signin_client_secret',
+    );
+  }
 
 }
 

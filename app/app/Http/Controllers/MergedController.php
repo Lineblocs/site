@@ -660,9 +660,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
   public function getAllSettings(Request $request) {
 
-        $customizations = customizations::getrecord();
+        $apiCreds = APICredential::getFrontendValuesOnly();
+        $customizations = Customizations::getrecord();
         $result = [
-          'customizations' => $customizations->toarray()
+          'customizations' => $customizations->toarray(),
+          'frontend_api_creds' => $apiCreds
         ];
         return $this->response->array($result);
       }
