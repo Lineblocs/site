@@ -97,6 +97,14 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
 
+		$signup_pay_details_required = false;
+
+		if ( $update_params['signup_requires_payment_detail'] =='yes') {
+			$signup_pay_details_required = true;
+		}
+		$update_params['signup_requires_payment_detail'] = $signup_pay_details_required;
+
+
 		$enable_google_signin = false;
 
 		if ( !empty( $update_params['enable_google_signin'] ) ) {

@@ -275,7 +275,20 @@
                 </div>
             </div>
 
-
+            <div class="row form-group">
+                <label for="signup_requires_payment_detail">Require payment details on registratione</label>
+                <div class="controls">
+                    <select name="signup_requires_payment_detail" class="form-control" id="signup_requires_payment_detail">
+                        @if ( $record->signup_requires_payment_detail)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
 
             <div class="row form-group">
                 <label for="dns_provider">DNS provider</label>

@@ -17,6 +17,7 @@ class Customizations extends Model {
     "enable_google_signin" => "boolean",
     "enable_msft_signin" => "boolean",
     "enable_apple_signin" => "boolean",
+    "signup_requires_payment_detail" => "boolean",
   );
   public static function getRecord() {
     return Customizations::all()[0];
