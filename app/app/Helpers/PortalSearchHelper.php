@@ -4,11 +4,18 @@ use App\ResourceArticle;
 use DB;
 final class PortalSearchHelper {
     public static function checkTitleMatches( $query, $title ) {
-        return TRUE;
+        return preg_match("/.*" . $query . ".*/", $title);
+        //return TRUE;
     }
 
-    public static function checkAnyTagMatches( $query, $title ) {
-        return TRUE;
+    public static function checkAnyTagMatches( $query, $tags ) {
+        foreach ( $tags as $tag ) {
+            $matches = preg_match("/.*" . $query . ".*/", $tag);
+            if ( $matches ) {
+                return TRUE;
+            }
+        }
+        return FALSE;
     }
 
 
@@ -204,7 +211,7 @@ final class PortalSearchHelper {
         foreach ( $views as $view ) {
           // find match
           $title = $view['title'];
-          $tagse = $view['tags'];
+          $tags = $view['tags'];
           if ( self::checkTitleMatches( $query, $title ) ) {
             $portal_views['results'][] = $view;
             continue;
