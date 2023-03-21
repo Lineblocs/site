@@ -1,21 +1,12 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use App\Helpers\SIPRouterHelper;
 use App\Http\Controllers\AdminController;
-use App\User;
+use App\Http\Requests\Admin\RTPProxyRequest;
 use App\RTPProxy;
 use App\SIPRouter;
-use App\Workspace;
-use App\PortNumber;
-use App\Http\Requests\Admin\RTPProxyRequest;
-use App\Helpers\MainHelper;
-use App\Helpers\SIPRouterHelper;
-use App\RTPProxyHost;
-use App\RTPProxyWhitelistIp;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
-use Illuminate\Http\Request;
 
 class RTPProxyController extends AdminController
 {
@@ -25,10 +16,10 @@ class RTPProxyController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -47,7 +38,8 @@ class RTPProxyController extends AdminController
         return view('admin.rtpproxy.create_edit', compact('ranges', 'routers'));
     }
 
-    private function getPriorityRanges() {
+    private function getPriorityRanges()
+    {
         $ranges = [
             '1',
             '2',
@@ -70,9 +62,9 @@ class RTPProxyController extends AdminController
     public function store(RTPProxyRequest $request)
     {
 
-        $rtpproxy = new RTPProxy ($request->all());
+        $rtpproxy = new RTPProxy($request->all());
         $rtpproxy->save();
-        SIPRouterHelper::addRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
+        // SIPRouterHelper::addRTPProxy($rtpproxy->id, $rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
 
@@ -98,7 +90,7 @@ class RTPProxyController extends AdminController
     public function update(RTPProxyRequest $request, RTPProxy $rtpproxy)
     {
         $rtpproxy->update($request->all());
-        SIPRouterHelper::updateRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
+        SIPRouterHelper::updateRTPProxy($rtpproxy->id, $rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
 
@@ -134,13 +126,14 @@ class RTPProxyController extends AdminController
      */
     public function data()
     {
-        $rtpproxys = RTPProxy::select(array('rtpproxy_sockets.id', 'rtpproxy_sockets.rtpproxy_sock','rtpproxy_sockets.cpu_pct', 'rtpproxy_sockets.mem_pct', 'rtpproxy_sockets.created_at'));
+        $rtpproxys = RTPProxy::select(array('rtpproxy_sockets.id', 'rtpproxy_sockets.rtpproxy_sock', 'rtpproxy_sockets.cpu_pct', 'rtpproxy_sockets.mem_pct', 'rtpproxy_sockets.created_at'));
 
-        return Datatables::of($rtpproxys)
-            //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->add_column('actions', '<a href="{{{ url(\'admin/rtpproxy/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($rtpproxys)
+        //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->addColumn('actions', '<a href="{{{ url(\'admin/rtpproxy/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/rtpproxy/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 }

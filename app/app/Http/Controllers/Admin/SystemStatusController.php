@@ -1,21 +1,12 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use App\Helpers\MainHelper;
 use App\Http\Controllers\AdminController;
-use App\User;
+use App\Http\Requests\Admin\SystemStatusRequest;
 use App\SystemStatusCategory;
 use App\SystemStatusUpdate;
-use App\SIPRegion;
-use App\SIPRateCenter;
-use App\SIPProvider;
-use App\SIPRateCenterProvider;
-use App\Workspace;
-use App\PortNumber;
-use App\Http\Requests\Admin\SystemStatusRequest;
-use App\Helpers\MainHelper;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
 use Illuminate\Http\Request;
 
 class SystemStatusController extends AdminController
@@ -26,10 +17,10 @@ class SystemStatusController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -79,7 +70,6 @@ class SystemStatusController extends AdminController
     }
 
     public function add_alert(SystemStatusCategory $systemstatus)
-
     {
         return view('admin.systemstatus.add_alert', compact('systemstatus'));
     }
@@ -91,7 +81,7 @@ class SystemStatusController extends AdminController
             'category_id' => $systemstatus->id,
             'title' => $data['title'],
             'body' => $data['body'],
-            'status' => $data['status']
+            'status' => $data['status'],
         ]);
         MainHelper::sendSysUpdateOut($alert);
         //return response("");
@@ -127,10 +117,11 @@ class SystemStatusController extends AdminController
     {
         $systemstatuss = SystemStatusCategory::select(array('system_status_categories.id', 'system_status_categories.name', 'system_status_categories.created_at'));
 
-        return Datatables::of($systemstatuss)
-            //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->add_column('actions', '<a href="{{{ url(\'admin/systemstatus/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>')
-            ->remove_column('id')
+        $dd = Datatables::of($systemstatuss)
+        //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->addColumn('actions', '<a href="{{{ url(\'admin/systemstatus/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 }

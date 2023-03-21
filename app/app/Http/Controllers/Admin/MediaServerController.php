@@ -1,43 +1,34 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
-use App\User;
-use App\MediaServer;
-use App\Workspace;
-use App\PortNumber;
 use App\Http\Requests\Admin\MediaServerRequest;
-use App\Helpers\MainHelper;
-use App\MediaServerHost;
-use App\MediaServerWhitelistIp;
+use App\MediaServer;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
-use Illuminate\Http\Request;
 
 class MediaServerController extends AdminController
 {
     public static $countries = [
         'US' => 'United States',
         'UK' => 'United Kingdon',
-        'CA' => 'Canada'
+        'CA' => 'Canada',
     ];
     public static $ipRanges = [
-            '/8' => '/8',
-            '/16' => '/16',
-            '/24' => '/24',
-            '/32' => '/32',
-        ];
+        '/8' => '/8',
+        '/16' => '/16',
+        '/24' => '/24',
+        '/32' => '/32',
+    ];
     public function __construct()
     {
         view()->share('type', 'server');
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -63,7 +54,7 @@ class MediaServerController extends AdminController
     public function store(MediaServerRequest $request)
     {
 
-        $server = new MediaServer ($request->all());
+        $server = new MediaServer($request->all());
         $server->save();
         header("X-Goto-URL: /admin/server/" . $server->id . "/edit");
     }
@@ -122,13 +113,14 @@ class MediaServerController extends AdminController
      */
     public function data()
     {
-        $servers = MediaServer::select(array('media_servers.id', 'media_servers.name','media_servers.ip_address', 'media_servers.ip_address_range', 'media_servers.created_at'));
+        $servers = MediaServer::select(array('media_servers.id', 'media_servers.name', 'media_servers.ip_address', 'media_servers.ip_address_range', 'media_servers.created_at'));
 
-        return Datatables::of($servers)
-            //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->add_column('actions', '<a href="{{{ url(\'admin/server/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $servers = Datatables::of($servers)
+        //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->addColumn('actions', '<a href="{{{ url(\'admin/server/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/server/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $servers->original;
     }
 }

@@ -1,19 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\AdminController;
-use App\User;
 use App\DNSRecord;
-use App\Workspace;
-use App\PortNumber;
-use App\MediaServer;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\Admin\DNSRecordRequest;
-use App\Helpers\MainHelper;
-use App\DNSRecordMediaServer;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
-use Illuminate\Http\Request;
 
 class DNSRecordController extends AdminController
 {
@@ -23,10 +14,10 @@ class DNSRecordController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -51,7 +42,7 @@ class DNSRecordController extends AdminController
     public function store(DNSRecordRequest $request)
     {
 
-        $dns = new DNSRecord ($request->all());
+        $dns = new DNSRecord($request->all());
         $dns->save();
         header("X-Goto-URL: /admin/dns/" . $dns->id . "/edit");
     }
@@ -102,8 +93,6 @@ class DNSRecordController extends AdminController
         $dns->delete();
     }
 
-
-
     /**
      * Show a list of all the languages posts formatted for Datatables.
      *
@@ -111,19 +100,21 @@ class DNSRecordController extends AdminController
      */
     public function data()
     {
-        $dnss = DNSRecord::select(array('dns_records.id', 'dns_records.host','dns_records.type', 'dns_records.value', 'dns_records.ttl', 'dns_records.created_at'));
+        $dnss = DNSRecord::select(array('dns_records.id', 'dns_records.host', 'dns_records.type', 'dns_records.value', 'dns_records.ttl', 'dns_records.created_at'));
 
-        return Datatables::of($dnss)
-            ->add_column('actions', '<a href="{{{ url(\'admin/dns/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($dnss)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/dns/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/dns/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
-    public function dnsTypes() {
+    public function dnsTypes()
+    {
         return [
             'inbound' => 'inbound',
             'outbound' => 'outbound',
-            'both' => 'both'
+            'both' => 'both',
         ];
     }
 }

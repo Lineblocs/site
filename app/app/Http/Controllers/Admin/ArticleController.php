@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\AdminController;
 use App\Article;
 use App\ArticleCategory;
-use App\Language;
-use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\Admin\ArticleRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Language;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 
-class ArticleController extends AdminController {
+class ArticleController extends AdminController
+{
 
     public function __construct()
     {
         view()->share('type', 'article');
     }
-     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+    /*
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -48,22 +49,20 @@ class ArticleController extends AdminController {
     public function store(ArticleRequest $request)
     {
         $article = new Article($request->except('image'));
-        $article -> user_id = Auth::id();
+        $article->user_id = Auth::id();
 
         $picture = "";
-        if(Input::hasFile('image'))
-        {
+        if (Input::hasFile('image')) {
             $file = Input::file('image');
             $filename = $file->getClientOriginalName();
-            $extension = $file -> getClientOriginalExtension();
+            $extension = $file->getClientOriginalExtension();
             $picture = sha1($filename . time()) . '.' . $extension;
         }
-        $article -> picture = $picture;
-        $article -> save();
+        $article->picture = $picture;
+        $article->save();
 
-        if(Input::hasFile('image'))
-        {
-            $destinationPath = public_path() . '/images/article/'.$article->id.'/';
+        if (Input::hasFile('image')) {
+            $destinationPath = public_path() . '/images/article/' . $article->id . '/';
             Input::file('image')->move($destinationPath, $picture);
         }
     }
@@ -77,7 +76,7 @@ class ArticleController extends AdminController {
     {
         $languages = Language::lists('name', 'id')->toArray();
         $articlecategories = ArticleCategory::lists('title', 'id')->toArray();
-        return view('admin.article.create_edit',compact('article','languages','articlecategories'));
+        return view('admin.article.create_edit', compact('article', 'languages', 'articlecategories'));
     }
 
     /**
@@ -88,21 +87,19 @@ class ArticleController extends AdminController {
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        $article -> user_id = Auth::id();
+        $article->user_id = Auth::id();
         $picture = "";
-        if(Input::hasFile('image'))
-        {
+        if (Input::hasFile('image')) {
             $file = Input::file('image');
             $filename = $file->getClientOriginalName();
-            $extension = $file -> getClientOriginalExtension();
+            $extension = $file->getClientOriginalExtension();
             $picture = sha1($filename . time()) . '.' . $extension;
         }
-        $article -> picture = $picture;
-        $article -> update($request->except('image'));
+        $article->picture = $picture;
+        $article->update($request->except('image'));
 
-        if(Input::hasFile('image'))
-        {
-            $destinationPath = public_path() . '/images/article/'.$article->id.'/';
+        if (Input::hasFile('image')) {
+            $destinationPath = public_path() . '/images/article/' . $article->id . '/';
             Input::file('image')->move($destinationPath, $picture);
         }
     }
@@ -130,7 +127,6 @@ class ArticleController extends AdminController {
         $article->delete();
     }
 
-
     /**
      * Show a list of all the languages posts formatted for Datatables.
      *
@@ -138,25 +134,25 @@ class ArticleController extends AdminController {
      */
     public function data()
     {
-        $articles = Article::with('category','language')
+        $articles = Article::with('category', 'language')
             ->get()
             ->map(function ($article) {
                 return [
                     'id' => $article->id,
                     'title' => $article->title,
-                    'category' => isset($article->category)?$article->category->title:"",
-                    'language' => isset($article->language)?$article->language->name:"",
+                    'category' => isset($article->category) ? $article->category->title : "",
+                    'language' => isset($article->language) ? $article->language->name : "",
                     'created_at' => $article->created_at->format('d.m.Y.'),
                 ];
             });
-        return Datatables::of($articles)
-            ->add_column('actions', '<a href="{{{ url(\'admin/article/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($articles)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/article/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/article/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>
                     <input type="hidden" name="row" value="{{$id}}" id="row">')
-            ->remove_column('id')
+            ->removeColumn('id')
 
             ->make();
+        return $dd->original;
     }
-
 
 }

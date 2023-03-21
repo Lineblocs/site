@@ -1,17 +1,12 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Requests\Admin\PhotoRequest;
+use App\Language;
 use App\Photo;
 use App\PhotoAlbum;
-use App\Language;
-use App\Http\Requests\Admin\PhotoRequest;
-use App\Http\Requests\Admin\DeleteRequest;
-use App\Http\Requests\Admin\ReorderRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use App\Helpers\Thumbnail;
-use Illuminate\Support\Facades\DB;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends AdminController
 {
@@ -135,7 +130,6 @@ class PhotoController extends AdminController
         $photo->delete();
     }
 
-
     /**
      * Show a list of all the languages posts formatted for Datatables.
      *
@@ -143,7 +137,7 @@ class PhotoController extends AdminController
      */
     public function data()
     {
-        $photos = Photo::with('album','language')
+        $photos = Photo::with('album', 'language')
             ->get()
             ->map(function ($photo) {
                 return [
@@ -156,11 +150,12 @@ class PhotoController extends AdminController
                     'created_at' => $photo->created_at->format('d.m.Y.'),
                 ];
             });
-        return Datatables::of($photos)
-            ->add_column('actions', '<a href="{{{ url(\'admin/photo/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($photos)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/photo/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                 <a href="{{{ url(\'admin/photo/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>
                 <input type="hidden" name="row" value="{{$id}}" id="row">')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 }

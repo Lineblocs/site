@@ -2,14 +2,9 @@
 
 use App\Helpers\MainHelper;
 use App\Http\Controllers\AdminController;
-use App\User;
-use App\SIPRouter;
-use App\RTPProxy;
-use App\Workspace;
-use App\PortNumber;
-use App\MediaServer;
 use App\Http\Requests\Admin\SIPRouterRequest;
 use App\MediaServer;
+use App\RTPProxy;
 use App\SIPRouter;
 use App\SIPRouterMediaServer;
 use App\User;
@@ -148,12 +143,13 @@ class SIPRouterController extends AdminController
     {
         $routers = SIPRouter::select(array('sip_routers.id', 'sip_routers.name', 'sip_routers.active', 'sip_routers.region', 'sip_routers.created_at'));
 
-        return Datatables::of($routers)
-            ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->add_column('actions', '<a href="{{{ url(\'admin/router/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($routers)
+            ->editColumn('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->addColumn('actions', '<a href="{{{ url(\'admin/router/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/router/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
     public function routerTypes()
     {

@@ -1,18 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
-use App\User;
-use App\ServicePlan;
-use App\ServicePlanDialPrefix;
-use App\Workspace;
-use App\PortNumber;
 use App\Http\Requests\Admin\ServicePlanRequest;
-use App\Helpers\MainHelper;
+use App\ServicePlan;
+use App\User;
 use Datatables;
 use DB;
-use Config;
-use Mail;
-use Illuminate\Http\Request;
 
 class ServicePlanController extends AdminController
 {
@@ -22,10 +15,10 @@ class ServicePlanController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -51,21 +44,22 @@ class ServicePlanController extends AdminController
     public function store(ServicePlanRequest $request)
     {
         $data = $request->all();
-        $serviceplan = new ServicePlan ($data);
+        $serviceplan = new ServicePlan($data);
         $serviceplan->save();
         $this->ensurePlansDontContainConflictingValues($serviceplan);
     }
 
     // make all plans featured except selected one
-    private function ensurePlansDontContainConflictingValues( $serviceplan ) {
-        if ( $serviceplan->featured_plan ) {
+    private function ensurePlansDontContainConflictingValues($serviceplan)
+    {
+        if ($serviceplan->featured_plan) {
             DB::table('service_plans')->where('id', '!=', $serviceplan->id)->update([
-                'featured_plan' => '0'
+                'featured_plan' => '0',
             ]);
         }
-        if ( $serviceplan->registration_plan ) {
+        if ($serviceplan->registration_plan) {
             DB::table('service_plans')->where('id', '!=', $serviceplan->id)->update([
-                'registration_plan' => '0'
+                'registration_plan' => '0',
             ]);
         }
     }
@@ -80,13 +74,15 @@ class ServicePlanController extends AdminController
         $features = $this->getFeatureOptions();
         return view('admin.serviceplan.create_edit', compact('serviceplan', 'features'));
     }
-    private function createFeatureOption($key) {
+    private function createFeatureOption($key)
+    {
         return [
-            'key' => $key
+            'key' => $key,
         ];
     }
 
-    private function getFeatureOptions() {
+    private function getFeatureOptions()
+    {
         return [
             $this->createFeatureOption('fax'),
             $this->createFeatureOption('im_integrations'),
@@ -150,13 +146,14 @@ class ServicePlanController extends AdminController
     {
         $serviceplans = ServicePlan::select(array('service_plans.id', 'service_plans.key_name', 'service_plans.nice_name', 'service_plans.featured_plan', 'service_plans.created_at'));
 
-        return Datatables::of($serviceplans)
-            ->add_column('actions', '<a href="{{{ url(\'admin/serviceplan/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($serviceplans)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/serviceplan/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/serviceplan/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
 
-            ->edit_column('featured_plan', '@if ($featured_plan=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->remove_column('id')
+            ->editColumn('featured_plan', '@if ($featured_plan=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 
 }

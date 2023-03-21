@@ -73,14 +73,14 @@ class User extends Model implements AuthenticatableContract,
         }
         $estimatedBalance = $chargesThisMonth + $accountBalance;
         $locale = 'en_US';
-        $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
+        //$nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
         $month = $monthNext->format('M');
         $date = $monthNext->format('d');
-        $date = $nf->format($date);
+       // $date = $nf->format($date);
         $nextInvoiceDue =$month . ' ' . $date;
         $month = $monthStart->format('M');
         $date = $monthStart->format('d');
-        $date = $nf->format($date);
+        //$date = $nf->format($date);
         $thisInvoiceDue =$month . ' ' . $date;
 
         $info =[

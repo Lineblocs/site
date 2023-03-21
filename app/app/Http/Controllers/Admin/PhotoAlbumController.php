@@ -1,12 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\PhotoAlbum;
-use App\Photo;
-use App\Language;
 use App\Http\Controllers\AdminController;
 use App\Http\Requests\Admin\PhotoAlbumRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Language;
+use App\PhotoAlbum;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoAlbumController extends AdminController
 {
@@ -17,10 +16,10 @@ class PhotoAlbumController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -116,13 +115,14 @@ class PhotoAlbumController extends AdminController
                 ];
             });
 
-        return Datatables::of($photo_albums)
-            ->edit_column('images_count', '<a class="btn btn-primary btn-sm" >{{ \App\Photo::where(\'photo_album_id\', \'=\', $id)->count() }}</a>')
-            ->add_column('actions', '<a href="{{{ url(\'admin/photoalbum/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($photo_albums)
+            ->editColumn('images_count', '<a class="btn btn-primary btn-sm" >{{ \App\Photo::where(\'photo_album_id\', \'=\', $id)->count() }}</a>')
+            ->addColumn('actions', '<a href="{{{ url(\'admin/photoalbum/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/photoalbum/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>
                     <input type="hidden" name="row" value="{{$id}}" id="row">')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 
 }

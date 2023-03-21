@@ -1,21 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\AdminController;
-use App\User;
 use App\ErrorUserTrace;
-use App\SIPRegion;
-use App\SIPRateCenter;
-use App\SIPProvider;
-use App\SIPRateCenterProvider;
-use App\Workspace;
-use App\PortNumber;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\Admin\ErrorTraceRequest;
-use App\Helpers\MainHelper;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
-use Illuminate\Http\Request;
 
 class ErrorTraceController extends AdminController
 {
@@ -25,10 +14,10 @@ class ErrorTraceController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -104,12 +93,13 @@ class ErrorTraceController extends AdminController
      */
     public function data()
     {
-        $errortraces = ErrorUserTrace::select(array('error_user_trace.id', 'users.email', 'workspaces.name',  'error_user_trace.message', 'error_user_trace.full_url', 'error_user_trace.created_at'));
+        $errortraces = ErrorUserTrace::select(array('error_user_trace.id', 'users.email', 'workspaces.name', 'error_user_trace.message', 'error_user_trace.full_url', 'error_user_trace.created_at'));
         $errortraces->leftJoin('users', 'users.id', '=', 'error_user_trace.user_id');
         $errortraces->leftJoin('workspaces', 'workspaces.id', '=', 'error_user_trace.workspace_id');
 
-        return Datatables::of($errortraces)
-            ->remove_column('id')
+        $dd = Datatables::of($errortraces)
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 }

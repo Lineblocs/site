@@ -1,17 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
-use App\User;
-use App\RouterFlow;
-use App\Workspace;
-use App\PortNumber;
 use App\Http\Requests\Admin\RouterFlowRequest;
-use App\Helpers\MainHelper;
+use App\RouterFlow;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
-use Illuminate\Http\Request;
 
 class RouterFlowController extends AdminController
 {
@@ -22,10 +15,10 @@ class RouterFlowController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -104,10 +97,11 @@ class RouterFlowController extends AdminController
     {
         $flows = RouterFlow::select(array('router_flows.id', 'router_flows.name', 'router_flows.created_at'));
 
-        return Datatables::of($flows)
-            ->add_column('actions', '<a href="{{{ url(\'admin/flow/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($flows)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/flow/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/flow/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 }

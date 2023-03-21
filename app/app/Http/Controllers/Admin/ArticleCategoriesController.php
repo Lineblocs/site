@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\ArticleCategory;
-use App\Language;
 use App\Http\Controllers\AdminController;
 use App\Http\Requests\Admin\ArticleCategoryRequest;
-use App\Http\Requests\Admin\DeleteRequest;
 use App\Http\Requests\Admin\ReorderRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Language;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleCategoriesController extends AdminController
 {
@@ -116,12 +115,13 @@ class ArticleCategoriesController extends AdminController
                     'created_at' => $article_category->created_at->format('d.m.Y.'),
                 ];
             });
-        return Datatables::of($article_categories)
-            ->add_column('actions', '<a href="{{{ url(\'admin/articlecategory/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($article_categories)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/articlecategory/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                 <a href="{{{ url(\'admin/articlecategory/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>
                 <input type="hidden" name="row" value="{{$id}}" id="row">')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 
     /**

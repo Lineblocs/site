@@ -1,20 +1,19 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/rtpproxies.rtp_proxies") !!} :: @parent
+@section('title')
+    {!! trans('admin/rtpproxies.rtp_proxies') !!} :: @parent
 @endsection
 
 {{-- Content --}}
 @section('main')
     <div class="page-header">
         <h3>
-            {!! trans("admin/rtpproxies.rtp_proxies") !!}
+            {!! trans('admin/rtpproxies.rtp_proxies') !!}
             <div class="pull-right">
                 <div class="pull-right">
-                    <a href="{!! url('admin/rtpproxy/create') !!}"
-                       class="btn btn-sm  btn-primary iframe"><span
-                                class="glyphicon glyphicon-plus-sign"></span> {{
-					trans("admin/modal.new") }}</a>
+                    <a href="{!! url('admin/rtpproxy/create') !!}" class="btn btn-sm  btn-primary iframe"><span
+                            class="glyphicon glyphicon-plus-sign"></span> {{ trans('admin/modal.new') }}</a>
                 </div>
             </div>
         </h3>
@@ -22,13 +21,13 @@
 
     <table id="table" class="table table-striped table-hover">
         <thead>
-        <tr>
-            <th>{!! trans("admin/rtpproxies.rtpproxy_sock") !!}</th>
-            <th>{!! trans("admin/rtpproxies.cpu_pct") !!}</th>
-            <th>{!! trans("admin/rtpproxies.mem_pct") !!}</th>
-            <th>{!! trans("admin/admin.created_at") !!}</th>
-            <th>{!! trans("admin/admin.action") !!}</th>
-        </tr>
+            <tr>
+                <th>{!! trans('admin/rtpproxies.rtpproxy_sock') !!}</th>
+                <th>{!! trans('admin/rtpproxies.cpu_pct') !!}</th>
+                <th>{!! trans('admin/rtpproxies.mem_pct') !!}</th>
+                <th>{!! trans('admin/admin.created_at') !!}</th>
+                <th>{!! trans('admin/admin.action') !!}</th>
+            </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -36,4 +35,14 @@
 
 {{-- Scripts --}}
 @section('scripts')
+    <script>
+        $(".iframe").colorbox({
+            iframe: true,
+            width: "80%",
+            height: "80%",
+            onClosed: function() {
+                oTable.ajax.reload();
+            }
+        });
+    </script>
 @endsection

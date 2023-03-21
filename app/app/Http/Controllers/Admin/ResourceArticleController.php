@@ -1,18 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
-use App\User;
-use App\ResourceArticle;
-use App\ResourceArticleDialPrefix;
-use App\Workspace;
-use App\PortNumber;
-use App\ResourceSection;
 use App\Http\Requests\Admin\ResourceArticleRequest;
-use App\Helpers\MainHelper;
+use App\ResourceArticle;
+use App\ResourceSection;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
 use Illuminate\Http\Request;
 
 class ResourceArticleController extends AdminController
@@ -23,10 +16,10 @@ class ResourceArticleController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -52,7 +45,7 @@ class ResourceArticleController extends AdminController
     public function store(ResourceArticleRequest $request)
     {
         $data = $request->all();
-        $resourcearticle = new ResourceArticle ($data);
+        $resourcearticle = new ResourceArticle($data);
         $resourcearticle->save();
     }
 
@@ -112,17 +105,18 @@ class ResourceArticleController extends AdminController
     {
         $section_id = $request->get('section_id');
         $resourcearticles = ResourceArticle::select(array('resource_articles.id', 'resource_articles.name', 'resource_articles.section_id', 'resource_articles.active', 'resource_articles.created_at'));
-        if ( !empty($section_id)) {
+        if (!empty($section_id)) {
             $resourcearticles = $resourcearticles->where('section_id', $section_id);
         }
 
-        return Datatables::of($resourcearticles)
-            ->add_column('actions', '<a href="{{{ url(\'admin/resourcearticle/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($resourcearticles)
+            ->addColumn('actions', '<a href="{{{ url(\'admin/resourcearticle/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/resourcearticle/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
 
-            ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->remove_column('id')
+            ->editColumn('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 
 }

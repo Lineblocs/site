@@ -1,21 +1,15 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
-use App\User;
-use App\SIPCountry;
-use App\SIPRegion;
-use App\SIPRateCenter;
-use App\SIPProvider;
-use App\SIPRateCenterProvider;
-use App\RouterFlow;
-use App\Workspace;
-use App\PortNumber;
 use App\Http\Requests\Admin\SIPCountryRequest;
-use App\Helpers\MainHelper;
+use App\RouterFlow;
+use App\SIPCountry;
+use App\SIPProvider;
+use App\SIPRateCenter;
+use App\SIPRateCenterProvider;
+use App\SIPRegion;
+use App\User;
 use Datatables;
-use DB;
-use Config;
-use Mail;
 use Illuminate\Http\Request;
 
 class SIPCountryController extends AdminController
@@ -26,10 +20,10 @@ class SIPCountryController extends AdminController
     }
 
     /*
-    * Display a listing of the resource.
-    *
-    * @return Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         // Show the page
@@ -59,13 +53,13 @@ class SIPCountryController extends AdminController
         $user = \Auth::user();
         /*
         $flow = RouterFlow::createFromTemplate('LCR', $user);
-        */
+         */
         $data = $request->all();
         $flow = RouterFlow::create([
             'name' => 'flow for country: ' . $data['name'],
-            'flow_json' => NULL
+            'flow_json' => null,
         ]);
-        $country = new SIPCountry ($data);
+        $country = new SIPCountry($data);
         $country->flow_id = $flow->id;
         $country->save();
         header("X-Goto-URL: /admin/country/" . $country->id . "/edit");
@@ -79,7 +73,7 @@ class SIPCountryController extends AdminController
      */
     public function edit(SIPCountry $country)
     {
-        $regions =SIPRegion::where('country_id', $country->id)->get();
+        $regions = SIPRegion::where('country_id', $country->id)->get();
         return view('admin.sipcountry.create_edit', compact('country', 'regions'));
     }
 
@@ -88,8 +82,6 @@ class SIPCountryController extends AdminController
         $flowId = $country->flow_id;
         return view('admin.sipcountry.edit_flow', compact('flowId'));
     }
-
-
 
     /**
      * Update the specified resource in storage.
@@ -126,7 +118,6 @@ class SIPCountryController extends AdminController
         $country->delete();
     }
 
-
     public function add_region(SIPCountry $country)
     {
         return view('admin.sipcountry.add_region', compact('country'));
@@ -136,7 +127,7 @@ class SIPCountryController extends AdminController
     {
         $data = $request->all();
         $region = SIPRegion::create(array_merge([
-            'country_id' => $country->id
+            'country_id' => $country->id,
         ], $data));
         return response("");
     }
@@ -155,7 +146,7 @@ class SIPCountryController extends AdminController
 
     public function add_ratecenter(SIPCountry $country, SIPRegion $region)
     {
-        $providers =SIPProvider::all();
+        $providers = SIPProvider::all();
         return view('admin.sipcountry.add_ratecenter', compact('country', 'region', 'providers'));
     }
 
@@ -168,12 +159,12 @@ class SIPCountryController extends AdminController
             unset($data['providers']);
         }
         $center = SIPRateCenter::create(array_merge($data, [
-            'region_id' => $region->id
+            'region_id' => $region->id,
         ]));
         foreach ($providers as $id => $provider) {
             SIPRateCenterProvider::create([
                 'center_id' => $center->id,
-                'provider_id' => $id
+                'provider_id' => $id,
             ]);
         }
         return response("");
@@ -181,8 +172,8 @@ class SIPCountryController extends AdminController
     }
     public function add_ratecenter_edit(SIPCountry $country, SIPRegion $region, SIPRateCenter $center)
     {
-        $providers =SIPProvider::all();
-        $centerProviders =SIPRateCenterProvider::where('center_id', $center->id)->get();
+        $providers = SIPProvider::all();
+        $centerProviders = SIPRateCenterProvider::where('center_id', $center->id)->get();
         return view('admin.sipcountry.add_ratecenter', compact('country', 'region', 'center', 'providers', 'centerProviders'));
     }
 
@@ -197,12 +188,12 @@ class SIPCountryController extends AdminController
 
         $center->update($data);
 
-        $centerProviders =SIPRateCenterProvider::where('center_id', $center->id)->get();
+        $centerProviders = SIPRateCenterProvider::where('center_id', $center->id)->get();
         foreach ($centerProviders as $cProvider) {
-            $delete = TRUE;
+            $delete = true;
             foreach ($providers as $provider) {
                 if ($provider == $cProvider->provider_id) {
-                    $delete = FALSE;
+                    $delete = false;
                 }
             }
             if ($delete) {
@@ -210,20 +201,19 @@ class SIPCountryController extends AdminController
             }
         }
         foreach ($providers as $id => $provider) {
-            $found = FALSE;
+            $found = false;
             foreach ($centerProviders as $cProvider) {
                 if ($provider == $cProvider->provider_id) {
-                    $found= TRUE;
+                    $found = true;
                 }
             }
             if (!$found) {
                 SIPRateCenterProvider::create([
                     'center_id' => $center->id,
-                    'provider_id' => $id
+                    'provider_id' => $id,
                 ]);
 
             }
-
 
         }
 
@@ -233,13 +223,13 @@ class SIPCountryController extends AdminController
     {
         $data = $request->all();
         $region->delete();
-        
+
         return response("");
     }
-public function del_ratecenter(Request $request, SIPCountry $country, SIPRegion $region, SIPRateCenter $center)
+    public function del_ratecenter(Request $request, SIPCountry $country, SIPRegion $region, SIPRateCenter $center)
     {
         $center->delete();
-        
+
         return response("");
     }
 
@@ -252,12 +242,13 @@ public function del_ratecenter(Request $request, SIPCountry $country, SIPRegion 
     {
         $countrys = SIPCountry::select(array('sip_countries.id', 'sip_countries.name', 'sip_countries.created_at'));
 
-        return Datatables::of($countrys)
-            //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->add_column('actions', '<a href="{{{ url(\'admin/country/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+        $dd = Datatables::of($countrys)
+        //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->addColumn('actions', '<a href="{{{ url(\'admin/country/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
             <a href="{{{ url(\'admin/country/\' . $id . \'/flow\' ) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit_flow") }}</a>
                     <a href="{{{ url(\'admin/country/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
-            ->remove_column('id')
+            ->removeColumn('id')
             ->make();
+        return $dd->original;
     }
 }
