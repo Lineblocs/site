@@ -42,6 +42,7 @@ Route::get('faqs', 'HomeController@faqs');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
 Route::get('/pages/tos', 'PagesController@termsOfService');
 Route::get('/resources', 'ResourcesController@index');
+Route::get('/resources/article-inactive', 'ResourcesController@articleInactive');
 Route::get('/resources/{section}', 'ResourcesController@section');
 Route::get('/resources/{section}/{item}', 'ResourcesController@sectionItem');
 Route::get('/features', 'HomeController@features');

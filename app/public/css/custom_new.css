@@ -330,3 +330,9 @@ ul:not(.browser-default) {
   margin-top: 20px;
   margin-bottom: 200px;
 }
+.article-inactive {
+  min-height: 400px;
+  margin-top: 100px;
+  width: 100%;
+  text-align: center;
+}

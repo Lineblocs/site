@@ -16,25 +16,6 @@ use Config;
 class ResourcesController extends BaseController {
 
   private function getSection($section) {
-    $file = base_path("yaml/resources.yaml");
-    $data = Yaml::parse(file_get_contents($file));
-    $results = [];
-    foreach ($data['sections'] as $sectionArr) {
-      if ($sectionArr['link']==$section) {
-        $sectionName = $sectionArr['name'];
-        foreach ($sectionArr['items'] as $item) {
-           $results[] = ['section' => $sectionArr, 'item' => $item];
-        }
-        break;
-      }
-    }
-    return ['name' => $sectionName, 'results' => $results];
-    // new code
-    //$sections =ResourceArticle::select(array('resource_articles.name', ))
-
-  }
-
-  private function getSection2($section) {
     $section = ResourceSection::where('key_name', $section)->firstOrFail();
     $results = $this->getResourceArticles( $section->id );
     return ['name' => $section['name'], 'results' => $results];
@@ -74,6 +55,7 @@ class ResourcesController extends BaseController {
     if ( !empty( $section_id )) {
       $articles->where('section_id', $section_id);
     }
+    $articles->where('active', '1');
     $articles = $articles->get();
     return $articles;
   }
@@ -161,8 +143,7 @@ class ResourcesController extends BaseController {
   {
     $file = base_path("yaml/resources.yaml");
     $data = Yaml::parse(file_get_contents($file));
-    //$info = $this->getSection($section);
-    $info = $this->getSection2($section);
+    $info = $this->getSection($section);
     $sectionName = $info['name'];
     $results = $info['results'];
     return view('resources.section', compact('section', 'sectionName', 'results'));
@@ -171,6 +152,9 @@ class ResourcesController extends BaseController {
   {
     $section =  ResourceSection::where('key_name', '=', $section)->firstOrFail();
     $article = ResourceArticle::where('key_name', '=', $item)->where('section_id', $section->id)->firstOrFail();
+    if ( !$article->active ) {
+      return redirect("/resources/article-inactive");
+    }
 
     //$markdown = file_get_contents( base_path("/docs/$section/$item.md") );
     $markdown = (string) $article->content;
@@ -208,26 +192,10 @@ class ResourcesController extends BaseController {
     View::share('description', $description);
     return view('resources.item', compact('html', 'related', 'title', 'section'));
   }
-  public function sectionItem2(Request $request, $section, $item)
-  {
-    $section = ResourceSection::where('name',$section)->firstOrFail();
-    $item= ResourceArticle::where('key_name',$item)->firstOrFail();
-    $markdown = $item->content;
-    $html = Markdown::defaultTransform($markdown); 
-    $related = [];
-    $related= ResourceArticle::where('section_id', $item->section_id)
-        ->where('id', '!=', $item->id)
-        ->orderBy('hits', 'DESC')
-        ->get();
 
-    $title = $item['name'];
-    $tags = $item['seo_tags'];
-    $description = $item['description'];
-    $theSection = $section->toArray();
-    View::share('title', $title);
-    View::share('tags', $tags);
-    View::share('description', $description);
-    return view('resources.item', compact('html', 'related', 'title', 'theSection'));
+  public function articleInactive(Request $request)
+  {
+    return view('resources.inactive');
   }
   public function backToBilling(Request $request)
   {
