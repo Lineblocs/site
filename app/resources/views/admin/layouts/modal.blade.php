@@ -39,7 +39,12 @@
                 @else
                 var back = null;
                 @endif
-            $('textarea').summernote({height: 250});
+            $('textarea').each(function() {
+                if ( $(this).hasClass('no-editor-enhancements') ) {
+                    return;
+                }
+                $(this).summernote({height: 250});
+            });
             $('form').submit(function (event) {
                 event.preventDefault();
                 var form = $(this);

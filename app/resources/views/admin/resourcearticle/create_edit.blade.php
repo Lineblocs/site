@@ -61,10 +61,11 @@
                     </div>
                 </div>
 
+
                 <div class="form-group  {{ $errors->has('content') ? 'has-error' : '' }}">
                     {!! Form::label('content', trans("admin/resourcearticles.content"), array('class' => 'control-label')) !!}
                     <div class="controls">
-                        {!! Form::textarea('content', null, array('class' => 'form-control')) !!}
+                        {!! Form::textarea('content', null, array('class' => 'form-control no-editor-enhancements')) !!}
                         <span class="help-block">{{ $errors->first('content', ':message') }}</span>
                     </div>
                 </div>
