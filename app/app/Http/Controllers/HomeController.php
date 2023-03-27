@@ -9,6 +9,7 @@ use App\SIPRegion;
 use App\SystemStatusCategory;
 use App\SystemStatusUpdate;
 use App\User;
+use App\Faq;
 use DB;
 use View;
 use Illuminate\Http\Request;
@@ -286,7 +287,8 @@ class HomeController extends BaseController {
   }
   public function faqs(Request $request)
   {
-    return view('pages.faqs');
+    $faqs = Faq::all();
+    return view('pages.faqs', compact('faqs'));
   }
   public function ucaas(Request $request)
   {

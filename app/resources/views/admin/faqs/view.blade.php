@@ -45,6 +45,14 @@ $(document).ready(function() {
         input.attr("type", type);
         return input;
     }
+    function addFieldTextarea(key, count, placeholder) {
+        var input = $("<textarea class='form-control'/>")
+        var name = "faqs[" + count + "][" + key + "]";
+        input.attr("name", name);
+        input.attr("placeholder", placeholder);
+        return input;
+    }
+
     function addFAQItem( data ) {
         var faq_length = faqs.find("li.item").length;
         var item = $("<li class='item no-list-style'></li>")
@@ -52,7 +60,7 @@ $(document).ready(function() {
         if ( data && data['question'] ) {
             question.val( data['question'] );
         }
-        var answer = addField("answer", faq_length, "Answer");
+        var answer = addFieldTextarea("answer", faq_length, "Answer");
         if ( data && data['answer'] ) {
             answer.val( data['answer'] );
         }
