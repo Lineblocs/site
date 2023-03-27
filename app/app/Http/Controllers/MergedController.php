@@ -698,8 +698,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $user = $this->getUser($request);
     $data = $request->json()->all();
     $updateParams = [];
-    if (!empty($data['enable_2fad'])) {
-      $updateParams['enable_2fad'] = $data['enable_2fad'];
+    if (!empty($data['enable_2fa'])) {
+      $updateParams['enable_2fa'] = $data['enable_2fa'];
     }
     if (!empty($data['type_of_2fa'])) {
       $updateParams['type_of_2fa'] = $data['type_of_2fa'];
