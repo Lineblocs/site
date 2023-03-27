@@ -169,8 +169,8 @@ class ResourcesController extends BaseController {
   }
   public function sectionItem(Request $request, $section, $item)
   {
-    $article = ResourceArticle::where('key_name', '=', $item)->firstOrFail();
     $section =  ResourceSection::where('key_name', '=', $section)->firstOrFail();
+    $article = ResourceArticle::where('key_name', '=', $item)->where('section_id', $section->id)->firstOrFail();
 
     //$markdown = file_get_contents( base_path("/docs/$section/$item.md") );
     $markdown = (string) $article->content;
