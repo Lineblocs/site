@@ -39,7 +39,9 @@
         "hackzilla/password-generator": "dev-master",
         "messagebird/php-rest-api": "dev-master",
         "fideloper/proxy": "^3.3",
-        "sentry/sentry-laravel": "1.8.0"
+        "sentry/sentry-laravel": "1.8.0",
+        "spomky-labs/otphp": "v10.0.x-dev",
+        "bacon/bacon-qr-code": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

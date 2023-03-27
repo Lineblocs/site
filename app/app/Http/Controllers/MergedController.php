@@ -54,6 +54,12 @@ use App\WorkspaceInvite;
 use \Config;
 use Twilio\Rest\Client;
 use Twilio\TwiML\VoiceResponse;
+use OTPHP\TOTP;
+use OTPHP\TOTPInterface;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer as QRWriter;
 use App\UserCredit;
 use DateTime;
 use DateInterval;
@@ -688,5 +694,79 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     WorkspaceEvent::addEvent($workspace, 'PLAN_CANCELLED', $props);
   }
 
+  public function save2FASettings(Request $request) {
+    $user = $this->getUser($request);
+    $data = $request->json()->all();
+    $updateParams = [];
+    if (!empty($data['enable_2fad'])) {
+      $updateParams['enable_2fad'] = $data['enable_2fad'];
+    }
+    if (!empty($data['type_of_2fa'])) {
+      $updateParams['type_of_2fa'] = $data['type_of_2fa'];
+    }
+    $user->update($updateParams);
+    return $this->response->noContent();
+  }
 
+  public function get2FAConfig(Request $request) {
+    $user = $this->getUser($request);
+    $secret = $user->secret_code_2fa;
+    if ( empty( $secret )) {
+      $otp = TOTP::generate();
+      $secret = $otp->getSecret();
+      $user->update(['secret_code_2fa' => $secret]);
+    }
+    $otp = TOTP::createFromSecret($secret);
+    //render the QR code
+    $renderer = new ImageRenderer(
+        new RendererStyle(400),
+        new ImagickImageBackEnd()
+    );
+    $qrContents = $writer->writeString($secret);
+    $writer = new QRWriter($renderer);
+    $base64_data = base64_encode( $qrContents );
+
+    return $this->response->array([
+      'secret_code' => $secret,
+      'qrcode_base64' => $base64_data
+    ]);
+  }
+
+  public function request2FACode(Request $request) {
+    $user = $this->getUser($request);
+    if ( !$user->enable_2fa ) {
+      return $this->response->errorForbidden();
+    }
+    if ( !$user->type_of_2fa == 'totp') {
+      $otp = TOTP::createFromSecret($user->secret_code);
+      return $this->response->array([
+          'success' => true
+      ]);
+    } elseif ( !$user->type_of_2fa == 'sm') {
+      $from = '';
+      $to = $user->phone_number;
+      $body = sprintf("Your OTP is %d", $otp);
+      MainHelper::sendSMS($from, $to, $body);
+      return $this->response->array([
+          'success' => true
+      ]);
+    }
+    return $this->response->errorForbidden();
+  }
+
+  public function verify2FACode(Request $request) {
+    $user = $this->getUser($request);
+    if ( !$user->enable_2fa ) {
+      return $this->response->errorForbidden();
+    }
+    $data = $request->json()->all();
+    $input = $data['2fa_code'];
+    $otp = TOTP::createFromSecret($user->secret_code);
+    if ( $otp->verify($input) ) {
+      return $this->response->array([
+        'success' => TRUE
+      ]);
+    }
+    return $this->response->errorBadRequest();
+  }
 }
