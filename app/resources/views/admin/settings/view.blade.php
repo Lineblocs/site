@@ -197,7 +197,29 @@
                     <input id="apple_signin_client_secret" class="form-control" name="apple_signin_client_secret" value="{{$creds->apple_signin_client_secret}}" />
                 </div>
             </div>
+            <div class="row form-group">
+            <h1>Analytics keys</h1>
+</div>
+            <hr/>
 
+            <div class="row form-group">
+            <h3>Google script tag</h3>
+            </div>
+            <div class="row form-group">
+                <label for="google_analytics_script_tag">Google analytics tag</label>
+                <div class="controls">
+                    <textarea class="form-control" name="google_analytics_script_tag">{{$creds->google_analytics_script_tag}}</textarea>
+                </div>
+            </div>
+            <div class="row form-group">
+            <h3>Matomo tag</h3>
+            </div>
+            <div class="row form-group">
+                <label for="matomo_analytics_tag">Matomo analytics tag</label>
+                <div class="controls">
+                    <textarea class="form-control" name="matomo_script_tag">{{$creds->matomo_script_tag}}</textarea>
+                </div>
+            </div>
 
 
             <div class="row form-group">

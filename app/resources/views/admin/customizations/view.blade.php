@@ -255,8 +255,39 @@
                     </select>
                 </div>
             </div>
-
-
+            <div class="row form-group">
+                <label for="portal_analytics_enabled">Portal Analytics enabled</label>
+                <div class="controls">
+                    <select name="portal_analytics_enabled" class="form-control" id="portal_analytics_enabled">
+                        @if ( $record->portal_analytics_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="analytics_sdk">Analytics SDK</label>
+                <div class="controls">
+                    <select name="analytics_sdk" class="form-control" id="analytics_sdk">
+                        @if ( $record->analytics_sdk == 'google')
+                            <option value="google" selected>Google</option>
+                            <option value="matomo">Matomo</option>
+                        @elseif ( $record->analytics_sdk == 'matomo')
+                            <option value="google">Google</option>
+                            <option value="matomo" selected>Matomo</option>
+                        @else ( $record->analytics_sdk == 'matomo')
+                            <option value="google" selected>Google</option>
+                            <option value="matomo">Matomo</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
             <div class="row form-group">
                 <label for="custom_code_containers_enabled">Allow users to run custom code</label>
                 <small>note: this will create custom compute resources that allow users to compile and execute their custom code</small>

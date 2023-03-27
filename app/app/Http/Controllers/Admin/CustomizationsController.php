@@ -97,6 +97,13 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
 
+		$portal_analytics_enabled = false;
+
+		if ( $update_params['portal_analytics_enabled'] =='yes') {
+			$portal_analytics_enabled = true;
+		}
+		$update_params['portal_analytics_enabled'] = $portal_analytics_enabled;
+
 		$signup_pay_details_required = false;
 
 		if ( $update_params['signup_requires_payment_detail'] =='yes') {

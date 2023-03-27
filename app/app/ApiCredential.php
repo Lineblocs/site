@@ -23,6 +23,8 @@ class ApiCredential extends Model {
 'msft_signin_client_secret',
 'apple_signin_client_id',
 'apple_signin_client_secret',
+'google_analytics_script_tag',
+'matomo_script_tag',
     );
   }
 
