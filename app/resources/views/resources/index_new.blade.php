@@ -52,7 +52,7 @@
                                       <a href="/resources/quickstarts/basic-ivr">Setup a basic 3 option IVR</a>
                                   </li>
                                   <li>
-                                      <a href="/resources/quickstarts/recordings-and-voicemail">Add recordings/voicemail</a>
+                                      <a href="/resources/quickstarts/recordings-and-voicemail">Integrate recordings and voicemail</a>
                                   </li>
                                   <li>
                                       <a href="/resources/quickstarts/call-queues">Setup Call Queues</a>
