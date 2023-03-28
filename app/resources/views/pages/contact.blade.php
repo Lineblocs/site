@@ -3,7 +3,7 @@
 @section('content')
     <div class="contact-page">
         <section class="heading">
-            <h1>Contacts</h1>
+            <h1>Contact</h1>
             @if (Session::has('status'))
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
