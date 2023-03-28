@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-6 column">
                         <div class="phone">
-                            <p>The Lineblocs Team is here to help answer any questions you may have. Fill out the form or call us at:</p>
+                            <p>The {{\App\Helpers\MainHelper::getSiteName()}} Team is here to help answer any questions you may have. Fill out the form or call us at:</p>
                             <a href="tel:+1 888 980 9750">+1 888 980 9750</a>
                         </div>
 
