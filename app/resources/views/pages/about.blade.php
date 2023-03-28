@@ -7,8 +7,8 @@
       <div class="container">
         <div class="row">
           <div class="col-12 col-md-6 my-auto">
-            <h1>About Lineblocs</h1>
-            <p>The Lineblocs project was created as an alternative solution to existing cloud based unified communications. Our goal is to provide a highly customizable solution for calling, fax, IM, and video related needs.</p>
+            <h1>About {{\App\Helpers\MainHelper::getSiteName()}}</h1>
+            <p>The {{\App\Helpers\MainHelper::getSiteName()}} project was created as an alternative solution to existing cloud based unified communications. Our goal is to provide a highly customizable solution for calling, fax, IM, and video related needs.</p>
           </div>
           <div class="col-12 col-md-6 my-auto">
             <img src="/images/about-us.png" alt="" class="mobile-only img-fluid">

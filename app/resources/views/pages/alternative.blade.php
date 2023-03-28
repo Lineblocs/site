@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-12 col-md-7 my-auto">
           <h1>Best alternative to&nbsp;RingCentral</h1>
-          <p>Many customers rely on Lineblocs to make high quality voice calls, integrate IM solutions, and connect via video.</p>
+          <p>Many customers rely on {{\App\Helpers\MainHelper::getSiteName()}} to make high quality voice calls, integrate IM solutions, and connect via video.</p>
           <a href="#get-started" class="button btn primary-button bg-blue">Get started in 30 seconds</a>
           <a href="#get-started" class="button btn secondary-button">Talk To Our Sales Team</a>
         </div>
@@ -56,7 +56,7 @@
       <div class="container">
         <div class="row">
           <div class="col-12 heading">
-            <h2 class="text-left">Why Businesses <span>choose Lineblocs?</span></h2>
+            <h2 class="text-left">Why Businesses <span>choose {{\App\Helpers\MainHelper::getSiteName()}}?</span></h2>
           </div>
 
         </div>
@@ -74,7 +74,7 @@
               </div>
               <div class="row">
                 <div class="col-12 col-lg-10 offset-lg-2 content">
-                  <p>Get a highly customizable communications solution that supports all the features of a modern communications system. Lineblocs make it easy for your team to quickly deploy softphones, IVRs, and much more.</p>
+                  <p>Get a highly customizable communications solution that supports all the features of a modern communications system. {{\App\Helpers\MainHelper::getSiteName()}} make it easy for your team to quickly deploy softphones, IVRs, and much more.</p>
                 </div>
               </div>
             </div>
@@ -196,7 +196,7 @@
           <div class="col-12 col-md-6">
 
             <h2>Talk to us</h2>
-            <p>If you would like to learn more about Lineblocs, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and specific needs.</p>
+            <p>If you would like to learn more about {{\App\Helpers\MainHelper::getSiteName()}}, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and specific needs.</p>
 
             <form>
               <div class="row">
@@ -258,14 +258,14 @@
             <div class="card-header" id="heading1">
               <h2 class="mb-0">
                 <button class="btn btn-link pl-0" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                  What does it cost to create a Lineblocs account?
+                  What does it cost to create a {{\app\helpers\mainhelper::getsitename()}} account?
                 </button>
               </h2>
             </div>
 
             <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion">
               <div class="card-body">
-                Creating an account is free. However when you create a Lineblocs account you are only given a 10 day evaluation period – regardless of membership type – which covers basic calling, setting up extensions, and using the user portal.
+                Creating an account is free. However when you create a {{\App\Helpers\MainHelper::getSiteName()}} account you are only given a 10 day evaluation period – regardless of membership type – which covers basic calling, setting up extensions, and using the user portal.
               </div>
             </div>
           </div>
@@ -279,7 +279,7 @@
             </div>
             <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
               <div class="card-body">
-                At this time Lineblocs only offers services to valid residents based in North America.
+                At this time {{\App\Helpers\MainHelper::getSiteName()} only offers services to valid residents based in North America.
               </div>
             </div>
           </div>
@@ -287,13 +287,13 @@
             <div class="card-header" id="heading3">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                  Is Lineblocs a CPaaS?
+                  Is {{\App\Helpers\MainHelper::getSiteName()} a CPaaS?
                 </button>
               </h2>
             </div>
             <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
               <div class="card-body">
-                No Lineblocs is not not a CPaaS. However we do provide calling, fax, and IM related services
+                No {{\App\Helpers\MainHelper::getSiteName()} is not not a CPaaS. However we do provide calling, fax, and IM related services
               </div>
             </div>
           </div>
@@ -301,13 +301,13 @@
             <div class="card-header" id="heading4">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                  Can I port my phone number to Lineblocs?
+                  Can I port my phone number to {{\App\Helpers\MainHelper::getSiteName()}?
                 </button>
               </h2>
             </div>
             <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
               <div class="card-body">
-                Yes, you are able to port numbers to Lineblocs. You can learn more about porting numbers in the Porting Numbers guide.
+                Yes, you are able to port numbers to {{\App\Helpers\MainHelper::getSiteName()}. You can learn more about porting numbers in the Porting Numbers guide.
               </div>
             </div>
           </div>
@@ -315,7 +315,7 @@
             <div class="card-header" id="heading5">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                  Does lineblocs offer an API like Twilio or Plivo?
+                  Does {{\App\Helpers\MainHelper::getSiteName()} offer an API like Twilio or Plivo?
                 </button>
               </h2>
             </div>
@@ -329,13 +329,13 @@
             <div class="card-header" id="heading6">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                  Does Lineblocs offer toll free numbers?
+                  Does {{\App\Helpers\MainHelper::getSiteName()} offer toll free numbers?
                 </button>
               </h2>
             </div>
             <div id="collapse6" class="collapse" aria-labelledby="heading6" data-parent="#accordion">
               <div class="card-body">
-                Yes you can currently purchase toll free numbers in the Lineblocs dashboard.
+                Yes you can currently purchase toll free numbers in the {{\App\Helpers\MainHelper::getSiteName()} dashboard.
               </div>
             </div>
           </div>
@@ -343,13 +343,13 @@
             <div class="card-header" id="heading7">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                  Does Lineblocs offer SMS services?
+                  Does {{\App\Helpers\MainHelper::getSiteName()} offer SMS services?
                 </button>
               </h2>
             </div>
             <div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion">
               <div class="card-body">
-                No we do not currently have any SMS service. Lineblocs currently only supports voice, fax, and IM.
+                No we do not currently have any SMS service. {{\App\Helpers\MainHelper::getSiteName()} currently only supports voice, fax, and IM.
               </div>
             </div>
           </div>
@@ -367,12 +367,12 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-6">
-          <a href="https://www.trustpilot.com/evaluate/lineblocs.com" target="_blank" title="Lineblocs on Trustpilot">
+          <a href="https://www.trustpilot.com/evaluate/{{\App\Helpers\MainHelper::getSiteName()}.com" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()} on Trustpilot">
             <img src="/images/trustpilot_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
         <div class="col-12 col-md-6">
-          <a href="https://www.g2.com/products/lineblocs/reviews" target="_blank" title="Lineblocs on G2Crowd">
+          <a href="https://www.g2.com/products/{{\App\Helpers\MainHelper::getSiteName()}/reviews" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()} on G2Crowd">
             <img src="/images/g2crowd_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>

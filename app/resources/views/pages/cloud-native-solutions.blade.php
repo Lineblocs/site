@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12 col-md-7 my-auto">
                     <h1 class="text-left">Cloud Native Solution</h1>
-                    <p>Many customers rely on Lineblocs to make high quality voice calls, integrate IM solutions, and connect via video</p>
+                    <p>Many customers rely on {{\App\Helpers\MainHelper::getSiteName()} to make high quality voice calls, integrate IM solutions, and connect via video</p>
                     <a href="#get-started" class="button btn primary-button bg-light-blue">Get started now</a>
                 </div>
                 <div class="col-12 col-md-5 my-auto">
@@ -158,7 +158,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12 heading">
-                        <h2 class="text-left">Why Businesses <span>choose Lineblocs?</span></h2>
+                        <h2 class="text-left">Why Businesses <span>choose {{\App\Helpers\MainHelper::getSiteName()}?</span></h2>
                     </div>
 
                 </div>
@@ -176,7 +176,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-lg-10 offset-lg-2 content">
-                                    <p>Get a highly customizable communications solution that supports all the features of a modern communications system. Lineblocs make it easy for your team to quickly deploy softphones, IVRs, and much more.</p>
+                                    <p>Get a highly customizable communications solution that supports all the features of a modern communications system. {{\App\Helpers\MainHelper::getSiteName()} make it easy for your team to quickly deploy softphones, IVRs, and much more.</p>
                                 </div>
                             </div>
                         </div>
@@ -370,7 +370,7 @@
                     <td><img src="/images/Check.png"/></td>
                 </tr>
                 <tr>
-                    <td>Lineblocs VPN</td>
+                    <td>{{\App\Helpers\MainHelper::getSiteName()} VPN</td>
                     <td><img src="/images/ex.png"/></td>
                     <td><img src="/images/ex.png"/></td>
                     <td><img src="/images/ex.png"/></td>

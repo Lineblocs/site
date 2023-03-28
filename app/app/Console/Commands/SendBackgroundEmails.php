@@ -10,6 +10,7 @@ use App\User;
 use App\UsageTrigger;
 use App\UsageTriggerResult;
 use App\UserCredit;
+use App\Helpers\MainHelper;
 
 class SendBackgroundEmails extends Command
 {
@@ -58,7 +59,9 @@ class SendBackgroundEmails extends Command
             ];
             Mail::send('emails.inactive_user', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);
-                $message->subject("Your Lineblocs.com account");
+                $site = MainHelper::getSiteName();
+                $subject = sprintf("Your %s account", $site);
+                $message->subject($subject);
                 $from = $mail['from'];
                 $message->from($from['address'], $from['name']);
             });
