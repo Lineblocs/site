@@ -712,18 +712,18 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $user = $this->getUser($request);
     $secret = $user->secret_code_2fa;
     if ( empty( $secret )) {
-      $otp = TOTP::generate();
+      $otp = TOTP::create();
       $secret = $otp->getSecret();
       $user->update(['secret_code_2fa' => $secret]);
     }
-    $otp = TOTP::createFromSecret($secret);
+    $otp = TOTP::create($secret);
     //render the QR code
     $renderer = new ImageRenderer(
         new RendererStyle(400),
         new ImagickImageBackEnd()
     );
-    $qrContents = $writer->writeString($secret);
     $writer = new QRWriter($renderer);
+    $qrContents = $writer->writeString($secret);
     $base64_data = base64_encode( $qrContents );
 
     return $this->response->array([
@@ -738,7 +738,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->errorForbidden();
     }
     if ( !$user->type_of_2fa == 'totp') {
-      $otp = TOTP::createFromSecret($user->secret_code);
+      $otp = TOTP::create($user->secret_code_2fa);
       return $this->response->array([
           'success' => true
       ]);
@@ -761,7 +761,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     }
     $data = $request->json()->all();
     $input = $data['2fa_code'];
-    $otp = TOTP::createFromSecret($user->secret_code);
+    $otp = TOTP::create($user->secret_code_2fa);
     if ( $otp->verify($input) ) {
       return $this->response->array([
         'success' => TRUE
