@@ -178,7 +178,7 @@ td[class="CtaText"] {
 
                                     <tr>
                                       <td valign="middle" align="center" style="">
-                                          <a href="https://lineblocs.com/" target="_blank" >
+                                          <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank" >
                                               <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" alt="" title="" width="207" height="46" style="display:block;" border="0" />
                                           </a>
                                       </td>
@@ -241,7 +241,7 @@ td[class="CtaText"] {
                                    <tr>
                                        <td style="font-family: 'Roboto', Arial, Helvetica, sans-serif; font-size: 14px; text-align: center; color: #0a1247; line-height: 30px; font-weight: bold;" align="center">
                                 Questions? <br />
-                                Reply to this email or get in touch with us at <a href="#" style="color: #3f51b5; font-weight: bold; text-decoration: none;">support@lineblocs.com</a>
+                                Reply to this email or get in touch with us at <a href="#" style="color: #3f51b5; font-weight: bold; text-decoration: none;"> {{\App\Helpers\MainHelper::createEmail('support')}}</a>
 
                                 </td>
                                    </tr>

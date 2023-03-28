@@ -71,7 +71,7 @@
                                 <a class="nav-link" href="/resources">Resources</a>
                             </li>
                             <li class="nav-item">
-                                <a href="https://app.lineblocs.com/#/register">
+                                <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/register')}}">
                                     @if (isset($header_cls))
                                         <button type="button" class="nav__btn">Login</button>
                                     @else
@@ -92,7 +92,7 @@
                             </div>
                             <div class="row rights">
                                 <div class="col">
-                                    <p>© 1999-2021 LineBlocs.com. All rights reserved. </p>
+                                    <p>© 1999-2021 {{\App\Helpers\MainHelper::getSiteName()}}. All rights reserved. </p>
                                 </div>
 
                             </div>
@@ -129,7 +129,7 @@
                     </div>
                 </div>
             </div>
-           <p>© 1999-2021 LineBlocs.com. All rights reserved. </p>
+           <p>© 1999-2021 {{\App\Helpers\MainHelper::getSiteName()}}. All rights reserved. </p>
         </footer>
         @yield('scripts')
             <!-- Twitter universal website tag code -->

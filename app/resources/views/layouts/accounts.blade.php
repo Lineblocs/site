@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="/css/materialize.css">
-  <link type="text/css" href="https://app.lineblocs.com/styles/app.min.css" rel="stylesheet" />
+  <link type="text/css" href="{{\App\Helpers\MainHelper::createAppUrl('/styles/app.min.css')}}" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap" rel="stylesheet">
 
   <!-- Compiled and minified JavaScript -->
@@ -51,14 +51,14 @@
 
   <div class="login-page">
     <div class="logo">
-    <a href="https://lineblocs.com/">
-      <img src="https://app.lineblocs.com/images/logo-blue-small.png">
+    <a href="{{\App\Helpers\MainHelper::createUrl()}}">
+      <img src="{{\App\Helpers\MainHelper::createAppUrl('/images/logo-blue-small.png')}}">
     </a>
 
                 <div class="dont-show" id="loading">
                     <h5>Please wait..</h5>
                     <br/>
-                    <img src="https://app.lineblocs.com/spinner.gif" width="64"/>
+                    <img src="{{\App\Helpers\MainHelper::createAppUrl('/spinner.gif')}}" width="64"/>
                 </div>
     </div>
 

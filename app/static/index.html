@@ -61,7 +61,7 @@
                                 <a href="/resources">Resources</a>
                             </li>
                             <li>
-                              <a href="https://app.lineblocs.com/#/login"><button type="submit" class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
+                              <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/login')}}" ><button type="submit" class="btn-custom service-btn top-login-btn"><span>Login</span></button></a>
                             </li>
                         </ul>
                     </div>
@@ -76,7 +76,7 @@
             <h1 class="heading">Your Line</h1>
             <p class="desc">LineBlocs is a fully customizable cloud phone system for productive teams.</p>
 
-            <a href="https://app.lineblocs.com/#/register">
+            <a href = "{{\App\Helpers\MainHelper::createAppUrl('/#/register')}}" >
                 <div class="btn-custom">
                     <span>Get started in 30 seconds</span>
                     <svg width="20px" height="20px" viewBox="0 0 30 20" version="1.1">

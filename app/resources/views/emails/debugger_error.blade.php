@@ -1,4 +1,4 @@
-<h2>Lineblocs.com debugger error occured</h2>
+<h2>{{\App\Helpers\MainHelper::getSiteName()}} debugger error occured</h2>
 
 <div>
     <h5>Hello {{$creator->getName()}},</h5>

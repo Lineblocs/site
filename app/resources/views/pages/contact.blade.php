@@ -27,7 +27,7 @@
                         </div>
                         <div class="email">
                             <span>E-mail</span>
-                            <a href="mailto:sales@lineblocs.com">sales@lineblocs.com</a>
+                            <a href="mailto:{{\App\Helpers\MainHelper::createEmail('sales')}}">{{\App\Helpers\MainHelper::createEmail('sales')}}</a>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6 contact-form column">

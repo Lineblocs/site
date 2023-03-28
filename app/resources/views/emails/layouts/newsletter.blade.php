@@ -187,7 +187,7 @@ td[class="CtaText"] {
 
                                     <tr>
                                       <td valign="middle" align="left" style="">
-                                          <a href="https://lineblocs.com/" target="_blank" >
+                                          <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank" >
                                               <img src="images/logo.png" alt="" title="" width="207" height="46" style="display:block;" border="0" />
                                           </a>
                                       </td>
@@ -231,7 +231,7 @@ td[class="CtaText"] {
                    <table align="center" border="0" cellspacing="0" cellpadding="0" width="100%">
 
                         <tr>
-                            <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:20px; line-height:22px; color:#ffffff; font-weight: bold; mso-line-height-rule:exactly;" valign="middle">@Lineblocs.com</td>
+                            <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:20px; line-height:22px; color:#ffffff; font-weight: bold; mso-line-height-rule:exactly;" valign="middle">@{{\App\Helpers\MainHelper::getSiteName()}}</td>
                             <td valign="middle"><table align="right" border="0" cellspacing="0" cellpadding="0">
                     <tr>
 

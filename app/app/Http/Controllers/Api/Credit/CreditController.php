@@ -117,10 +117,11 @@ class CreditController extends HasStripeController {
         // A transaction defines the contract of a
         // payment - what is the payment for and who
         // is fulfilling it. 
+        $site =MainHelper::getSiteName();
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($itemList)
-            ->setDescription("Credits purchase for LineBlocs.com")
+            ->setDescription("Credits purchase for " . $site)
             ->setInvoiceNumber(uniqid());
 
         // ### Redirect urls

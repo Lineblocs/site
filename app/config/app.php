@@ -28,9 +28,13 @@ return [
     */
 
     'deployment_domain' => env('DEPLOYMENT_DOMAIN'),
+
     'sip_base_domain' => env('DEPLOYMENT_DOMAIN'),
 
     'url' => sprintf("https://%s", env('DEPLOYMENT_DOMAIN')),
+
+
+    'site_name' => env('SITE_NAME'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

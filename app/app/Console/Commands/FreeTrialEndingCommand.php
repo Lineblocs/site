@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Mail;
 use App\User;
+use App\Helpers\MainHelper;
 use Config;
 
 class FreeTrialEndingCommand extends Command
@@ -52,7 +53,7 @@ class FreeTrialEndingCommand extends Command
             $data = [];
             Mail::send('emails.free_trial_expiring', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);
-                $message->subject("Lineblocs.com free trial expiring soon");
+                $subject = MainHelper::creatEmailSubject("free trial expiring soon");
                 $from = $mail['from'];
                 $message->from($from['address'], $from['name']);
             });

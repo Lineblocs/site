@@ -1,6 +1,7 @@
 <?php
+use App\Helpers\MainHelper;
+$default = MainHelper::createSubdomainUrl("s3fs", "/");
 
 return [
-  //'url' => 'http://mediafiles.lineblocs.com/'
-  'url' => env('MEDIAFILES_URL', 'https://s3fs.lineblocs.com/files/')
+  'url' => env('MEDIAFILES_URL', $default),
 ];

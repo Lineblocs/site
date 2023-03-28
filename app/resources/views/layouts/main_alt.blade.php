@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
 
   @if (isset($title))
-  <title>LineBlocs.com - {{$title}}</title>
+  <title>{{\App\Helpers\MainHelper::createTitle($title)}}</title>
   @else
-  <title>LineBlocs.com - Customizable Phone</title>
+  <title>{{\App\Helpers\MainHelper::createDefaultTitle($title)}}</title>
   @endif
   @if (isset($description))
   <meta name="description" content="{{$description}}">
@@ -181,7 +181,7 @@
             <a href="/resources">Resources</a>
           </li>
           <li>
-            <a href="https://app.lineblocs.com/#/login"><button type="submit"
+            <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/login')}}"><button type="submit"
                 class="btn-custom service-btn top-login-btn btn-top"><span>Login</span></button></a>
           </li>
         </ul>
@@ -205,7 +205,7 @@
           <hr>
           <br>
           <li>
-            <a href="https://app.lineblocs.com/#/register"><button type="submit"
+            <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/register')}}"><button type="submit"
                 class="btn-custom service-btn top-login-btn"><span>get started</span></button></a>
           </li>
         </ul>
@@ -253,7 +253,7 @@
       <div class="privacy">
         <div class="container max">
           <div class="privacy-content">
-            <p>© LineBlocs.com</p>
+            <p>© {{\App\Helpers\MainHelper::getSiteName()}}</p>
             <div class="social-media">
               <a href="https://www.facebook.com/lineblocs/"><img src="/images/facebook.png"></a>
               <a href="https://twitter.com/lineblocs"><img src="/images/twitter.png"></a>

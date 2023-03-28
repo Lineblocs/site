@@ -42,7 +42,8 @@ class LogController extends ApiAuthController {
         try {
           Mail::send('emails.debugger_error', $data, function ($message) use ($mail, $creator) {
               $message->to($creator->email);
-              $message->subject("Lineblocs.com - Debugger Error");
+              $subject =MainHelper::createEmailSubject("Debugger Error");
+              $message->subject($subject);
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });

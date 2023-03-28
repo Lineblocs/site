@@ -346,7 +346,7 @@ class MergedController extends ApiAuthController
     $workspace = $this->getWorkspace($request);
     $local_path = "/var/www/";
     //$remote_path = $workspace->provisionURL(); 
-    $remote_path = "prv.lineblocs.com";
+    $remote_path =MainHelper::createSubdomain("prv");
     $phones = Phone::where('workspace_id', $workspace->id)->where('needs_provisioning', '1')->count();
     return $this->response->array([
       'remote_path' => $remote_path,

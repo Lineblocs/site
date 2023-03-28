@@ -278,7 +278,7 @@ class RegisterController extends ApiAuthController
             'user' => $user,
             'link' => $link
           ];
-          $subject = "Lineblocs.com - Verify Your Email";
+          $subject =MainHelper::createEmailSubject("Verify Your Email");
           $result = EmailHelper::sendEmail($subject, $user->email, 'verify-email', $data);
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
@@ -302,7 +302,8 @@ class RegisterController extends ApiAuthController
           $data = [];
           Mail::send('emails.password_was_reset', $data, function ($message) use ($user, $mail) {
               $message->to($user->email);
-              $message->subject("Lineblocs.com - Password reset successfully");
+              $subject =MainHelper::createEmailSubject("Password reset successfully");
+              $message->subject($subject);
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });

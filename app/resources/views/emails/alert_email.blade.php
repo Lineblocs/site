@@ -188,7 +188,7 @@ td[class="CtaText"] {
 
                                     <tr>
                                       <td valign="middle" align="center" style="">
-                                          <a href="https://lineblocs.com/" target="_blank" >
+                                          <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank" >
                                               <img src="images/logo.png" alt="" title="" width="160" height="" style="display:block;" border="0" />
                                           </a>
                                       </td>

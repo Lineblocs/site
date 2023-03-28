@@ -1,4 +1,4 @@
-<h2>Lineblocs.com</h2>
+<h2>{{\App\Helpers\MainHelper::getSiteName()}}</h2>
 
 <div>
     <h5>Hello {{$user->getName()}},</h5>

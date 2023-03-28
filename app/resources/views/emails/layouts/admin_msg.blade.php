@@ -178,7 +178,7 @@ td[class="CtaText"] {
 
                                     <tr>
                                       <td valign="middle" align="center" style="">
-                                          <a href="https://lineblocs.com/" target="_blank" >
+                                          <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank" >
                                               <img src="images/logo.png" alt="" title="" width="207" height="46" style="display:block;" border="0" />
                                           </a>
                                       </td>
@@ -241,7 +241,7 @@ td[class="CtaText"] {
                         </tr>
                                    <tr>
                                        <td style="font-family: 'Roboto', Arial, Helvetica, sans-serif; font-size: 16px; text-align: center; color: #0a1247; line-height: 30px; font-weight: bold;" align="center">
-                                Questions? Mail us at our email  <a href="#" style="color: #3f51b5; font-weight: bold; text-decoration: none;">support@lineblocs.com</a>
+                                Questions? Mail us at our email  <a href="#" style="color: #3f51b5; font-weight: bold; text-decoration: none;">{{\App\Helpers\MainHelper::createEmail('support')}}</a>
 
                                 </td>
                                    </tr>
@@ -255,7 +255,7 @@ td[class="CtaText"] {
                                   <tr>
                                         <td valign="middle"><table align="center" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                              <td style="font-family:Arial, Helvetica, sans-serif; font-size:20px; line-height:22px; color:#0a1247; font-weight: bold; mso-line-height-rule:exactly;" valign="middle">@Lineblocs.com</td>
+                                              <td style="font-family:Arial, Helvetica, sans-serif; font-size:20px; line-height:22px; color:#0a1247; font-weight: bold; mso-line-height-rule:exactly;" valign="middle">@{{\App\Helpers\MainHelper::getSiteName()}}</td>
                                               <td valign="top" style="font-size:1px; line-height:1px;" width="15">&nbsp;</td>
                                               <td valign="top" style="font-size:1px; line-height:1px;" width="33"><a href="#" target="_blank"><img style="display:block;" src="images/facebook.png" width="33" height="33" alt="facebook" title="facebook" border="0" /></a></td>
                                               <td valign="top" style="font-size:1px; line-height:1px;" width="10">&nbsp;</td>

@@ -100,7 +100,8 @@ class PortNumberController extends ApiAuthController {
         $mailData = compact('user','workspace', 'number');
           Mail::send('emails.port_started', $mailData, function ($message) use ($user, $mail) {
               $message->to($user->email);
-              $message->subject("Lineblocs.com - Port Number Request Started");
+              $subject =MainHelper::createEmailSubject("Port Number Request Started");
+              $message->subject($subject);
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });
@@ -121,7 +122,8 @@ class PortNumberController extends ApiAuthController {
         }
           Mail::send('emails.port_updated', $data, function ($message) use ($user, $mail) {
               $message->to($user->email);
-              $message->subject("Lineblocs.com - Port Number Request Updated");
+              $subject =MainHelper::createEmailSubject("Port Number Request Updated");
+              $message->subject($subject);
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });

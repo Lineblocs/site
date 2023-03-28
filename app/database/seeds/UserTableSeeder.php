@@ -16,7 +16,7 @@ public function run()
   $admin = \App\User::create([
     'name' => 'Admin User',
     'username' => 'admin_user',
-    'email' => 'support@lineblocs.com',
+    'email' => '{{\App\Helpers\MainHelper::createEmail('support')}}',
     'password' => bcrypt('jY4xm8<9Hw6`yp/L'),
     'confirmed' => 1,
     'admin' => 1,

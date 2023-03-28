@@ -111,7 +111,7 @@ class AuthenticateController extends ApiAuthController
             ];
 
             $mail = Config::get('mail');
-            $subject = "Lineblocs.com - Unknown Device Login";
+            $subject =MainHelper::createEmailSubject("Unknown Device Login");
             $result = EmailHelper::sendEmail($currentUser->email, 'unknown_device_login', $data);
             /*
             Mail::send('emails.unknown_device_login', $data, function ($message) use ($currentUser, $mail) {

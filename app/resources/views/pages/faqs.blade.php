@@ -47,7 +47,7 @@
           @endforeach
         
     <p>
-      For more topics and support please view our <a href="https://lineblocs.com/resources">Resources</a> section
+      For more topics and support please view our <a href="{{\App\Helpers\MainHelper::createUrl('/resources')}}">Resources</a> section
     </p>
   </div>
 </div>

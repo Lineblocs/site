@@ -197,15 +197,4 @@ class ResourcesController extends BaseController {
   {
     return view('resources.inactive');
   }
-  public function backToBilling(Request $request)
-  {
-    return redirect("http://app.lineblocs.com/#/dashboard/billing?result=OK");
-  }
-  public function backToBillingCancel(Request $request)
-  {
-    return redirect("http://app.lineblocs.com/#/dashboard/billing?result=CANCEL");
-  }
-
-
-
 }

@@ -64,6 +64,9 @@ class HomeController extends BaseController {
   }
   public function rates(Request $request, $countryId)
   {
+
+    $outbound_csv =MainHelper::createUrl("/extra/outbound-call-rates.csv");
+    $inbound_csv =MainHelper::createUrl("/extra/inbound-call-rates.csv");
     $content = [
       'main' => [
         'heading' => 'Voice pricing',
@@ -76,8 +79,8 @@ class HomeController extends BaseController {
             'name' => 'United States'
           ],
           'voice' => [
-            'outbound_csv' => 'http://lineblocs.com/extra/outbound-call-rates.csv',
-            'inbound_csv' => 'http://lineblocs.com/extra/inbound-call-rates.csv',
+            'outbound_csv' => $outbound_csv,
+            'inbound_csv' => $inbound_csv,
             'all' => [
               'inbound_per_min' =>  '0.008',
               'outbound_per_min' =>  '0.008',
@@ -114,8 +117,8 @@ class HomeController extends BaseController {
             'name' => 'Canada'
           ],
           'voice' => [
-            'outbound_csv' => 'http://lineblocs.com/extra/outbound-call-rates.csv',
-            'inbound_csv' => 'http://lineblocs.com/extra/inbound-call-rates.csv',
+            'outbound_csv' => $outbound_csv,
+            'inbound_csv' => $inbound_csv,
             'all' => [
               'inbound_per_min' =>  '0.008',
               'outbound_per_min' =>  '0.008',
@@ -216,14 +219,18 @@ class HomeController extends BaseController {
     ];
     $config = Config::get("company_reps");
     Mail::send('emails.contact', $template, function ($m) use ($config, $template) {
-      $m->from('contact@lineblocs.com', 'Lineblocs Contact');
+      $from =MainHelper::createEmail('contact');
+      $site =MainHelper::getSiteName();
+      $m->from($from,$site);
 
       $m->to($config['contact']['email_address'], $config['contact']['email_name'])->subject('New Lineblocs contact');
       $m->cc([$template['email']]);
   });
     Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {
       $subject = 'Thanks for contacting us';
-      $m->from('contact@lineblocs.com', 'Lineblocs');
+      $from =MainHelper::createEmail('contact');
+      $site =MainHelper::getSiteName();
+      $m->from($from, $site);
       $name = sprintf("%s %s", $template['first_name'], $template['last_name']);
       $m->to($template['email'], $name)->subject($subject);
   });
@@ -239,15 +246,15 @@ class HomeController extends BaseController {
 
   public function login(Request $request)
   {
-    return redirect("http://app.lineblocs.com/#/login");
+    return redirect(mainhelper::createappurl("/#/login"));
   }
   public function backToBilling(Request $request)
   {
-    return redirect("http://app.lineblocs.com/#/dashboard/billing?result=OK");
+    return redirect(MainHelper::createAppUrl("/#/dashboard/billing?result=OK"));
   }
   public function backToBillingCancel(Request $request)
   {
-    return redirect("http://app.lineblocs.com/#/dashboard/billing?result=CANCEL");
+    return redirect(MainHelper::createAppUrl("/#/dashboard/billing?result=CANCEL"));
   }
   public function emailVerify(Request $request)
   {
@@ -256,7 +263,7 @@ class HomeController extends BaseController {
     $user->update([
       'email_verified' => TRUE
     ]) ;
-    return redirect("http://app.lineblocs.com/#/login?result=email-verified");
+    return redirect(MainHelper::createAppUrl("/#/login?result=email-verified"));
   }
   public function alternative_ringcentral(Request $request)
   {

@@ -728,9 +728,10 @@ final class MainHelper {
   }
   public static function makeDomainName($name, $region='') {
     if (!empty($region)) {
-         return sprintf("%s.%s.lineblocs.com", $name, $region);
+         $subdomain = $name.".".$region;
+         return self::createSubdomain($subdomain);
     }
-    return sprintf("%s.lineblocs.com", $name);
+    return self::createSubdomain($name);
   }
   public static function createJoinHash() {
     $hash = bin2hex(random_bytes(16));
@@ -813,10 +814,6 @@ final class MainHelper {
        $url = "http://localhost:9000/edit".$params;
        return $url;
     }
-    public static function createURL($path='') {
-
-      return sprintf("%s.pstn", $trunk_name);
-    }
     public static function createSIPTrunkTerminationURI($trunk_name) {
       return sprintf("%s.pstn", $trunk_name);
     }
@@ -848,6 +845,39 @@ final class MainHelper {
     public static function createResourceArticleUrl($article_key, $section_key) {
       return sprintf("https://%s/resources/%s/%s", \Config::get("app.deployment_domain"), $section_key, $article_key);
     }
+    public static function createUrl($path='') {
+      $domain = env('DEPLOYMENT_DOMAIN');
+      return sprintf("https://%s/%s", $domain, $path);
+    }
+    public static function createAppUrl($path) {
+      return self::createSubdomainUrl("app", $path);
+    }
+    public static function createSubdomainUrl($subdomain, $path) {
+      $subdomain  = self::createSubdomain($subdomain);
+      return sprintf("https://%s/%s", $subdomain,$path);
+    }
+    public static function createSubdomain($subdomain) {
+      $domain = env('DEPLOYMENT_DOMAIN');
+      return sprintf("%s.%s", $subdomain, $domain);
+    }
+    public static function createEmail($user) {
+      $domain = env('DEPLOYMENT_DOMAIN');
+      return sprintf("%s@%s", $user, $domain);
+    }
+    public static function getSiteName() {
+      return Config::get("app.site_name");
+    }
 
-
+    public static function createEmailSubject($subject) {
+      $site = self::getSiteName();
+      return sprintf("%s - %s", $site, $subject);
+    }
+    public static function createTitle($text) {
+      $site = self::getSiteName();
+      return sprintf("%s - %s", $site, $text);
+    }
+    public static function createDefaultTitle($text='Scalable phone system') {
+      $site = self::getSiteName();
+      return sprintf("%s - %s", $site, $text);
+    }
 }

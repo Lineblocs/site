@@ -22,7 +22,7 @@
 
                                 <tr>
                                     <td align="left" valign="top" style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:14px;line-height:23px;color:#252f5a; text-align: center;">
-You can make use of voicemail in your call flows and also view recordings in your lineblocs.com dashboard. in this guide we will go over how to setup a DID number for voicemail and how to view manage recordings in your lineblocs account.
+You can make use of voicemail in your call flows and also view recordings in your {{\App\Helpers\MainHelper::getSiteName()}} dashboard. in this guide we will go over how to setup a DID number for voicemail and how to view manage recordings in your lineblocs account.
                                     </td>
                                 </tr>    
                                 <tr>

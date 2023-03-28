@@ -2,8 +2,8 @@
 
 return [
     'contact' => [
-        'email_address' => 'contact@lineblocs.com',
-        'email_name' => 'Lineblocs Support'
+        'email_address' => 'contact@example.org',
+        'email_name' => 'Example'
     ]
 
 ];

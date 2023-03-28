@@ -21,7 +21,7 @@ class Workspace extends Model {
       return $array;
       }
   public function makeDomainName($region='') {
-    return sprintf("%s.lineblocs.com", $this->name);
+    return MainHelper::createSubdomain($this->name);
   }
 
   public function toArrayWithRoles(User $user) {
@@ -31,10 +31,11 @@ class Workspace extends Model {
       return $array;
   }
   public function provisionURL() {
-    return sprintf("%s.prv.lineblocs.com", $this->name);
+    $subdomain = $this->name.".prv";
+    return MainHelper::createSubdomain($subdomain);
   }
   public function sipURL() {
-    return sprintf("%s.lineblocs.com", $this->name);
+    return MainHelper::createSubdomain($this->name);
   }
   public function getPlanInfo() {
     $plans = \Config::get("service_plans");

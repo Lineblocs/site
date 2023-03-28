@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'info@lineblocs.com', 'name' => 'LineBlocs.com'],
+    'from' => ['address' => 'info@example.org', 'name' => 'Example.org'],
 
     /*
     |--------------------------------------------------------------------------

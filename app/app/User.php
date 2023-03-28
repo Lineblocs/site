@@ -111,7 +111,7 @@ class User extends Model implements AuthenticatableContract,
     }
     public function getSIPURL() {
       //return sprintf("%s:%s", $this->ip_address, $this->sip_port);
-      return sprintf("%s.lineblocs.com", $this->container_name);
+      return MainHelper::createSubdomainUrl($this->container_name, "");
     }
     public function canBuyNumber($workspace, $user, $number, $cost) {
       $limit = MainHelper::checkLimit($workspace, $user, "numbers");
@@ -149,8 +149,7 @@ class User extends Model implements AuthenticatableContract,
         if (isset($headers['X-Workspace-ID'])) {
           $id = $headers['X-Workspace-ID'];
           $workspace = Workspace::find($id);
-          $domain = sprintf("%s.lineblocs.com", $workspace->name);
-
+          $domain = MainHelper::createSubdomain($workspace->name);
           $array['sip_url'] = $domain;
           $array['domain'] = $domain;
         }
