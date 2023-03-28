@@ -46,15 +46,12 @@
           @endif
           @endforeach
         
-    </ul>
     <p>
       For more topics and support please view our <a href="https://lineblocs.com/resources">Resources</a> section
     </p>
-
-
-
   </div>
-</div>--}}
+</div>
+</div>
 @endsection
 @section('scripts')
 <script>
