@@ -284,7 +284,8 @@ ul:not(.browser-default) {
 .collection .collection-item {
     background-color: #fff;
     line-height: 1.5rem;
-    padding: 10px 20px;
+    list-style: none !important;
+    padding: 10px 0px;
     margin: 0;
     border-bottom: 1px solid #e0e0e0;
 }

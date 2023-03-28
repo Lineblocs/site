@@ -94,6 +94,9 @@
   font-size: 12px;
 }
 
+.pricing .collection {
+  margin: 0;
+}
 .pricing .collection,
 .pricing .collection-item {
   border: none;
@@ -105,7 +108,7 @@
   font-weight: 300;
   font-size: 16px;
   line-height: 19.2px;
-  list-style-type: initial !important;
+  /*list-style-type: initial !important;*/
   position: relative;
   padding-left: 30px;
 }

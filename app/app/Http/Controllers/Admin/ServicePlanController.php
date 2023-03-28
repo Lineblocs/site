@@ -103,6 +103,7 @@ class ServicePlanController extends AdminController
             $this->createFeatureOption('featured_plan'),
             $this->createFeatureOption('pay_as_you_go'),
             $this->createFeatureOption('registration_plan'),
+            $this->createFeatureOption('include_in_pricing_pages'),
         ];
     }
     /**
@@ -127,7 +128,7 @@ class ServicePlanController extends AdminController
 
     public function delete(ServicePlan $serviceplan)
     {
-        return view('admin.serviceplan.delete', compact('plan'));
+        return view('admin.serviceplan.delete', compact('serviceplan'));
     }
 
     /**

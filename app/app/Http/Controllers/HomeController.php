@@ -9,6 +9,7 @@ use App\SIPRegion;
 use App\SystemStatusCategory;
 use App\SystemStatusUpdate;
 use App\User;
+use App\ServicePlan;
 use App\Faq;
 use DB;
 use View;
@@ -50,7 +51,11 @@ class HomeController extends BaseController {
   }
   public function pricing(Request $request)
   {
-    return view('pages.pricing', []);
+    $plans = ServicePlan::where('include_in_pricing_pages', '1')->get();
+    $plans = ServicePlan::sortPlansByFeatures($plans);
+    return view('pages.pricing', [
+      'plans' => $plans
+    ]);
   }
 
   public function rates1(Request $request)
