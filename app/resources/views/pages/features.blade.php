@@ -66,7 +66,7 @@
                         
                         <div class="col-12 col-lg-6 my-auto">
                             <h2 class="text-left">Overcome Challenges with existing on-premise calling solutions</h2>
-                            <p>Designed using the best technologies, {{\App\Helpers\MainHelper::getSiteName()} offers features that can help you create a calling, fax, and IM environment that can easily scale.</p>
+                            <p>Designed using the best technologies, {{\App\Helpers\MainHelper::getSiteName()}} offers features that can help you create a calling, fax, and IM environment that can easily scale.</p>
                             <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/register')}}"  class="button btn primary-button bg-blue">Create account</a>
                         </div>
                         <div class="col-12 col-lg-6 my-auto desktop-images">

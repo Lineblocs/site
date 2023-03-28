@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-12">
                 <h1>Resources</h1>
-                <p class="text-center">Everything you need to get the most out of your {{\App\Helpers\MainHelper::getSiteName()} solution</p>
+                <p class="text-center">Everything you need to get the most out of your {{\App\Helpers\MainHelper::getSiteName()}} solution</p>
             </div>
 
         </div>
@@ -192,7 +192,7 @@
                                   </div>
                                   <div class="col-9 col-sm-10 col-md-12">
                                       <p>Open Source</p>
-                                      <p class="muted">How to install and setup the {{\App\Helpers\MainHelper::getSiteName()} open source edition.</p>
+                                      <p class="muted">How to install and setup the {{\App\Helpers\MainHelper::getSiteName()}} open source edition.</p>
                                   </div>
                               </div>
 

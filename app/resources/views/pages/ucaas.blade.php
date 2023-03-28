@@ -14,7 +14,7 @@
           <div class="card-stacked min">
             <div class="card-content">
               <h3>Fully Featured</h3>
-              <p>the {{\App\Helpers\MainHelper::getSiteName()} solution supports all the features of a modern communications system. our supported
+              <p>the {{\App\Helpers\MainHelper::getSiteName()}} solution supports all the features of a modern communications system. our supported
                 features include: call transfers, IVRs, find me, voicemail and more..</p>
             </div>
           </div>
@@ -54,7 +54,7 @@
   <div class="container">
     <div class="row">
       <div class="col s8">
-        <h2>Why {{\App\Helpers\MainHelper::getSiteName()} ?</h2>
+        <h2>Why {{\App\Helpers\MainHelper::getSiteName()}} ?</h2>
         <p>
           our solution is designed from bottom up using best technologies our cloud portal is here to help you make and
           receive

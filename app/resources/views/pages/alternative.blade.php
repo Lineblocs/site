@@ -279,7 +279,7 @@
             </div>
             <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
               <div class="card-body">
-                At this time {{\App\Helpers\MainHelper::getSiteName()} only offers services to valid residents based in North America.
+                At this time {{\App\Helpers\MainHelper::getSiteName()}} only offers services to valid residents based in North America.
               </div>
             </div>
           </div>
@@ -287,13 +287,13 @@
             <div class="card-header" id="heading3">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                  Is {{\App\Helpers\MainHelper::getSiteName()} a CPaaS?
+                  Is {{\App\Helpers\MainHelper::getSiteName()}} a CPaaS?
                 </button>
               </h2>
             </div>
             <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
               <div class="card-body">
-                No {{\App\Helpers\MainHelper::getSiteName()} is not not a CPaaS. However we do provide calling, fax, and IM related services
+                No {{\App\Helpers\MainHelper::getSiteName()}} is not not a CPaaS. However we do provide calling, fax, and IM related services
               </div>
             </div>
           </div>
@@ -315,7 +315,7 @@
             <div class="card-header" id="heading5">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                  Does {{\App\Helpers\MainHelper::getSiteName()} offer an API like Twilio or Plivo?
+                  Does {{\App\Helpers\MainHelper::getSiteName()}} offer an API like Twilio or Plivo?
                 </button>
               </h2>
             </div>
@@ -329,13 +329,13 @@
             <div class="card-header" id="heading6">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                  Does {{\App\Helpers\MainHelper::getSiteName()} offer toll free numbers?
+                  Does {{\App\Helpers\MainHelper::getSiteName()}} offer toll free numbers?
                 </button>
               </h2>
             </div>
             <div id="collapse6" class="collapse" aria-labelledby="heading6" data-parent="#accordion">
               <div class="card-body">
-                Yes you can currently purchase toll free numbers in the {{\App\Helpers\MainHelper::getSiteName()} dashboard.
+                Yes you can currently purchase toll free numbers in the {{\App\Helpers\MainHelper::getSiteName()}} dashboard.
               </div>
             </div>
           </div>
@@ -343,13 +343,13 @@
             <div class="card-header" id="heading7">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                  Does {{\App\Helpers\MainHelper::getSiteName()} offer SMS services?
+                  Does {{\App\Helpers\MainHelper::getSiteName()}} offer SMS services?
                 </button>
               </h2>
             </div>
             <div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion">
               <div class="card-body">
-                No we do not currently have any SMS service. {{\App\Helpers\MainHelper::getSiteName()} currently only supports voice, fax, and IM.
+                No we do not currently have any SMS service. {{\App\Helpers\MainHelper::getSiteName()}} currently only supports voice, fax, and IM.
               </div>
             </div>
           </div>
@@ -367,12 +367,12 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-6">
-          <a href="https://www.trustpilot.com/evaluate/{{\App\Helpers\MainHelper::getSiteName()}.com" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()} on Trustpilot">
+          <a href="https://www.trustpilot.com/evaluate/{{\App\Helpers\MainHelper::getSiteName()}.com" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()}} on Trustpilot">
             <img src="/images/trustpilot_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
         <div class="col-12 col-md-6">
-          <a href="https://www.g2.com/products/{{\App\Helpers\MainHelper::getSiteName()}/reviews" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()} on G2Crowd">
+          <a href="https://www.g2.com/products/{{\App\Helpers\MainHelper::getSiteName()}/reviews" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()}} on G2Crowd">
             <img src="/images/g2crowd_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
