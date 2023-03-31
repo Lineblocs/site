@@ -124,6 +124,12 @@ class AuthenticateController extends ApiAuthController
         }
         // add subdomain matching
         $workspace = Workspace::where('creator_id', '=', $currentUser->id)->first();
+        $enable2FA = $currentUser->enable_2fa;
+        if ( $enable2FA ) {
+            $result = ['enable_2fa' => $enable2FA, 'token' => null, 'workspace' => null];
+            return $this->response->array($result);
+        }
+
         $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace);
         return $this->response->array($result);
     }

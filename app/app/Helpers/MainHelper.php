@@ -564,6 +564,7 @@ final class MainHelper {
         $result = [
             'token' => MainHelper::createJWTPayload($token),
             'workspace' => $workspace->toArrayWithRoles($user),
+            'enable_2fa' => $user->enable_2fa,
             'isAdmin' => FALSE,
             'adminWorkspaceToken' => ''
             //'expire_in' => \Carbon\Carbon::now()->addMinutes(config('jwt.ttl'))->format('Y-m-d H:i:s')

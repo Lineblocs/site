@@ -31,6 +31,7 @@ use App\Phone;
 
 use App\PhoneGroup;
 use App\WorkspaceUser;
+use Auth;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiController;
@@ -734,6 +735,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
   public function request2FACode(Request $request) {
     $user = $this->getUser($request);
+    $data = $request->json()->all();
+    $credentials = ['email'=>$user->email, 'password' => $data['password']];
+    $valid =Auth::attempt($credentials);
+    if ( !$valid ) {
+      return $this->response->errorForbidden();
+    }
+
     if ( !$user->enable_2fa ) {
       return $this->response->errorForbidden();
     }
@@ -756,6 +764,15 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
   public function verify2FACode(Request $request) {
     $user = $this->getUser($request);
+    $data = $request->json()->all();
+    $credentials = ['email'=>$user->email, 'password' => $data['password']];
+
+    $valid =Auth::attempt($credentials);
+    if ( !$valid ) {
+      return $this->response->errorForbidden();
+    }
+
+
     if ( !$user->enable_2fa ) {
       return $this->response->errorForbidden();
     }
