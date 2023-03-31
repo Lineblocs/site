@@ -398,6 +398,7 @@ $api->version('v1', function($api) {
   $api->get('admin/getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');
   $api->post('internalAppRedirect', '\App\Http\Controllers\MergedController@internalAppRedirect');
   $api->get('getAllSettings', '\App\Http\Controllers\MergedController@getAllSettings');
+  $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
   $api->post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
   $api->post('jwt/authenticatePublic', '\App\Http\Controllers\JWT\AuthenticateController@authenticatePublic');
   $api->get('jwt/heartbeat', '\App\Http\Controllers\JWT\AuthenticateController@heartbeat');

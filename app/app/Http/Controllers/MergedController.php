@@ -7,6 +7,7 @@ use App\Call;
 use App\UserCard;
 use App\UsageTrigger;
 use App\DIDNumber;
+use App\ServicePlan;
 use App\CallSystemTemplate;
 use App\Workspace;
 use App\WorkspaceEvent;
@@ -675,6 +676,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           'frontend_api_creds' => $apiCreds
         ];
         return $this->response->array($result);
+      }
+
+  public function getServicePlans(Request $request) {
+      $plans = ServicePlan::all();
+        return $this->response->array($plans->toArray());
       }
 
   public function search(Request $request) {
