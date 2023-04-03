@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Hash;
 use App\User;
 use App\Call;
 use App\UserCard;
@@ -740,27 +741,29 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
 
   public function request2FACode(Request $request) {
-    $user = $this->getUser($request);
-    $data = $request->json()->all();
-    $credentials = ['email'=>$user->email, 'password' => $data['password']];
-    $valid =Auth::attempt($credentials);
+    $email = $request->get('email');
+    $password = $request->get('password');
+    $credentials = ['email'=>$email, 'password' => $password];
+    $valid = Auth::attempt($credentials);
     if ( !$valid ) {
       return $this->response->errorForbidden();
     }
+    $user = Auth::getUser();
+    $data = $request->json()->all();
 
     if ( !$user->enable_2fa ) {
       return $this->response->errorForbidden();
     }
-    if ( !$user->type_of_2fa == 'totp') {
+    if ( $user->type_of_2fa == 'totp') {
       $otp = TOTP::create($user->secret_code_2fa);
       return $this->response->array([
           'success' => true
       ]);
-    } elseif ( !$user->type_of_2fa == 'sm') {
+    } elseif ( $user->type_of_2fa == 'sms') {
       $from = '';
       $to = $user->phone_number;
       $body = sprintf("Your OTP is %d", $otp);
-      MainHelper::sendSMS($from, $to, $body);
+      //MainHelper::sendSMS($from, $to, $body);
       return $this->response->array([
           'success' => true
       ]);
@@ -769,15 +772,15 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
 
   public function verify2FACode(Request $request) {
-    $user = $this->getUser($request);
     $data = $request->json()->all();
-    $credentials = ['email'=>$user->email, 'password' => $data['password']];
+    $credentials = ['email'=>$data['email'], 'password' => $data['password']];
 
     $valid =Auth::attempt($credentials);
     if ( !$valid ) {
       return $this->response->errorForbidden();
     }
 
+    $user = Auth::getUser();
 
     if ( !$user->enable_2fa ) {
       return $this->response->errorForbidden();
@@ -790,6 +793,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         'success' => TRUE
       ]);
     }
-    return $this->response->errorBadRequest();
+    return $this->response->array([
+      'success' => FALSE
+    ]);
   }
 }
