@@ -38,7 +38,8 @@ class User extends Model implements AuthenticatableContract,
       "ip_whitelist_disabled" => "boolean",
       "invoices_by_email" => "boolean",
       "admin" => "boolean",
-      "free_trial_started" => "date"
+      "free_trial_started" => "date",
+      "enable_2fa" => "boolean"
     );
 
     public function getBillingInfo() {
