@@ -255,6 +255,30 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row form-group">
+                <label for="payments_enabled">Billing retry enabled</label>
+                <div class="controls">
+                    <select name="billing_retry_enabled" class="form-control" id="billing_retry_enabled">
+                        @if ( $record->billing_retry_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="billing_retry_enabled">Billing retry attempts</label>
+                <div class="controls">
+                    <input name="billing_num_retries" class="form-control" id="billing_num_retries" value="{{$record->billing_num_retries}}"></input>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="portal_analytics_enabled">Portal Analytics enabled</label>
                 <div class="controls">

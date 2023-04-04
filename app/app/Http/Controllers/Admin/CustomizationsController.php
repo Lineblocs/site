@@ -97,6 +97,13 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
 
+		$billing_retry_enabled = false;
+
+		if ( $update_params['billing_retry_enabled'] =='yes') {
+			$billing_retry_enabled = true;
+		}
+		$update_params['billing_retry_enabled'] = $billing_retry_enabled;
+
 		$portal_analytics_enabled = false;
 
 		if ( $update_params['portal_analytics_enabled'] =='yes') {
