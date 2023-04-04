@@ -788,8 +788,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $data = $request->json()->all();
     $input = $data['2fa_code'];
     $otp = TOTP::create($user->secret_code_2fa);
-    //if ( $otp->verify($input) ) {
-    if ( TRUE ) {
+    if ( $otp->verify($input) ) {
       $token = JWTAuth::attempt($credentials);
       $workspace = $user->getDefaultWorkspace();
       $loginData = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
