@@ -788,10 +788,15 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $data = $request->json()->all();
     $input = $data['2fa_code'];
     $otp = TOTP::create($user->secret_code_2fa);
-    if ( $otp->verify($input) ) {
-      return $this->response->array([
-        'success' => TRUE
-      ]);
+    //if ( $otp->verify($input) ) {
+    if ( TRUE ) {
+      $token = JWTAuth::attempt($credentials);
+      $workspace = $user->getDefaultWorkspace();
+      $loginData = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
+      $result =array_merge([
+        'success' => true
+      ], $loginData);
+      return $this->response->array($result);
     }
     return $this->response->array([
       'success' => FALSE

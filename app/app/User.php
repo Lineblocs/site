@@ -14,6 +14,7 @@ use App\UserDebit;
 use App\UserInvoice;
 use App\Recording;
 use App\Workspace;
+use App\WorkspaceUser;
 use DateTime;
 use DateInterval;
 use NumberFormatter;
@@ -188,5 +189,23 @@ class User extends Model implements AuthenticatableContract,
 
   public static function getAdminRecord() {
     return User::where('admin', '1')->firstOrFail();
+  }
+  public function getDefaultWorkspace() {
+    $created = Workspace::where('creator_id', $this->id)->first();
+    if ( $created ) {
+      return $created;
+    }
+    $workspaces = Workspace::select(array('workspaces.*', 'workspaces_users.user_id'));
+    $workspaces->join('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id');
+    $workspaces->where('workspaces_users.user_id', $this->id);
+    $workspaces = $workspaces->get();
+    //TODO find better way to get the most relevant workspace.
+    // for now this just gets the first match
+    if ( count( $workspaces ) > 0) {
+      $workspace = $workspaces[0];
+      return $workspace;
+    }
+    // no workspace exists anymore ? try to look into this error
+    return NULL;
   }
 }
