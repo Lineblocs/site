@@ -254,8 +254,16 @@ public function del_ratecenter(Request $request, SIPCountry $country, SIPRegion 
 
         return Datatables::of($countrys)
             //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            // hide edit flow button for now
+            // reenable it when the module is fully tested
+            /*
             ->add_column('actions', '<a href="{{{ url(\'admin/country/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
             <a href="{{{ url(\'admin/country/\' . $id . \'/flow\' ) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit_flow") }}</a>
+                    <a href="{{{ url(\'admin/country/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
+            ->remove_column('id')
+            ->make();
+            */
+            ->add_column('actions', '<a href="{{{ url(\'admin/country/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/country/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
