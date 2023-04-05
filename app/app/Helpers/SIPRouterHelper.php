@@ -4,6 +4,7 @@ use \Config;
 use \Log;
 use \DB;
 use App\Helpers\MainHelper;
+use App\Helpers\WebSvcHelper;
 final class SIPRouterHelper {
   public static function request($url, $body) 
   {
@@ -84,8 +85,13 @@ final class SIPRouterHelper {
 
   public static function reloadRTPProxies() {
     // opensips-cli -x mi rtpproxy_reload
-
+    $service = "opensips:1042";
+    $path = "/reload_rtpproxies";
+    $method ="get";
+    $result = WebSvcHelper::request( $service, $path, $method );
+    return $result;
   }
+
   public static function addDomain($user, $domain) {
     $conn = DB::connection('mysql-opensips');
     $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
