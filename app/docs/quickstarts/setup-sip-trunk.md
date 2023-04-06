@@ -27,7 +27,7 @@ In order to setup a hosted SIP trunk correctly it is recommended that you fill i
 
 ### Updating the origination settings
 
-To update the origination settings, please click the ![origination tab](/img/frontend/docs/sip-trunks/origination.png) tab.
+To update the origination settings, please click the "Origination" tab.
 
 In the origination panel, you can configure a primary and secondary SIP server. These servers will be utilized when Lineblocs needs to send a call to your SIP trunk.
 
@@ -39,7 +39,7 @@ sip:mysipserver.example.org
 
 ### Termination
 
-To access the termination settings, please click the ![termination tab](/img/frontend/docs/sip-trunks/termination.png) tab.
+To access the termination settings, please click the "Termination" tab.
 
 On the termination tab you will find any relevant settings for SIP termination. You can configure any valid domain name here and use it with your SIP trunk. For example:
 
