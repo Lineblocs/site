@@ -680,8 +680,60 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
 
   public function getServicePlans(Request $request) {
-      $plans = ServicePlan::all();
-        return $this->response->array($plans->toArray());
+      $plans = ServicePlan::all()->toArray();
+      $features = [
+        'fax',
+        'im_integrations',
+        'productivity_integrations',
+        'voice_analytics',
+        'fraud_protection',
+        'crm_integrations',
+        'programmable_toolkit',
+        'sso',
+        'provisioner',
+        'vpn',
+        'multiple_sip_domains',
+        'bring_carrier',
+        'featured_plan',
+        'pay_as_you_go',
+        'registration_plan',
+      ];
+      $results = [];
+      foreach ( $plans as $cnt => $plan ) {
+        $plan_features = [];
+        foreach ($features as $feature) {
+          $plan_features[] = [
+            'key' => $feature,
+            'value' =>$plan[$feature],
+            'description' => ServicePlan::getFeatureDescription( $feature )
+          ];
+        }
+        $item = $plan;
+        $item['monthly_charge'] = MainHelper::toDollars($item['monthly_charge_cents']);
+        $plan_benefits = [];
+        // compare the previous plan with the current one to get the benefits
+        $last_cnt = $cnt - 1;
+        if ( array_key_exists( $last_cnt, $plans) ) {
+          $last_plan = $plans[$last_cnt];
+          foreach ($features as $feature) {
+            $has_feature_1 = $plan[$feature];
+            $has_feature_2 = $last_plan[$feature];
+            if ( !$has_feature_2 && $has_feature_1 ) {
+              $plan_benefits[] = [
+                'key' => $feature,
+                'value' => TRUE,
+                'description' => ServicePlan::getFeatureDescription( $feature )
+              ];
+            }
+          }
+        } else {
+          $plan_benefits = $plan_features;
+        }
+        $item['features'] = $plan_features;
+        $item['benefits'] = $plan_benefits;
+        $results[] = $item;
+      }
+        return $this->response->array($results);
       }
 
   public function search(Request $request) {

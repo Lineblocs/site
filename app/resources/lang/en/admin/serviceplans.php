@@ -20,5 +20,8 @@ return [
     'monthly_charge_cents' => 'Monthly charge',
     'pay_as_you_go' => 'Pay as you go plan',
     'registration_plan' => 'Registration plan',
-    'include_in_pricing_pages' => 'Include in pricing pages'
+    'include_in_pricing_pages' => 'Include in pricing pages',
+    'rank' => 'Rank',
+    'call_duration' => 'Call duration',
+    'recording_space' => 'Recording space'
 ];

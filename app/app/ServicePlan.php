@@ -62,7 +62,9 @@ class ServicePlan extends Model {
     $pieces = explode(".", $charge);
     return $pieces[1];
   }
-
+  public static function getFeatureDescription( $feature ) {
+    return $feature;
+  }
 
 
 }

@@ -37,6 +37,36 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('rank') ? 'has-error' : '' }}">
+            {!! Form::label('rank', trans("admin/serviceplans.rank"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('rank', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('name', ':message') }}</span>
+            </div>
+        </div>
+
+        <div class="form-group  {{ $errors->has('call_duration') ? 'has-error' : '' }}">
+            {!! Form::label('call_duration', trans("admin/serviceplans.call_duration"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('call_duration', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('name', ':message') }}</span>
+            </div>
+        </div>
+
+        <div class="form-group  {{ $errors->has('recording_space') ? 'has-error' : '' }}">
+            {!! Form::label('recording_space', trans("admin/serviceplans.recording_space"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('recording_space', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('name', ':message') }}</span>
+            </div>
+        </div>
+
+
+
+
+
+
+
 
         @foreach ( $features as $feature )
             <div class="form-group  {{ $errors->has($feature['key']) ? 'has-error' : '' }}">
