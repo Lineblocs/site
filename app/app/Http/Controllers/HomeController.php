@@ -10,6 +10,7 @@ use App\SystemStatusCategory;
 use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
+use App\Customizations;
 use App\Faq;
 use App\CompanyRepresentative;
 use DB;
@@ -170,7 +171,10 @@ class HomeController extends BaseController {
   }
   public function contact(Request $request)
   {
-    $vars = [];
+    $customizations = Customizations::getRecord();
+    $vars = [
+      'customizations' => $customizations
+    ];
     return view('pages.contact', $vars);
   }
   public function alternative(Request $request)

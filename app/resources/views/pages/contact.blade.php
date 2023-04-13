@@ -18,16 +18,16 @@
                     <div class="col-12 col-lg-6 column">
                         <div class="phone">
                             <p>The {{\App\Helpers\MainHelper::getSiteName()}} Team is here to help answer any questions you may have. Fill out the form or call us at:</p>
-                            <a href="tel:+1 888 980 9750">+1 888 980 9750</a>
+                            <a href="tel:{{$customizations->contact_phone_number}}">{{$customizations->contact_phone_number}}</a>
                         </div>
 
                         <div class="address">
                             <span>Address</span>
-                            <p>First Edmonton Place <br/>10665 Jasper Avenue<br/>Suite 1412</p>
+                            {!! nl2br($customizations->contact_address) !!}
                         </div>
                         <div class="email">
                             <span>E-mail</span>
-                            <a href="mailto:{{\App\Helpers\MainHelper::createEmail('sales')}}">{{\App\Helpers\MainHelper::createEmail('sales')}}</a>
+                            <a href="mailto:{{$customizations->contact_email}}">{{$customizations->contact_email}}</a>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6 contact-form column">

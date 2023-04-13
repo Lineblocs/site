@@ -120,6 +120,30 @@
                 </div>
             </div>
 
+           <div class="row">
+                <h3>Global contact details</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <label for="contact_address">Address</label>
+                <div class="controls">
+                    <textarea name="contact_address" id="contact_address" class="form-control" value="{{$record->contact_address}}">{{$record->contact_address}}</textarea>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="contact_phone_number">Phone Number</label>
+                <div class="controls">
+                    <input name="contact_phone_number" id="contact_phone_number" class="form-control" value="{{$record->contact_phone_number}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="contact_email">Email</label>
+                <div class="controls">
+                    <input name="contact_email" id="contact_email" class="form-control" value="{{$record->contact_email}}"/>
+                </div>
+            </div>
+
+
             <div class="row">
                 <h3>Social media links</h3>
                 <hr/>
