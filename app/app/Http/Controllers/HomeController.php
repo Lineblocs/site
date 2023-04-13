@@ -11,6 +11,7 @@ use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
 use App\Faq;
+use App\CompanyRepresentative;
 use DB;
 use View;
 use Illuminate\Http\Request;
@@ -217,13 +218,13 @@ class HomeController extends BaseController {
       'email' => $data['email'],
       'comments' => $data['comments']
     ];
-    $config = Config::get("company_reps");
-    Mail::send('emails.contact', $template, function ($m) use ($config, $template) {
+    $contact = CompanyRepresentative::getMainContact();
+    Mail::send('emails.contact', $template, function ($m) use ($contact, $template) {
       $from =MainHelper::createEmail('contact');
       $site =MainHelper::getSiteName();
       $m->from($from,$site);
 
-      $m->to($config['contact']['email_address'], $config['contact']['email_name'])->subject('New Lineblocs contact');
+      $m->to($contact->email_address, $contact->name)->subject('New Lineblocs contact');
       $m->cc([$template['email']]);
   });
     Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {

@@ -177,6 +177,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('router', 'Admin\SIPRouterController');
     Route::resource('routerServer', 'Admin\SIPRouterController');
 
+    # company reps
+    Route::get('companyrepresentative/data', 'Admin\CompanyRepresentativeController@data');
+    Route::get('companyrepresentative/{companyrepresentative}/show', 'Admin\CompanyRepresentativeController@show');
+    Route::get('companyrepresentative/{companyrepresentative}/edit', 'Admin\CompanyRepresentativeController@edit');
+    Route::get('companyrepresentative/{companyrepresentative}/delete', 'Admin\CompanyRepresentativeController@delete');
+    Route::resource('companyrepresentative', 'Admin\CompanyRepresentativeController');
+
+
 
     # DNSRecords
     Route::get('dns/data', 'Admin\DNSRecordController@data');

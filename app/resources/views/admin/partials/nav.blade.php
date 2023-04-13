@@ -138,6 +138,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/companyrepresentative')}}">
+                        <i class="glyphicon glyphicon-user"></i> Company Representatives
+                    </a>
+                </li>
+                <li>
                     <a href="{{url('admin/dns')}}">
                         <i class="glyphicon glyphicon-user"></i> DNS Records
                     </a>

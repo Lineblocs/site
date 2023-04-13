@@ -32,6 +32,7 @@ use \App\SIPTrunkOriginationEndpoint;
 use \App\SIPTrunkTermination;
 use \App\ResourceSection;
 use \App\ResourceArticle;
+use \App\CompanyRepresentative;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -81,6 +82,8 @@ class RouteServiceProvider extends ServiceProvider
 
        \Route::model('resourcearticle',ResourceArticle::class);
        \Route::model('resourcesection',ResourceSection::class);
+
+       \Route::model('companyrepresentative',CompanyRepresentative::class);
     }
 
     /**

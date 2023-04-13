@@ -149,7 +149,7 @@ class ServicePlanController extends AdminController
      */
     public function data()
     {
-        $serviceplans = ServicePlan::select(array('service_plans.id', 'service_plans.key_name', 'service_plans.nice_name', 'service_plans.featured_plan', 'service_plans.created_at'));
+        $serviceplans = ServicePlan::select(array('service_plans.id', 'service_plans.key_name', 'service_plans.nice_name', 'service_plans.featured_plan', 'service_plans.rank', 'service_plans.created_at'));
 
         return Datatables::of($serviceplans)
             ->add_column('actions', '<a href="{{{ url(\'admin/serviceplan/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
