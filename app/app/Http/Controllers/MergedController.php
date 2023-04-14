@@ -764,6 +764,16 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     if (!empty($data['type_of_2fa'])) {
       $updateParams['type_of_2fa'] = $data['type_of_2fa'];
     }
+    if ( $updateParams['enable_2fa'] ) {
+      // ensure that the code is correct
+      $confirmationCode = $data['confirmation_code'];
+      $otp = TOTP::create($user->secret_code_2fa);
+      if ( $otp->verify($confirmationCode)) {
+        $user->update($updateParams);
+        return $this->response->noContent();
+      }
+      return $this->response->errorBadRequest();
+    }
     $user->update($updateParams);
     return $this->response->noContent();
   }
@@ -791,7 +801,22 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       'qrcode_base64' => $base64_data
     ]);
   }
-
+  public function request2FAConfirmationCode(Request $request) {
+    $type_of_2fa = $request->get('type_of_2fa');
+    $user = $this->getUser($request);
+    if ( $type_of_2fa == 'sms') {
+      $from = '';
+      $to = $user->phone_number;
+      $body = sprintf("Your confirmation code for 2FA is: %s", $otp);
+      MainHelper::sendSMS($from, $to, $body);
+      return $this->response->array([
+          'success' => true
+      ]);
+    }
+    return $this->response->array([
+        'success' => true
+    ]);
+  }
   public function request2FACode(Request $request) {
     $email = $request->get('email');
     $password = $request->get('password');
