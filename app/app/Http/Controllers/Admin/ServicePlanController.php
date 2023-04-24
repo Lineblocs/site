@@ -88,6 +88,8 @@ class ServicePlanController extends AdminController
 
     private function getFeatureOptions() {
         return [
+            $this->createFeatureOption('allows_monthly'),
+            $this->createFeatureOption('allows_annual'),
             $this->createFeatureOption('fax'),
             $this->createFeatureOption('im_integrations'),
             $this->createFeatureOption('productivity_integrations'),

@@ -37,6 +37,13 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('annual_cost_cents') ? 'has-error' : '' }}">
+            {!! Form::label('annual_cost_cents', trans("admin/serviceplans.annual_cost_cents"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('annual_cost_cents', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('name', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('rank') ? 'has-error' : '' }}">
             {!! Form::label('rank', trans("admin/serviceplans.rank"), array('class' => 'control-label')) !!}
             <div class="controls">
@@ -60,14 +67,6 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
-
-
-
-
-
-
-
-
         @foreach ( $features as $feature )
             <div class="form-group  {{ $errors->has($feature['key']) ? 'has-error' : '' }}">
                 {!! form::label($feature['key'], trans("admin/serviceplans." . $feature['key']), array('class' => 'control-label')) !!}
