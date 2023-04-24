@@ -25,6 +25,7 @@ class ApiCredential extends Model {
 'apple_signin_client_secret',
 'google_analytics_script_tag',
 'matomo_script_tag',
+'stripe_pub_key'
     );
   }
 
