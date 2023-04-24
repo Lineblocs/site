@@ -878,4 +878,14 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       'success' => FALSE
     ]);
   }
+
+  public function getCountryList() {
+    // TODO: create database tables for countries data
+    $path = public_path('assets/misc/countries.json');
+    $countries = json_decode( file_get_contents( $path ), TRUE );
+    return $this->response->array([
+      'data' => $countries
+    ]);
+  }
+
 }

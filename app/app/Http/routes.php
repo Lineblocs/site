@@ -436,6 +436,8 @@ $api->version('v1', function($api) {
   $api->post('verify2FACode', '\App\Http\Controllers\MergedController@verify2FACode');
 
 
+
+  $api->get('getCountryList', '\App\Http\Controllers\MergedController@getCountryList');
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');
   $api->get('getBillingHistory', '\App\Http\Controllers\BillingController@getBillingHistory');
   $api->get('downloadBillingHistory', '\App\Http\Controllers\BillingController@downloadBillingHistory');
