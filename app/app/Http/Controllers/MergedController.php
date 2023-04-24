@@ -807,6 +807,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     if ( $type_of_2fa == 'sms') {
       $from = '';
       $to = $user->phone_number;
+      $otp = TOTP::create($user->secret_code_2fa);
       $body = sprintf("Your confirmation code for 2FA is: %s", $otp);
       MainHelper::sendSMS($from, $to, $body);
       return $this->response->array([
