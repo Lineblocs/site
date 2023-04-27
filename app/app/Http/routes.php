@@ -517,6 +517,7 @@ $api->version('v1', function($api) {
   });
   $api->group([ 'prefix' => 'extension', 'namespace' => '\App\Http\Controllers\Api\Extension'], function($api) {
       $api->get("/extensionData/{extensionId}", "ExtensionController@extensionData");
+      $api->get("/extensionData/{extensionId}/history", "ExtensionController@extensionDataHistory");
       $api->post("/saveExtension", "ExtensionController@saveExtension");
       $api->post("/updateExtension/{flowId}", "ExtensionController@updateExtension");
       $api->delete("/deleteExtension/{extensionId}", "ExtensionController@deleteExtension");

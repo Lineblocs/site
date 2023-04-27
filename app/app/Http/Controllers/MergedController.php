@@ -742,7 +742,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->array($result);
   }
 
-  public function billingDiscontinuea(Request $request) {
+  public function billingDiscontinue(Request $request) {
     // downgrade plan to pay as you go
     $workspace = $this->getWorkspace($request);
     $workspace->update([

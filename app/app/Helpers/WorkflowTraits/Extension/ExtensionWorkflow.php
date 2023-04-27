@@ -166,6 +166,20 @@ trait ExtensionWorkflow {
 
         return $this->response->array($array);
     }
+
+    public function extensionDataHistory(Request $request, $extensionId)
+    {
+        if (!$this->hasPermissions($request, $extension, 'manage_extensions')) {
+            return $this->response->errorForbidden();
+        }
+        $calls =  Call::where('from_extension_id', $extensionId)
+                        ->orWhere('to_extension_id', $extensionId)
+                        ->get();
+        $array = $calls->toArray();
+
+        return $this->response->array($array);
+    }
+
     public function listExtensions(Request $request)
     {
         $paginate = $this->getPaginate( $request );
