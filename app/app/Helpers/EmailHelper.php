@@ -17,8 +17,8 @@ final class EmailHelper {
     $mail = Config::get('mail');
     if ( $customizations->mail_provider == 'smtp-gateway') {
       try {
-        Mail::send('emails.'.$template, $data, function ($message) use ($subject, $user, $mail) {
-            $message->to($user->email);
+        Mail::send('emails.'.$template, $data, function ($message) use ($subject, $to, $mail) {
+            $message->to($to);
             //$message->subject("Lineblocs.com - Verify Your Email");
             $message->subject($subject);
             $from = $mail['from'];

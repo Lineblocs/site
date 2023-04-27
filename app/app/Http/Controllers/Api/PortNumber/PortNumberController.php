@@ -13,6 +13,7 @@ use \App\Transformers\PortNumberTransformer;
 use \App\ThirdParty\NumberService;
 use \App\Helpers\MainHelper;
 use \App\Helpers\WorkspaceHelper;
+use \App\Helpers\EmailHelper;
 use App\PortNumberDocument;
 use \Input;
 use \Mail;
@@ -98,13 +99,8 @@ class PortNumberController extends ApiAuthController {
         }
         $mail = Config::get("mail");
         $mailData = compact('user','workspace', 'number');
-          Mail::send('emails.port_started', $mailData, function ($message) use ($user, $mail) {
-              $message->to($user->email);
-              $subject =MainHelper::createEmailSubject("Port Number Request Started");
-              $message->subject($subject);
-              $from = $mail['from'];
-              $message->from($from['address'], $from['name']);
-          });
+        $subject =MainHelper::createEmailSubject("Port Number Request Started");
+        $result = EmailHelper::sendEmail($subject, $user->email, 'port_started', $mailData);
         return $this->response->noContent();
     }
     public function updateNumber(Request $request, $numberId)
