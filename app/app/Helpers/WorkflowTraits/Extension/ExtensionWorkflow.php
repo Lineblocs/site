@@ -10,6 +10,7 @@ use \App\Extension;
 use \App\ExtensionTag;
 use \App\Flow;
 use \App\Transformers\ExtensionTransformer;
+use \App\Transformers\CallTransformer;
 use App\NumberService\SIPConfigService;
 use \App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
@@ -172,12 +173,19 @@ trait ExtensionWorkflow {
         if (!$this->hasPermissions($request, $extension, 'manage_extensions')) {
             return $this->response->errorForbidden();
         }
-        $calls =  Call::where('from_extension_id', $extensionId)
-                        ->orWhere('to_extension_id', $extensionId)
-                        ->get();
-        $array = $calls->toArray();
 
-        return $this->response->array($array);
+        $paginate = $this->getPaginate( $request );
+        $all = $request->get("all");
+
+        $calls =  Call::where('from_extension_id', $extensionId)
+                        ->orWhere('to_extension_id', $extensionId);
+        MainHelper::addSearch($request, $calls, []);
+
+        if (!empty($all)) {
+            return $this->response->collection($calls->get(), new CallTransformer);
+        }
+
+        return $this->response->paginator($calls->paginate($paginate), new CallTransformer);
     }
 
     public function listExtensions(Request $request)
