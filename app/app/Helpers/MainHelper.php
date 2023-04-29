@@ -191,6 +191,7 @@ final class MainHelper {
         if (isset($data['password'])) {
           $password = $data['password'];
         }
+        $defaulTheme = 'default';
         $params = [
           'first_name' => $data['first_name'], 
           'last_name' => $data['last_name'], 
@@ -205,7 +206,8 @@ final class MainHelper {
           'trial_mode' => TRUE,
           'plan' => 'trial',
           'sip_port' => '5060',
-          'rtp_ports' => ''
+          'rtp_ports' => '',
+          'theme' => $defaulTheme
         ];
         if ($needsPasswordSet) {
           $params['needs_password_set'] = $needsPasswordSet;
