@@ -671,10 +671,21 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function getAllSettings(Request $request) {
 
         $apiCreds = APICredential::getFrontendValuesOnly();
-        $customizations = Customizations::getrecord();
+        $customizations = Customizations::getRecord();
+        $availableThemes = array(
+          array(
+            'name' => 'default',
+            'is_default' => TRUE
+          ),
+          array(
+            'name' => 'dark',
+            'is_default' => FALSE
+          )
+        );
         $result = [
-          'customizations' => $customizations->toarray(),
-          'frontend_api_creds' => $apiCreds
+          'customizations' => $customizations->toArray(),
+          'frontend_api_creds' => $apiCreds,
+          'available_themes' => $availableThemes
         ];
         return $this->response->array($result);
       }
