@@ -217,11 +217,11 @@ final class MainHelper {
         $user = User::create($params);
         return $user;
     }
-  public static function createUser($data) {
+  public static function createUser($data, $externalUser=FALSE) {
       $key = Config::get("stripe.secret_key");
       $customization = Customizations::getRecord();
       $user = MainHelper::createUserWithoutPaymentGateway($data);
-      if ( $customization->payment_gateway_enabled ) {
+      if ( $customization->payment_gateway_enabled && !$externalUser ) {
         if ( $customization->payment_gateway == 'stripe' ) {
           \Stripe\Stripe::setApiKey($key);
 

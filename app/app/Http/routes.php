@@ -317,6 +317,8 @@ $api->version('v1', function($api) {
         $api->post("/", "UserController@post");
         $api->post("/{userId}", "UserController@put");
         $api->delete("/{userId}", "UserController@delete");
+        $api->post("/createUser", "UserController@createUser");
+        $api->post("/validateLogin", "UserController@validateLogin");
     });
     $api->group([ 'prefix' => 'blocked', 'namespace' => '\BlockedNumber'], function($api) {
         $api->get("/list", "BlockedNumberController@list");
@@ -355,6 +357,7 @@ $api->version('v1', function($api) {
         $api->post("/{trunkId}", "SIPTrunkController@updateTrunk");
         $api->delete("/{trunkId}", "SIPTrunkController@deleteTrunk");
     });
+
   });
   $api->group([ 'prefix' => 'internal', 'namespace' => '\App\Http\Controllers\Api\Internal'], function($api) {
     $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {

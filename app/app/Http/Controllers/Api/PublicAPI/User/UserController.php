@@ -22,6 +22,61 @@ use Config;
 
 class UserController extends ApiPublicController {
     use UserWorkflow;
+
+    public function createUser(Request $request)
+    {
+        $data = $request->json()->all();
+        $email = $data['email'];
+        $valid = filter_var($email, FILTER_VALIDATE_EMAIL);
+        if (!$valid) {
+            return $this->response->array([
+            'success' => FALSE,
+            'message' => 'Email was invalid..'
+          ]);
+        }
+        $exists = User::where('email', $email)->first();
+        if ($exists) {
+          return $this->response->array([
+            'success' => FALSE,
+            'message' => 'User with this email already exists..'
+          ]);
+        }
+        $externalUser = TRUE;
+        $user = MainHelper::createUser($data, $externalUser);
+        $unique = uniqid(TRUE);
+        $plan = 'none';
+        if ( !empty($data['plan'] )) {
+          $plan = $data['plan'];
+        }
+
+        $workspace = Workspace::create([
+        'creator_id' => $user->id,
+        'name' => $unique,
+        'api_token' => MainHelper::createAPIToken(),
+        'api_secret' => MainHelper::createAPISecret(),
+        'plan' => $plan,
+        'trial_mode' => FALSE,
+        'external_app_workspace' => TRUE
+      ]);
+      WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
+      //WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
+        return $this->response->array([
+            'success' => TRUE,
+            'userId' => $user->id,
+            'workspace' => $workspace->toArrayWithRoles($user)
+        ]);
+    }
+    public function validateLogin(Request $request) {
+        // just validatiing the HTTP basic auth here
+        $user = $this->getUser($request);
+        if ( !$user ) {
+          return $this->response->array([
+            'success' => FALSE,
+            'message' => 'Authentication failed.'
+          ]);
+        }
+        return $this->response->noContent();
+    }
     public function post(Request $request)
     {
         return $this->addUser($request);
