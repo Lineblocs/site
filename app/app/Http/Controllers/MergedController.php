@@ -899,5 +899,32 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       'data' => $countries
     ]);
   }
+  public function getBillingCountries() {
+    $countries = array(
+      array(
+        'iso' => 'CA',
+        'name' => 'Canada'
+      },
+      array(
+        'iso' => 'US',
+        'name' => 'United States'
+      )
+      );
+      return $this->response->array($countries);
+  }
+  public function saveCustomerPaymentDetails(Request $request) 
+  {
+    $data = $request->json()->all();
+    $user = $this->getUser( $request );
+    $workspace = $this->getWorkspace( $request );
+    if ( $data['payment_gateway'] == 'stripe' ) {
+      $params = [
+        'last_4' => '',
+        'stripe_token' => $data['card_token']
+      ];
+      $card = MainHelpers::addCard($data, $user, $workspace, TRUE, 'stripe');
+      return $this->response->noContent();
+    }
+  }
 
 }

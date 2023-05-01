@@ -438,6 +438,8 @@ $api->version('v1', function($api) {
 
 
   $api->get('getCountryList', '\App\Http\Controllers\MergedController@getCountryList');
+  $api->get('getBillingCountries', '\App\Http\Controllers\MergedController@getBillingCountries');
+  $api->post('saveCustomerPaymentDetails', '\App\Http\Controllers\MergedController@saveCustomerPaymentDetails');
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');
   $api->get('getBillingHistory', '\App\Http\Controllers\BillingController@getBillingHistory');
   $api->get('downloadBillingHistory', '\App\Http\Controllers\BillingController@downloadBillingHistory');

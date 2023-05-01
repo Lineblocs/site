@@ -740,25 +740,38 @@ final class MainHelper {
     $hash = bin2hex(random_bytes(16));
     return $hash;
   }
-  public static function addCard($data, $user, $workspace)
+  public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
-    MainHelper::initStripe();
-          $card = \Stripe\Customer::createSource(
-              $user->stripe_id,
-              [
-                  'source' => $data['stripe_token']
-              ]
-          );
-        $all = UserCard::where('workspace_id', $workspace->id)->get();
-        $params = [
-            'last_4' => $data['last_4'],
-            'stripe_id' => $card->id,
-            'user_id' => $user->id,
-            'workspace_id' => $workspace->id,
-            'issuer' => $card->brand
-        ];
-        return UserCard::create($params);
+    if ( $paymentGateway == 'stripe' ) {
+      MainHelper::initStripe();
+      $card = \Stripe\Customer::createSource(
+          $user->stripe_id,
+          [
+              'source' => $data['stripe_token']
+          ]
+      );
+      //$all = UserCard::where('workspace_id', $workspace->id)->get();
+      if ( $isDefault ) {
+        // update invoice settings to use this card as the default payment method
+        \Stripe\Customer::update(
+            $user->stripe_id,
+            array(
+                'invoice_settings' => array(
+                  'default_payment_method' => $card->id
+                )
+            )
+        );
       }
+      $params = [
+          'last_4' => $data['last_4'],
+          'stripe_id' => $card->id,
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'issuer' => $card->brand
+      ];
+      return UserCard::create($params);
+    }
+  }
   public static function makeCardPrimary($card, $user, $workspace)
   {
         $all = UserCard::where('workspace_id', $workspace->id)->update(['primary' => FALSE]);
