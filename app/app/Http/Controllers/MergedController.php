@@ -904,7 +904,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       array(
         'iso' => 'CA',
         'name' => 'Canada'
-      },
+      ),
       array(
         'iso' => 'US',
         'name' => 'United States'
