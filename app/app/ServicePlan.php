@@ -65,6 +65,9 @@ class ServicePlan extends Model {
   public static function getFeatureDescription( $feature ) {
     return $feature;
   }
+  public static function getPayAsYouGoplan() {
+    return self::where('pay_as_you_go', '1')->firstOrFail();
+  }
 
 
 }

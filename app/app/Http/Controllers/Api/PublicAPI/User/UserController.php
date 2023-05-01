@@ -44,30 +44,33 @@ class UserController extends ApiPublicController {
         $externalUser = TRUE;
         $user = MainHelper::createUser($data, $externalUser);
         $unique = uniqid(TRUE);
-        $plan = 'none';
-        if ( !empty($data['plan'] )) {
-          $plan = $data['plan'];
-        }
-
+        $plan = ServicePlan::getPayAsYouGoplan();
+        $apiToken = MainHelper::createAPIToken();
+        $apiSecret = MainHelper::createAPISecret();
         $workspace = Workspace::create([
         'creator_id' => $user->id,
         'name' => $unique,
-        'api_token' => MainHelper::createAPIToken(),
-        'api_secret' => MainHelper::createAPISecret(),
-        'plan' => $plan,
+        'api_token' => $apiToken,
+        'api_secret' => $apiSecret,
+        'plan' => $plan->key_name,
         'trial_mode' => FALSE,
         'external_app_workspace' => TRUE
       ]);
       WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
       //WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
-        return $this->response->array([
-            'success' => TRUE,
-            'userId' => $user->id,
-            'workspace' => $workspace->toArrayWithRoles($user)
-        ]);
+      $apiDetails = [
+        'token' => $apiToken,
+        'secret' => $apiSecret
+      ];
+    return $this->response->array([
+        'success' => TRUE,
+        'userId' => $user->id,
+        'workspace' => $workspace->toArrayWithRoles($user),
+        'apiDetails' => $apiDetails
+    ]);
     }
     public function validateLogin(Request $request) {
-        // just validatiing the HTTP basic auth here
+        // just validating the HTTP basic auth here
         $user = $this->getUser($request);
         if ( !$user ) {
           return $this->response->array([
