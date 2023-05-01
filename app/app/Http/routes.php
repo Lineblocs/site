@@ -349,11 +349,11 @@ $api->version('v1', function($api) {
       });
     });
     $api->group([ 'prefix' => 'trunk', 'namespace' => '\SIPTrunk'], function($api) {
-        $api->get("/list", "SIPTrunkController@list");
-        $api->get("/{trunkId}", "SIPTrunkController@get");
-        $api->post("/", "SIPTrunkController@post");
-        $api->post("/{trunkId}", "SIPTrunkController@put");
-        $api->delete("/{trunkId}", "SIPTrunkController@delete");
+        $api->get("/list", "SIPTrunkController@listTrunks");
+        $api->get("/{trunkId}", "SIPTrunkController@trunkData");
+        $api->post("/", "SIPTrunkController@saveTrunk");
+        $api->post("/{trunkId}", "SIPTrunkController@updateTrunk");
+        $api->delete("/{trunkId}", "SIPTrunkController@deleteTrunk");
     });
   });
   $api->group([ 'prefix' => 'internal', 'namespace' => '\App\Http\Controllers\Api\Internal'], function($api) {
