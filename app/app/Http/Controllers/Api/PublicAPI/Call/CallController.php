@@ -17,6 +17,11 @@ use App\Helpers\WorkflowTraits\Call\CallWorkflow;
 
 class CallController extends ApiPublicController {
     use CallWorkflow;
+    public function getReports(Request $request, $callId)
+    {
+        $reports = [];
+        return $this->response->array($reports);
+    }
     public function get(Request $request, $callId)
     {
         return $this->callData($request, $callId);
