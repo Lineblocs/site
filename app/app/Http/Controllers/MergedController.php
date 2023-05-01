@@ -919,7 +919,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $workspace = $this->getWorkspace( $request );
     if ( $data['payment_gateway'] == 'stripe' ) {
       $params = [
-        'last_4' => '',
+        'last_4' => $data['last_4'],
         'stripe_token' => $data['card_token']
       ];
       $card = MainHelpers::addCard($data, $user, $workspace, TRUE, 'stripe');
