@@ -24,6 +24,10 @@ use File;
 
 class DIDNumberController extends ApiPublicController {
     use DIDNumberWorkflow;
+    public function searchAvailable(Request $request) {
+
+    }
+
     public function post(Request $request)
     {
         return $this->saveNumber($request);

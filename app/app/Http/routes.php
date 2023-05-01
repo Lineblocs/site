@@ -298,6 +298,7 @@ $api->version('v1', function($api) {
   $api->group([ 'prefix' => 'public', 'namespace' => '\App\Http\Controllers\Api\PublicAPI'], function($api) {
     /** /list route should be before /{id} route to avoid conflicts.. **/
     $api->group([ 'prefix' => 'did', 'namespace' => '\DIDNumber'], function($api) {
+        $api->get("/searchAvailable", "DIDNumberController@searchAvailable");
         $api->get("/list", "DIDNumberController@list");
         $api->get("/{didId}", "DIDNumberController@get");
         $api->post("/", "DIDNumberController@post");
