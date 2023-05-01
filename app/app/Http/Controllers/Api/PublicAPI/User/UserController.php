@@ -78,7 +78,9 @@ class UserController extends ApiPublicController {
             'message' => 'Authentication failed.'
           ]);
         }
-        return $this->response->noContent();
+        return $this->response->array([
+            'success' => TRUE
+        ]);
     }
     public function post(Request $request)
     {
