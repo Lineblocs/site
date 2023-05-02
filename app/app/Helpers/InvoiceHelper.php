@@ -12,15 +12,17 @@ final class InvoiceHelper {
   public static function generatePrettyInvoice($user, $workspace, $data)
   {
       $site = MainHelper::getSiteName();  
+      $accountName = "Test 123";
       $attn = [
         "Test 123",
         "7-11910102 AVE NW",
         "Edmonton, Alberta",
         "T5K0R7  Canada"
       ];
+
       $invoiceVars = [
         'vars' => [
-          'account_name' => '',
+          'account_name' => $accountName,
           'attn' => $attn,
           'account_no' => '',
           'invoice_no' => '',

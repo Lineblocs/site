@@ -7,26 +7,45 @@
       <td>
         <table width="100%">   
           <tr>
-            <td>
-              <strong>Account name: </strong> {{$vars['account_name']}}</td>
+            <td width="33%">
+              <strong>Account name: </strong>
+            </td>
+            <td width="66%">
+              {{$vars['account_name']}}</td>
             </td>
           </tr>
           <tr>
-            <td><strong>Attn: </strong> <span style="direction:rtl;">{!! $vars['attn'][0] !!}</span></td>
+            <td width="33%">
+              <strong>Attn: </strong>
+            </td>
+            <td width="66%">
+              {{$vars['attn'][0]}}</td>
+            </td>
           </tr>
           <tr>
-            <td><span style="direction:rtl;">{!! $vars['attn'][0] !!}</span></td>
+            <td width="33%">
+              &nbsp;
+            </td>
+            <td width="66%">
+              {{$vars['attn'][1]}}</td>
+            </td>
           </tr>
           <tr>
-            <td><span style="direction:rtl;">{!! $vars['attn'][1] !!}</span></td>
+            <td width="33%">
+              &nbsp;
+            </td>
+            <td width="66%">
+              {{$vars['attn'][2]}}</td>
+            </td>
           </tr>
           <tr>
-            <td><span style="direction:rtl;">{!! $vars['attn'][2] !!}</span></td>
+            <td width="33%">
+              &nbsp;
+            </td>
+            <td width="66%">
+              {{$vars['attn'][3]}}</td>
+            </td>
           </tr>
-          <tr>
-            <td><span style="direction:rtl;">{!! $vars['attn'][3] !!}</span></td>
-          </tr>
-
         </table>
       </td>
       <td>
@@ -46,7 +65,16 @@
               <strong>Statement date: </strong> {{$vars['statement_date']}}</td>
             </td>
           </tr>
+          <tr>
+            <td>
           <strong>Due date: </strong> {{$vars['due_date']}}</td>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              &nbsp;
+            </td>
+          </tr>
         </table>
       </td>
     </tr>
