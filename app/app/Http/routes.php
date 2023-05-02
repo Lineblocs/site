@@ -78,6 +78,7 @@ Route::get('/status', 'HomeController@status');
 Route::get('/status/{categoryId}', 'HomeController@status_category');
 Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //Route::post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
+Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
@@ -448,6 +449,7 @@ $api->version('v1', function($api) {
   $api->get('getBillingInfo', '\App\Http\Controllers\BillingController@getBillingInfo');
   $api->get('getBillingHistory', '\App\Http\Controllers\BillingController@getBillingHistory');
   $api->get('downloadBillingHistory', '\App\Http\Controllers\BillingController@downloadBillingHistory');
+  $api->get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
   $api->post('verifyPasswordStrength', '\App\Http\Controllers\MergedController@verifyPasswordStrength');
   $api->get('generateSecurePassword', '\App\Http\Controllers\MergedController@generateSecurePassword');
   $api->post('changeBillingSettings', '\App\Http\Controllers\BillingController@changeBillingSettings');
