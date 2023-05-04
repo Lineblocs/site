@@ -7,8 +7,27 @@
       border-top: 2px solid black;
       border-bottom: 2px solid black;
     }
+    table.invoice_tbl tr.header_alt td {
+      border-bottom: 2px solid black;
+    }
     table.invoice_tbl {
       border-bottom: 2px solid black;
+    }
+
+    table.invoice_tbl tr.bordered td {
+      border-top: 2px solid black;
+    }
+    table.invoice_tbl.five-cols tr td {
+      width: 20%;
+    }
+    table.invoice_tbl.no_borders {
+      border-top: none;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+    }
+    table.invoice_tbl.invoice_totals {
+      margin-top: 20px;
     }
     .page-break {
       page-break-after: always;
@@ -17,6 +36,9 @@
       margin: 0;
     }
     .invoice_tbl h1,h2,h3.h4.h5 {
+      margin: 0;
+    }
+    .no_margins {
       margin: 0;
     }
     @page { margin-top: 120px; margin-bottom: 120px}
@@ -126,7 +148,7 @@
     </table>
     <table width="100%" class="bordered">
       <tr>
-        <td><strong>Useful Information</strong></tr>
+        <td><h3 class="no_margins"><strong>Useful Information</strong></h3></tr>
       </tr>
       <tr>
         <td>
@@ -258,18 +280,18 @@
       </table>
       <table width="100%" class="invoice_tbl">
         <tr class="header">
-          <td>Description</td>
+          <td>Description of charges</td>
           <td>Month</td>
           <td>Price</td>
           <td>Tax</td>
           <td style="text-align: right;">Total</td>
       </tr>
         <tr class="data">
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td style="text-align: right;">&nbsp;</td>
+          <td>{{$vars['invoice_desc']}}</td>
+          <td>{{$vars['invoice_month']}}</td>
+          <td>{{$vars['invoice_amount_no_tax']}}</td>
+          <td>{{$vars['tax_amount']}}</td>
+          <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
         </tr>
       </table>
       <table width="100%">
@@ -282,17 +304,17 @@
       <table class="invoice_tbl" width="100%">
         <tr>
             <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: center;" ><h2>Total excl tax</h2></td>
+            <td width="33%" style="text-align: right;" ><h2>Total (exc. tax)</h2></td>
             <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount_no_tax']}}</h2></td>
         </tr>
         <tr>
             <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: center;" ><h2>GST 5%</h2></td>
+            <td width="33%" style="text-align: right;" ><h2>GST 5%</h2></td>
             <td width="33%" style="text-align: right;"><h2>{{$vars['tax1']}}</h2></td>
         </tr>
         <tr>
             <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: center;" ><h2>Total w/ tax</h2></td>
+            <td width="33%" style="text-align: right;" ><h2>Total (inc. tax) tax</h2></td>
             <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount']}}</h2></td>
         </tr>
       </table>
@@ -379,44 +401,79 @@
           </td>
         </tr>
       </table>
-      <table width="100%" class="invoice_tbl">
-        <tr class="header">
-          <td>Description</td>
-          <td>Month</td>
-          <td>Price</td>
-          <td>Tax</td>
-          <td style="text-align: right;">Total</td>
-      </tr>
-        <tr class="data">
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td style="text-align: right;">&nbsp;</td>
-        </tr>
-      </table>
+
       <table width="100%">
         <tr>
-            <td>April  2023 invoice 3187-16190</td>
+          <td><h3>Recurring charges</h3></td>
+        </tr>
+    </table>
+
+      <table width="100%" class="invoice_tbl five-cols">
+        <tr class="header">
+          <td>Item Description</td>
+          <td>Date</td>
+          <td>Price</td>
+          <td>Tax Amount</td>
+          <td style="text-align: right;">Total (inc. tax)</td>
+      </tr>
+      @foreach ( $vars['invoice_items']['recurring_rows'] as $item )
+        <tr class="data">
+          <td>{{$item['item_desc']}}</td>
+          <td>{{$item['date']}}</td>
+          <td>{{$item['total_amount_without_tax']}}</td>
+          <td>{{$item['tax_amount']}}</td>
+          <td style="text-align: right;">{{$item['total_amount']}}</td>
+        </tr>
+
+      @endforeach
+        <tr class="data bordered">
             <td>&nbsp;</td>
-            <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
+            <td>Subtotal</td>
+            <td>{{$vars['invoice_items']['subtotal_price']}}</td>
+            <td>{{$vars['invoice_items']['subtotal_tax']}}</td>
+            <td style="text-align: right;">{{$vars['invoice_items']['subtotal_total']}}</td>
         </tr>
-      </table>
-      <table class="invoice_tbl" width="100%">
+    </table>
+
+    <table width="100%">
         <tr>
-            <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: center;" ><h2>Total excl tax</h2></td>
-            <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount_no_tax']}}</h2></td>
+          <td><h3>Call tolls</h3></td>
         </tr>
-        <tr>
-            <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: center;" ><h2>GST 5%</h2></td>
-            <td width="33%" style="text-align: right;"><h2>{{$vars['tax1']}}</h2></td>
+    </table>
+
+      <table width="100%" class="invoice_tbl five-cols">
+        <tr class="header">
+          <td>Item Description</td>
+          <td>Date</td>
+          <td>Price</td>
+          <td>Tax Amount</td>
+          <td style="text-align: right;">Total (inc. tax)</td>
+      </tr>
+      @foreach ( $vars['invoice_items']['call_tolls_rows'] as $item )
+        <tr class="data">
+          <td>{{$item['item_desc']}}</td>
+          <td>{{$item['date']}}</td>
+          <td>{{$item['total_amount_without_tax']}}</td>
+          <td>{{$item['tax_amount']}}</td>
+          <td style="text-align: right;">{{$item['total_amount']}}</td>
         </tr>
-        <tr>
-            <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: center;" ><h2>Total w/ tax</h2></td>
-            <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount']}}</h2></td>
+
+      @endforeach
+        <tr class="data bordered">
+            <td>&nbsp;</td>
+            <td>Subtotal</td>
+            <td>{{$vars['invoice_items']['subtotal_price']}}</td>
+            <td>{{$vars['invoice_items']['subtotal_tax']}}</td>
+            <td style="text-align: right;">{{$vars['invoice_items']['subtotal_total']}}</td>
+        </tr>
+    </table>
+    <table width="100%" class="invoice_tbl five-cols no_borders invoice_totals">
+        <tr class="data">
+            <td>&nbsp;</td>
+            <td>Total charges</td>
+            <td>{{$vars['invoice_items']['price']}}</td>
+            <td>{{$vars['invoice_items']['tax']}}</td>
+            <td style="text-align: right;">{{$vars['invoice_items']['total']}}</td>
         </tr>
       </table>
     </div>
@@ -426,5 +483,58 @@
       <center>
         <h1>Payment Methods</h1>
       </center>
+      <table width="100%">
+        <tr>
+          <td>Your payment method is</td>
+          <td>{{$vars['payment_method']}}</td>
+        </tr>
+      </table>
+
+      <table width="100%" class="bordered">
+        <tr>
+          <td><strong>You can update your payment method at {{$site}}</strong></tr>
+        </tr>
+      </tr>
+      </table>
+      <center>
+        <h1>Invoice Notices</h1>
+      </center>
+      <table width="100%">
+        <tr class="header_alt">
+          <td width="50%">Notices</td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Account adjustments/refunds</strong></td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Account balance</strong></td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Credits</strong></td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Due date</strong></td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Payments received</strong></td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Recurring charges</strong></td>
+          <td width="50%"></td>
+        </tr>
+        <tr>
+          <td width="50%"><strong>Total payment due</strong></td>
+          <td width="50%"></td>
+        </tr>
+      </table>
+
+
+
     </div>
 </body>
