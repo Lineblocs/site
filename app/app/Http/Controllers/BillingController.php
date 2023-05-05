@@ -71,11 +71,10 @@ class BillingController extends ApiAuthController
     public function generateMonthlyInvoice(Request $request) {
       $user = User::all()[0];
       $all = $request->all();
-      $start = DateTime::createFromFormat("Y-m-d H:i:s", $all['startDate']);
-      $end = DateTime::createFromFormat("Y-m-d H:i:s",$all['endDate']);
-
-      $data = MainHelper::billingData($user, $all['startDate'], $all['endDate']);
-      $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $data);
+      $month = new DateTime();
+      $month->modify('first day of this month');
+      $invoice = MainHelper::getMonthlyInvoice($user, $month);
+      $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $invoice);
       //$pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
       return $pdf->download('monthly_invoice.pdf');
     }

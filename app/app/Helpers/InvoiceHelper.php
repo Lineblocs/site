@@ -4,30 +4,105 @@ use \Config;
 use \Log;
 use \DB;
 use \PDF;
+use \DateTime;
 use App\Settings;
 use App\Customizations;
+use App\BillingTax;
+use App\UserInvoiceLineItem;
 use App\Helpers\MainHelper;
 use App\Helpers\WebSvcHelper;
 final class InvoiceHelper {
-  public static function generatePrettyInvoice($user, $workspace, $data)
+  public static function placeholderIfEmpty($value, $placeholder="N/A") {
+    if ( empty( $value )) {
+      return $placeholder;
+    }
+    return $value;
+  }
+  public static function calculateTax($amount, $tax) {
+    $percentInDecimal = $tax->tax_percentage / 100;
+    return ($percentInDecimal * $amount);
+  }
+  public static function createLineItemsFromInvoicRecords($lineItems, $tax) {
+    $result = [];
+    foreach ( $lineItems as $row ) {
+      $item = $row->toArray();
+      $item['item_desc'] = '';
+      if ( $row['key_name'] == 'call_costs' ) {
+        $item['item_desc'] = 'Voice calling services';
+      } else if ( $row['key_name'] == 'recording_costs' ) {
+        $item['item_desc'] = 'Recording storage';
+
+      } else if ( $row['key_name'] == 'number_costs' ) {
+        $item['item_desc'] = 'Monthly DID charges';
+      } else if ( $row['key_name'] == 'membership_costs' ) {
+        $item['item_desc'] = 'Charges for membership';
+      }
+
+      $item['date'] = $row->created_at;
+      $item['total_amount_without_tax'] = $item['cents'];
+      $taxCosts = self::calculateTax( $item['total_amount_without_tax'], $tax );
+      $item['tax_amount'] =$taxCosts;
+      $item['total_amount'] = $item['total_amount_without_tax'] + $taxCosts;
+      $results[] = $item;
+    }
+    return $results;
+  }
+  public static function generatePrettyInvoice($user, $workspace, $invoice)
   {
       $site = MainHelper::getSiteName();  
-      $accountName = "Test 123";
-      $taxNumber = "123";
-      $tax1 = "GST";
+      $invoiceDate = $invoice->created_at;
+      //$billingRegionid = $workspace->billing_region_id;
+      $billingRegionid = 2;
+      $tax = BillingTax::where('region_id', $billingRegionid)
+                        ->where('primary_tax', '1')
+                        ->first();
+
+      $lineItems = self::createLineItemsFromInvoicRecords(
+          UserInvoiceLineItem::where('invoice_id', $invoice->id)->get(),
+          $tax
+      );
+      $recurringLineItems = array_filter( $lineItems, function( $item )  {
+        return $item['is_recurring'];
+      });
+      $fixedLineItems = array_filter( $lineItems, function( $item )  {
+        return !$item['is_recurring'];
+      });
+
+      $accountName = self::placeholderIfEmpty($user->company_name, "N/A");
+      $taxNumber = self::placeholderIfEmpty($user->tax_number);
+      $tax1 = $tax->name;
+      $addr1 = self::placeholderIfEmpty( $user->address_line_1, "N/A" );
+      $addr2 = self::placeholderIfEmpty($user->address_line_2, "&nbsp;" );
+      $postalCode = self::placeholderIfEmpty( $user->postal_code, "&nbsp;" );
+      $state = self::placeholderIfEmpty( $user->state, "&nbsp;" );
+      $city = self::placeholderIfEmpty($user->city, "&nbsp;" );
+      $country = self::placeholderIfEmpty( $user->country, "&nbsp;");
+
       $attn = [
-        "10665 Jasper Ave NW",
-        "Unit 1412",
-        "Edmonton, Alberta",
-        "T5K0R7  Canada"
+        $addr1,
+        $addr2,
+        sprintf("%s, %s", $city, $state),
+        sprintf("%s %s", $postalCode, $country)
       ];
-      $invoiceAmt = "99.99";
-      $dueDate = "31 March 2023";
-      $paidInvoice = TRUE;
-      $paymentRecvdDate = '18 April 2023';
-      $invoiceDesc = "$site invoice for April 2023";
-      $invoiceMonth = "April";
-      $taxAmt = "0.99";
+      $invoiceAmt = $invoice->cents;
+      $invoiceAmtInclTaxes = $invoice->cents_including_taxes;
+      $invoiceNum = $invoice->invoice_no;
+      $dueDate = $invoice->due_date;
+
+      $statementDate = new DateTime();
+      $paidInvoice = FALSE;
+      $paymentRecvdDate = "N/A";
+      if ( $invoice->status == 'COMPLETE' ) {
+        $paidInvoice=TRUE;
+        $paymentRecvdDate = $invoice->complete_date->format('d M Y');
+      }
+
+      $invoiceDesc = sprintf("%s invoice for %s", $site, $invoiceDate->format("M Y"));
+      $invoiceMonth = $invoiceDate->format("M");
+      $invoiceYear =  $invoiceDate->format("Y");
+      $taxAmt = $invoice->cents_taxes;
+      $taxName = $tax->name;
+      $taxPercentage = sprintf("%d%%", $tax->tax_percentage);
       $invoiceItems = [
         [
           'item_desc' => 'Calls -- Orgination costs',
@@ -37,25 +112,39 @@ final class InvoiceHelper {
           'tax_amount' => '0.99',
         ]
       ];
-      $invoiceItemsPrice = '9.99';
-      $invoiceItemsTax = '0.99';
-      $invoiceItemsTotal = '19.99';
-      $paymentMethod = "Credit card";
+      //$invoiceItemsPrice = '9.99';
+      $invoiceItemsPrice = 0;
+      $invoiceItemsTax = 0;
+      $invoiceItemsTotal = 0;
+
+      foreach ( $lineItems as $item ) {
+        $cents = $item['cents'];
+        $itemPrice = $cents;
+        $itemTax = self::calculateTax($cents, $tax);
+        $invoiceItemsPrice += $itemPrice;
+        $invoiceItemsTax += $itemTax;
+        $invoiceItemsTotal += ($itemPrice + $itemTax);
+      }
+      $paymentMethod = MainHelper::getPrimaryPaymentMethod($workspace);
+      $accountNo = $workspace->account_no;
       $invoiceVars = [
-        'leftFooterText' => '123',
+        'leftFooterText' => 'Invoice',
         'paidInvoice' => $paidInvoice,
         'vars' => [
           'account_name' => $accountName,
           'attn' => $attn,
-          'account_no' => '',
-          'invoice_no' => '',
+          'account_no' => $accountNo,
+          'invoice_no' => $invoiceNum,
           'invoice_month' => $invoiceMonth,
-          'statement_date' => '',
+          'invoice_year' => $invoiceYear,
+          'statement_date' => $statementDate,
           'due_date' => $dueDate,
           'invoice_desc' => $invoiceDesc,
-          'invoice_amount' => $invoiceAmt,
+          'invoice_amount' => $invoiceAmtInclTaxes,
           'invoice_amount_no_tax' => $invoiceAmt,
           'tax_amount' => $taxAmt,
+          'tax_name' => $taxName,
+          'tax_percentage' => $taxPercentage,
           'payment_recvd_date' => $paymentRecvdDate,
           'tax_number' => $taxNumber,
           'tax1' => $tax1,
@@ -67,11 +156,10 @@ final class InvoiceHelper {
             'price' => $invoiceItemsPrice,
             'tax' => $invoiceItemsTax,
             'total' => $invoiceItemsTotal,
-            'recurring_rows' => $invoiceItems,
-            'call_tolls_rows' => $invoiceItems
+            'recurring_rows' => $recurringLineItems,
+            'fixed_rate_rows' => $fixedLineItems
           ]
         ],
-        'rows' => $data,
         'site' => $site
       ];
       $pdfLoaded = \PDF::loadView('pdf.pretty_monthly_invoice', $invoiceVars);

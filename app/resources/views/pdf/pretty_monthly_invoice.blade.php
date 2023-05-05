@@ -1,3 +1,6 @@
+<?php
+use \App\Helpers\MainHelper;
+?>
 <body>
   <style>
     table.bordered {
@@ -78,7 +81,7 @@
                 <strong>Account name: </strong>
               </td>
               <td width="66%">
-                {{$vars['account_name']}}</td>
+                {!! $vars['account_name'] !!}
               </td>
             </tr>
             <tr>
@@ -86,7 +89,7 @@
                 <strong>Attn: </strong>
               </td>
               <td width="66%">
-                {{$vars['attn'][0]}}</td>
+                {!! $vars['attn'][0] !!}
               </td>
             </tr>
             <tr>
@@ -94,7 +97,7 @@
                 &nbsp;
               </td>
               <td width="66%">
-                {{$vars['attn'][1]}}</td>
+                {!! $vars['attn'][1] !!}
               </td>
             </tr>
             <tr>
@@ -102,7 +105,7 @@
                 &nbsp;
               </td>
               <td width="66%">
-                {{$vars['attn'][2]}}</td>
+                {!! $vars['attn'][2] !!}
               </td>
             </tr>
             <tr>
@@ -110,7 +113,7 @@
                 &nbsp;
               </td>
               <td width="66%">
-                {{$vars['attn'][3]}}</td>
+                {!! $vars['attn'][3] !!}
               </td>
             </tr>
           </table>
@@ -129,12 +132,12 @@
             </tr>
             <tr>
               <td>
-                <strong>Statement date: </strong> {{$vars['statement_date']}}</td>
+                <strong>Statement date: </strong> {{$vars['statement_date']->format('Y-m-d')}}</td>
               </td>
             </tr>
             <tr>
               <td>
-            <strong>Due date: </strong> {{$vars['due_date']}}</td>
+            <strong>Due date: </strong> {{$vars['due_date']->format('Y-m-d')}}</td>
               </td>
             </tr>
             <tr>
@@ -169,30 +172,30 @@
         <td style="text-align: right;">Amount</td>
     </tr>
       <tr class="data">
-        <td>Outstanding balance on {{$vars['due_date']}}</td>
+        <td>Outstanding balance on {{$vars['due_date']->format('Y-m-d')}}</td>
         <td></td>
-        <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
+        <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
       </tr>
       @if ( $paidInvoice )
         <tr class="data">
-          <td>Payment received  {{$vars['payment_recvd_date']}}</td>
+          <td>Payment received  {{$vars['payment_recvd_date']->format('Y-m-d')}}</td>
           <td></td>
-          <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
+          <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
         </tr>
       @endif
     </table>
     <table width="100%">
       <tr>
-          <td>April  2023 invoice 3187-16190</td>
+          <td>{{$vars['invoice_month']}} {{$vars['invoice_year']}} Invoice {{$vars['invoice_no']}}</td>
           <td>&nbsp;</td>
-          <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
+          <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
       </tr>
     </table>
     <table width="100%">
       <tr>
           <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
           <td width="33%" style="text-align: center;" ><h2>Total Payment Due</h2></td>
-          <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount']}}</h2></td>
+          <td width="33%" style="text-align: right;"><h2>{{MainHelper::toDollars($vars['invoice_amount'])}}</h2></td>
       </tr>
     </table>
     </div>
@@ -210,7 +213,7 @@
                   <strong>Account name: </strong>
                 </td>
                 <td width="66%">
-                  {{$vars['account_name']}}</td>
+                  {!! $vars['account_name'] !!}
                 </td>
               </tr>
               <tr>
@@ -218,7 +221,7 @@
                   <strong>Attn: </strong>
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][0]}}</td>
+                  {!! $vars['attn'][0] !!}
                 </td>
               </tr>
               <tr>
@@ -226,7 +229,7 @@
                   &nbsp;
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][1]}}</td>
+                  {!! $vars['attn'][1] !!}
                 </td>
               </tr>
               <tr>
@@ -234,7 +237,7 @@
                   &nbsp;
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][2]}}</td>
+                  {!! $vars['attn'][2] !!}
                 </td>
               </tr>
               <tr>
@@ -242,7 +245,7 @@
                   &nbsp;
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][3]}}</td>
+                  {!! $vars['attn'][3] !!}
                 </td>
               </tr>
             </table>
@@ -261,12 +264,12 @@
               </tr>
               <tr>
                 <td>
-                  <strong>Statement date: </strong> {{$vars['statement_date']}}</td>
+                  <strong>Statement date: </strong> {{$vars['statement_date']->format('Y-m-d')}}</td>
                 </td>
               </tr>
               <tr>
                 <td>
-              <strong>Due date: </strong> {{$vars['due_date']}}</td>
+              <strong>Due date: </strong> {{$vars['due_date']->format('Y-m-d')}}</td>
                 </td>
               </tr>
               <tr>
@@ -289,33 +292,33 @@
         <tr class="data">
           <td>{{$vars['invoice_desc']}}</td>
           <td>{{$vars['invoice_month']}}</td>
-          <td>{{$vars['invoice_amount_no_tax']}}</td>
-          <td>{{$vars['tax_amount']}}</td>
-          <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
+          <td>{{MainHelper::toDollars($vars['invoice_amount_no_tax'])}}</td>
+          <td>{{MainHelper::toDollars($vars['tax_amount'])}}</td>
+          <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
         </tr>
       </table>
       <table width="100%">
         <tr>
-            <td>April  2023 invoice 3187-16190</td>
+            <td>{{$vars['invoice_month']}} {{$vars['invoice_year']}} Invoice {{$vars['invoice_no']}}</td>
             <td>&nbsp;</td>
-            <td style="text-align: right;">{{$vars['invoice_amount']}}</td>
+            <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
         </tr>
       </table>
       <table class="invoice_tbl" width="100%">
         <tr>
             <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
             <td width="33%" style="text-align: right;" ><h2>Total (exc. tax)</h2></td>
-            <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount_no_tax']}}</h2></td>
+            <td width="33%" style="text-align: right;"><h2>{{MainHelper::toDollars($vars['invoice_amount_no_tax'])}}</h2></td>
         </tr>
         <tr>
             <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
-            <td width="33%" style="text-align: right;" ><h2>GST 5%</h2></td>
-            <td width="33%" style="text-align: right;"><h2>{{$vars['tax1']}}</h2></td>
+            <td width="33%" style="text-align: right;" ><h2>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</h2></td>
+            <td width="33%" style="text-align: right;"><h2>{{MainHelper::toDollars($vars['tax_amount'])}}</h2></td>
         </tr>
         <tr>
             <td width="33%" style="text-align: left;" ><h2>&nbsp;</h2></td>
             <td width="33%" style="text-align: right;" ><h2>Total (inc. tax) tax</h2></td>
-            <td width="33%" style="text-align: right;"><h2>{{$vars['invoice_amount']}}</h2></td>
+            <td width="33%" style="text-align: right;"><h2>{{MainHelper::toDollars($vars['invoice_amount'])}}</h2></td>
         </tr>
       </table>
     </div>
@@ -333,7 +336,7 @@
                   <strong>Account name: </strong>
                 </td>
                 <td width="66%">
-                  {{$vars['account_name']}}</td>
+                  {!! $vars['account_name'] !!}
                 </td>
               </tr>
               <tr>
@@ -341,7 +344,7 @@
                   <strong>Attn: </strong>
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][0]}}</td>
+                  {!! $vars['attn'][0] !!}
                 </td>
               </tr>
               <tr>
@@ -349,7 +352,7 @@
                   &nbsp;
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][1]}}</td>
+                  {!! $vars['attn'][1] !!}
                 </td>
               </tr>
               <tr>
@@ -357,7 +360,7 @@
                   &nbsp;
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][2]}}</td>
+                  {!! $vars['attn'][2] !!}
                 </td>
               </tr>
               <tr>
@@ -365,7 +368,7 @@
                   &nbsp;
                 </td>
                 <td width="66%">
-                  {{$vars['attn'][3]}}</td>
+                  {!! $vars['attn'][3] !!}
                 </td>
               </tr>
             </table>
@@ -384,12 +387,12 @@
               </tr>
               <tr>
                 <td>
-                  <strong>Statement date: </strong> {{$vars['statement_date']}}</td>
+                  <strong>Statement date: </strong> {{$vars['statement_date']->format('Y-m-d')}}</td>
                 </td>
               </tr>
               <tr>
                 <td>
-              <strong>Due date: </strong> {{$vars['due_date']}}</td>
+              <strong>Due date: </strong> {{$vars['due_date']->format('Y-m-d')}}</td>
                 </td>
               </tr>
               <tr>
@@ -419,19 +422,19 @@
       @foreach ( $vars['invoice_items']['recurring_rows'] as $item )
         <tr class="data">
           <td>{{$item['item_desc']}}</td>
-          <td>{{$item['date']}}</td>
-          <td>{{$item['total_amount_without_tax']}}</td>
-          <td>{{$item['tax_amount']}}</td>
-          <td style="text-align: right;">{{$item['total_amount']}}</td>
+          <td>{{$item['date']->format('Y-m-d')}}</td>
+          <td>{{MainHelper::toDollars($item['total_amount_without_tax'])}}</td>
+          <td>{{MainHelper::toDollars($item['tax_amount'])}}</td>
+          <td style="text-align: right;">{{MainHelper::toDollars($item['total_amount'])}}</td>
         </tr>
 
       @endforeach
         <tr class="data bordered">
             <td>&nbsp;</td>
             <td>Subtotal</td>
-            <td>{{$vars['invoice_items']['subtotal_price']}}</td>
-            <td>{{$vars['invoice_items']['subtotal_tax']}}</td>
-            <td style="text-align: right;">{{$vars['invoice_items']['subtotal_total']}}</td>
+            <td>{{MainHelper::toDollars($vars['invoice_items']['subtotal_price'])}}</td>
+            <td>{{MainHelper::toDollars($vars['invoice_items']['subtotal_tax'])}}</td>
+            <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_items']['subtotal_total'])}}</td>
         </tr>
     </table>
 
@@ -449,31 +452,31 @@
           <td>Tax Amount</td>
           <td style="text-align: right;">Total (inc. tax)</td>
       </tr>
-      @foreach ( $vars['invoice_items']['call_tolls_rows'] as $item )
+      @foreach ( $vars['invoice_items']['fixed_rate_rows'] as $item )
         <tr class="data">
           <td>{{$item['item_desc']}}</td>
-          <td>{{$item['date']}}</td>
-          <td>{{$item['total_amount_without_tax']}}</td>
-          <td>{{$item['tax_amount']}}</td>
-          <td style="text-align: right;">{{$item['total_amount']}}</td>
+          <td>{{$item['date']->format('Y-m-d')}}</td>
+          <td>{{MainHelper::toDollars($item['total_amount_without_tax'])}}</td>
+          <td>{{MainHelper::toDollars($item['tax_amount'])}}</td>
+          <td style="text-align: right;">{{MainHelper::toDollars($item['total_amount'])}}</td>
         </tr>
 
       @endforeach
         <tr class="data bordered">
             <td>&nbsp;</td>
             <td>Subtotal</td>
-            <td>{{$vars['invoice_items']['subtotal_price']}}</td>
-            <td>{{$vars['invoice_items']['subtotal_tax']}}</td>
-            <td style="text-align: right;">{{$vars['invoice_items']['subtotal_total']}}</td>
+            <td>{{MainHelper::toDollars($vars['invoice_items']['subtotal_price'])}}</td>
+            <td>{{MainHelper::toDollars($vars['invoice_items']['subtotal_tax'])}}</td>
+            <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_items']['subtotal_total'])}}</td>
         </tr>
     </table>
     <table width="100%" class="invoice_tbl five-cols no_borders invoice_totals">
         <tr class="data">
             <td>&nbsp;</td>
             <td>Total charges</td>
-            <td>{{$vars['invoice_items']['price']}}</td>
-            <td>{{$vars['invoice_items']['tax']}}</td>
-            <td style="text-align: right;">{{$vars['invoice_items']['total']}}</td>
+            <td>{{MainHelper::toDollars($vars['invoice_items']['price'])}}</td>
+            <td>{{MainHelper::toDollars($vars['invoice_items']['tax'])}}</td>
+            <td style="text-align: right;">{{MainHelper::toDollars($vars['invoice_items']['total'])}}</td>
         </tr>
       </table>
     </div>
