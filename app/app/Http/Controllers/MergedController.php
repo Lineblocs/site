@@ -47,6 +47,7 @@ use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
 
 use App\Helpers\PortalSearchHelper;
+use App\Helpers\BillingDataHelper;
 
 use App\PhoneGlobalSetting;
 use App\PhoneGlobalSettingValue;
@@ -952,20 +953,14 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
     // set the billing region
     $region = $data['billing_region_id'];
-    if ( $data['payment_gateway'] == 'stripe' ) {
-      $params = [
-        'last_4' => $data['last_4'],
-        'stripe_token' => $data['card_token']
-      ];
-      $card = MainHelper::addCard($data, $user, $workspace, TRUE, 'stripe');
-      $workspace->update([
-        'billing_region_id' => $region
-      ]);
-
-      return $this->response->noContent();
-
+    $gateway = $data['payment_gateway'];
+    $cardData = $data;
+    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $cardData, $user, $workspace);
+    if (!$result) {
+      return $this->response->errorBaRrequest();
     }
-    return $this->response->errorBaRrequest();
+
+    return $this->response->noContent();
   }
 
 }
