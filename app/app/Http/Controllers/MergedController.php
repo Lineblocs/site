@@ -960,6 +960,9 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->errorBaRrequest();
     }
 
+    $workspace->update([
+      'billing_region_id' => $region
+    ]);
     return $this->response->noContent();
   }
 

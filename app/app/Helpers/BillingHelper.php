@@ -16,10 +16,9 @@ final class BillingDataHelper {
           'stripe_token' => $cardData['card_token']
         ];
         $card = MainHelper::addCard($cardData, $user, $workspace, TRUE, $gateway);
-        $workspace->update([
-          'billing_region_id' => $region
-        ]);
+        return TRUE;
       break;
     }
+    return FALSE;
   }
 }
