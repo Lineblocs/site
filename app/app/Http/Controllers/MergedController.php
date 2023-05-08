@@ -904,7 +904,9 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function getBillingCountries() {
     $regions = BillingRegion::select(array(
       DB::raw('billing_regions.name AS region_name'),
+      DB::raw('billing_regions.id AS region_id'),
       DB::raw('billing_countries.name AS country_name'),
+      DB::raw('billing_countries.id AS country_id'),
       DB::raw('billing_countries.iso AS iso'),
     ));
     $regions->join('billing_countries', 'billing_countries.id', '=', 'billing_regions.billing_country_id');
@@ -920,13 +922,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $countryBillingData = new \ArrayObject();
       $countryBillingData->offsetSet('iso', $item['iso']);
       $countryBillingData->offsetSet('name', $item['country_name']);
+      $countryBillingData->offsetSet('country_id', $item['country_id']);
       $countryBillingData->offsetSet('states', []);
       if (!empty( $matches ) && count( $matches ) > 0 ) {
         $keys = array_keys( $matches );
         $countryBillingData = $matches[$keys[0]];
       }
       $states = $countryBillingData->offsetGet('states');
-      $states[] = $item['region_name'];
+      $states[] = [
+        'name' => $item['region_name'],
+        'id' => $item['region_id'],
+      ];
       $countryBillingData->offsetSet('states', $states);
       if (!in_array($countryBillingData, $results)) {
         $results[] = $countryBillingData;
@@ -943,14 +949,23 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $data = $request->json()->all();
     $user = $this->getUser( $request );
     $workspace = $this->getWorkspace( $request );
+
+    // set the billing region
+    $region = $data['billing_region_id'];
     if ( $data['payment_gateway'] == 'stripe' ) {
       $params = [
         'last_4' => $data['last_4'],
         'stripe_token' => $data['card_token']
       ];
-      $card = MainHelpers::addCard($data, $user, $workspace, TRUE, 'stripe');
+      $card = MainHelper::addCard($data, $user, $workspace, TRUE, 'stripe');
+      $workspace->update([
+        'billing_region_id' => $region
+      ]);
+
       return $this->response->noContent();
+
     }
+    return $this->response->errorBaRrequest();
   }
 
 }
