@@ -401,9 +401,13 @@ final class MainHelper {
   }
 
   public static function createJWTPayload($token) {
+      $expireIn = \Carbon\Carbon::now()->addMinutes(config('jwt.ttl'));
+      $formatted = $expireIn->format('Y-m-d H:i:s');
+      $timestamp = $expireIn->getTimestamp();
       return [
               'auth' => $token,
-              'expire_in' => \Carbon\Carbon::now()->addMinutes(config('jwt.ttl'))->format('Y-m-d H:i:s')
+              'expire_in' => $formatted,
+              'expire_in_timestamp' => $timestamp
             ];
   }
   public static function checkUserInWorkspace($challenge, $user) {
