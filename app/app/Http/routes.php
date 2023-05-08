@@ -314,13 +314,15 @@ $api->version('v1', function($api) {
         $api->delete("/{extensionId}", "ExtensionController@delete");
     });
     $api->group([ 'prefix' => 'user', 'namespace' => '\User'], function($api) {
-        $api->get("/list", "UserController@list");
-        $api->get("/{userId}", "UserController@get");
-        $api->post("/", "UserController@post");
-        $api->post("/{userId}", "UserController@put");
-        $api->delete("/{userId}", "UserController@delete");
         $api->post("/createUser", "UserController@createUser");
         $api->post("/validateLogin", "UserController@validateLogin");
+        $api->post("/requestLoginToken", "UserController@requestLoginToken");
+        $api->get("/list", "UserController@list");
+
+        $api->get("/{userId}", "UserController@get");
+        $api->post("/update", "UserController@post");
+        $api->post("/update/{userId}", "UserController@put");
+        $api->delete("/{userId}", "UserController@delete");
     });
     $api->group([ 'prefix' => 'blocked', 'namespace' => '\BlockedNumber'], function($api) {
         $api->get("/list", "BlockedNumberController@list");

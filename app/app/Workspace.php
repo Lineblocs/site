@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
 use App\WorkspaceUser;
+
 class Workspace extends Model {
   protected $dates = ['created_at', 'updated_at'];
 

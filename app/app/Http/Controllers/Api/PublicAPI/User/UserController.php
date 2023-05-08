@@ -6,6 +6,7 @@ use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
+use \App\AppLogin;
 use \App\DIDNumber;
 use \App\DIDNumberTag;
 use \App\UserDebit;
@@ -13,9 +14,12 @@ use \App\Flow;
 use \App\Transformers\DIDNumberTransformer;
 use \App\Helpers\MainHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
+use Auth;
 use \DB;
 use Mail;
 use Config;
+use DateTime;
+use Log;
 
 
 
@@ -68,6 +72,39 @@ class UserController extends ApiPublicController {
         'workspace' => $workspace->toArrayWithRoles($user),
         'apiDetails' => $apiDetails
     ]);
+    }
+    public function requestLoginToken(Request $request) {
+      Log::info("requestLoginToken called");
+        $data = $request->json()->all();
+        $credentials = [
+          'email' => $data['email'],
+          'password' => $data['password']
+        ];
+      Log::info("requestLoginToken email = " . $credentials['email']);
+        $appName = $data['app_name'];
+
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            \Log::info("error occured: " . $e->getMessage());
+            return $this->errorInternal($request, 'Could not create token');
+        }
+        $currentUser = Auth::user();
+        AppLogin::create([
+          'user_id' => $currentUser->id,
+          'app_name' => $appName,
+          'datetime' => new DateTime()
+        ]);
+
+        $result = [
+            'token' => MainHelper::createJWTPayload($token),
+            'user' => $currentUser->toArray()
+        ];
+        return $this->response->array($result);
     }
     public function validateLogin(Request $request) {
         // just validating the HTTP basic auth here

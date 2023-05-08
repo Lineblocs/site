@@ -88,9 +88,6 @@ class AuthenticateController extends ApiAuthController
 
           }
         }
-
-
-
         $currentUser->update([
             'last_login' => $now
         ]);
