@@ -16,6 +16,8 @@ use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPTrunk;
+use App\BillingCountry;
+use App\BillingRegion;
 use App\PhoneDefault;
 use App\Fax;
 use App\PlanUsagePeriod;
@@ -900,17 +902,41 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     ]);
   }
   public function getBillingCountries() {
-    $countries = array(
-      array(
-        'iso' => 'CA',
-        'name' => 'Canada'
-      ),
-      array(
-        'iso' => 'US',
-        'name' => 'United States'
-      )
-      );
-      return $this->response->array($countries);
+    $regions = BillingRegion::select(array(
+      DB::raw('billing_regions.name AS region_name'),
+      DB::raw('billing_countries.name AS country_name'),
+      DB::raw('billing_countries.iso AS iso'),
+    ));
+    $regions->join('billing_countries', 'billing_countries.id', '=', 'billing_regions.billing_country_id');
+    $regions = $regions->get();
+    $results = [];
+    foreach ( $regions as $item ) {
+      $matches = array_filter( $results, function($match) use ($item) {
+          if ( $item['iso'] == $match['iso'] ) {
+            return TRUE;
+          }
+          return FALSE;
+      });
+      $countryBillingData = new \ArrayObject();
+      $countryBillingData->offsetSet('iso', $item['iso']);
+      $countryBillingData->offsetSet('name', $item['country_name']);
+      $countryBillingData->offsetSet('states', []);
+      if (!empty( $matches ) && count( $matches ) > 0 ) {
+        $keys = array_keys( $matches );
+        $countryBillingData = $matches[$keys[0]];
+      }
+      $states = $countryBillingData->offsetGet('states');
+      $states[] = $item['region_name'];
+      $countryBillingData->offsetSet('states', $states);
+      if (!in_array($countryBillingData, $results)) {
+        $results[] = $countryBillingData;
+      }
+    }
+    foreach ( $results as $key => $item ) {
+      $results[$key] = $item->getArrayCopy();
+    }
+    
+      return $this->response->array($results);
   }
   public function saveCustomerPaymentDetails(Request $request) 
   {
