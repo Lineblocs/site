@@ -948,8 +948,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function saveCustomerPaymentDetails(Request $request) 
   {
     $data = $request->json()->all();
-    $user = $this->getUser( $request );
-    $workspace = $this->getWorkspace( $request );
+    $userId = $data['user_id'];
+    $workspaceId = $data['workspace_id'];
+    //$user = $this->getUser( $request );
+    $user = User::findOrFail($userId);
+    //$workspace = $this->getWorkspace( $request );
+    //$workspace = Workspace::where('creator_id', '=', $user->id)->firstOrFail();
+    $workspace = Workspace::findOrFail($workspaceId);
 
     // set the billing region
     $region = $data['billing_region_id'];
