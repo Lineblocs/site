@@ -269,6 +269,7 @@ final class DNSHelper {
                     ]
                 ]
             ];
+
           foreach ( $info['regions'] as $code => $region ) {
             //region PoP
             $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
@@ -284,6 +285,17 @@ final class DNSHelper {
                   ]
               ];
           }
+          $baseRecords[] = [
+                'Action'            => 'CREATE',
+                "ResourceRecordSet" => [
+                    'Name'            => sprintf("%s.app", $info['workspace']['name']),
+                    'Type'            => 'CNAME',
+                    'TTL'             => '60',
+                    'ResourceRecords' => [
+                        array('Value' => $domain)
+                    ]
+                ]
+            ];
         }
       foreach ($sip_trunk_terminations as $cnt => $term_settings) {
         $host = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr );
@@ -334,6 +346,35 @@ final class DNSHelper {
           'ttl' => $record['ttl']
         ];
       }
+
+    foreach ($routerDNS as $cnt => $info) {
+        $ttl = '60';
+        $update[] = [
+          'type' => 'a',
+          'name' => $info['workspace']['name'],
+          'ttl' => $ttl,
+          'value' => $info['value']
+        ];
+        foreach ( $info['regions'] as $code => $region ) {
+          //region PoP
+          $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+
+          $update[] = [
+            'type' => 'a',
+            'name' => $value,
+            'ttl' => $ttl,
+            'value' => $region['router_ip']
+          ];
+        }
+        $value = sprintf("%s.app", $info['workspace']['name']);
+        $update[] = [
+          'type' => 'cname',
+          'name' => $value,
+          'ttl' => $ttl,
+          'value' => $domain
+        ];
+      }
+
 
       foreach ( $update as $record ) {
          $ddns->updateRecord( $record[ 'type' ] , $record[ 'name' ] , $external_ip , $record[ 'ttl' ] );
