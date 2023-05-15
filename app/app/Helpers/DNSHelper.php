@@ -381,6 +381,7 @@ final class DNSHelper {
       }
     } else if ( $dns_provider == 'self-managed' ) {
       // TODO implement
+      // integrate with the bind DNS service
       return TRUE;
     }
     return FALSE;

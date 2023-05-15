@@ -4,7 +4,7 @@ You can update your Lineblocs account settings at any time. This includes updati
 
 ## View Account settings
 
-To view your account settings on the Lineblocs dashboard, please click the ![User](/img/frontend/docs/shared/user.png) icon then click [Settings](https://lineblocs.com/#/dashboard/settings)
+To view your account settings on the Lineblocs dashboard, please click the ![user](/img/frontend/docs/shared/user.png) icon then click [settings](https://lineblocs.com/#/dashboard/settings)
 
 #### Update Password
 
