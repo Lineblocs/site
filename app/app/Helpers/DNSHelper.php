@@ -172,6 +172,18 @@ final class DNSHelper {
           $nc['Address'.$number] = $region['router_ip'];
           $nc['TTL'.$number] = '60';
         }
+
+        // add records for web portal
+        $increment = $increment + 1;
+          $number = $cnt + $increment;
+
+          $value = sprintf("%s.app", $info['workspace']['name']);
+          $nc['HostName'.$number] = $value;
+          $nc['RecordType'.$number] = 'CNAME';
+          $nc['Address'.$number] = $domain;
+          // incase of A records
+          //$nc['Address'.$number] = $web_portal_ip;
+          $nc['TTL'.$number] = '60';
       }
 
       foreach ($sip_trunk_terminations as $cnt => $term_settings) {
