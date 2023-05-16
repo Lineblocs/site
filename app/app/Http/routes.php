@@ -674,6 +674,12 @@ $api->version('v1', function($api) {
       $api->get("/listParams", "WorkspaceParamController@listParams");
       $api->post("/saveParams", "WorkspaceParamController@saveParams");
   });
+  $api->group([ 'prefix' => 'workspaceRoutingACL', 'namespace' => '\App\Http\Controllers\Api\WorkspaceRoutingACL'], function($api) {
+
+      $api->get("/listACLs", "WorkspaceRoutingACLController@listACLs");
+      $api->post("/saveACLs", "WorkspaceRoutingACLController@saveACLs");
+  });
+
 
   $api->group([ 'prefix' => 'settings', 'namespace' => '\App\Http\Controllers\Api\Settings'], function($api) {
       $api->get("/verifiedCallerids", "VerifiedCallerIdsController@getVerified");
