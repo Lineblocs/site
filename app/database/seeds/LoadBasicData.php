@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Helpers\MainHelper;
+use App\SIPRoutingACL;
 
 class LoadBasicData extends Seeder
 {
