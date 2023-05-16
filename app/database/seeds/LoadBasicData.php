@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Helpers\MainHelper;
 
 class LoadBasicData extends Seeder
 {
@@ -39,6 +40,21 @@ class LoadBasicData extends Seeder
         echo "loading SIP United States data.." .PHP_EOL;
         require_once($dir2."load_sip_us_data.php");
         */
+
+        // load SIP routing ACLs
+        $riskLevels = MainHelper::$aclRiskLevels;
+        SIPRoutingACL::create([
+            'iso' => 'us',
+            'name' => 'United States',
+            'risk_level' => 'low',
+            'enabled' => TRUE
+        ]);
+        SIPRoutingACL::create([
+            'iso' => 'ca',
+            'name' => 'Canada',
+            'risk_level' => 'low',
+            'enabled' => TRUE
+        ]);
 
     }
 }

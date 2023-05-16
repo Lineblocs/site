@@ -39,6 +39,12 @@ final class MainHelper {
             '/24' => '/24',
             '/32' => '/32',
         ];
+
+    public static $aclRiskLevels = [
+            'high' => 'High',
+            'moderate' => 'Moderate',
+            'low' => 'Low'
+      ];
     public static $regions = [
       'ca-central-1' => 'ca-central-1' 
     ];

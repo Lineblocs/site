@@ -20,5 +20,6 @@ return [
     'yes' => 'Yes',
     'no' => 'No',
     'active' => 'Active',
-    'webrtc_optimized' => 'WebRTC optimized'
+    'webrtc_optimized' => 'WebRTC optimized',
+    'enabled' => 'Enabled'
 	];

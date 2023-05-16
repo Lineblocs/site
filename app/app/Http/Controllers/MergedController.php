@@ -218,8 +218,9 @@ class MergedController extends ApiAuthController
       $cloned1 = clone $start;
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
-      $plans = \Config::get("service_plans");
-      $plan = $plans[ $workspace->plan ];
+      //$plans = \Config::get("service_plans");
+      //$plan = $plans[ $workspace->plan ];
+      $plan = ServicePlan::where('key_name', $workspace->plan)->firstOrFail()->toArray();
       while ($currentDay != $dayCount) {
         $labels[] = $cloned1->format("M-d");
         $cloned2 = clone $cloned1;
@@ -233,7 +234,7 @@ class MergedController extends ApiAuthController
       }
       $graph = ['labels' => $labels, 'data' => $data];
       $user = $this->getUser($request);
-        $billingInfo = $user->getBillingInfo();
+        $billingInfo = $user->getBillingInfo($plan);
        $billing = [
           'info' => $billingInfo
         ];

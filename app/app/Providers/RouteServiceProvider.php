@@ -33,6 +33,8 @@ use \App\SIPTrunkTermination;
 use \App\ResourceSection;
 use \App\ResourceArticle;
 use \App\CompanyRepresentative;
+use \App\SIPRoutingACL;
+
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -84,6 +86,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('resourcesection',ResourceSection::class);
 
        \Route::model('companyrepresentative',CompanyRepresentative::class);
+       \Route::model('routingacl',SIPRoutingACL::class);
     }
 
     /**

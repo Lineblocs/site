@@ -304,6 +304,30 @@
             </div>
 
             <div class="row form-group">
+                <label for="register_credits_enabled">Register credits enabled</label>
+                <div class="controls">
+                    <select name="register_credits_enabled" class="form-control" id="register_credits_enabled">
+                        @if ( $record->register_credits_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="register_credits">Register credits</label>
+                <div class="controls">
+                    <input name="register_credits" class="form-control" value="{{$record->register_credits}}" />
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="portal_analytics_enabled">Portal Analytics enabled</label>
                 <div class="controls">
                     <select name="portal_analytics_enabled" class="form-control" id="portal_analytics_enabled">

@@ -118,6 +118,11 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['signup_requires_payment_detail'] = $signup_pay_details_required;
 
+		if ( $update_params['register_credits_enabled'] =='yes') {
+			$register_credits_enabled = true;
+		}
+		$update_params['register_credits_enabled'] = $register_credits_enabled;
+
 
 		$enable_google_signin = false;
 

@@ -67,6 +67,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{url('admin/routingacl')}}">
+                        <i class="glyphicon glyphicon-user"></i> SIP Routing ACL
+                    </a>
+                </li>
+
+                <li>
                     <a href="{{url('admin/rtpproxy')}}">
                         <i class="glyphicon glyphicon-user"></i> RTP proxies
                     </a>

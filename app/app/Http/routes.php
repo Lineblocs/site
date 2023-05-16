@@ -251,6 +251,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
     Route::resource('serviceplan', 'Admin\ServicePlanController');
 
+
+    # SIPRoutingACL
+    Route::get('routingacl/data', 'Admin\SIPRoutingACLController@data');
+    Route::get('routingacl/{routingacl}/show', 'Admin\SIPRoutingACLController@show');
+    Route::get('routingacl/{routingacl}/edit', 'Admin\SIPRoutingACLController@edit');
+    Route::get('routingacl/{routingacl}/delete', 'Admin\SIPRoutingACLController@delete');
+    Route::resource('routingacl', 'Admin\SIPRoutingACLController');
+
      # ResourceSections
     Route::get('resourcesection/data', 'Admin\ResourceSectionController@data');
     Route::get('resourcesection/{resourcesection}/show', 'Admin\ResourceSectionController@show');

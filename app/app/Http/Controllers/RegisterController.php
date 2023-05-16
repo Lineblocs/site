@@ -19,6 +19,7 @@ use Twilio\Rest\Client;
 use Twilio\TwiML\VoiceResponse;
 use App\UserCredit;
 use App\ServicePlan;
+use App\Customizations;
 use Illuminate\Support\Facades\Password;
 use \Log;
 use App\UserDevice;
@@ -30,7 +31,6 @@ use App\WorkspaceEvent;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
-use App\Customizations;
 use DateTime;
 
 class RegisterController extends ApiAuthController
@@ -244,7 +244,7 @@ class RegisterController extends ApiAuthController
           }
 
           //add register credit for user
-          $amountInCents = Config::get("misc.register_credits")*100;
+          $amountInCents = $customizations->register_credits*100;
           $credit = [
             'cents' => $amountInCents,
             'card_id' => NULL,
