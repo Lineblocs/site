@@ -40,6 +40,14 @@
             </div>
         </div>
 
+        <div class="form-group  {{ $errors->has('country_code') ? 'has-error' : '' }}">
+            {!! Form::label('country_code', trans("admin/routingacl.country_code"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::select('country_code', $riskLevels, null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('country_code', ':message') }}</span>
+            </div>
+        </div>
+
         <div class="form-group  {{ $errors->has('enabled') ? 'has-error' : '' }}">
             {!! Form::label('enabled', trans("admin/admin.enabled"), array('class' => 'control-label')) !!}
             <div class="controls">

@@ -4,5 +4,6 @@ return [
     'sip_routing_acl' => 'SIP Routing ACL',
     'iso' => 'ISO',
     'name' =>   'Name',
-    'risk_level' =>   'Risk level'
+    'risk_level' =>   'Risk level',
+    'country_code' =>   'Country code'
 ];
