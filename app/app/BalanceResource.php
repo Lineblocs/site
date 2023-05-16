@@ -7,10 +7,10 @@ use App\Helpers\MainHelper;
 use App\User;
 
 class BalanceResource extends Model {
-  public static function create($attrs=array()) {
+  public static function create($attrs=array(), $plan=NULL) {
     $user = User::findOrFail($attrs['user_id']);
     $record = parent::create( $attrs );
-    $billing = $user->getBillingInfo();
+    $billing = $user->getBillingInfo($plan);
     $update = [];
     $update['balance'] = $billing['accountBalance'];
     $record->update($update);

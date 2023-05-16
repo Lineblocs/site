@@ -18,6 +18,7 @@ use \Mail;
 use Twilio\Rest\Client;
 use Twilio\TwiML\VoiceResponse;
 use App\UserCredit;
+use App\ServicePlan;
 use Illuminate\Support\Facades\Password;
 use \Log;
 use App\UserDevice;
@@ -196,10 +197,10 @@ class RegisterController extends ApiAuthController
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
         $customizations =Customizations::getRecord();
-        $plans = Config::get("service_plans");
-        $plan = $plans[$data['plan']];
+        $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail()->toArray();
+        //$plan = $plans[$data['plan']];
         $region = "ca-central-1";
-          $info = MainHelper::getHostIPForUser($region, $user);
+        $info = MainHelper::getHostIPForUser($region, $user);
           //$reservedIp = AWSHelper::reserveIP($region, $ip['main'], $ip['reservedIp']);
           //$reservedIp = VultrHelper::reserveIP($region, $ip['main'], $ip."/32");
           /*
@@ -251,7 +252,7 @@ class RegisterController extends ApiAuthController
             'status' => 'approved'
           ];
 
-          UserCredit::create($credit);
+          UserCredit::create($credit, $plan);
           $now = new \DateTime();
           $user->update([
             'last_login' => $now

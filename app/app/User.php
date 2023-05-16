@@ -171,11 +171,17 @@ class User extends Model implements AuthenticatableContract,
       return 'not-applicable';
     }
 
-    public function getLimits() {
+    public function getLimits($plan=NULL) {
       $work = \App\Workspace::where('creator_id', $this->id)->first();
+
       if ( $work ) {
-        $limits = Config::get("service_plans")[$work->plan];
-        return $limits;
+        // FIXME: need to add better handling for database I/O
+        if (!empty($plan)) {
+            return $plan;
+        }
+
+        $plan = ServicePlan::where('key_name', $work->plan)->firstOrFail()->toArray();
+        return $plan;
       } else {
         return [
           'call_duration' => 'N/A',

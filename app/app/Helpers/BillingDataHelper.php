@@ -6,19 +6,20 @@ use App\Settings;
 
 final class BillingDataHelper {
   // update this to support multiple billing gateways in the future
-  public static function updateWorkspaceBilling($gateway, $cardData, $user, $workspace) {
+  public static function updateWorkspaceBilling($gateway, $billingData, $user, $workspace)
   {
-
+    $paymentValues = $billingData['payment_values'];
     switch ( $gateway ) {
       case "stripe":
         $params = [
-          'last_4' => $cardData['last_4'],
-          'stripe_token' => $cardData['card_token']
+          'last_4' => $paymentValues['last_4'],
+          'stripe_token' => $paymentValues['card_token']
         ];
-        $card = MainHelper::addCard($cardData, $user, $workspace, TRUE, $gateway);
+        $card = MainHelper::addCard($params, $user, $workspace, TRUE, $gateway);
         return TRUE;
       break;
     }
+
     return FALSE;
   }
 }

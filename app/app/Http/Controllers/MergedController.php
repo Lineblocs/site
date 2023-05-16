@@ -959,8 +959,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     // set the billing region
     $region = $data['billing_region_id'];
     $gateway = $data['payment_gateway'];
-    $cardData = $data;
-    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $cardData, $user, $workspace);
+    $billingData = $data;
+    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $billingData, $user, $workspace);
     if (!$result) {
       return $this->response->errorBaRrequest();
     }
