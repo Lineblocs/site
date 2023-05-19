@@ -30,5 +30,6 @@ return [
     'origination' => 'Origination',
     'termination' => 'Termination',
     'did_numbers' => 'DID Numbers',
-    'rtpproxies' => 'RTP proxies'
+    'rtpproxies' => 'RTP proxies',
+    'users' => 'Users'
 ];

@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html">
-                <img src="{{\App\Helpers\MainHelper::adminLogo()}}" height="42"/>
+            <img src="{{\App\Helpers\MainHelper::adminLogo()}}" height="42" />
         </a>
     </div>
     <div class="navbar-default sidebar" role="navigation">
@@ -22,89 +22,99 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{url('admin/user')}}">
-                        <i class="glyphicon glyphicon-user"></i> Users
-                    </a>
-                </li>
-                <!--
-                <li>
                     <a href="#">
-                        <i class="glyphicon glyphicon-bullhorn"></i> Newsletters
+                        <i class="glyphicon glyphicon-bullhorn"></i> Basic Administration
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav collapse">
+
                         <li>
-                            <a href="{{url('admin/newsletters/sent')}}">
-                                <i class="glyphicon glyphicon-list"></i>  Sent newsletters
+                            <a href="{{url('admin/user')}}">
+                                <i class="glyphicon glyphicon-user"></i> Users
                             </a>
                         </li>
+
                         <li>
-                            <a href="{{url('admin/newsletters/create')}}">
-                                <i class="glyphicon glyphicon-bullhorn"></i> Create Newsletter
+                            <a href="{{url('admin/workspace')}}">
+                                <i class="glyphicon glyphicon-user"></i> Workspaces
                             </a>
                         </li>
                     </ul>
                 </li>
-            -->
+
                 <li>
-                    <a href="{{url('admin/provider')}}">
-                        <i class="glyphicon glyphicon-user"></i> SIP Providers
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> SIP configuration & Networking
+                        <span class="fa arrow"></span>
                     </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/country')}}">
-                        <i class="glyphicon glyphicon-user"></i> SIP Service Countries
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/router')}}">
-                        <i class="glyphicon glyphicon-user"></i> SIP Routers
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/trunk')}}">
-                        <i class="glyphicon glyphicon-user"></i> SIP Trunks
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/routingacl')}}">
-                        <i class="glyphicon glyphicon-user"></i> SIP Routing ACL
-                    </a>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/provider')}}">
+                                <i class="glyphicon glyphicon-user"></i> Trunk Providers
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/country')}}">
+                                <i class="glyphicon glyphicon-user"></i> Service Countries
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/router')}}">
+                                <i class="glyphicon glyphicon-user"></i> Routers
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/trunk')}}">
+                                <i class="glyphicon glyphicon-user"></i> Trunks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/routingacl')}}">
+                                <i class="glyphicon glyphicon-user"></i> Routing ACL
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{url('admin/rtpproxy')}}">
+                                <i class="glyphicon glyphicon-user"></i> RTP proxies
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/server')}}">
+                                <i class="glyphicon glyphicon-user"></i> Media Servers
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li>
-                    <a href="{{url('admin/rtpproxy')}}">
-                        <i class="glyphicon glyphicon-user"></i> RTP proxies
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> DIDs inventories and rates
+                        <span class="fa arrow"></span>
                     </a>
-                </li>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/number')}}">
+                                <i class="glyphicon glyphicon-user"></i> Number Inventory
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/rate')}}">
+                                <i class="glyphicon glyphicon-user"></i> Call Rates
+                            </a>
+                        </li>
 
-
-
-
-                <li>
-                    <a href="{{url('admin/server')}}">
-                        <i class="glyphicon glyphicon-user"></i> Media Servers
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/number')}}">
-                        <i class="glyphicon glyphicon-user"></i> Number Inventory
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/routerflow')}}">
-                        <i class="glyphicon glyphicon-user"></i> Router flows
-                    </a>
+                    </ul>
                 </li>
                 <li>
                     <a href="#">
-                        <i class="glyphicon glyphicon-bullhorn"></i> Settings
+                        <i class="glyphicon glyphicon-bullhorn"></i> Settings & Content management
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav collapse">
                         <li>
                             <a href="{{url('admin/settings')}}">
-                                <i class="glyphicon glyphicon-list"></i>  API credentials
+                                <i class="glyphicon glyphicon-list"></i> API credentials
                             </a>
                         </li>
                         <li>
@@ -113,55 +123,52 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/serviceplan')}}">
+                                <i class="glyphicon glyphicon-user"></i> Service Plan
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/faqs')}}">
                                 <i class="glyphicon glyphicon-bullhorn"></i> FAQs
                             </a>
                         </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="glyphicon glyphicon-bullhorn"></i> Resources
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav collapse">
                         <li>
                             <a href="{{url('admin/resourcesection')}}">
-                                <i class="glyphicon glyphicon-list"></i>  Sections
+                                <i class="glyphicon glyphicon-list"></i> Resources
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/companyrepresentative')}}">
+                                <i class="glyphicon glyphicon-user"></i> Company Representatives
                             </a>
                         </li>
                     </ul>
                 </li>
 
+
+
                 <li>
-                    <a href="{{url('admin/rate')}}">
-                        <i class="glyphicon glyphicon-user"></i> Call Rates
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> Advanced Options
+                        <span class="fa arrow"></span>
                     </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/serviceplan')}}">
-                        <i class="glyphicon glyphicon-user"></i> Service Plan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/companyrepresentative')}}">
-                        <i class="glyphicon glyphicon-user"></i> Company Representatives
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/dns')}}">
-                        <i class="glyphicon glyphicon-user"></i> DNS Records
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/systemstatus')}}">
-                        <i class="glyphicon glyphicon-user"></i> System Status
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/errortrace')}}">
-                        <i class="glyphicon glyphicon-user"></i> Error Trace
-                    </a>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/dns')}}">
+                                <i class="glyphicon glyphicon-user"></i> DNS Records
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/systemstatus')}}">
+                                <i class="glyphicon glyphicon-user"></i> System Status
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/errortrace')}}">
+                                <i class="glyphicon glyphicon-user"></i> Error Trace
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ url('auth/logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
@@ -169,4 +176,4 @@
             </ul>
         </div>
     </div>
-</nav>
+    </nav>

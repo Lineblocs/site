@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkspaceUser extends PublicResource {
-  protected $dates = ['created_at', 'updated_at'];
+  protected $dates = ['created_at', 'updated_at', 'joined_at'];
   public static $publicPrefix = "wu";
   protected $guarded  = array('id');
   protected $table = "workspaces_users";

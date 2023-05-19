@@ -105,12 +105,23 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('user', 'Admin\UserController');
     Route::resource('port', 'Admin\UserController');
     Route::resource('did', 'Admin\UserController');
+
+    # Workspaces
+    Route::get('workspace/data', 'Admin\WorkspaceController@data');
+    Route::get('workspace/{workspace}/show', 'Admin\WorkspaceController@show');
+    Route::get('workspace/{workspace}/edit', 'Admin\WorkspaceController@edit');
+    Route::get('workspace/{workspace}/delete', 'Admin\WorkspaceController@delete');
+    Route::resource('workspace', 'Admin\WorkspaceController');
+
     # SIPProviders
     Route::get('provider/data', 'Admin\SIPProviderController@data');
     Route::get('provider/{provider}/show', 'Admin\SIPProviderController@show');
     Route::get('provider/{provider}/edit', 'Admin\SIPProviderController@edit');
     Route::get('provider/{provider}/delete', 'Admin\SIPProviderController@delete');
     Route::resource('provider', 'Admin\SIPProviderController');
+
+
+
      # CallRates
     Route::get('rate/data', 'Admin\CallRateController@data');
     Route::get('rate/{rate}/show', 'Admin\CallRateController@show');
