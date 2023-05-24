@@ -38,11 +38,11 @@
                             <a href="{{url('admin/workspace')}}">
                                 <i class="glyphicon glyphicon-user"></i> Workspaces
                             </a>
-                        </li>
                     </ul>
                 </li>
 
                 <li>
+
                     <a href="#">
                         <i class="glyphicon glyphicon-bullhorn"></i> SIP configuration & Networking
                         <span class="fa arrow"></span>

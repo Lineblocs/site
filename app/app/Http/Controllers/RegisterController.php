@@ -315,6 +315,12 @@ class RegisterController extends ApiAuthController
     {
       $data = $request->json()->all();
       $plan = $data['plan'];
+
+      $specifiedPlan = ServicePlan::where('name', $plan)->first();
+      if ( !$specifiedPlan ) {
+        return $this->response->errorBadRequest();
+      }
+
       $count = Workspace::where('name', '=', $data['workspace'])->count();
       if ($count > 0) {
         return $this->response->array(['success' => FALSE, 'workspace name already taken...']);
