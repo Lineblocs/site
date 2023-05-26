@@ -316,7 +316,7 @@ class RegisterController extends ApiAuthController
       $data = $request->json()->all();
       $plan = $data['plan'];
 
-      $specifiedPlan = ServicePlan::where('name', $plan)->first();
+      $specifiedPlan = ServicePlan::where('key_name', $plan)->first();
       if ( !$specifiedPlan ) {
         return $this->response->errorBadRequest();
       }
