@@ -9,7 +9,8 @@ class SIPRoutingACL extends Model {
 
   protected $guarded  = array('id');
   protected $casts = array(
-    "enabled" => "boolean"
+    "enabled" => "boolean",
+    "preset_acl_enabled" => "boolean",
   );
 
   protected $table = "sip_routing_acl";

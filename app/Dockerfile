@@ -1,8 +1,12 @@
-FROM php:7.3.0-apache
+FROM php:7.4.0-apache
 SHELL ["/bin/bash", "-c"]
 
 # Set working directory
 WORKDIR /var/www/html
+
+# TODO: this is a temporary fix. 
+# in the future, upgrade to use later verison of PHP instead (possibly PHP 8)
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
