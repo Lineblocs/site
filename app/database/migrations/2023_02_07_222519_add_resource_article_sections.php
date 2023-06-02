@@ -12,7 +12,7 @@ class AddResourceArticleSections extends Migration
      */
     public function up()
     {
-        Schema::create('resource_sections', function (Blueprint $table) {
+        Schema::create('resource_articles_sections', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->string('title');

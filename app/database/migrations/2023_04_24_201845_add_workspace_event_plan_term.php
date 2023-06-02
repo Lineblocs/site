@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddServicePlanTerm extends Migration
+class AddWorkspaceEventPlanTerm extends Migration
 {
     /**
      * Run the migrations.
