@@ -35,6 +35,7 @@ return [
 
 
     'site_name' => env('SITE_NAME'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -226,6 +227,5 @@ return [
     ],
 
     'document_save_dir' => public_path("fs/documents"),
-    'file_save_dir' => public_path("fs/files"),
-    'name' => 'Telephony site'
+    'file_save_dir' => public_path("fs/files")
 ];
