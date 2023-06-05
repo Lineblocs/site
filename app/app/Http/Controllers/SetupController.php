@@ -227,6 +227,11 @@ class SetupController extends BaseController {
 
   public function setup_customization(Request $request)
   {
+    $user = User::getAdminRecord();
+    $name= getSavedValue($request, $user,  'company_name');
+    $params = [
+      'name' => $name
+    ];
     return view("setup.customization", $params);
   }
   public function save_customization(Request $request)
@@ -248,10 +253,12 @@ public function setup_alreadycomplete(Request $request)
   }
 public function setup_restart(Request $request)
   {
+    /*
     $creds = ApiCredential::getRecord();
     $creds->update([
       'setup_complete' => FALSE
     ]);
+    */
     return redirect("/setup/");
   }
 
