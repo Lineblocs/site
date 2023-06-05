@@ -60,7 +60,7 @@ echo var_dump( DB::table('service_plans')->delete() );
 echo var_dump( DB::table('company_representatives')->delete() );
 echo var_dump( DB::table('dns_records')->delete() );
 echo var_dump( DB::table('error_user_trace')->delete() );
-
+echo var_dump( DB::table('service_plans')->delete() );
 
 echo "Removing customizations tables" .PHP_EOL;
 echo var_dump( DB::table('api_credentials')->delete() );

@@ -84,11 +84,11 @@ class ServicePlanController extends AdminController
         return [
             'key' => $key
         ];
-    }
+}
 
     private function getFeatureOptions() {
         return [
-            $this->createFeatureOption('allows_monthly'),
+$this->createFeatureOption('allows_monthly'),
             $this->createFeatureOption('allows_annual'),
             $this->createFeatureOption('fax'),
             $this->createFeatureOption('im_integrations'),

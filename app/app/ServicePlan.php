@@ -45,7 +45,7 @@ class ServicePlan extends Model {
 
   public function getFormattedMonthlyCharge()
   {
-    $cents = $this->monthly_charge_cents;
+    $cents = $this->base_costs;
     return number_format(($cents /100), 2, '.', ' ');
   }
 
@@ -68,6 +68,7 @@ class ServicePlan extends Model {
   public static function getPayAsYouGoplan() {
     return self::where('pay_as_you_go', '1')->firstOrFail();
   }
+
 
 
 }
