@@ -15,7 +15,7 @@ class AddCallIdToRecordings extends Migration
         Schema::table('recordings', function (Blueprint $table) {
             //
             $table->integer('call_id')->unsigned()->nullable();
-            $table->foreign('call_id')->references('id')->on('calls');
+            $table->foreign('call_id')->references('id')->on('calls')->onDelete('SET NULL');
 
         });
     }

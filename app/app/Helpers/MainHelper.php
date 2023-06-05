@@ -723,7 +723,6 @@ final class MainHelper {
     return FALSE;
   }
   public static function getRegions() {
-    $nodes = \Config::get("mothernodes");
     $results = [];
     $routers = SIPRouter::all();
     foreach ($routers as $item) {

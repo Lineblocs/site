@@ -118,6 +118,7 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['signup_requires_payment_detail'] = $signup_pay_details_required;
 
+		$register_credits_enabled = false;
 		if ( $update_params['register_credits_enabled'] =='yes') {
 			$register_credits_enabled = true;
 		}
@@ -131,11 +132,13 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['enable_google_signin'] = $enable_google_signin;
 
+		$enable_msft_signin = false;
 		if ( !empty( $update_params['enable_msft_signin'] ) ) {
 			$enable_msft_signin = true;
 		}
 		$update_params['enable_msft_signin'] = $enable_msft_signin;
 
+		$enable_apple_signin = false;
 		if ( !empty( $update_params['enable_apple_signin'] ) ) {
 			$enable_apple_signin = true;
 		}
@@ -145,16 +148,19 @@ class CustomizationsController extends AdminController {
 		$search_include_blog_views = false;
 		$search_include_resources = false;
 
+		$search_include_portal_views = false;
 		if ( !empty( $update_params['search_include_portal_views'] ) ) {
 			$search_include_portal_views = true;
 		}
 		$update_params['search_include_portal_views'] = $search_include_portal_views;
 
+		$search_include_resources = false;
 		if ( !empty( $update_params['search_include_resources'] ) ) {
 			$search_include_resources = true;
 		}
 		$update_params['search_include_resources'] = $search_include_resources;
 
+		$search_include_blog_views = false;
 		if ( !empty( $update_params['search_include_blog_views'] ) ) {
 			$search_include_blog_views = true;
 		}

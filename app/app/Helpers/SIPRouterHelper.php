@@ -111,7 +111,7 @@ final class SIPRouterHelper {
 
   public static function removeRTPProxy($lineblocsId) {
     $conn = DB::connection('mysql-opensips');
-    $conn->insert('DELETE FROM `rtpproxy_sockets` WHERE `lineblocs_id` = ?', [$lineblocsId]);
+    $conn->delete('DELETE FROM `rtpproxy_sockets` WHERE `lineblocs_id` = ?', [$lineblocsId]);
     self::reloadRTPProxies();
   }
 
@@ -224,6 +224,17 @@ final class SIPRouterHelper {
       $domain = MainHelper::makeDomainName($workspace['name'], $region['internal_code']);
       self::processSIPProxyDomain($user, $workspace, $domain, $extensions);
     }
+  }
+
+
+  public static function removeAllUserData()
+  {
+    //main domain
+    $conn = DB::connection('mysql-opensips');
+    $conn->delete('DELETE FROM `subscriber`;');
+    $conn->delete('DELETE FROM `domain`;');
+    $conn->delete('DELETE FROM `rtpproxy_sockets`;');
+    $conn->delete('DELETE FROM `usr_preferences`;');
   }
 
 }

@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PhoneDefSeeder::class);
         $this->call(LoadPhoneData::class);
         $this->call(LoadBasicData::class);
+
+        // create any singleton records such as customizations and settings
         Model::reguard();
     }
 }

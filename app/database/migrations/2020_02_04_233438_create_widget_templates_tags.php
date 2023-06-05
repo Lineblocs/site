@@ -17,7 +17,7 @@ class CreateWidgetTemplatesTags extends Migration
             $table->timestamps();
             $table->string('title');
             $table->integer('template_id')->unsigned();
-            $table->foreign('template_id')->references('id')->on('widget_templates');
+            $table->foreign('template_id')->references('id')->on('widget_templates')->onDelete('CASCADE');
 
         });
     }

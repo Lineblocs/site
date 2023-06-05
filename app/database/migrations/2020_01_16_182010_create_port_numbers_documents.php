@@ -16,7 +16,7 @@ class CreatePortNumbersDocuments extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('number_id')->unsigned();
-            $table->foreign('number_id')->references('id')->on('port_numbers');
+            $table->foreign('number_id')->references('id')->on('port_numbers')->onDelete('CASCADE');
             $table->integer('user_id')->nullable()->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->string('filename');
