@@ -11,6 +11,7 @@ use App\DIDNumber;
 use App\Http\Requests\Admin\UserRequest;
 use App\Helpers\MainHelper;
 use App\Helpers\AdminUIHelper;
+use App\Helpers\EmailHelper;
 use Datatables;
 use DB;
 use Config;
@@ -183,41 +184,67 @@ class UserController extends AdminController
                 ];
 
             if ($status=='received') {
+                $subject = "Port Request " . $port->public_id . " received";
+                $result = EmailHelper::sendEmail($subject, $user->email, 'ports_status_received' , $data);
+
+            
+                /*
                 Mail::send('emails.ports_status_received', $data, function ($message) use ($user, $port, $mail) {
                     $message->to($user->email);
                     $message->subject("Port Request " . $port->public_id . " received");
                     $from = $mail['from'];
                     $message->from($from['address'], $from['name']);
                 });
+                */
             } elseif ($status=='submitted-to-provider') {
+                $subject = "Port Request " . $port->public_id . " submitted to provider";
+                $result = EmailHelper::sendEmail($subject, $user->email, 'ports_status_submitted' , $data);
+
+                /*
                 Mail::send('emails.ports_status_submitted', $data, function ($message) use ($user, $port, $mail) {
                     $message->to($user->email);
                     $message->subject("Port Request " . $port->public_id . " submitted to provider");
                     $from = $mail['from'];
                     $message->from($from['address'], $from['name']);
                 });
+                */
             } elseif ($status=='confirmed') {
+                $subject = "Port Request " . $port->public_id . " confirmed";
+                $result = EmailHelper::sendEmail($subject, $user->email, 'ports_status_confirmed' , $data);
+
+                /*
                 Mail::send('emails.ports_status_confirmed', $data, function ($message) use ($user, $port, $mail) {
                     $message->to($user->email);
                     $message->subject("Port Request " . $port->public_id . " confirmed");
                     $from = $mail['from'];
                     $message->from($from['address'], $from['name']);
                 });
+                */
             } elseif ($status=='completed') {
+                $subject = "Port Request " . $port->public_id . " completed";
+                $result = EmailHelper::sendEmail($subject, $user->email, 'ports_status_completed', $data);
+
+                /*
                 Mail::send('emails.ports_status_completed', $data, function ($message) use ($user, $port, $mail) {
                     $message->to($user->email);
                     $message->subject("Port Request " . $port->public_id . " completed");
                     $from = $mail['from'];
                     $message->from($from['address'], $from['name']);
                 });
+                */
 
             } elseif ($status=='needs-info') {
+                $subject = "Port Request " . $port->public_id . " needs additional info";
+                $result = EmailHelper::sendEmail($subject, $user->email, 'ports_status_needs_info', $data);
+
+                /*
                 Mail::send('emails.ports_status_needs_info', $data, function ($message) use ($user, $port, $mail) {
                     $message->to($user->email);
                     $message->subject("Port Request " . $port->public_id . " needs additional info");
                     $from = $mail['from'];
                     $message->from($from['address'], $from['name']);
                 });
+                */
             }
         }
         $port->update($request->all());
@@ -432,11 +459,14 @@ EOF;
             'subject' => $subject,
             'body' => $body
         ];
+        $result = EmailHelper::sendEmail($subject, $user->email, 'admin_email', $data);
+        /*
         Mail::send('emails.admin_email', $data, function($m) use ($subject, $to, $admin, $user) {
             $m->from($admin->email, $admin->getName());
             $m->to($user->email, $user->getName());
             $m->subject($subject);
         });
+        */
     }
 
 

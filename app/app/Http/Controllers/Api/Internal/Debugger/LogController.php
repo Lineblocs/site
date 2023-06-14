@@ -12,6 +12,7 @@ use \App\Recording;
 use \App\DebuggerLog;
 use \App\Transformers\CallTransformer;
 use \App\Helpers\MainHelper;
+use \App\Helpers\EmailHelper;
 use DateTime;
 use DateInterval;
 use Config;
@@ -40,6 +41,9 @@ class LogController extends ApiAuthController {
           Report: %s
         ", $creator->email, $params['title'], $params['report']));
         try {
+          $subject = "Debugger Error";
+          $result = EmailHelper::sendEmail($subject, $creator->email, 'debugger_error', $data);
+          /*
           Mail::send('emails.debugger_error', $data, function ($message) use ($mail, $creator) {
               $message->to($creator->email);
               $subject =MainHelper::createEmailSubject("Debugger Error");
@@ -47,6 +51,7 @@ class LogController extends ApiAuthController {
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });
+          */
         } catch (Exception $ex) {
           Log::info("could not send logger to " . $creator->email);
           return $log;

@@ -79,9 +79,10 @@ trait DIDNumberWorkflow {
         $params = [];
         $params['number'] = $data['number'];
         if (!empty($data['flow_id'])) {
+          \Log::info("attaching flow id: " . $params['flow_id']);
           $params['flow_id'] = MainHelper::resolveAppId(new Flow, $data['flow_id']);
         }
-        \Log::info("attaching flow id: " . $params['flow_id']);
+
         $did = BYODIDNumber::create( array_merge($params, [
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,

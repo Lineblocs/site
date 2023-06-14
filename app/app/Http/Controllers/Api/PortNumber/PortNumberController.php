@@ -116,6 +116,9 @@ class PortNumberController extends ApiAuthController {
         if (!$this->uploadDocs($request, $number)) {
           return $this->errorInternal(sprintf("One of the documents could not be uploaded please be sure to upload a file size less than %s and use one of the following file formats: %s", self::$maxDocumentSizeReadable, implode(",", self::$acceptedDocumentFormats)));
         }
+        $subject = "Port Number Request Updated";
+          $result = EmailHelper::sendEmail($subject, $user->email, 'port_updated', $data);
+          /*
           Mail::send('emails.port_updated', $data, function ($message) use ($user, $mail) {
               $message->to($user->email);
               $subject =MainHelper::createEmailSubject("Port Number Request Updated");
@@ -123,6 +126,7 @@ class PortNumberController extends ApiAuthController {
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });
+          */
         return $this->response->noContent();
     }
     public function numberData(Request $request, $numberId)

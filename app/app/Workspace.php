@@ -6,6 +6,7 @@ use App\Helpers\MainHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
+use App\ServicePlan;
 use App\WorkspaceUser;
 
 class Workspace extends Model {
@@ -39,8 +40,9 @@ class Workspace extends Model {
     return MainHelper::createSubdomain($this->name);
   }
   public function getPlanInfo() {
-    $plans = \Config::get("service_plans");
-    return $plans[ $this->plan ];
+    //$plans = \Config::get("service_plans");
+    //return $plans[ $this->plan ];
+    return ServicePlan::where('key_name', $this->plan)->firstOrFail();
   }
   public static function asSelect() {
     $items = Workspace::all();

@@ -88,9 +88,9 @@ final class PhoneProvisionHelper {
 </gs_provision>';
 //XML compiled, write to file
     $stripped = $phone->getStrippedMacAddress();
-    $this->provisionPhone($phone, "cfg".$stripped.".xml", $xml_data);
+    self::provisionPhone($phone, "cfg".$stripped.".xml", $xml_data);
   }
-  public function provisionPhone($phone, $file, $xml_data)
+  public static function provisionPhone($phone, $file, $xml_data)
   {
     $s3 = \Storage::disk('s3');
     $provision_path_local = \Config::get("provision.path");

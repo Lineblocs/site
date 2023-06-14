@@ -760,8 +760,9 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function billingDiscontinue(Request $request) {
     // downgrade plan to pay as you go
     $workspace = $this->getWorkspace($request);
+    $servicePlan = ServicePlan::getPayAsYouGoplan();
     $workspace->update([
-      'plan' => $plan,
+      'plan' => $servicePlan->key_name
     ]);
     $props = array(
       "billing_status" => "pending_processing"
@@ -773,14 +774,20 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $user = $this->getUser($request);
     $data = $request->json()->all();
     $updateParams = [];
+
     if (!empty($data['enable_2fa'])) {
       $updateParams['enable_2fa'] = $data['enable_2fa'];
     }
     if (!empty($data['type_of_2fa'])) {
       $updateParams['type_of_2fa'] = $data['type_of_2fa'];
     }
+    $type2fa = $data['type_of_2fa'];
     if ( $updateParams['enable_2fa'] ) {
       // ensure that the code is correct
+      if ( $type2fa == 'totp') {
+        $user->update($updateParams);
+        return $this->response->noContent();
+      }
       $confirmationCode = $data['confirmation_code'];
       $otp = TOTP::create($user->secret_code_2fa);
       if ( $otp->verify($confirmationCode)) {

@@ -76,7 +76,7 @@ final class MainHelper {
     } elseif ($type == "extensions") {
         $count = Extension::where('user_id', '=', $user->id)->count();
         $limit =  $info['extensions'];
-        if ($count >= $limit) {
+        if ($count >= $limit && !$info['unlimited_extensions']) {
           return TRUE;
         }
       }

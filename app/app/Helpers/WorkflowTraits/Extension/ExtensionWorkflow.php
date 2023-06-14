@@ -15,6 +15,7 @@ use App\NumberService\SIPConfigService;
 use \App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
+use App\Helpers\EmailHelper;
 use \DB;
 use Mail;
 use Config;
@@ -94,12 +95,16 @@ trait ExtensionWorkflow {
         if ($status) {
             $mail = Config::get("mail");
             $data = compact('extension', 'workspace');
+            $subject = "Extension Created";
+            $result = EmailHelper::sendEmail($subject, $user->email, 'extension_created', $data);
+            /*
             Mail::send('emails.extension_created', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);
                 $message->subject("Extension Created");
                 $from = $mail['from'];
                 $message->from($from['address'], $from['name']);
             });
+            */
             return $this->response->array($extension->toArray())->withHeader('X-Extension-ID', $extension->public_id);
         }
         return $this->errorInternal($request, 'Provision extension error..');

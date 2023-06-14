@@ -336,6 +336,7 @@ $api->version('v1', function($api) {
         $api->post("/createUser", "UserController@createUser");
         $api->post("/validateLogin", "UserController@validateLogin");
         $api->post("/requestLoginToken", "UserController@requestLoginToken");
+        $api->post("/forgotPassword", "UserController@forgotPassword");
         $api->get("/list", "UserController@list");
 
         $api->get("/{userId}", "UserController@get");

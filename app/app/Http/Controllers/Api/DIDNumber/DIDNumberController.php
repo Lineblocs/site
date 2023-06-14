@@ -13,6 +13,7 @@ use \App\Flow;
 use \App\Transformers\DIDNumberTransformer;
 use \App\NumberService\NumberService;
 use \App\Helpers\MainHelper;
+use \App\Helpers\EmailHelper;
 use \App\Helpers\WorkflowTraits\DIDNumber\DIDNumberWorkflow;
 use \DB;
 use Mail;
@@ -113,12 +114,17 @@ class DIDNumberController extends ApiAuthController {
             $data = array(
               "did" => $number
             );
+            $subject = "DID Purchased";
+            $result = EmailHelper::sendEmail($subject, $user->email, 'did_purchased', $data);
+
+            /*
             Mail::send('emails.did_purchased', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);
                 $message->subject("DID Purchased");
                 $from = $mail['from'];
                 $message->from($from['address'], $from['name']);
             });
+            */
             return $this->response->array(['success' => TRUE, 'number' => $number->toArray()])->withHeader('X-Number-ID', $number->public_id);
         }
         return $this->errorInternal($request, 'DID register error');

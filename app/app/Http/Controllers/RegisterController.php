@@ -301,6 +301,9 @@ class RegisterController extends ApiAuthController
       if (isset($data['password'])) {
           $mail = Config::get("mail");
           $data = [];
+          $subject = "Password reset successfully";
+          $result = EmailHelper::sendEmail($subject, $user->email, 'password_was_reset', $data);
+          /*
           Mail::send('emails.password_was_reset', $data, function ($message) use ($user, $mail) {
               $message->to($user->email);
               $subject =MainHelper::createEmailSubject("Password reset successfully");
@@ -308,6 +311,7 @@ class RegisterController extends ApiAuthController
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
           });
+          */
       }
       return $this->response->noContent();
     }

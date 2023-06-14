@@ -14,6 +14,7 @@ use \App\Transformers\PhoneTransformer;
 use \DB;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
+use App\Helpers\EmailHelper;
 use Mail;
 use Config;
 
@@ -105,12 +106,16 @@ class PhoneController extends ApiAuthController {
         PhoneTag::updateModelTags($tags, $phone->id);
             $mail = Config::get("mail");
             $data = compact('phone', 'phoneDef');
+            $subject = "Phone Created";
+            $result = EmailHelper::sendEmail($subject, $user->email, 'phone_created', $data);
+            /*
             Mail::send('emails.phone_created', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);
                 $message->subject("Phone Created");
                 $from = $mail['from'];
                 $message->from($from['address'], $from['name']);
             });
+            */
         return $this->response->noContent()->withHeader('X-Phone-ID', $phone->id);
     }
 

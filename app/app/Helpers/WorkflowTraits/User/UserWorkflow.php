@@ -12,6 +12,7 @@ use \App\Transformers\FlowTransformer;
 use \App\Transformers\FlowTemplateTransformer;
 use \App\Helpers\MainHelper;
 use \App\Helpers\WorkspaceHelper;
+use \App\Helpers\EmailHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
 use App\WorkspaceUser;
 use App\WorkspaceInvite;
@@ -50,12 +51,16 @@ trait UserWorkflow {
         //$hash = $workspaceUser->createJoinHash();
         $link = MainHelper::createPortalLink("/#/join-workspace/". $invite->hash);
         $mailData['link'] =  $link;
-          Mail::send('emails.invited_to_workspace', $mailData, function ($message) use ($newUser, $mail, $workspace) {
+        $subject = "You have been invited to workspace " . $workspace->name;
+        $result = EmailHelper::sendEmail($subject, $newUser->email, 'invited_to_workspace', $mailData);
+        /*
+        Mail::send('emails.invited_to_workspace', $mailData, function ($message) use ($newUser, $mail, $workspace) {
             $message->to($newUser->email);
             $message->subject("You have been invited to workspace " . $workspace->name);
             $from = $mail['from'];
             $message->from($from['address'], $from['name']);
         });
+        */
 
     }
     public function addUser(Request $request)

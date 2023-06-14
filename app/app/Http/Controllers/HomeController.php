@@ -11,6 +11,7 @@ use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
 use App\Customizations;
+use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
 use DB;
@@ -223,6 +224,9 @@ class HomeController extends BaseController {
       'comments' => $data['comments']
     ];
     $contact = CompanyRepresentative::getMainContact();
+    $subject = 'New Lineblocs contact';
+    $result = EmailHelper::sendEmail($subject, $contact->email_address, 'contact', $template);
+    /*
     Mail::send('emails.contact', $template, function ($m) use ($contact, $template) {
       $from =MainHelper::createEmail('contact');
       $site =MainHelper::getSiteName();
@@ -231,6 +235,9 @@ class HomeController extends BaseController {
       $m->to($contact->email_address, $contact->name)->subject('New Lineblocs contact');
       $m->cc([$template['email']]);
   });
+  */
+    $result = EmailHelper::sendEmail($subject, $template['email'], 'contact_confirm', $template);
+    /*
     Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {
       $subject = 'Thanks for contacting us';
       $from =MainHelper::createEmail('contact');
@@ -239,6 +246,7 @@ class HomeController extends BaseController {
       $name = sprintf("%s %s", $template['first_name'], $template['last_name']);
       $m->to($template['email'], $name)->subject($subject);
   });
+  */
 
     $request->session()->flash('status', 'Thanks for contacting us we will get in touch with you within 24-78 hours.');
     return view('pages.contact', $vars);

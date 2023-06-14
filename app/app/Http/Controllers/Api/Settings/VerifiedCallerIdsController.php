@@ -29,19 +29,12 @@ class VerifiedCallerIdsController extends ApiAuthController {
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         $code = rand(100000, 999999); 
-        $twilio= Config::get('twilio');
-        $client = new Client($twilio['account_sid'], $twilio['auth_token']);
         $message = sprintf("Your Lineblocs Caller ID verification code is %s", $code);
         try {
-            $client->messages->create(
-                // Where to send a text message (your cell phone?)
-            $number,
-                array(
-                    'from' => $twilio['verification_number'],
-                    'body' => $message
-                )
-            );
-
+            $d7= Config::get('d7');
+            $from=$d7['verification_number'];
+            $to = MainHelper::toE164($data['number']);
+            MainHelper::sendSMS($from, $to, $message);
             VerifiedCallerId::create([
                 'user_id' => $user->id,
                 'workspace_id' => $workspace->id,

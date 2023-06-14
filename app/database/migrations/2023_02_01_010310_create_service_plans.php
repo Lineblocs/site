@@ -20,7 +20,7 @@ class CreateServicePlans extends Migration
             $table->string('description')->default('');
             $table->string('call_duration')->default('');
             $table->string('recording_space')->default('');
-            $table->boolean('extensions')->default(FALSE);
+            $table->integer('extensions')->default(5);
             $table->boolean('fax')->default(FALSE);
             $table->boolean('im_integrations')->default(FALSE);
             $table->boolean('productivity_integrations')->default(FALSE);
