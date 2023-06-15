@@ -11,6 +11,9 @@ use \App\DIDNumber;
 use \App\DIDNumberTag;
 use \App\UserDebit;
 use \App\Flow;
+use \App\ServicePlan;
+use \App\Workspace;
+use \App\WorkspaceUser;
 use \App\Transformers\DIDNumberTransformer;
 use \App\Helpers\MainHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
@@ -66,11 +69,17 @@ class UserController extends ApiPublicController {
         'token' => $apiToken,
         'secret' => $apiSecret
       ];
+
+      if (!$token = $token = JWTAuth::fromUser($user)) {
+          return response()->json(['error' => 'invalid_credentials'], 401);
+      }
     return $this->response->array([
         'success' => TRUE,
         'userId' => $user->id,
         'workspace' => $workspace->toArrayWithRoles($user),
-        'apiDetails' => $apiDetails
+        'apiDetails' => $apiDetails,
+            'token' => MainHelper::createJWTPayload($token),
+            'user' => $user->toArray()
     ]);
     }
     public function requestLoginToken(Request $request) {
