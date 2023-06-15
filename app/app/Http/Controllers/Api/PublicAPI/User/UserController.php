@@ -104,9 +104,11 @@ class UserController extends ApiPublicController {
         }
         $currentUser = Auth::user();
         // check if the user is confirmed
+        /*
         if (!$currentUser->confirmed) {
           return $this->response->errorForbidden('email is not verified');
         }
+        */
         AppLogin::create([
           'user_id' => $currentUser->id,
           'app_name' => $appName,
