@@ -103,6 +103,10 @@ class UserController extends ApiPublicController {
             return $this->errorInternal($request, 'Could not create token');
         }
         $currentUser = Auth::user();
+        // check if the user is confirmed
+        if (!$currentUser->confirmed) {
+          return $this->response->errorForbidden('email is not verified');
+        }
         AppLogin::create([
           'user_id' => $currentUser->id,
           'app_name' => $appName,
