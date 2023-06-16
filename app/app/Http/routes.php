@@ -384,62 +384,26 @@ $api->version('v1', function($api) {
     });
 
   });
-  $api->group([ 'prefix' => 'internal', 'namespace' => '\App\Http\Controllers\Api\Internal'], function($api) {
-    $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {
-      $api->post("/createCall", "CallController@createCall");
-      $api->post("/updateCall", "CallController@updateCall");
-    });
-    $api->group([ 'prefix' => 'conference', 'namespace' => '\Conference'], function($api) {
-      $api->post("/createConference", "ConferenceController@createConference");
-    });
 
-    $api->group([ 'prefix' => 'debugger', 'namespace' => '\Debugger'], function($api) {
-      $api->post("/createLog", "LogController@createLog");
-      $api->post("/createLogSimple", "LogController@createLogSimple");
-    });
-    $api->group([ 'prefix' => 'recording', 'namespace' => '\Recording'], function($api) {
-      $api->post("/createRecording", "RecordingController@createRecording");
-      $api->post("/updateRecording", "RecordingController@updateRecording");
-    });
-    $api->group([ 'prefix' => 'fax', 'namespace' => '\Fax'], function($api) {
-      $api->post("/createFax", "FaxController@createFax");
-    });
-    $api->group([ 'prefix' => 'user', 'namespace' => '\User'], function($api) {
-      $api->get("/verifyCaller", "UserController@verifyCaller");
-      $api->get("/verifyCallerByDomain", "UserController@verifyCallerByDomain");
-      $api->get("/getUserByDomain", "UserController@getUserByDomain");
-      $api->get("/getWorkspaceMacros", "UserController@getWorkspaceMacros");
-      $api->get("/getDIDNumberData", "UserController@getDIDNumberData");
-      $api->get("/getPSTNProvierIP", "UserController@getPSTNProviderIP");
-
-      $api->get("/ipWhitelistLookup", "UserController@ipWhitelistLookup");
-      $api->get("/getDIDAcceptOption", "UserController@getDIDAcceptOption");
-      $api->get("/getDIDAssignedIP", "UserController@getDIDAssignedIP");
-      $api->get("/getUserAssignedIP", "UserController@getUserAssignedIP");
-      $api->get("/getPSTNProviderIP", "UserController@getPSTNProviderIP");
-      $api->get("/addPSTNProviderTechPrefix", "UserController@addPSTNProviderTechPrefix");
-      $api->get("/getCallerIdToUse", "UserController@getCallerIdToUse");
-      $api->get("/getExtensionFlowInfo", "UserController@getExtensionFlowInfo");
-      $api->get("/getDIDDomain", "UserController@getDIDDomain");
-      $api->get("/getCodeFlowInfo", "UserController@getCodeFlowInfo");
-      $api->get("/incomingPSTNValidation", "UserController@incomingPSTNValidation");
-      $api->get("/incomingMediaServerValidation", "UserController@incomingMediaServerValidation");
-    });
-    $api->group([ 'prefix' => 'debit', 'namespace' => '\Debit'], function($api) {
-      $api->post("/createDebit", "DebitController@createDebit");
-      $api->post("/createAPIUsageDebit", "DebitController@createAPIUsageDebit");
-      });
+  $api->group([ 'prefix' => 'admin'], function($api) {
+    $api->get('getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');
   });
 
-  $api->get('admin/getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');
   $api->post('internalAppRedirect', '\App\Http\Controllers\MergedController@internalAppRedirect');
   $api->get('getAllSettings', '\App\Http\Controllers\MergedController@getAllSettings');
   $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
-  $api->post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
-  $api->post('jwt/authenticatePublic', '\App\Http\Controllers\JWT\AuthenticateController@authenticatePublic');
-  $api->get('jwt/heartbeat', '\App\Http\Controllers\JWT\AuthenticateController@heartbeat');
-  $api->post('forgot', '\App\Http\Controllers\RegisterController@forgot');
-  $api->post('reset', '\App\Http\Controllers\RegisterController@reset');
+
+  $api->group([ 'prefix' => 'jwt'], function($api) {
+    $api->post('authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
+    $api->post('publicAuthenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticatePublic');
+    $api->get('heartbeat', '\App\Http\Controllers\JWT\AuthenticateController@heartbeat');
+  });
+
+  $api->group([ 'prefix' => 'account'], function($api) {
+    $api->post('forgotPassword', '\App\Http\Controllers\RegisterController@forgot');
+    $api->post('resetPassword', '\App\Http\Controllers\RegisterController@reset');
+  });
+
   $api->post('register', '\App\Http\Controllers\RegisterController@register');
   $api->post('registerSendVerify', '\App\Http\Controllers\RegisterController@registerSendVerify');
   $api->post('registerVerify', '\App\Http\Controllers\RegisterController@registerVerify');
@@ -457,14 +421,12 @@ $api->version('v1', function($api) {
   $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');
   $api->get('search', '\App\Http\Controllers\MergedController@search');
   $api->post('billing/discontinue', '\App\Http\Controllers\MergedController@billingDiscontinue');
+  $api->post('billingDiscontinue', '\App\Http\Controllers\MergedController@billingDiscontinue');
   $api->post('save2FASettings', '\App\Http\Controllers\MergedController@save2FASettings');
   $api->get('get2FAConfig', '\App\Http\Controllers\MergedController@get2FAConfig');
   $api->get('request2FACode', '\App\Http\Controllers\MergedController@request2FACode');
   $api->get('request2FAConfirmationCode', '\App\Http\Controllers\MergedController@request2FAConfirmationCode');
   $api->post('verify2FACode', '\App\Http\Controllers\MergedController@verify2FACode');
-
-
-
   $api->get('getCountryList', '\App\Http\Controllers\MergedController@getCountryList');
   $api->get('getBillingCountries', '\App\Http\Controllers\MergedController@getBillingCountries');
   $api->post('saveCustomerPaymentDetails', '\App\Http\Controllers\MergedController@saveCustomerPaymentDetails');
@@ -510,63 +472,70 @@ $api->version('v1', function($api) {
   $api->get('getPOPs', '\App\Http\Controllers\MergedController@getPOPs');
 
   $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
-    $api->post('saveWidget', 'WidgetTemplateController@saveWidget');
-    $api->get('listWidgets', 'WidgetTemplateController@listWidgets');
+    $api->post('', 'WidgetTemplateController@saveWidget');
+    $api->get('list', 'WidgetTemplateController@listWidgets');
   });
 
   $api->group([ 'prefix' => 'routerflow', 'namespace' => '\App\Http\Controllers\Api\RouterFlow'], function($api) {
-      $api->get("/flowData/{flowId}", "FlowController@flowData");
-      $api->post("/saveFlow", "FlowController@saveFlow");
-      $api->post("/updateFlow/{flowId}", "FlowController@updateFlow");
-      $api->get("/listFlows", "FlowController@listFlows");
-      $api->delete("/deleteFlow/{flowId}", "FlowController@deleteFlow");
+      $api->get("/list", "FlowController@listFlows");
       $api->get("/listTemplates", "FlowController@listTemplates");
+      $api->get("/{flowId}", "FlowController@flowData");
+      $api->post("/", "FlowController@saveFlow");
+      $api->post("/{flowId}", "FlowController@updateFlow");
+      $api->delete("/{flowId}", "FlowController@deleteFlow");
   });
 
   $api->group([ 'prefix' => 'flow', 'namespace' => '\App\Http\Controllers\Api\Flow'], function($api) {
-      $api->get("/flowData/{flowId}", "FlowController@flowData");
-      $api->post("/saveFlow", "FlowController@saveFlow");
-      $api->post("/updateFlow/{flowId}", "FlowController@updateFlow");
-      $api->get("/listFlows", "FlowController@listFlows");
-      $api->delete("/deleteFlow/{flowId}", "FlowController@deleteFlow");
+      $api->get("/list", "FlowController@listFlows");
       $api->get("/listTemplates", "FlowController@listTemplates");
+      $api->get("/{flowId}", "FlowController@flowData");
+      $api->post("/", "FlowController@saveFlow");
+      $api->post("/{flowId}", "FlowController@updateFlow");
+      $api->put("/{flowId}", "FlowController@updateFlow");
+      $api->delete("/{flowId}", "FlowController@deleteFlow");
   });
-  $api->group([ 'prefix' => 'did', 'namespace' => '\App\Http\Controllers\Api\DIDNumber'], function($api) {
-      $api->get("/available", "DIDNumberController@availableNumbers");
-      $api->get("/numberData/{flowId}", "DIDNumberController@numberData");
-      $api->post("/saveNumber", "DIDNumberController@saveNumber");
-      $api->post("/updateNumber/{numberId}", "DIDNumberController@updateNumber");
-      $api->get("/listNumbers", "DIDNumberController@listNumbers");
-      $api->delete("/deleteNumber/{numberId}", "DIDNumberController@deleteNumber");
-  });
-    $api->group([ 'prefix' => 'port', 'namespace' => '\App\Http\Controllers\Api\PortNumber'], function($api) {
-      $api->post("/saveNumber", "PortNumberController@saveNumber");
-      $api->post("/updateNumber/{numberId}", "PortNumberController@updateNumber");
-      $api->get("/numberData/{numberId}", "PortNumberController@numberData");
-      $api->get("/listNumbers", "PortNumberController@listNumbers");
-      $api->delete("/deleteNumber/{numberId}", "PortNumberController@deleteNumber");
-  });
-  $api->group([ 'prefix' => 'extension', 'namespace' => '\App\Http\Controllers\Api\Extension'], function($api) {
-      $api->get("/extensionData/{extensionId}", "ExtensionController@extensionData");
-      $api->get("/extensionData/{extensionId}/history", "ExtensionController@extensionDataHistory");
-      $api->post("/saveExtension", "ExtensionController@saveExtension");
-      $api->post("/updateExtension/{flowId}", "ExtensionController@updateExtension");
-      $api->delete("/deleteExtension/{extensionId}", "ExtensionController@deleteExtension");
-      $api->get("/listExtensions", "ExtensionController@listExtensions");
-  });
-  $api->group([ 'prefix' => 'function', 'namespace' => '\App\Http\Controllers\Api\Macro'], function($api) {
-      $api->get("/functionData/{functionId}", "MacroController@functionData");
-      $api->post("/saveFunction", "MacroController@saveFunction");
-      $api->post("/updateFunction/{functionId}", "MacroController@updateFunction");
-      $api->delete("/deleteFunction/{functionId}", "MacroController@deleteFunction");
-      $api->get("/listFunctions", "MacroController@listFunctions");
 
+  $api->group([ 'prefix' => 'did', 'namespace' => '\App\Http\Controllers\Api\DIDNumber'], function($api) {
+      $api->get("/listNumbers", "DIDNumberController@listNumbers");
+      $api->get("/available", "DIDNumberController@availableNumbers");
+      $api->get("/{numberId}", "DIDNumberController@numberData");
+      $api->post("/", "DIDNumberController@saveNumber");
+      $api->put("/{numberId}", "DIDNumberController@updateNumber");
+      $api->delete("/{numberId}", "DIDNumberController@deleteNumber");
+  });
+
+    $api->group([ 'prefix' => 'port', 'namespace' => '\App\Http\Controllers\Api\PortNumber'], function($api) {
+      $api->get("/list", "PortNumberController@listNumbers");
+      $api->post("/", "PortNumberController@saveNumber");
+      $api->post("/{numberId}", "PortNumberController@updateNumber");
+      $api->get("/{numberId}", "PortNumberController@numberData");
+      $api->delete("/{numberId}", "PortNumberController@deleteNumber");
+  });
+
+  $api->group([ 'prefix' => 'extension', 'namespace' => '\App\Http\Controllers\Api\Extension'], function($api) {
+      $api->get("/list", "ExtensionController@listExtensions");
+      $api->get("/{extensionId}", "ExtensionController@extensionData");
+      $api->get("/{extensionId}/history", "ExtensionController@extensionDataHistory");
+      $api->post("/", "ExtensionController@saveExtension");
+      $api->post("/{extensionId}", "ExtensionController@updateExtension");
+      $api->put("/{extensionId}", "ExtensionController@updateExtension");
+      $api->delete("/{extensionId}", "ExtensionController@deleteExtension");
+  });
+
+  $api->group([ 'prefix' => 'function', 'namespace' => '\App\Http\Controllers\Api\Macro'], function($api) {
+      $api->get("/list", "MacroController@listFunctions");
+      $api->get("/{functionId}", "MacroController@functionData");
+      $api->post("/", "MacroController@saveFunction");
+      $api->post("/{functionId}", "MacroController@updateFunction");
+      $api->put("/{functionId}", "MacroController@updateFunction");
+      $api->delete("/{functionId}", "MacroController@deleteFunction");
 
       $api->get("/templateData/{templateId}", "MacroController@templateData");
-      $api->post("/saveTemplate", "MacroController@saveTemplate");
-      $api->post("/updateTemplate/{templateId}", "MacroController@updateTemplate");
-      $api->delete("/deleteTemplate/{templateId}", "MacroController@deleteTemplate");
-      $api->get("/listTemplates", "MacroController@listTemplates");
+      $api->post("/templateData", "MacroController@saveTemplate");
+      $api->post("/templateData/{templateId}", "MacroController@updateTemplate");
+      $api->put("/templateData/{templateId}", "MacroController@updateTemplate");
+      $api->delete("/templateData/{templateId}", "MacroController@deleteTemplate");
+      $api->get("/templateData/list", "MacroController@listTemplates");
 
   });
 
@@ -574,138 +543,164 @@ $api->version('v1', function($api) {
 
    $api->group([ 'prefix' => 'byo', 'namespace' => '\App\Http\Controllers\Api\BYO'], function($api) {
     $api->group([ 'prefix' => 'carrier', 'namespace' => '\Carrier'], function($api) {
-      $api->get("/carrierData/{carrierId}", "BYOCarrierController@carrierData");
-      $api->post("/saveCarrier", "BYOCarrierController@saveCarrier");
-      $api->post("/updateCarrier/{carrierId}", "BYOCarrierController@updateCarrier");
-      $api->delete("/deleteCarrier/{carrierId}", "BYOCarrierController@deleteCarrier");
-      $api->get("/listCarriers", "BYOCarrierController@listCarriers");
+      $api->get("/list", "BYOCarrierController@listCarriers");
+      $api->get("/{carrierId}", "BYOCarrierController@carrierData");
+      $api->post("/", "BYOCarrierController@saveCarrier");
+      $api->post("/{carrierId}", "BYOCarrierController@updateCarrier");
+      $api->put("/{carrierId}", "BYOCarrierController@updateCarrier");
+      $api->delete("/{carrierId}", "BYOCarrierController@deleteCarrier");
      });
+
     $api->group([ 'prefix' => 'did', 'namespace' => '\DID'], function($api) {
-      $api->get("/numberData/{numbrId}", "BYODIDNumberController@numberData");
-      $api->post("/saveNumber", "BYODIDNumberController@saveNumber");
-      $api->post("/updateNumber/{numberId}", "BYODIDNumberController@updateNumber");
-      $api->delete("/deleteNumber/{numberId}", "BYODIDNumberController@deleteNumber");
-      $api->get("/listNumbers", "BYODIDNumberController@listNumbers");
-      $api->post("/importNumbers", "BYODIDNumberController@importNumbers");
+      $api->get("/list", "BYODIDNumberController@listNumbers");
+      $api->post("/import", "BYODIDNumberController@importNumbers");
+      $api->get("/{numberId}", "BYODIDNumberController@numberData");
+      $api->post("/", "BYODIDNumberController@saveNumber");
+      $api->post("/{numberId}", "BYODIDNumberController@updateNumber");
+      $api->put("/{numberId}", "BYODIDNumberController@updateNumber");
+      $api->delete("/{numberId}", "BYODIDNumberController@deleteNumber");
      });
 
   });
+
     $api->group([ 'prefix' => 'trunk', 'namespace' => '\App\Http\Controllers\Api\SIPTrunk'], function($api) {
         $api->get("/list", "SIPTrunkController@listTrunks");
         $api->get("/{trunkId}", "SIPTrunkController@trunkData");
         $api->post("/", "SIPTrunkController@saveTrunk");
         $api->post("/{trunkId}", "SIPTrunkController@updateTrunk");
+        $api->put("/{trunkId}", "SIPTrunkController@updateTrunk");
         $api->delete("/{trunkId}", "SIPTrunkController@deleteTrunk");
     });
   $api->group([ 'prefix' => 'call', 'namespace' => '\App\Http\Controllers\Api\Call'], function($api) {
-      $api->get("/callData/{callId}", "CallController@callData");
-      $api->get("/listCall", "CallController@listCalls");
+      $api->get("/list", "CallController@listCalls");
+      $api->get("/{callId}", "CallController@callData");
   });
   $api->group([ 'prefix' => 'call', 'namespace' => '\App\Http\Controllers\Api\Call'], function($api) {
-      $api->get("/callData/{callId}", "CallController@callData");
-      $api->post("/updateCall/{callId}", "CallController@updateCall");
-      $api->get("/listCalls", "CallController@listCalls");
-      $api->get("/graphData", "CallController@graphData");
+      $api->get("/list", "CallController@listCalls");
+      $api->get("/graph", "CallController@graphData");
+      $api->get("/{callId}", "CallController@callData");
+      $api->post("/{callId}", "CallController@updateCall");
+      $api->put("/{callId}", "CallController@updateCall");
   });
     $api->group([ 'prefix' => 'log', 'namespace' => '\App\Http\Controllers\Api\Log'], function($api) {
-      $api->get("/logData/{logId}", "LogController@logData");
-      $api->get("/listLogs", "LogController@listLogs");
+      $api->get("/list", "LogController@listLogs");
+      $api->get("/{logId}", "LogController@logData");
   });
   $api->group([ 'prefix' => 'recording', 'namespace' => '\App\Http\Controllers\Api\Recording'], function($api) {
-      $api->get("/recordingData/{recordingId}", "RecordingController@recordingData");
-      $api->delete("/deleteRecording/{recordingId}", "RecordingController@deleteRecording");
-      $api->get("/listRecordings", "RecordingController@listRecordings");
-      $api->post("/addRecordingTag/{recordingId}", "RecordingController@addRecordingTag");
-      $api->delete("/removeRecordingTag/{recordingId}/{tagName}", "RecordingController@removeRecordingTag");
+      $api->get("/list", "RecordingController@listRecordings");
+      $api->get("/{recordingId}", "RecordingController@recordingData");
+      $api->delete("/{recordingId}", "RecordingController@deleteRecording");
+      $api->post("/{recordingId}/tag", "RecordingController@addRecordingTag");
+      $api->delete("/{recordingId}/tag/{tagName}", "RecordingController@removeRecordingTag");
   });
 
   $api->group([ 'prefix' => 'phone', 'namespace' => '\App\Http\Controllers\Api\Phone'], function($api) {
-      $api->get("/phoneData/{phoneId}", "PhoneController@phoneData");
-      $api->delete("/deletePhone/{phoneId}", "PhoneController@deletePhone");
-      $api->post("/savePhone", "PhoneController@savePhone");
-      $api->post("/updatePhone/{phoneId}", "PhoneController@updatePhone");
-      $api->get("/listPhones", "PhoneController@listPhones");
+      $api->get("/list", "PhoneController@listPhones");
       $api->get("/phoneDefs", "PhoneController@phoneDefs");
+      $api->get("/{phoneId}", "PhoneController@phoneData");
+      $api->delete("/{phoneId}", "PhoneController@deletePhone");
+      $api->post("/", "PhoneController@savePhone");
+      $api->post("/{phoneId}", "PhoneController@updatePhone");
+      $api->put("/{phoneId}", "PhoneController@updatePhone");
   });
+
   $api->group([ 'prefix' => 'phoneGroup', 'namespace' => '\App\Http\Controllers\Api\PhoneGroup'], function($api) {
-      $api->get("/phoneGroupData/{phoneGroupId}", "PhoneGroupController@phoneGroupData");
-      $api->delete("/deletePhoneGroup/{phoneGroupId}", "PhoneGroupController@deletePhoneGroup");
-      $api->post("/savePhoneGroup", "PhoneGroupController@savePhoneGroup");
-      $api->post("/updatePhoneGroup/{phoneGroupId}", "PhoneGroupController@updatePhoneGroup");
-      $api->get("/listPhoneGroups", "PhoneGroupController@listPhoneGroups");
+      $api->get("/list", "PhoneGroupController@listPhoneGroups");
+      $api->get("/{phoneGroupId}", "PhoneGroupController@phoneGroupData");
+      $api->delete("/{phoneGroupId}", "PhoneGroupController@deletePhoneGroup");
+      $api->post("/", "PhoneGroupController@savePhoneGroup");
+      $api->post("/{phoneGroupId}", "PhoneGroupController@updatePhoneGroup");
+      $api->put("/{phoneGroupId}", "PhoneGroupController@updatePhoneGroup");
   });
+
   $api->group([ 'prefix' => 'phoneGlobalSetting', 'namespace' => '\App\Http\Controllers\Api\PhoneGlobalSetting'], function($api) {
-      $api->get("/phoneGlobalSettingData/{phoneGlobalSettingId}", "PhoneGlobalSettingController@phoneGlobalData");
-      $api->delete("/deletePhoneGlobalSetting/{phoneGlobalSettingId}", "PhoneGlobalSettingController@deletePhoneGlobalSetting");
-      $api->post("/savePhoneGlobalSetting", "PhoneGlobalSettingController@savePhoneGlobalSetting");
-      $api->post("/updatePhoneGlobalSetting/{phoneGlobalSettingId}", "PhoneGlobalSettingController@updatePhoneGlobalSetting");
-      $api->get("/listPhoneGlobalSettings", "PhoneGlobalSettingController@listPhoneGlobalSettings");
+      $api->get("/list", "PhoneGlobalSettingController@listPhoneGlobalSettings");
+      $api->get("/{phoneGlobalSettingId}", "PhoneGlobalSettingController@phoneGlobalData");
+      $api->delete("/{phoneGlobalSettingId}", "PhoneGlobalSettingController@deletePhoneGlobalSetting");
+      $api->post("/", "PhoneGlobalSettingController@savePhoneGlobalSetting");
+      $api->post("/{phoneGlobalSettingId}", "PhoneGlobalSettingController@updatePhoneGlobalSetting");
+      $api->put("/{phoneGlobalSettingId}", "PhoneGlobalSettingController@updatePhoneGlobalSetting");
   });
+
   $api->group([ 'prefix' => 'phoneIndividualSetting', 'namespace' => '\App\Http\Controllers\Api\PhoneIndividualSetting'], function($api) {
-      $api->get("/phoneIndividualSettingData/{phoneIndividualSettingId}", "PhoneIndividualSettingController@phoneIndividualData");
-      $api->delete("/deletePhoneIndividualSetting/{phoneIndividualSettingId}", "PhoneIndividualSettingController@deletePhoneIndividualSetting");
-      $api->post("/savePhoneIndividualSetting", "PhoneIndividualSettingController@savePhoneIndividualSetting");
-      $api->post("/updatePhoneIndividualSetting/{phoneIndividualSettingId}", "PhoneIndividualSettingController@updatePhoneIndividualSetting");
-      $api->get("/listPhoneIndividualSettings", "PhoneIndividualSettingController@listPhoneIndividualSettings");
+      $api->get("/list", "PhoneIndividualSettingController@listPhoneIndividualSettings");
+      $api->get("/{phoneIndividualSettingId}", "PhoneIndividualSettingController@phoneIndividualData");
+      $api->delete("/{phoneIndividualSettingId}", "PhoneIndividualSettingController@deletePhoneIndividualSetting");
+      $api->post("/", "PhoneIndividualSettingController@savePhoneIndividualSetting");
+      $api->post("/{phoneIndividualSettingId}", "PhoneIndividualSettingController@updatePhoneIndividualSetting");
+      $api->put("/{phoneIndividualSettingId}", "PhoneIndividualSettingController@updatePhoneIndividualSetting");
   });
+
   $api->group([ 'prefix' => 'file', 'namespace' => '\App\Http\Controllers\Api\File'], function($api) {
-      $api->delete("/deleteFile/{fileId}", "FileController@deleteFile");
-      $api->get("/listFiles", "FileController@listFiles");
+      $api->get("/list", "FileController@listFiles");
+      $api->delete("/{fileId}", "FileController@deleteFile");
       $api->post("/upload", "FileController@upload");
-      $api->post("/uploadByGoogleDrive", "FileController@uploadByGoogleDrive");
+      $api->post("/uploadFromGoogleDrive", "FileController@uploadByGoogleDrive");
+      $api->post("/uploadFromThirdParty", "FileController@uploadFromThirdParty");
   });
+
     $api->group([ 'prefix' => 'fax', 'namespace' => '\App\Http\Controllers\Api\Fax'], function($api) {
-      $api->get("/faxData/{faxId}", "FaxController@faxData");
-      $api->delete("/deleteFax/{faxId}", "FaxController@deleteFax");
-      $api->get("/listFaxes", "FaxController@listFaxes");
+      $api->get("/list", "FaxController@listFaxes");
+      $api->get("/{faxId}", "FaxController@faxData");
+      $api->delete("/{faxId}", "FaxController@deleteFax");
   });
+
   $api->group([ 'prefix' => 'credit', 'namespace' => '\App\Http\Controllers\Api\Credit'], function($api) {
-      $api->post("/addCredit", "CreditController@addCredit");
+      $api->post("/", "CreditController@addCredit");
       $api->post("/checkoutWithPayPal", "CreditController@checkoutWithPayPal");
       $api->get("/checkoutWithPayPalDone", "CreditController@checkoutWithPayPalDone")->name('checkout_paypal_done');
       $api->get("/checkoutWithPayPalFail", "CreditController@checkoutWithPayPalFail")->name('checkout_paypal_fail');
   });
+
   $api->group([ 'prefix' => 'card', 'namespace' => '\App\Http\Controllers\Api\Card'], function($api) {
-
-      $api->get("/listCards", "CardController@listCards");
-      $api->post("/addCard", "CardController@addCard");
-      $api->put("/setPrimary/{cardId}", "CardController@setPrimary");
-      $api->delete("/deleteCard/{cardId}", "CardController@deleteCard");
+      $api->get("/list", "CardController@listCards");
+      $api->post("/", "CardController@addCard");
+      $api->put("/{cardId}/sePprimary", "CardController@setPrimary");
+      $api->delete("/{cardId}", "CardController@deleteCard");
   });
+
   $api->group([ 'prefix' => 'workspaceUser', 'namespace' => '\App\Http\Controllers\Api\WorkspaceUser'], function($api) {
-
-      $api->get("/listUsers", "WorkspaceUserController@listUsers");
-      $api->post("/addUser", "WorkspaceUserController@addUser");
-      $api->delete("/deleteUser/{userId}", "WorkspaceUserController@deleteUser");
-      $api->post("/updateUser/{userId}", "WorkspaceUserController@updateUser");
-      $api->get("/userData/{userId}", "WorkspaceUserController@userData");
-      $api->post("/resendInvite/{userId}", "WorkspaceUserController@resendInvite");
+      $api->get("/list", "WorkspaceUserController@listUsers");
+      $api->post("/", "WorkspaceUserController@addUser");
+      $api->delete("/{userId}", "WorkspaceUserController@deleteUser");
+      $api->post("/{userId}", "WorkspaceUserController@updateUser");
+      $api->put("/{userId}", "WorkspaceUserController@updateUser");
+      $api->get("/{userId}", "WorkspaceUserController@userData");
+      $api->post("/{userId]/resendInvite", "WorkspaceUserController@resendInvite");
   });
-    $api->group([ 'prefix' => 'workspaceParam', 'namespace' => '\App\Http\Controllers\Api\WorkspaceParam'], function($api) {
 
-      $api->get("/listParams", "WorkspaceParamController@listParams");
+    $api->group([ 'prefix' => 'workspaceParam', 'namespace' => '\App\Http\Controllers\Api\WorkspaceParam'], function($api) {
+      $api->get("/list", "WorkspaceParamController@listParams");
       $api->post("/saveParams", "WorkspaceParamController@saveParams");
   });
+
   $api->group([ 'prefix' => 'workspaceRoutingACL', 'namespace' => '\App\Http\Controllers\Api\WorkspaceRoutingACL'], function($api) {
 
-      $api->get("/listACLs", "WorkspaceRoutingACLController@listACLs");
+      $api->get("/list", "WorkspaceRoutingACLController@listACLs");
       $api->post("/saveACLs", "WorkspaceRoutingACLController@saveACLs");
   });
 
-
   $api->group([ 'prefix' => 'settings', 'namespace' => '\App\Http\Controllers\Api\Settings'], function($api) {
-      $api->get("/verifiedCallerids", "VerifiedCallerIdsController@getVerified");
-      $api->post("/verifiedCallerids", "VerifiedCallerIdsController@postVerified");
-      $api->post("/verifiedCallerids/confirm", "VerifiedCallerIdsController@postVerifiedConfirm");
-      $api->delete("/verifiedCallerids/{id}", "VerifiedCallerIdsController@deleteVerified");
-      $api->get("/blockedNumbers", "BlockedNumbersController@getNumbers");
-      $api->post("/blockedNumbers", "BlockedNumbersController@postNumber");
-      $api->delete("/blockedNumbers/{id}", "BlockedNumbersController@deleteNumber");
-      $api->get("/ipWhitelist", "IpWhitelistController@getIpWhitelist");
-      $api->post("/ipWhitelist", "IpWhitelistController@postIpWhitelist");
-      $api->delete("/ipWhitelist/{id}", "IpWhitelistController@deleteIpWhitelist");
+    $api->group([ 'prefix' => 'verifieDIDs'], function($api) {
+      $api->get("/list", "VerifiedCallerIdsController@getVerified");
+      $api->post("/", "VerifiedCallerIdsController@postVerified");
+      $api->post("/confirm", "VerifiedCallerIdsController@postVerifiedConfirm");
+      $api->delete("/{id}", "VerifiedCallerIdsController@deleteVerified");
+    });
+    $api->group([ 'prefix' => 'blockedNumbers'], function($api) {
+      $api->get("/list", "BlockedNumbersController@getNumbers");
+      $api->post("/", "BlockedNumbersController@postNumber");
+      $api->delete("/{id}", "BlockedNumbersController@deleteNumber");
+    });
+    $api->group([ 'prefix' => 'ipWhitelist'], function($api) {
+      $api->get("/list", "IpWhitelistController@getIpWhitelist");
+      $api->post("/", "IpWhitelistController@postIpWhitelist");
+      $api->delete("/{id}", "IpWhitelistController@deleteIpWhitelist");
+    });
 
-      $api->get("/extensionCodes", "ExtensionCodeController@getExtensionCodes");
-      $api->post("/extensionCodes", "ExtensionCodeController@postExtensionCodes");
+    $api->group([ 'prefix' => 'extensionCodes'], function($api) {
+      $api->get("/list", "ExtensionCodeController@getExtensionCodes");
+      $api->post("/", "ExtensionCodeController@postExtensionCodes");
+    });
   });
 });
