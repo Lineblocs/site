@@ -416,8 +416,8 @@ $api->version('v1', function($api) {
   $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');
   $api->get('getUserInfo', '\App\Http\Controllers\RegisterController@getUserInfo');
   $api->post('updateSelf', '\App\Http\Controllers\RegisterController@updateSelf');
-  $api->post('updateWorkspace', '\App\Http\Controllers\RegisterController@updateWorkspace');
-  $api->post('updateWorkspace2', '\App\Http\Controllers\MergedController@updateWorkspace2');
+  $api->post('setupWorkspace', '\App\Http\Controllers\RegisterController@setupWorkspace');
+  $api->post('updateWorkspace', '\App\Http\Controllers\MergedController@updateWorkspace');
   $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');
   $api->get('search', '\App\Http\Controllers\MergedController@search');
   $api->post('billing/discontinue', '\App\Http\Controllers\MergedController@billingDiscontinue');
@@ -496,8 +496,8 @@ $api->version('v1', function($api) {
   });
 
   $api->group([ 'prefix' => 'did', 'namespace' => '\App\Http\Controllers\Api\DIDNumber'], function($api) {
-      $api->get("/listNumbers", "DIDNumberController@listNumbers");
-      $api->get("/available", "DIDNumberController@availableNumbers");
+      $api->get("/list", "DIDNumberController@listNumbers");
+      $api->get("/availableNumbers", "DIDNumberController@availableNumbers");
       $api->get("/{numberId}", "DIDNumberController@numberData");
       $api->post("/", "DIDNumberController@saveNumber");
       $api->put("/{numberId}", "DIDNumberController@updateNumber");
@@ -681,7 +681,7 @@ $api->version('v1', function($api) {
   });
 
   $api->group([ 'prefix' => 'settings', 'namespace' => '\App\Http\Controllers\Api\Settings'], function($api) {
-    $api->group([ 'prefix' => 'verifieDIDs'], function($api) {
+    $api->group([ 'prefix' => 'verifiedCallerIDs'], function($api) {
       $api->get("/list", "VerifiedCallerIdsController@getVerified");
       $api->post("/", "VerifiedCallerIdsController@postVerified");
       $api->post("/confirm", "VerifiedCallerIdsController@postVerifiedConfirm");
