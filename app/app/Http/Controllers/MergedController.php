@@ -28,6 +28,8 @@ use App\Recording;
 use App\IpWhitelist;
 use App\BlockedNumber;
 use App\VerifiedCallerId;
+use App\BYOCarrier;
+use App\BYODIDNumber;
 
 use App\Customizations;
 use App\ApiCredential;
@@ -509,6 +511,16 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       } elseif ($module == 'trunks') { 
         foreach ( $data['items'] as $item) {
           $item = SIPTrunk::findOrFail($item['id']);
+          $item->delete();
+        }
+      } elseif ($module == 'carriers') { 
+        foreach ( $data['items'] as $item) {
+          $item = BYOCarrier::findOrFail($item['id']);
+          $item->delete();
+        }
+      } elseif ($module == 'byo_numbers') { 
+        foreach ( $data['items'] as $item) {
+          $item = BYODIDNumber::findOrFail($itcm['id']);
           $item->delete();
         }
       }

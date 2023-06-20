@@ -137,7 +137,7 @@ trait UserWorkflow {
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         $resource= WorkspaceUser::where('public_id', $userId)->firstOrFail();
-        if (!WorkspaceHelper::canPerformAction($workspace, $user, 'manage_users')) {
+        if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_users')) {
             return $this->response->errorForbidden();
         }
         $reqUser = User::findOrFail($resource->user_id);

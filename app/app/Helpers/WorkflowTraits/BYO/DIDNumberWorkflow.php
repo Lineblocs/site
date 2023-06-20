@@ -78,7 +78,7 @@ trait DIDNumberWorkflow {
         }
         $params = [];
         $params['number'] = $data['number'];
-        if (!empty($data['flow_id'])) {
+        if (!empty($data['flow_id']) && strtolower($data['flow_id']) != 'none') {
           $params['flow_id'] = MainHelper::resolveAppId(new Flow, $data['flow_id']);
           \Log::info("attaching flow id: " . $params['flow_id']);
         }
