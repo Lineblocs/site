@@ -60,7 +60,7 @@ class ApiController extends Controller {
                return TRUE;
           }
 
-          return FALSE;
+          return $info->{$action};
      }
   
      public function errorPerformingAction() {

@@ -14,6 +14,7 @@ use \App\Helpers\WorkspaceHelper;
 use App\WorkspaceRoutingACL;
 use App\SIPRoutingACL;
 use DB;
+use Log;
 
 class WorkspaceRoutingACLController extends ApiAuthController {
     public function listACLs(Request $request)
@@ -25,19 +26,31 @@ class WorkspaceRoutingACLController extends ApiAuthController {
             'sip_routing_acl.risk_level',
             DB::raw('sip_routing_acl.enabled AS preset_acl_enabled'),
             DB::raw('sip_routing_acl.id AS routing_acl_id'),
-            DB::raw('workspace_routing_acl.id AS workspace_acl_id'),
-            DB::raw('workspace_routing_acl.enabled AS enabled'),
+            //DB::raw('workspace_routing_acl.id AS workspace_acl_id'),
+            //DB::raw('workspace_routing_acl.enabled AS enabled'),
         ));
+        /*
         $acls->leftJoin('workspace_routing_acl',
           'workspace_routing_acl.routing_acl_id',
           '=',
           'sip_routing_acl.id');
+        $acls->where('workspace_routing_acl.workspace_id', $workspace->id);
+        */
         $data = $acls->get()->toArray(); 
+        foreach ( $data as $cnt => $row ) {
+          $acl = WorkspaceRoutingACL::where('routing_acl_id',$row['routing_acl_id'])->first();
+          if ( $acl ) {
+            $data[$cnt]['workspace_acl_id'] = $acl->id;
+            $data[$cnt]['enabled'] = $acl->enabled;
+          }
+        }
+        /*
         foreach ( $data as $cnt => $row ) {
           if ( empty( $row['enabled'] )) {
             $data[$cnt]['enabled'] = false;
           }
         }
+        */
         return $this->response->array($data);
     }
     public function saveACLs(Request $request)
@@ -50,18 +63,26 @@ class WorkspaceRoutingACLController extends ApiAuthController {
             return $this->response->errorForbidden();
         }
         */
+        Log::info("looking up ACLs for workspace: " . $workspace->id);
         $currentACLs = WorkspaceRoutingACL::where('workspace_id', '=', $workspace->id)->get();
         foreach ($data as $item) {
+          Log::info("updating ACL record: " . json_encode( $item ));
           $attrs = $item;
-          if (isset($item['id']) && !empty($item['id'])) {
+          $found = FALSE;
+          if (!empty($item['id'])) {
             unset($attrs['id']);
             foreach ($currentACLs as $acl) {
-              if ( $acl['id'] == $item['id'] ) {
+              $item_id = (int) $item['id'] ;
+              Log::info("comparing " . $item_id . " with " . $acl['id']);
+              if ( $acl['id'] == $item_id ) {
+                Log::info("updating id: " . $acl['routing_acl_id']);
+                Log::info("updating: " . json_encode( $attrs ));
                 $acl->update($attrs);
               }
             }
           } else {
             // ensure the routing_acl_id is there
+            Log::info("creating new acl record: " . json_encode( $attrs ));
             $attrsToCreate = $attrs;
             $attrsToCreate['workspace_id'] = $workspace->id;
             $newParam = WorkspaceRoutingACL::create($attrsToCreate);

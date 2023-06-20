@@ -579,7 +579,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
       return $this->response->array( $result );
     }
-    public function updateWorkspace2(Request $request) {
+    public function updateWorkspace(Request $request) {
       $data =$request->json()->all();
       $workspace =$this->getWorkspace($request);
       $workspace->update($data);

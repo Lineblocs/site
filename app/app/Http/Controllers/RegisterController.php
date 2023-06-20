@@ -315,7 +315,7 @@ class RegisterController extends ApiAuthController
       }
       return $this->response->noContent();
     }
-    public function updateWorkspace(Request $request)
+    public function setupWorkspace(Request $request)
     {
       $data = $request->json()->all();
       $plan = $data['plan'];
