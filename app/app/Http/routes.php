@@ -706,5 +706,20 @@ $api->version('v1', function($api) {
         $api->post("/", "ExtensionCodeController@postExtensionCodes");
       });
     });
+
+    $api->group([ 'prefix' => 'cms', 'namespace' => '\App\Http\Controllers\Api\CMS'], function($api) {
+        $api->group([ 'prefix' => 'faq'], function($api) {
+          $api->get("/list", "FAQController@list");
+        });
+        $api->group([ 'prefix' => 'resource'], function($api) {
+          $api->get("/list", "ResrouceController@list");
+          $api->get("/{key}", "ResrouceController@getResource");
+        });
+        $api->group([ 'prefix' => 'page'], function($api) {
+          $api->get("/list", "PageController@list");
+          $api->get("/{key}", "PageController@getPage");
+        });
+    });
+
   });
 });

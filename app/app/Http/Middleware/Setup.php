@@ -53,6 +53,7 @@ class Setup implements Middleware {
             'setup/alreadycomplete',
             'setup/restart'
         ];
+        
         if ($creds->setup_complete && !in_array( $route->getPath(), $excluded )) {
             return $this->response->redirectTo('/setup/alreadycomplete');
         }
