@@ -633,61 +633,24 @@ final class MainHelper {
 
 
   public static function sendSMS($from='', $to='', $body='') {
-    $curl = curl_init();
-    $body = urlencode($body);
-    $d7 = Config::get("d7networks");
-    $user = $d7['user'];
-    $pass = $d7['pass'];
-
-    curl_setopt_array($curl, array(
-    //CURLOPT_URL => "https://http-api.d7networks.com/send?username=$user&password=$pass&dlr-method=POST&dlr=no&to=$to&content=$body&from=SMSinfo",
-    CURLOPT_URL => "https://http-api.d7networks.com/send?username=$user&password=$pass&dlr-method=POST&dlr=no&to=$to&content=$body&from=$from",
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "POST",
-    ));
-    $response = curl_exec($curl);
-    $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    //echo "HTTP code: " . $httpcode.PHP_EOL;
-    curl_close($curl);
-    if ($httpcode >= 200 && $httpcode <= 299) {
-      return TRUE;
+    $customizations = Customizations::getRecord();
+    ClassFinder::disablePSR4Vendors(); // Optional; see performance notes below
+    $providers = ClassFinder::getClassesInNamespace('App\Helpers\Sms');
+    $smsProvider = NULL;
+    foreach ( $providers as $provider ) {
+      $name = $provider::getProviderName();
+      if ( $name == $customizations->sms_provider ) {
+        $smsProvider = $provider;
+        break;
+      }
     }
-    return FALSE;
-  }
-
-  public static function sendSMSMB($from='', $to='', $body='') {
-    \Config::get("messagebird.access_key");
-    $MessageBird = new \MessageBird\Client('YOUR_ACCESS_KEY'); // Set your own API access key here.
-
-    $Message             = new \MessageBird\Objects\Message();
-    $Message->originator = $from;
-    $Message->recipients = array($to);
-    $Message->body       = $body;
-
-    try {
-        $MessageResult = $MessageBird->messages->create($Message);
-        return TRUE;
-
-    } catch (\MessageBird\Exceptions\AuthenticateException $e) {
-        // That means that your accessKey is unknown
-        \Log::info('message bird wrong login');
-        return FALSE;
-
-    } catch (\MessageBird\Exceptions\BalanceException $e) {
-        // That means that you are out of credits, so do something about it.
-        \Log::info('message bird no balance');
-        return FALSE;
-
-    } catch (\Exception $e) {
-      \Log::info('message bird error: ' . $e->getMessage());
-        return FALSE;
-
+    if (empty($smsProvider)) {
+      // no provider implementation found
+      Log::error("no sms provider implementation for: " . $customizations->sms_provider);
+      return;
     }
+    $providerObj = new $smsProvider();
+    $providerObj->sendSMS($from, $to, $body);
   }
 
   public static function upgradeMembership($user, $workspace, $newMembership='') {

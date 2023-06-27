@@ -361,6 +361,41 @@
                 </div>
             </div>
             <div class="row form-group">
+                <label for="sms_provider">SMS provider</label>
+                <div class="controls">
+                    <select name="sms_provider" class="form-control" id="sms_provider">
+                        @if ( $record->sms_provider == 'd7networks')
+                            <option value="d7networks" selected>D7Networks</option>
+                            <option value="messagebird">Messagebird</option>
+                        @elseif ( $record->sms_provider == 'messagebird')
+                            <option value="d7networks">D7Networks</option>
+                            <option value="messagebird" selected>Messagebird</option>
+                        @else
+                            <option value="d7networks">D7Networks</option>
+                            <option value="messagebird">Messagebird</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+           <div class="row form-group">
+                <label for="sms_api_key">SMS API key</label>
+                <div class="controls">
+                    <input name="sms_api_key" class="form-control" value="{{$record->sms_api_key}}" />
+                </div>
+            </div>
+
+           <div class="row form-group">
+                <label for="sms_api_secret">SMS API secret</label>
+                <div class="controls">
+                    <input name="sms_api_secret" class="form-control" value="{{$record->sms_api_secret}}" />
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="custom_code_containers_enabled">Allow users to run custom code</label>
                 <small>note: this will create custom compute resources that allow users to compile and execute their custom code</small>
                 <div class="controls">
