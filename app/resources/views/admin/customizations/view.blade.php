@@ -463,6 +463,62 @@
 
 
 
+            <div class="row">
+                <h3>Maintenance and upgrade settings</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <div class="controls">
+                    @if ( $record->automatic_module_updates )
+                        <input id="automatic_module_updates" type="checkbox"  name="automatic_module_updates" checked/>
+                    @else
+                        <input id="automatic_module_updates" type="checkbox"  name="automatic_module_updates"/>
+                    @endif
+                    <label>Automatic module updates</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="controls">
+                    @if ( $record->automatic_security_updates )
+                        <input id="automatic_security_updates" type="checkbox"  name="automatic_security_updates" checked/>
+                    @else
+                        <input id="automatic_security_updates" type="checkbox"  name="automatic_security_updates"/>
+                    @endif
+                    <label>Automatic security updates</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="maintenance_window_day">Maintenance window day</label>
+                <div class="controls">
+                    <select name="maintenance_window_day" class="form-control" id="maintenance_window_day">
+                        @foreach ($maintenanceDays as $day)
+                            @if ($day == $record->maintenance_window_day)
+                                <option value="{{$day}}" selected>{{$day}}</option>
+                            @else
+                                <option value="{{$day}}">{{$day}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="maintenance_window_time">Maintenance window time</label>
+                <div class="controls">
+                    <select name="maintenance_window_time" class="form-control" id="maintenance_window_time">
+                        @foreach ($maintenanceTimes as $time)
+                            @if ($time == $record->maintenance_window_time)
+                                <option value="{{$time}}" selected>{{$time}}</option>
+                            @else
+                                <option value="{{$time}}">{{$time}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <input type="hidden" name="_token" value="{{csrf_token()}}"/>
                 <button type="submit" class="btn btn-success">Save</button>

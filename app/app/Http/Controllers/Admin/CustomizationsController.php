@@ -19,7 +19,19 @@ class CustomizationsController extends AdminController {
 	public function view()
 	{
 		$record = Customizations::getRecord();
-		return view('admin.customizations.view',  ['record' => $record]);
+		$maintenanceDays = [
+			'monday',
+			'tuesday',
+			'wednesday',
+			'thursday',
+			'friday',
+			'saturday',
+			'sunday',
+		];
+		$maintenanceTimes = [
+			'03:00–11:00 UTC'
+		];
+		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes]);
 	}
 
 	private function storeUploadedFile( $file, $file_name ) {
@@ -173,6 +185,24 @@ class CustomizationsController extends AdminController {
 			$custom_code_containers_enabled = true;
 		}
 		$update_params['custom_code_containers_enabled'] = $custom_code_containers_enabled;
+
+
+		$automatic_module_updates = false;
+
+		if ( !empty( $update_params['automatic_module_updates'] ) ) {
+			$automatic_module_updates = true;
+		}
+		$update_params['automatic_module_updates'] = $automatic_module_updates;
+
+		$automatic_security_updates = false;
+
+		if ( !empty( $update_params['automatic_security_updates'] ) ) {
+			$automatic_security_updates = true;
+		}
+		$update_params['automatic_security_updates'] = $automatic_security_updates;
+
+
+
 
 		$record->update( $update_params );
 		$session = $request->session();
