@@ -15620,3 +15620,7 @@ table.dataTable thead .sorting:after {
 #faqs li input {
 	margin-bottom: 10px;
 }
+
+.btn-info:hover {
+	background: #5bc0de !important;
+}
