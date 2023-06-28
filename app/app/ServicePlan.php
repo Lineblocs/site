@@ -69,6 +69,8 @@ class ServicePlan extends Model {
     return self::where('pay_as_you_go', '1')->firstOrFail();
   }
 
-
+  public static function getRecurringMembershipPlans() {
+    return self::where('pay_as_you_go', '0')->get();
+  }
 
 }

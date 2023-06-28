@@ -8,11 +8,13 @@ use App\WorkspaceUser;
 use App\PlanUsagePeriod;
 use App\Customizations;
 use App\ApiCredential;
+use App\ServicePlan;
 class UserTableSeeder extends Seeder {
 
 public function run()
 {
-
+  $plans = ServicePlan::getRecurringMembershipPlans();
+  $plan = $plans[0];
   $admin = \App\User::create([
     'name' => 'Admin User',
     'username' => 'admin_user',
@@ -24,7 +26,7 @@ public function run()
     'office_number' => 'ADMIN',
     'confirmation_code' => md5(microtime() . env('APP_KEY')),
     'region' => 'ca-central-1',
-    'plan' => 'ultimate',
+    'plan' => $plan->name,
     'stripe_id' => 'cus_HPMybdGfNCjbIl'
   ]);
     $workspace = Workspace::create([
@@ -32,7 +34,7 @@ public function run()
       'name' => 'admin',
       'api_token' => MainHelper::createAPIToken(),
       'api_secret' => MainHelper::createAPISecret(),
-      'plan' => 'ultimate'
+      'plan' => $plan->name,
     ]);
 WorkspaceUser::createSuperAdmin($workspace, $admin);
   SIPRouterHelper::addUserToProxy($admin->toArray(), $workspace->toArray());
@@ -48,7 +50,7 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
 			'mobile_number' => 'USER',
 			'office_number' => 'USER',
       'region' => 'ca-central-1',
-      'plan' => 'ultimate',
+      'plan' => $plan->name,
       'stripe_id' => 'cus_HPMybdGfNCjbIl'
 		]);
       $workspace = Workspace::create([
@@ -56,7 +58,7 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
         'name' => 'workspace',
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
-        'plan' => 'ultimate'
+        'plan' => $plan->name
     ]);
     WorkspaceUser::createSuperAdmin($workspace, $user);
         PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);
