@@ -70,6 +70,10 @@ echo "Removing customizations tables" .PHP_EOL;
 echo var_dump( DB::table('api_credentials')->delete() );
 echo var_dump( DB::table('customizations')->delete() );
 
+
+echo "Removing system status data" .PHP_EOL;
+echo var_dump( DB::table('system_status_categories')->delete() );
+
 echo "Removing opensips data" .PHP_EOL;
 
 echo var_dump( SIPRouterHelper::removeAllUserData() );
