@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\ApiResource;
 use App\Helpers\MainHelper;
+use Exception;
 
 class ApiCredential extends Model {
   protected $dates = ['created_at', 'updated_at'];
@@ -12,6 +13,16 @@ class ApiCredential extends Model {
   protected $guarded  = array('id');
   public static function getRecord() {
     return ApiCredential::all()[0];
+  }
+
+  public static function getParameterIfAvailable($param) {
+    try {
+      $record = self::getRecord();
+      return $record->{$param};
+    } catch (Exception $ex) {
+      Log::error("error occured while getting API credential: " .$param);
+    }
+    return "";
   }
   public static function getFrontendValuesOnly() {
     extract( self::getRecord()->toArray() );

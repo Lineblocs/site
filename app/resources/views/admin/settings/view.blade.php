@@ -221,6 +221,15 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+            <h3>Logging and stacktrace tools</h3>
+</div>
+            <div class="row form-group">
+                <label for="sentry_dsn">Sentry DSN</label>
+                <div class="controls">
+                    <input class="form-control" name="sentry_dsn" value="{{$creds->sentry_dsn}}"/>
+                </div>
+            </div>
 
             <div class="row form-group">
                 <input type="hidden" name="_token" value="{{csrf_token()}}"/>

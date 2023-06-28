@@ -68,6 +68,7 @@ class SettingsController extends AdminController {
         'google_signin_app_id',
         'google_analytics_script_tag',
         'matomo_script_tag',
+        'sentry_dsn',
         ];
         $update = [];
         foreach ( $keys as $key ) {
