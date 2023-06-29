@@ -40,7 +40,9 @@ class ServicePlanController extends AdminController
     public function create()
     {
         $features = $this->getFeatureOptions();
-        return view('admin.serviceplan.create_edit', compact('features'));
+        $callDurations = $this->getCallDurations();
+        $recordingSpace = $this->getRecordingSpaceOptions();
+        return view('admin.serviceplan.create_edit', compact('features', 'callDurations', 'recordingSpace'));
     }
 
     /**
@@ -78,7 +80,9 @@ class ServicePlanController extends AdminController
     public function edit(ServicePlan $serviceplan)
     {
         $features = $this->getFeatureOptions();
-        return view('admin.serviceplan.create_edit', compact('serviceplan', 'features'));
+        $callDurations = $this->getCallDurations();
+        $recordingSpace = $this->getRecordingSpaceOptions();
+        return view('admin.serviceplan.create_edit', compact('serviceplan', 'features', 'callDurations', 'recordingSpace'));
     }
     private function createFeatureOption($key) {
         return [
@@ -104,8 +108,24 @@ $this->createFeatureOption('allows_monthly'),
             $this->createFeatureOption('bring_carrier'),
             $this->createFeatureOption('featured_plan'),
             $this->createFeatureOption('pay_as_you_go'),
-            $this->createFeatureOption('registration_plan'),
             $this->createFeatureOption('include_in_pricing_pages'),
+        ];
+    }
+
+    private function getCallDurations() {
+        return [
+            '30' => '30 minutes',
+            '60' => '60 minutes',
+            '120' => '120 minutes',
+            'UNLIMITED' => 'UNLIMITED'
+        ];
+    }
+
+    private function getRecordingSpaceOptions() {
+        return [
+            '256gb' => '256gb',
+            '512gb' => '512gb',
+            '1024gb' => '1024gb'
         ];
     }
     /**

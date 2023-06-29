@@ -31,9 +31,9 @@
             </div>
         </div>
         <div class="form-group  {{ $errors->has('monthly_charge_cents') ? 'has-error' : '' }}">
-            {!! Form::label('monthly_charge_cents', trans("admin/serviceplans.monthly_charge_cents"), array('class' => 'control-label')) !!}
+            {!! Form::label('base_costs', trans("admin/serviceplans.monthly_charge_cents"), array('class' => 'control-label')) !!}
             <div class="controls">
-                {!! Form::text('monthly_charge_cents', null, array('class' => 'form-control')) !!}
+                {!! Form::text('base_costs', null, array('class' => 'form-control')) !!}
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
@@ -55,7 +55,8 @@
         <div class="form-group  {{ $errors->has('call_duration') ? 'has-error' : '' }}">
             {!! Form::label('call_duration', trans("admin/serviceplans.call_duration"), array('class' => 'control-label')) !!}
             <div class="controls">
-                {!! Form::text('call_duration', null, array('class' => 'form-control')) !!}
+                {!! Form::select('call_duration', $callDurations, NULL, ['id' => 'callduration', 'class' => 'form-control']) !!}
+
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
@@ -63,7 +64,7 @@
         <div class="form-group  {{ $errors->has('recording_space') ? 'has-error' : '' }}">
             {!! Form::label('recording_space', trans("admin/serviceplans.recording_space"), array('class' => 'control-label')) !!}
             <div class="controls">
-                {!! Form::text('recording_space', null, array('class' => 'form-control')) !!}
+                {!! Form::select('recording_space', $recordingSpace, NULL, ['id' => 'recordingspace', 'class' => 'form-control']) !!}
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
