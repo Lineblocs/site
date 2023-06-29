@@ -17,8 +17,8 @@
                             <i class="glyphicon glyphicon-user fa-3x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{$users}}</div>
-                            <div>{{ trans("admin/admin.users") }}!</div>
+                            <div class="huge grey-txt">{{$users}}</div>
+                            <div class="grey-txt">{{ trans("admin/admin.users") }}!</div>
                         </div>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
                             <i class="glyphicon glyphicon-user fa-3x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{$sipproviders}}</div>
-                            <div>{{ trans("admin/sipproviders.sip_providers") }}!</div>
+                            <div class="huge grey-txt">{{$sipproviders}}</div>
+                            <div class="grey-txt">{{ trans("admin/sipproviders.sip_providers") }}!</div>
                         </div>
                     </div>
                 </div>
@@ -63,8 +63,8 @@
                             <i class="glyphicon glyphicon-user fa-3x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{$callrates}}</div>
-                            <div>{{ trans("admin/callrates.call_rates") }}!</div>
+                            <div class="huge grey-txt">{{$callrates}}</div>
+                            <div class="grey-txt">{{ trans("admin/callrates.call_rates") }}!</div>
                         </div>
                     </div>
                 </div>

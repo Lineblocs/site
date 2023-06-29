@@ -15624,3 +15624,11 @@ table.dataTable thead .sorting:after {
 .btn-info:hover {
 	background: #5bc0de !important;
 }
+
+.panel .panel-info {
+	color: #3D3D3D;
+}
+
+.grey-txt {
+	color: #3D3D3D;
+}

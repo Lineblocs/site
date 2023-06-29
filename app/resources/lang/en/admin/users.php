@@ -6,6 +6,9 @@ return [
 
     'first_name' =>   'First Name',
     'last_name' =>   'Last Name',
+    'job_title' => 'Job Title',
+    'mobile_number' => 'Mobile Number',
+    'office_number' => 'Office Number',
     'username' =>   'Username',
     'email' =>   'Email',
     'password' =>  'Password',
