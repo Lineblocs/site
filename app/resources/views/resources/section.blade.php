@@ -1,16 +1,16 @@
 @extends('layouts.app_new')
 @section('fullTitle')
-Resource articles in {{$sectionname}}
+Resource articles in {{$sectionName}}
 @endsection
 @section('metaDescription')
-Resource articles in {{$sectionname}}
+Resource articles in {{$sectionName}}
 @endsection
 @section('content')
   <div class="resources-section section no-pad-bot" id="index-banner">
     <div class="container">
         <div class="row breadcrumbs">
             <div class="col s12">
-    <a href="/resources">Resources</a> <span>{{$sectionname}}</span>
+    <a href="/resources">Resources</a> <span>{{$sectionName}}</span>
             </div>
         </div>
         <div class="row">
