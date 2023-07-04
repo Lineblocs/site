@@ -1,5 +1,10 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+FAQs
+@endsection
+@section('metaDescription')
+faqs, how to use site, documentation
+@endsection
 @section('content')
   <div class="container faq">
     <div class="row heading">

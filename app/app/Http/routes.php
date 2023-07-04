@@ -33,6 +33,8 @@ Route::group(['prefix' => 'setup', 'middleware' => '\App\Http\Middleware\Setup']
 Route::get('home', 'HomeController@index');
 Route::get('about', 'HomeController@about');
 Route::get('contact', 'HomeController@contact');
+Route::get('quote', 'HomeController@requestQuote');
+Route::post('quote', 'HomeController@requestQuoteSubmit');
 Route::post('contactSubmit', 'HomeController@contactSubmit');
 Route::get('login', 'HomeController@login');
 Route::get('pricing', 'HomeController@pricing');
@@ -66,6 +68,7 @@ Route::get('/back-to-billing', 'HomeController@backToBilling');
 Route::get('/back-to-billing-cancel', 'HomeController@backToBillingCancel');
 Route::get('/email-verify', 'HomeController@emailVerify')->name('email-verify');
 Route::get('/alternative', 'HomeController@alternative');
+Route::post('/alternative', 'HomeController@alternativeSubmit');
 Route::get('/alternative/ringcentral', 'HomeController@alternative_ringcentral');
 Route::get('/alternative/nextiva', 'HomeController@alternative_nextiva');
 Route::get('/alternative/dialpad', 'HomeController@alternative_dialpad');

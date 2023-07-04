@@ -827,8 +827,11 @@ final class MainHelper {
         $default_logo = '/images/logo-comp_03.png';
         return $default_logo;
     }
-    public static function createPortalLink($path) {
+    public static function createPortalLink($path='') {
       return sprintf("https://app.%s/%s", \Config::get("app.deployment_domain"), $path);
+    }
+   public static function createRegisterLink() {
+      return self::createPortalLink('#/register');
     }
     public static function createResourceArticleUrl($article_key, $section_key) {
       return sprintf("https://%s/resources/%s/%s", \Config::get("app.deployment_domain"), $section_key, $article_key);

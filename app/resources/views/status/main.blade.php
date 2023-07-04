@@ -1,5 +1,7 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+System Status
+@endsection
 @section('content')
   <!-- top hero section -->
   <main class="system-status container">

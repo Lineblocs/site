@@ -1,5 +1,13 @@
 @extends('layouts.app_new')
-@section('title') About :: @parent @endsection
+@section('title')
+{{$title}}
+@endsection
+@section('metaDescription')
+{{$title}}
+@endsection
+@section('metaKeywords')
+{{$article->seo_tags}}
+@endsection
 @section('content')
 <div class="resources-section resources-item section no-pad-bot" id="index-banner">
     <div class="container resource">

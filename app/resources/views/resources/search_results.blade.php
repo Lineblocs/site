@@ -1,5 +1,7 @@
 @extends('layouts.app_new')
-@section('title') About :: @parent @endsection
+@section('fullTitle')
+Search results for "{{$query}}"
+@endsection
 @section('content')
   <div class="resources-section section no-pad-bot" id="index-banner">
     <div class="container">

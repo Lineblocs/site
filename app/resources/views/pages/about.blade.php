@@ -1,5 +1,7 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+About
+@endsection
 @section('content')
   <div class="about-us-page">
 

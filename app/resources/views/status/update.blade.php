@@ -1,5 +1,7 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+{{$category->name}} status update
+@endsection
 @section('content')
 
     <!-- main -->

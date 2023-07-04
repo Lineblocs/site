@@ -13,6 +13,10 @@
       <h1>System Status</h1>
       <p>As of 13 Otober 2020 18:12</p>
     </header>
+    <!-- TODO: finish this -->
+    <a href="{!! url('admin/systemstatus/add_alert') !!}"
+        class="btn btn-sm  btn-primary iframe"><span
+                class="glyphicon glyphicon-plus-sign"></span> {{ trans("admin/modal.add_alert") }}</a>
     <section class="system-status__container">
     </section>
     <section class="system-status__states">

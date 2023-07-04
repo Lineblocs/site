@@ -190,7 +190,7 @@ class ResourcesController extends BaseController {
     View::share('title', $title);
     View::share('tags', $tags);
     View::share('description', $description);
-    return view('resources.item', compact('html', 'related', 'title', 'section'));
+    return view('resources.item', compact('html', 'related', 'title', 'section', 'article'));
   }
 
   public function articleInactive(Request $request)

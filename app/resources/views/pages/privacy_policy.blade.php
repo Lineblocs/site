@@ -1,5 +1,12 @@
 @extends('layouts.app_new', ['show_drift' => FALSE])
-@section('title') About :: @parent @endsection
+@section('title')
+Privacy Policy
+@endsection
+
+@section('metaDescription')
+Privacy Policy
+@endsection
+
 @section('content')
             <link rel="stylesheet" href="/css/legal.css">
 <body>

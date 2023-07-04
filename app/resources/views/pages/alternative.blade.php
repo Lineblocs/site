@@ -1,5 +1,7 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('fullTitle')
+How {{\App\Helpers\MainHelper::getSiteName()}} compares agaisnt {{$competitor}}
+@endsection
 @section('content')
 <div class="analysis-page">
   <section class="analysis-header full-section">
@@ -7,10 +9,10 @@
     <div class="container">
       <div class="row">
         <div class="col-12 col-md-7 my-auto">
-          <h1>Best alternative to&nbsp;RingCentral</h1>
+          <h1>Best alternative to&nbsp;{{$competitor}}</h1>
           <p>Many customers rely on {{\App\Helpers\MainHelper::getSiteName()}} to make high quality voice calls, integrate IM solutions, and connect via video.</p>
-          <a href="#get-started" class="button btn primary-button bg-blue">Get started in 30 seconds</a>
-          <a href="#get-started" class="button btn secondary-button">Talk To Our Sales Team</a>
+          <a href="{{\App\Helpers\MainHelper::createRegisterLink()}}" class="button btn primary-button bg-blue">Get started in 30 seconds</a>
+          <a href="/quote" class="button btn secondary-button">Talk To Our Sales Team</a>
         </div>
         <div class="col-12 col-md-5 my-auto">
           <img src="/images/analysis-header.png" alt="" class="mobile-only img-fluid">
@@ -136,8 +138,8 @@
         </div>
         <div class="row">
           <div class="col-12 buttons-row">
-            <a href="#prices" class="button btn primary-button bg-blue">View Full Pricing Comparison</a>
-            <a href="#get-started" class="button btn secondary-button">Request A Quote</a>
+            <a href="/pricing" class="button btn primary-button bg-blue">View Full Pricing Comparison</a>
+            <a href="/quote" class="button btn secondary-button">Request A Quote</a>
           </div>
         </div>
       </div>
@@ -159,9 +161,6 @@
               </li>
               <li class="checked d-flex">
                 Recording Transcrptions
-              </li>
-              <li class="not-checked d-flex">
-                Conferences
               </li>
               <li class="not-checked d-flex">
                 Conferences
@@ -190,59 +189,61 @@
     </div>
   </section> {{-- .solutions --}}
   <section class="contact-form">
-    <div class="inner-holder">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-md-6">
+    <form action="/alternative" method="POST">
+      <div class="inner-holder">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-md-6">
 
-            <h2>Talk to us</h2>
-            <p>If you would like to learn more about {{\App\Helpers\MainHelper::getSiteName()}}, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and specific needs.</p>
+              <h2>Talk to us</h2>
+              <p>If you would like to learn more about {{\App\Helpers\MainHelper::getSiteName()}}, please get in touch with us today. We can help you find calling solutions based on your team's size, budget, and specific needs.</p>
 
-            <form>
-              <div class="row">
-                <div class="col-12 col-md-6">
-                  <div class="wrapper">
-                    <input type="text" class="form-control" >
-                    <span class="placeholder">Name</span>
+              <form>
+                <div class="row">
+                  <div class="col-12 col-md-6">
+                    <div class="wrapper">
+                      <input type="text" class="form-control" >
+                      <span class="placeholder">Name</span>
+                    </div>
+
                   </div>
-
-                </div>
-                <div class="col-12 col-md-6">
-                  <div class="wrapper">
-                    <input type="email" class="form-control" >
-                    <span class="placeholder">Email</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="wrapper">
-                    <textarea class="form-control" id="textArea" rows="5"></textarea>
-                    <span class="placeholder">Message</span>
+                  <div class="col-12 col-md-6">
+                    <div class="wrapper">
+                      <input type="email" class="form-control" >
+                      <span class="placeholder">Email</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <button class="btn button" type="submit">Send message</button>
+                <div class="row">
+                  <div class="col">
+                    <div class="wrapper">
+                      <textarea class="form-control" id="textArea" rows="5"></textarea>
+                      <span class="placeholder">Message</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <small id="ppInfo" class="text-muted">
-                    By clicking the button, you agree to Line block
-                  </small>
+                <div class="row">
+                  <div class="col">
+                    <button class="btn button" type="submit">Send message</button>
+                  </div>
                 </div>
-              </div>
-            </form>
+                <div class="row">
+                  <div class="col">
+                    <small id="ppInfo" class="text-muted">
+                      By clicking the button, you agree to Line block
+                    </small>
+                  </div>
+                </div>
+              </form>
 
+            </div>
+            <div class="col-12 col-md-6 mobile-hidden my-auto">
+              <img src="/images/analysis-cf.png" alt="Man" class="img-fluid">
+            </div>
           </div>
-          <div class="col-12 col-md-6 mobile-hidden my-auto">
-            <img src="/images/analysis-cf.png" alt="Man" class="img-fluid">
-          </div>
-        </div>
       </div>
     </div>
+        </form>
   </section> {{-- .contact-form --}}
   <section class="faq">
     <div class="container">
@@ -258,7 +259,7 @@
             <div class="card-header" id="heading1">
               <h2 class="mb-0">
                 <button class="btn btn-link pl-0" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                  What does it cost to create a {{\app\helpers\mainhelper::getsitename()}} account?
+                  What does it cost to create a {{\App\Helpers\MainHelper::getSiteName()}} account?
                 </button>
               </h2>
             </div>
@@ -301,13 +302,13 @@
             <div class="card-header" id="heading4">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                  Can I port my phone number to {{\App\Helpers\MainHelper::getSiteName()}?
+                  Can I port my phone number to {{\App\Helpers\MainHelper::getSiteName()}}?
                 </button>
               </h2>
             </div>
             <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
               <div class="card-body">
-                Yes, you are able to port numbers to {{\App\Helpers\MainHelper::getSiteName()}. You can learn more about porting numbers in the Porting Numbers guide.
+                Yes, you are able to port numbers to {{\App\Helpers\MainHelper::getSiteName()}}. You can learn more about porting numbers in the Porting Numbers guide.
               </div>
             </div>
           </div>
@@ -315,13 +316,13 @@
             <div class="card-header" id="heading5">
               <h2 class="mb-0">
                 <button class="btn btn-link collapsed pl-0" type="button" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                  Does {{\App\Helpers\MainHelper::getSiteName()}} offer an API like Twilio or Plivo?
+                  Does {{\App\Helpers\MainHelper::getSiteName()}} offer an API like Twilio?
                 </button>
               </h2>
             </div>
             <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordion">
               <div class="card-body">
-                No, we currently do not offer a CPaaS type of API.
+                No, we currently do not offer a CPaaS API.
               </div>
             </div>
           </div>
@@ -367,12 +368,12 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-6">
-          <a href="https://www.trustpilot.com/evaluate/{{\App\Helpers\MainHelper::getSiteName()}.com" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()}} on Trustpilot">
+          <a href="https://www.trustpilot.com/evaluate/{{\App\Helpers\MainHelper::getSiteName()}}" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()}} on Trustpilot">
             <img src="/images/trustpilot_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
         <div class="col-12 col-md-6">
-          <a href="https://www.g2.com/products/{{\App\Helpers\MainHelper::getSiteName()}/reviews" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()}} on G2Crowd">
+          <a href="https://www.g2.com/products/{{\App\Helpers\MainHelper::getSiteName()}}/reviews" target="_blank" title="{{\App\Helpers\MainHelper::getSiteName()}} on G2Crowd">
             <img src="/images/g2crowd_reviews.png" alt="" class="img-fluid my-auto">
           </a>
         </div>
@@ -387,11 +388,11 @@
           <p>Get up and going with one of our calling solutions today — it's easy.</p>
         </div>
         <div class="col-12 col-lg-3 my-auto">
-          <a href="#get-started" class="button btn primary-button bg-blue">Get started now</a>
+          <a href="{{\App\Helpers\MainHelper::createRegisterLink()}}" class="button btn primary-button bg-blue">Get started now</a>
 
         </div>
         <div class="col-12 col-lg-3 my-auto">
-          <a href="#request-quote" class="button btn secondary-button">Request A Quote</a>
+          <a href="/quote" class="button btn secondary-button">Request A Quote</a>
         </div>
       </div>
     </div>

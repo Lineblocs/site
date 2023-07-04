@@ -2,8 +2,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php
+        $fullTitle = View::yieldContent('fullTitle');
+        $metaDescription = View::yieldContent('metaDescription');
+        $metaKeywords = View::yieldContent('metaKeywords');
+    ?>
+    @if (!empty($fullTitle))
+    <title>{{trim($fullTitle)}}@show</title>
+    @else
+    <title>{{\App\Helpers\MainHelper::getSiteName()}} - {{trim(View::yieldContent('title'))}}@show</title>
+    @endif
     <meta charset="UTF-8">
+    @if (!empty($metaDescription))
+    <meta name="description" content="{{trim($metaDescription)}}">
+    @else
     <meta name="description" content="{{\App\Helpers\MainHelper::getSiteName()}} is a fully custimizable cloud phone system for productive teams.">
+    @endif
+    @if (!empty($metaKeywords))
+    <meta name="keywords" content="{{trim($metaKeywords)}}">
+    @else
+    <meta name="keywords" content="">
+    @endif
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--<link rel="shortcut icon" type="image/png" href="favicon.png"/>-->
     <link rel="shortcut icon" type="image/png" href="{!! asset('images/new-icon.png') !!}">
@@ -41,7 +60,6 @@
     <script src="https://kit.fontawesome.com/cbbc235e67.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <title>{{\App\Helpers\MainHelper::getSiteName()}}</title>
 </head>
 <body>
     @if (isset($header_cls))

@@ -1,5 +1,7 @@
 @extends('layouts.app_new', ['header_cls' => 'resources'])
-@section('title') About :: @parent @endsection
+@section('title')
+Resource Articles
+@endsection
 @section('content')
   <!-- heading -->
   <section class="resources">

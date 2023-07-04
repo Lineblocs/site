@@ -31,5 +31,6 @@ return [
     'termination' => 'Termination',
     'did_numbers' => 'DID Numbers',
     'rtpproxies' => 'RTP proxies',
-    'users' => 'Users'
+    'users' => 'Users',
+    'add_alert' => 'Add alert'
 ];

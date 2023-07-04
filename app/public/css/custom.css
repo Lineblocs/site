@@ -571,3 +571,7 @@ section.gray {
   margin-top: 100px;
   text-align: center;
 }
+
+.white {
+  color: #FFFFFF;
+}

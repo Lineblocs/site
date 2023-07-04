@@ -1,5 +1,7 @@
 @extends('layouts.app_new', ['footer_cls' => 'no-margin'])
-@section('title') Home :: @parent @endsection
+@section('title')
+UCaaS services for {{$region['name']}}, {{$country['name']}}
+@endsection
 @section('content')
     <!-- main -->
     <!-- <main class="landing" style="background:black"> -->

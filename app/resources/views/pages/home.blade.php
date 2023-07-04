@@ -1,5 +1,10 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+A customizable VoIP system
+@endsection
+@section('metaDescription')
+A customizable VoIP system
+@endsection
 @section('content')
         <div class="hero__container">
 
@@ -116,6 +121,12 @@
                         </tr>
                         </tbody>
                 </table>
+                <br/>
+                <center>
+                    <a href="/alternative/ringcentral" >
+                        <button class="primary-button bg-blue"><span style="font-size: 24px; padding: 10px;">View full comparison</span></button>
+                    </a>
+                </center>
             </section>
             <section class="serviceAreas">
                 <div class="container">

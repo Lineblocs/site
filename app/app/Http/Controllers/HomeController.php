@@ -178,7 +178,22 @@ class HomeController extends BaseController {
     ];
     return view('pages.contact', $vars);
   }
+
+  public function requestQuote(Request $request)
+  {
+    return view('pages.request_quote');
+  }
+
+  public function requestQuoteSubmit(Request $request)
+  {
+    return view('pages.request_quote');
+  }
   public function alternative(Request $request)
+  {
+    $vars = [];
+    return view('pages.alternative', $vars);
+  }
+  public function alternativeSubmit(Request $request)
   {
     $vars = [];
     return view('pages.alternative', $vars);
@@ -280,19 +295,19 @@ class HomeController extends BaseController {
   }
   public function alternative_ringcentral(Request $request)
   {
-    return view('pages.alternative');
+    return view('pages.alternative', ['competitor' => 'RingCentral']);
   }
     public function alternative_nextiva(Request $request)
     {
-        return view('pages.alternative');
+        return view('pages.alternative', ['competitor' => 'Nextiva']);
     }
     public function alternative_dialpad(Request $request)
     {
-        return view('pages.alternative');
+        return view('pages.alternative', ['competitor' => 'Dialpad']);
     }
     public function alternative_grasshopper(Request $request)
     {
-        return view('pages.alternative');
+        return view('pages.alternative', ['competitor' => 'Grasshopper']);
     }
     public function cloud_native_solutions(Request $request)
     {

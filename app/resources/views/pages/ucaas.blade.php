@@ -1,5 +1,8 @@
 @extends('layouts.main', ['footer_cls' => 'no-margin'])
 @section('title') Home :: @parent @endsection
+@section('title')
+UCaaS services
+@endsection
 @section('content')
 <div class="section no-bottom-margin more-padding" id="index-banner">
   <div class="container">

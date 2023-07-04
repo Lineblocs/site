@@ -1,5 +1,11 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+Pricing
+@endsection
+@section('metaDescription')
+Pricing plans for all
+@endsection
+
 @section('content')
 
 <div class="pricing">

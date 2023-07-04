@@ -1,5 +1,7 @@
 @extends('layouts.app_new')
-@section('title') Home :: @parent @endsection
+@section('title')
+Features
+@endsection
 @section('content')
     <main>
         <!-- <section class="two-column full-section features-1"> -->
