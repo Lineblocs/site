@@ -388,6 +388,10 @@ $api->version('v1', function($api) {
     });
   });
   $api->group(['prefix' => 'v1'], function ($api) { // Use this route group for v1
+    $api->group([ 'prefix' => 'setup'], function($api) {
+      $api->get('getSettings', '\App\Http\Controllers\Api\SetupController@getSettings');
+      $api->post('saveSettings', '\App\Http\Controllers\Api\SetupController@saveSettings');
+    });
     $api->group([ 'prefix' => 'admin'], function($api) {
       $api->get('getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');
     });
@@ -712,13 +716,16 @@ $api->version('v1', function($api) {
           $api->get("/list", "FAQController@list");
         });
         $api->group([ 'prefix' => 'resource'], function($api) {
-          $api->get("/list", "ResrouceController@list");
-          $api->get("/{key}", "ResrouceController@getResource");
+          $api->get("/list", "ResourceController@list");
+          $api->get("/{key}", "ResourceController@getResource");
         });
+
+        /*
         $api->group([ 'prefix' => 'page'], function($api) {
           $api->get("/list", "PageController@list");
           $api->get("/{key}", "PageController@getPage");
         });
+        */
     });
 
   });
