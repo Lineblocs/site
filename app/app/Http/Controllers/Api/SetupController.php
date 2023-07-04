@@ -81,6 +81,9 @@ class SetupController extends ApiAuthController
       }
 
       $data =$request->json()->all();
-      $creds->update($data['api_creds']);
+      $creds->update(array_merge( 
+        $data['api_creds'],
+        [ 'setup_complete' => true ]
+      ));
     }
 }
