@@ -94,4 +94,4 @@ COPY ports.conf /etc/apache2/ports.conf
 RUN chown -R www-data:www-data ./public/assets
 EXPOSE 8080
 #CMD [ "apache2-foreground" ]
-ENTRYPOINT ["./scripts/entrypoint.sh"]
+ENTRYPOINT ["./shell_scripts/entrypoint.sh"]
