@@ -9,6 +9,9 @@ use Exception;
 
 class ApiCredential extends Model {
   protected $dates = ['created_at', 'updated_at'];
+  protected $casts = array(
+    "setup_complete" => "boolean"
+  );
 
   protected $guarded  = array('id');
   public static function getRecord() {

@@ -394,6 +394,7 @@ $api->version('v1', function($api) {
     $api->group([ 'prefix' => 'setup'], function($api) {
       $api->get('getSettings', '\App\Http\Controllers\Api\SetupController@getSettings');
       $api->post('saveSettings', '\App\Http\Controllers\Api\SetupController@saveSettings');
+      $api->post('completeSetup', '\App\Http\Controllers\Api\SetupController@completeSetup');
     });
     $api->group([ 'prefix' => 'admin'], function($api) {
       $api->get('getWorkspaces', '\App\Http\Controllers\Api\AdminController@getWorkspaces');

@@ -81,6 +81,17 @@ class SetupController extends ApiAuthController
       }
 
       $data =$request->json()->all();
+      $creds->update($data['api_creds']);
+    }
+
+    public function completeSetup(Request $request)
+    {
+      $creds = ApiCredential::getRecord();
+      if ($this->isSetupComplete($creds)) {
+        return $this->response->errorForbidden();
+      }
+
+      $data =$request->json()->all();
       $creds->update(array_merge( 
         $data['api_creds'],
         [ 'setup_complete' => true ]
