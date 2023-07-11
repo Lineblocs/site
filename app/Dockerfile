@@ -86,7 +86,7 @@ RUN mv vendoring vendor
 
 # Copy existing application directory permissions
 #RUN chown -R www-data:www-data /var/www/html
-RUN ./scripts/deploy-docker.sh
+RUN ./shell_scripts/deploy-docker.sh
 
 # Change current user to www
 # Expose port 9000 and start php-fpm server
