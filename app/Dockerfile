@@ -76,6 +76,15 @@ COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN mv php.ini "$PHP_INI_DIR/php.ini"
 RUN mv .env.docker .env
 
+#prepare set up .env from docker-compose enviroment
+ENV DB_HOST mysqldb \
+    DB_USERNAME  root_lineblocs \
+    DB_PASSWORD 101010 \
+    DB_DATABASE lineblocs \
+    DB_PORT 3306 \
+    DB_OPENSIPS_DATABASE opensips \
+    DEPLOYMENT_DOMAIN domain.tech
+
 # Change current user to www
 # Expose port 9000 and start php-fpm server
 
