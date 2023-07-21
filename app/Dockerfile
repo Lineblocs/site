@@ -77,13 +77,22 @@ RUN mv php.ini "$PHP_INI_DIR/php.ini"
 RUN mv .env.docker .env
 
 #prepare set up .env from docker-compose enviroment
-ENV DB_HOST mysqldb \
-    DB_USERNAME  root_lineblocs \
-    DB_PASSWORD 101010 \
-    DB_DATABASE lineblocs \
-    DB_PORT 3306 \
-    DB_OPENSIPS_DATABASE opensips \
-    DEPLOYMENT_DOMAIN domain.tech
+ARG DB_HOST_ARG=127.0.0.1
+ARG DB_USERNAME_ARG=root_lineblocs
+ARG DB_PASSWORD_ARG=101010
+ARG DB_DATABASE_ARG=lineblocs
+ARG DB_PORT_ARG=3306
+ARG DB_OPENSIPS_DATABASE_ARG=opensips
+ARG DEPLOYMENT_DOMAIN_ARG=domain.tld
+
+ENV DB_HOST $DB_HOST_ARG 
+ENV DB_USERNAME  $DB_USERNAME_ARG 
+ENV DB_PASSWORD $DB_PASSWORD_ARG 
+ENV DB_DATABASE $DB_DATABASE_ARG 
+ENV DB_PORT $DB_PORT_ARG 
+ENV DB_OPENSIPS_DATABASE $DB_OPENSIPS_DATABASE_ARG 
+ENV DEPLOYMENT_DOMAIN $DEPLOYMENT_DOMAIN_ARG
+    
 
 # Change current user to www
 # Expose port 9000 and start php-fpm server
