@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\ApiResource;
 use App\Helpers\MainHelper;
 use Exception;
+use Log;
 
 class ApiCredential extends Model {
   protected $dates = ['created_at', 'updated_at'];
@@ -23,7 +24,7 @@ class ApiCredential extends Model {
       $record = self::getRecord();
       return $record->{$param};
     } catch (Exception $ex) {
-      Log::error("error occured while getting API credential: " .$param);
+      print("error occured while getting API credential: " .$param);
     }
     return "";
   }
