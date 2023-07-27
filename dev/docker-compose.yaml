@@ -1,0 +1,94 @@
+version: "3.6"
+x-logging: &default-logging
+  options:
+    max-size: "100m"
+    max-file: "5"
+  driver: json-file
+services:
+  mysqldb:
+    image: mysql:latest
+    container_name: lineblocs-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_NAME: mysql
+    profiles:
+      - enable_mysql
+    entrypoint:
+      sh -c "
+        echo 'CREATE DATABASE IF NOT EXISTS ${DB_DATABASE}; USE ${DB_DATABASE}; GRANT ALL  ON '\\`'${DB_DATABASE}'\\`'.* TO '\\''${DB_USERNAME}'\\''@'\\''%'\\''; ' > /docker-entrypoint-initdb.d/init.sql;
+        echo 'CREATE DATABASE IF NOT EXISTS ${DB_OPENSIPS_DATABASE}; USE ${DB_OPENSIPS_DATABASE}; GRANT ALL  ON '\\`'${DB_OPENSIPS_DATABASE}'\\`'.* TO '\\''${DB_USERNAME}'\\''@'\\''%'\\''; ' >> /docker-entrypoint-initdb.d/init.sql;
+        /usr/local/bin/docker-entrypoint.sh  --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+      "
+    volumes:
+      - ./mysql/dbinitial:/docker-entrypoint-initdb.d/
+#      - ./mysql/conf/mysql:/etc/mysql/
+#      - ./mysql/data:/var/lib/mysql/
+    ports:
+     - ${MYSQL_PORT_HOST}:3306
+    networks:
+      - lineblocs_internal
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: lineblocs-nginx-proxy
+    ports:
+      - "80:80"
+    environment:
+      - TRUST_DOWNSTREAM_PROXY=true
+      - DHPARAM_GENERATION=false
+      - HTTPS_METHOD=nohttps
+    networks:
+      - lineblocs_internal
+    profiles:
+      - enable_proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  site:
+    # use image from docker hub. Need side project live but not develop site project
+    #image: lineblocs/site:master
+    # end of use image from docker hub
+    # use dockerfile as image. Development site project, use this config
+    build:
+      context: ../app
+      dockerfile: Dockerfile
+    image: lineblocs-site
+    volumes:
+      - ../app:/var/www/html
+    # end of use docekrfile as image
+    logging: *default-logging
+    container_name: lineblocs-site
+    restart: unless-stopped
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_PORT=${DB_PORT}
+      - DB_OPENSIPS_DATABASE=${DB_OPENSIPS_DATABASE}
+      - DEPLOYMENT_DOMAIN=${DEPLOYMENT_DOMAIN}
+      - VIRTUAL_HOST=${DEPLOYMENT_DOMAIN}
+      - VIRTUAL_PORT=8080
+    ports:
+      - "${SITE_PORT_HOST}:8080"
+    networks:
+      - lineblocs_internal
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    logging: *default-logging
+    container_name: lineblocs-phpmyadmin
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=${DB_HOST}
+      - PMA_PORT=${DB_PORT}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - VIRTUAL_HOST=dbeditor.${DEPLOYMENT_DOMAIN}
+      - VIRTUAL_PORT=80
+    ports:
+      - "${PHPMYADMIN_PORT_HOST}:80"
+    networks:
+      - lineblocs_internal
+
+networks:
+  lineblocs_internal:
