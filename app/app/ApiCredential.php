@@ -7,6 +7,7 @@ use App\ApiResource;
 use App\Helpers\MainHelper;
 use Exception;
 use Log;
+use Illuminate\Support\Facades\DB;
 
 class ApiCredential extends Model {
   protected $dates = ['created_at', 'updated_at'];
@@ -20,6 +21,12 @@ class ApiCredential extends Model {
   }
 
   public static function getParameterIfAvailable($param) {
+    try {
+      DB::connection()->getPdo();
+  } catch (\Exception $e) {
+      echo("Could not connect to the database.  Please check your configuration. error:" . $e );
+      return;
+  }
     try {
       $record = self::getRecord();
       return $record->{$param};

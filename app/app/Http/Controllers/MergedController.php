@@ -68,6 +68,9 @@ use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer as QRWriter;
+use chillerlan\QRCode\Data\QRMatrix;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use App\UserCredit;
 use DateTime;
 use DateInterval;
@@ -827,12 +830,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         new ImagickImageBackEnd()
     );
     $writer = new QRWriter($renderer);
-    $qrContents = $writer->writeString($secret);
-    $base64_data = base64_encode( $qrContents );
+    $domain = MainHelper::getDeploymentDomain();
+    //$tag = "access";
+    $tag = $user->email;
+    $otpData = sprintf("otpauth://totp/%s?secret=%s&issuer=%s", $tag, $secret, $domain);
+    //$qrCode = new QRCode();
+    //$qrContents = $qrCode->render( $otpData );
+    $qrContents = base64_encode( $writer->writeString($otpData) );
 
     return $this->response->array([
       'secret_code' => $secret,
-      'qrcode_base64' => $base64_data
+      'qrcode_base64' => $qrContents
     ]);
   }
   public function request2FAConfirmationCode(Request $request) {

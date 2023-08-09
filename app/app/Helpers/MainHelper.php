@@ -837,7 +837,7 @@ final class MainHelper {
       return sprintf("https://%s/resources/%s/%s", \Config::get("app.deployment_domain"), $section_key, $article_key);
     }
     public static function createUrl($path='') {
-      $domain = env('DEPLOYMENT_DOMAIN');
+      $domain = self::getDeploymentDomain();
       return sprintf("https://%s/%s", $domain, $path);
     }
     public static function createAppUrl($path) {
@@ -848,13 +848,18 @@ final class MainHelper {
       return sprintf("https://%s/%s", $subdomain,$path);
     }
     public static function createSubdomain($subdomain) {
-      $domain = env('DEPLOYMENT_DOMAIN');
+      $domain = self::getDeploymentDomain();
       return sprintf("%s.%s", $subdomain, $domain);
     }
     public static function createEmail($user) {
-      $domain = env('DEPLOYMENT_DOMAIN');
+      $domain = self::getDeploymentDomain();
       return sprintf("%s@%s", $user, $domain);
     }
+    public static function getDeploymentDomain() {
+      $domain = env('DEPLOYMENT_DOMAIN');
+      return $domain;
+    }
+
     public static function getSiteName() {
       return Config::get("app.site_name");
     }
