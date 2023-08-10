@@ -19,6 +19,7 @@ use View;
 use Illuminate\Http\Request;
 use Config;
 use Mail;
+use App\Helpers\MainHelper;
 
 class HomeController extends BaseController {
   /**
