@@ -367,12 +367,19 @@
                         @if ( $record->sms_provider == 'd7networks')
                             <option value="d7networks" selected>D7Networks</option>
                             <option value="messagebird">Messagebird</option>
+                            <option value="telerivet">Telerivet</option>
                         @elseif ( $record->sms_provider == 'messagebird')
                             <option value="d7networks">D7Networks</option>
                             <option value="messagebird" selected>Messagebird</option>
+                            <option value="telerivet">Telerivet</option>
+                        @elseif ( $record->sms_provider == 'telerivet')
+                            <option value="d7networks">D7Networks</option>
+                            <option value="messagebird">Messagebird</option>
+                            <option value="telerivet" selected>Telerivet</option>
                         @else
                             <option value="d7networks">D7Networks</option>
                             <option value="messagebird">Messagebird</option>
+                            <option value="telerivet">Telerivet</option>
                         @endif
                         <!--<option>Wide</option>-->
                         <!--<option>Compact</option>-->
@@ -392,8 +399,15 @@
                 <div class="controls">
                     <input name="sms_api_secret" class="form-control" value="{{$record->sms_api_secret}}" />
                 </div>
+
             </div>
 
+         <div class="row form-group">
+                <label for="sms_from_number">SMS from number</label>
+                <div class="controls">
+                    <input name="sms_from_number" class="form-control" id="sms_from_number" value="{{$record->sms_from_number}}"/>
+                </div>
+            </div>
 
             <div class="row form-group">
                 <label for="custom_code_containers_enabled">Allow users to run custom code</label>
@@ -460,8 +474,6 @@
                     </select>
                 </div>
             </div>
-
-
 
             <div class="row">
                 <h3>Maintenance and upgrade settings</h3>

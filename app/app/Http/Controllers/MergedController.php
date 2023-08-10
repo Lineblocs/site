@@ -804,13 +804,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $user->update($updateParams);
         return $this->response->noContent();
       }
-      $confirmationCode = $data['confirmation_code'];
-      $otp = TOTP::create($user->secret_code_2fa);
-      if ( $otp->verify($confirmationCode)) {
+      if (!empty( $data['confirmation_code'] ) ) {
+        $confirmationCode = $data['confirmation_code'];
+        $otp = TOTP::create($user->secret_code_2fa);
+        if ( $otp->verify($confirmationCode)) {
+          return $this->response->errorBadRequest();
+        }
         $user->update($updateParams);
         return $this->response->noContent();
       }
-      return $this->response->errorBadRequest();
+      $user->update($updateParams);
+      return $this->response->noContent();
     }
     $user->update($updateParams);
     return $this->response->noContent();

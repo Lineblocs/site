@@ -29,19 +29,19 @@
         "giggsey/libphonenumber-for-php": "^8.10",
         "twilio/sdk": "^5.35",
         "paypal/rest-api-sdk-php": "1.13.0",
-        "google/cloud": "^0.112.0",
         "michelf/php-markdown": "^1.8",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^7.4",
         "barryvdh/laravel-dompdf": "v0.8.2",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "google/apiclient": "^2.0",
         "league/flysystem-aws-s3-v3": "~1.0",
         "hackzilla/password-generator": "dev-master",
         "messagebird/php-rest-api": "dev-master",
         "fideloper/proxy": "^3.3",
         "sentry/sentry-laravel": "1.8.0",
         "spomky-labs/otphp": "v10.0.x-dev",
-        "bacon/bacon-qr-code": "dev-master"
+        "bacon/bacon-qr-code": "dev-master",
+        "intergo/sms.to-php": "dev-master",
+        "haydenpierce/class-finder": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

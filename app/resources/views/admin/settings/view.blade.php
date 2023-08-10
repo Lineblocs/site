@@ -95,6 +95,22 @@
                 </div>
             </div>
 
+           <div class="row form-group">
+                <label for="telerivet_api_key">Telerivet API key</label>
+                <div class="controls">
+                    <input id="telerivet_api_key" type="text" class="form-control" name="telerivet_api_key" value="{{$creds->telerivet_api_key}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="telerivet_project_id">Telerivet Project ID</label>
+                <div class="controls">
+                    <input id="telerivet_project_id" type="text" class="form-control" name="telerivet_project_id" value="{{$creds->telerivet_project_id}}"/>
+                </div>
+            </div>
+
+
+
+
             <div class="row form-group">
                 <label for="smtp_host">SMTP host</label>
                 <div class="controls">

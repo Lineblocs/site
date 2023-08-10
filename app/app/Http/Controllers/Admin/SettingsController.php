@@ -70,6 +70,8 @@ class SettingsController extends AdminController {
         'google_analytics_script_tag',
         'matomo_script_tag',
         'sentry_dsn',
+        'telerivet_api_key',
+        'telerivet_project_id',
         ];
         $update = [];
         foreach ( $keys as $key ) {
