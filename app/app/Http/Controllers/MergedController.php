@@ -50,6 +50,7 @@ use App\Helpers\PhoneProvisionHelper;
 
 use App\Helpers\PortalSearchHelper;
 use App\Helpers\BillingDataHelper;
+use App\Helpers\SMSHelper;
 
 use App\PhoneGlobalSetting;
 use App\PhoneGlobalSettingValue;
@@ -851,7 +852,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $to = $user->phone_number;
       $otp = TOTP::create($user->secret_code_2fa);
       $body = sprintf("Your confirmation code for 2FA is: %s", $otp);
-      MainHelper::sendSMS($from, $to, $body);
+      SMSHelper::sendSMS($from, $to, $body);
       return $this->response->array([
           'success' => true
       ]);
@@ -883,7 +884,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $from = '';
       $to = $user->phone_number;
       $body = sprintf("Your OTP is %d", $otp);
-      //MainHelper::sendSMS($from, $to, $body);
+      //SMSHelper::sendSMS($from, $to, $body);
       return $this->response->array([
           'success' => true
       ]);

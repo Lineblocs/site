@@ -9,6 +9,7 @@ use \App\User;
 use \App\VerifiedCallerId;
 use \App\Transformers\VerifiedCallerIdTransformer;
 use \App\Helpers\MainHelper;
+use \App\Helpers\SMSHelper;
 use \Config;
 use \Twilio\Rest\Client;
 use \Exception;
@@ -34,7 +35,7 @@ class VerifiedCallerIdsController extends ApiAuthController {
             $d7= Config::get('d7');
             $from=$d7['verification_number'];
             $to = MainHelper::toE164($data['number']);
-            MainHelper::sendSMS($from, $to, $message);
+            SMSHelper::sendSMS($from, $to, $message);
             VerifiedCallerId::create([
                 'user_id' => $user->id,
                 'workspace_id' => $workspace->id,

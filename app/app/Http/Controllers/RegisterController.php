@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
+use App\Helpers\SMSHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
@@ -154,7 +155,7 @@ class RegisterController extends ApiAuthController
           $d7= Config::get('d7');
         $message = sprintf("Your Lineblocs verification code is %s", $code);
         if (!$isTest) {
-          $sent = MainHelper::sendSMS( $d7['verification_number'], $number, $message );
+          $sent = SMSHelper::sendSMS( $d7['verification_number'], $number, $message );
           if (!$sent) {
             return $this->response->array(['valid' => FALSE, 'error' => 'could not send SMS']);
           }
