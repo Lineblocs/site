@@ -3,7 +3,6 @@
 Email Verification
 @endsection
 @section('content')
-
 <!-- Body Content One Column Start  -->
 <tr>
     <td valign="top" class="mobilespacer">

@@ -280,7 +280,7 @@ class RegisterController extends ApiAuthController
             'link' => $link
           ];
           $subject =MainHelper::createEmailSubject("Verify Your Email");
-          $result = EmailHelper::sendEmail($subject, $user->email, 'verify-email', $data);
+          $result = EmailHelper::sendEmail($subject, $user->email, 'verify_email', $data);
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
 
@@ -522,6 +522,15 @@ class RegisterController extends ApiAuthController
     $data = $request->json()->all();
     MainHelper::addCard($data, $user, $workspace);
     return $this->response->noContent();
+  }
+
+  public function emailTest(){
+    $email = 'tgblinkss@gmail.com';
+    $data = 'This is a test';
+    $subject =MainHelper::createEmailSubject("Verify Your Email");
+    $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
+    return json_encode($result);
+    // return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
   }
 
 }

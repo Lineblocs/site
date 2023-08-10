@@ -26,7 +26,7 @@ final class EmailHelper {
         });
       } catch (Exception $ex) {
         Log::error('could not send email. tried sending email with template: ' . $template . ' data was: ' . json_encode($data));
-        return FALSE;
+        return $ex->getMessage();
       }
       return TRUE;
     } else if ( $customizations->mail_provider == 'ses') {

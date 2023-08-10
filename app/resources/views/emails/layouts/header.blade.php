@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -300,26 +300,6 @@
                                     </tr>
                                     <!-- Highlight One Column End  -->
                                     <!-- Header Banner One Column Start  -->
-                                    <tr>
-                                      <td valign="top">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="SubContainer" style="border-radius: 3px;">
-                                          <tr>
-                                            <td>
-                                              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                <tr>
-                                                  <td valign="top" height="25" class="vspacer20" style="mso-line-height-rule:exactly; font-size:1px; line-height:1px;">&nbsp;</td>
-                                                </tr>
-                                                <tr>
-                                                  <td align="center">
-                                                    <img src="{{\Config::get("app.url").'/email-images/'}}success.jpg" style="display: block;" width="80" alt="Invite" title="Invitation">
-                                                  </td>
-                                                </tr>
-                                              </table>
-                                            </td>
-                                          </tr>
-                                        </table>
-                                      </td>
-                                    </tr>
                                     <!-- Header Banner One Column End  -->
                                     <!-- Body Content One Column Start  --> @yield('content')
                                     <!-- Body Content One Column End  -->

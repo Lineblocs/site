@@ -32,7 +32,8 @@ class SettingsController extends AdminController {
             "ap-south-1" => "India (Mumbai)"
         );
         if ( empty( $creds->aws_region )){
-            $selected_region = $aws_regions[0];
+            $region_keys = array_keys( $aws_regions );
+            $selected_region = $region_keys[0];
         } else {
             $selected_region = $creds->aws_region;
         }

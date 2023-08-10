@@ -42,6 +42,9 @@ Route::get('rates', 'HomeController@rates1');
 Route::get('rates/{countryId}', 'HomeController@rates');
 Route::get('faqs', 'HomeController@faqs');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
+// service level agreement
+Route::get('/pages/service-agreement', 'PagesController@serviceAgreement');
+
 Route::get('/pages/tos', 'PagesController@termsOfService');
 Route::get('/resources', 'ResourcesController@index');
 Route::get('/resources/article-inactive', 'ResourcesController@articleInactive');
@@ -424,6 +427,7 @@ $api->version('v1', function($api) {
     $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
     $api->post('addCard', '\App\Http\Controllers\RegisterController@addCard');
     $api->get('self', '\App\Http\Controllers\RegisterController@getSelf');
+
     $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');
     $api->get('getUserInfo', '\App\Http\Controllers\RegisterController@getUserInfo');
     $api->post('updateSelf', '\App\Http\Controllers\RegisterController@updateSelf');

@@ -14,6 +14,7 @@ Privacy Policy
       <select class="browser-default" id="selectbox">
         <option value="/pages/privacy-policy" selected>PRIVACY POLICY</option>
         <option value="/pages/tos">TERMS OF SERVICE</option>
+        <option value="/pages/tos" >SERVICE LEVEL AGREEMENT</option>
       </select>
      </div>    
        <div class="container legal">
@@ -24,6 +25,7 @@ Privacy Policy
           <div class="sidebar">
         <p><a href="/pages/privacy-policy" class="active">PRIVACY POLICY</a></p>
         <p><a href="/pages/tos">TERMS OF SERVICE</a></p>
+        <p><a href="/pages/tos"  >SERVICE LEVEL AGREEMENT</a></p>
           </div>
           <div class="content privacy-page"> 
             <h2>LINEBLOCS PRIVACY POLICY</h2>           
