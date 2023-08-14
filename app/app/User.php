@@ -15,6 +15,7 @@ use App\UserInvoice;
 use App\Recording;
 use App\Workspace;
 use App\WorkspaceUser;
+use Log;
 use DateTime;
 use DateInterval;
 use NumberFormatter;
@@ -181,6 +182,7 @@ class User extends Model implements AuthenticatableContract,
             return $plan;
         }
 
+        Log::info(sprintf("looking up service plan key_name = %s", $work->plan));
         $plan = ServicePlan::where('key_name', $work->plan)->firstOrFail()->toArray();
         return $plan;
       } else {

@@ -19,6 +19,9 @@ final class InvoiceHelper {
     return $value;
   }
   public static function calculateTax($amount, $tax) {
+    if (!$tax) {
+      return 0;
+    }
     $percentInDecimal = $tax->tax_percentage / 100;
     return ($percentInDecimal * $amount);
   }
@@ -70,7 +73,13 @@ final class InvoiceHelper {
 
       $accountName = self::placeholderIfEmpty($user->company_name, "N/A");
       $taxNumber = self::placeholderIfEmpty($user->tax_number);
-      $tax1 = $tax->name;
+      if (is_null($tax)) {
+        $tax1 = "N/A";
+        $taxPercentage = "N/A";
+      } else {
+        $tax1 = $tax['name'];
+        $taxPercentage = sprintf("%d%%", $tax->tax_percentage);
+      }
       $addr1 = self::placeholderIfEmpty( $user->address_line_1, "N/A" );
       $addr2 = self::placeholderIfEmpty($user->address_line_2, "&nbsp;" );
       $postalCode = self::placeholderIfEmpty( $user->postal_code, "&nbsp;" );
@@ -101,8 +110,6 @@ final class InvoiceHelper {
       $invoiceMonth = $invoiceDate->format("M");
       $invoiceYear =  $invoiceDate->format("Y");
       $taxAmt = $invoice->cents_taxes;
-      $taxName = $tax->name;
-      $taxPercentage = sprintf("%d%%", $tax->tax_percentage);
       $invoiceItems = [
         [
           'item_desc' => 'Calls -- Orgination costs',
@@ -143,7 +150,7 @@ final class InvoiceHelper {
           'invoice_amount' => $invoiceAmtInclTaxes,
           'invoice_amount_no_tax' => $invoiceAmt,
           'tax_amount' => $taxAmt,
-          'tax_name' => $taxName,
+          'tax_name' => $tax1,
           'tax_percentage' => $taxPercentage,
           'payment_recvd_date' => $paymentRecvdDate,
           'tax_number' => $taxNumber,

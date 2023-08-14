@@ -16,7 +16,7 @@ Terms of Service
     <select class="browser-default" id="selectbox">
       <option value="/pages/privacy-policy">PRIVACY POLICY</option>
       <option value="/pages/tos" selected="">TERMS OF SERVICE</option>
-      <option value="/pages/tos" >SERVICE LEVEL AGREEMENT</option>
+      <option value="/pages/service-agreement" >SERVICE LEVEL AGREEMENT</option>
     </select>
   </div>
   <div class="container legal">
