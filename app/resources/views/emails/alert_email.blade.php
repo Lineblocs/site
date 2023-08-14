@@ -200,7 +200,7 @@ td[class="CtaText"] {
                         </tr>
                       </table></td>
                   </tr>
-                </table></td>
+                </table></td>3
             </tr>
           </table></td>
       </tr>

@@ -16,7 +16,7 @@ Service Level Agreement
     <select class="browser-default" id="selectbox">
       <option value="/pages/privacy-policy">PRIVACY POLICY</option>
       <option value="/pages/tos">TERMS OF SERVICE</option>
-      <option value="/pages/tos" selected="">SERVICE LEVEL AGREEMENT</option>
+      <option value="/pages/service-agreement" selected="">SERVICE LEVEL AGREEMENT</option>
     </select>
   </div>
   <div class="container legal">

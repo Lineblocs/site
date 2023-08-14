@@ -23,14 +23,7 @@ $membershipCosts = 100*20;
 $faxCosts = 100*20;
 $numberCosts = 100*20;
 $tax = \App\BillingTax::where('name', 'GST')->first();
-if(!$tax){
-    $taxAmount = 0;
-
-}
-else{
-    $taxAmount = InvoiceHelper::calculateTax($invoiceSubtotal, $tax);
-
-}
+$taxAmount = InvoiceHelper::calculateTax($invoiceSubtotal, $tax);
 $invoiceTotal = $invoiceSubtotal+$taxAmount;
 //$invoice = MainHelper::getMonthlyInvoice($user, $month);
 $invoice = UserInvoice::create([
