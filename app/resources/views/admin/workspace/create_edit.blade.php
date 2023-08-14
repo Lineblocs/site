@@ -67,7 +67,7 @@
                         @foreach ($users as $user)
                             <tr>
                                 <td>{{$user->email}}</td>
-                                <td>{{$user->joined_at}}</td>
+                                <td>{{$user->created_at->format('Y-m-d')}}</td>
                                 <td>
                                 </td>
                             </tr>

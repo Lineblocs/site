@@ -887,8 +887,9 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     } elseif ( $user->type_of_2fa == 'sms') {
       $from = '';
       $to = $user->phone_number;
-      $body = sprintf("Your OTP is %d", $otp);
-      //SMSHelper::sendSMS($from, $to, $body);
+      $otp = TOTP::create($user->secret_code_2fa);
+      $body = sprintf("Your OTP is %s", $otp->now());
+      SMSHelper::sendSMS($from, $to, $body);
       return $this->response->array([
           'success' => true
       ]);

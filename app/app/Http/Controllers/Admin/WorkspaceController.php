@@ -64,7 +64,7 @@ class WorkspaceController extends AdminController
     {
         $users = WorkspaceUser::select(array('workspaces_users.*', 'users.email'));
         $users->join('users', 'users.id', '=', 'workspaces_users.user_id');
-        $users->where('workspace_id', $workspace->id)->get();
+        $users = $users->where('workspace_id', $workspace->id)->get();
         return view('admin.workspace.create_edit', compact('workspace', 'users'));
     }
 
