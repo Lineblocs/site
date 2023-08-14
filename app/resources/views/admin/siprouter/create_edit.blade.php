@@ -6,6 +6,11 @@
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
             @if (!empty($servers))
+     <li><a href="#tab-digitmapping" data-toggle="tab"> {{
+            trans("admin/modal.digitmapping") }}</a></li>
+            @endif
+
+            @if (!empty($servers))
      <li><a href="#tab-servers" data-toggle="tab"> {{
             trans("admin/modal.servers") }}</a></li>
             @endif
@@ -95,6 +100,54 @@
         </div>
     </div>
         @if (isset($router))
+    <div class="tab-pane" id="tab-digitmapping">
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <br/>
+                    <a href="/admin/router/{{$router->id}}/add_digitmapping" class="btn btn-success">Add Mapping</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <input type="hidden" id="token" value="{{csrf_token()}}"/>
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>ANI</th>
+                        <th>Route 1</th>
+                        <th>Route 2</th>
+                        <th>Route 3</th>
+                        <th>Route 4</th>
+                        <th>Route 5</th>
+                        <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($digitMappings as $mapping)
+                            <tr>
+                                <td>{{$mapping->ani}}</td>
+                                <td>{{$mapping->route1_name}}</td>
+                                <td>{{$mapping->route2_name}}</td>
+                                <td>{{$mapping->route3_name}}</td>
+                                <td>{{$mapping->route4_name}}</td>
+                                <td>{{$mapping->route5_name}}</td>
+                                <td>
+                                    <a class="btn btn-info" href="/admin/router/{{$router->id}}/edit_digitmapping/{{$mapping->id}}">Edit</a>
+                                    <button type="button" class="btn btn-danger del-digitmapping" data-id="{{$mapping->id}}">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            @endif
+
+
+        @if (isset($router))
     <div class="tab-pane" id="tab-servers">
         <div class="row">
             <div class="col-md-8">
@@ -165,9 +218,17 @@
                 @else
                     var routerId = null;
                 @endif
+
+                function confirm_it() {
+                    var sure = window.confirm("Are you sure?");
+                    return sure;
+                }
                 $("#roles").select2()
                 $(".del-server").each(function() {
                     $( this ).click(function() {
+                        if (!confirm_it()) {
+                            return;
+                        }
                         var id = $( this ).attr("data-id");
                         var params = {
                             "_token": $("#token").val()
@@ -178,8 +239,27 @@
                         });
                     });
                 });
+                $(".del-digitmapping").each(function() {
+                    $( this ).click(function() {
+                        if (!confirm_it()) {
+                            return;
+                        }
+
+                        var id = $( this ).attr("data-id");
+                        var params = {
+                            "_token": $("#token").val()
+                        };
+                        $.post("/admin/router/" + routerId + "/del_digitmapping/" + id, params, function() {
+                            alert("Digit mapping deleted..");
+                            window.location.reload();
+                        });
+                    });
+                });
                 $(".del-ip").each(function() {
                     $( this ).click(function() {
+                        if (!confirm_it()) {
+                            return;
+                        }
                         var id = $( this ).attr("data-id");
                         var params = {
                             "_token": $("#token").val()

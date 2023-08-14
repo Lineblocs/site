@@ -7,13 +7,16 @@ use App\RTPProxy;
 use App\Workspace;
 use App\PortNumber;
 use App\MediaServer;
+use App\SIPProvider;
 use App\Http\Requests\Admin\SIPRouterRequest;
 use App\Helpers\MainHelper;
 use App\SIPRouterMediaServer;
+use App\SIPRouterDigitMapping;
 use Datatables;
 use DB;
 use Config;
 use Mail;
+use Log;
 use Illuminate\Http\Request;
 
 class SIPRouterController extends AdminController
@@ -69,6 +72,24 @@ class SIPRouterController extends AdminController
     {
         $ranges = MainHelper::$ipRanges;
         $regions = MainHelper::$regions;
+        $digitMappings = SIPRouterDigitMapping::select(array(
+            'sip_routers_digit_mappings.*',
+            DB::raw( 'route1.name AS route1_name' ),
+            DB::raw( 'route2.name AS route2_name' ),
+            DB::raw( 'route3.name AS route3_name' ),
+            DB::raw( 'route4.name AS route4_name' ),
+            DB::raw( 'route5.name AS route5_name' )
+        ));
+        $digitMappings->leftJoin(DB::raw('sip_providers route1'), 'route1.id', '=', 'sip_routers_digit_mappings.route1');
+        $digitMappings->leftJoin(DB::raw('sip_providers route2'), 'route2.id', '=', 'sip_routers_digit_mappings.route2');
+        $digitMappings->leftJoin(DB::raw('sip_providers route3'), 'route3.id', '=', 'sip_routers_digit_mappings.route3');
+        $digitMappings->leftJoin(DB::raw('sip_providers route4'), 'route4.id', '=', 'sip_routers_digit_mappings.route4');
+        $digitMappings->leftJoin(DB::raw('sip_providers route5'), 'route5.id', '=', 'sip_routers_digit_mappings.route5');
+
+        $digitMappings->where('sip_routers_digit_mappings.router_id', $router->id);
+        Log::info("digit mapping sql query: " . $digitMappings->toSql());
+        $digitMappings = $digitMappings->get();
+
         $servers = SIPRouterMediaServer::select(array('media_servers.*'));
         $servers->join('sip_routers', 'sip_routers.id', '=', 'sip_routers_media_servers.router_id');
         $servers->join('media_servers', 'media_servers.id', '=', 'sip_routers_media_servers.server_id');
@@ -76,7 +97,7 @@ class SIPRouterController extends AdminController
         $servers = $servers->get();
         $rtpproxies = RTPProxy::where('router_id', $router->id)->get();
         
-        return view('admin.siprouter.create_edit', compact('router', 'servers', 'ranges', 'regions', 'rtpproxies'));
+        return view('admin.siprouter.create_edit', compact('router', 'servers', 'ranges', 'regions', 'rtpproxies', 'digitMappings'));
     }
 
     /**
@@ -138,6 +159,66 @@ class SIPRouterController extends AdminController
             
         return response("");
     }
+
+
+    public function add_digitmapping(SIPRouter $router)
+    {
+        $providers = SIPProvider::asSelect(true);
+        return view('admin.siprouter.add_digitmapping', compact('router', 'providers'));
+    }
+
+    public function add_digitmapping_save(Request $request, SIPRouter $router)
+    {
+        $data = $request->all();
+        $optionalKeys = [
+            'route1',
+            'route2',
+            'route3',
+            'route4',
+            'route5'
+        ];
+        foreach ($optionalKeys as $key) {
+            if (empty($data[$key])) {
+                $data[$key] = NULL;
+            }
+        }
+        $digitMapping = SIPRouterDigitMapping::create(array_merge([
+            'router_id' => $router->id
+        ], $data));
+        return response("");
+    }
+
+    public function edit_digitmapping(SIPRouter $router, SIPRouterDigitMapping $digitMapping)
+    {
+        $providers = SIPProvider::asSelect(true);
+        return view('admin.siprouter.add_digitmapping', compact('router', 'providers', 'digitMapping'));
+    }
+
+    public function edit_digitmapping_save(Request $request, SIPRouter $router, SIPRouterDigitMapping $digitMapping)
+    {
+        $data = $request->all();
+        $optionalKeys = [
+            'route1',
+            'route2',
+            'route3',
+            'route4',
+            'route5'
+        ];
+        foreach ($optionalKeys as $key) {
+            if (empty($data[$key])) {
+                $data[$key] = NULL;
+            }
+        }
+        $digitMapping->update( $data );
+        return response("");
+    }
+    public function del_digitmapping(Request $request, SIPRouter $router, SIPRouterDigitMapping $digitMapping)
+    {
+        $digitMapping->delete();
+            
+        return response("");
+    }
+
 
 
     /**

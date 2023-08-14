@@ -193,6 +193,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::post('router/{router}/add_server', 'Admin\SIPRouterController@add_server_save');
     Route::get('router/{router}/edit_server/{routerServer}', 'Admin\SIPRouterController@edit_server');
     Route::post('router/{router}/del_server/{routerServer}', 'Admin\SIPRouterController@del_server');
+    Route::get('router/{router}/add_digitmapping', 'Admin\SIPRouterController@add_digitmapping');
+    Route::post('router/{router}/add_digitmapping', 'Admin\SIPRouterController@add_digitmapping_save');
+    Route::get('router/{router}/edit_digitmapping/{digitMapping}', 'Admin\SIPRouterController@edit_digitmapping');
+    Route::post('router/{router}/edit_digitmapping/{digitMapping}', 'Admin\SIPRouterController@edit_digitmapping_save');
+    Route::put('router/{router}/edit_digitmapping/{digitMapping}', 'Admin\SIPRouterController@edit_digitmapping_save');
+    Route::post('router/{router}/del_digitmapping/{digitMapping}', 'Admin\SIPRouterController@del_digitmapping');
     Route::resource('router', 'Admin\SIPRouterController');
     Route::resource('routerServer', 'Admin\SIPRouterController');
 

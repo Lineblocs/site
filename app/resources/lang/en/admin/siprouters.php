@@ -11,5 +11,11 @@ return [
     'private_ip_address_range' => 'Range',
     'region' => 'Region',
     'type_of_provider' => 'Type of provider',
+    'ani' => 'ANI',
+    'route1' => 'Route 1',
+    'route2' => 'Route 2',
+    'route3' => 'Route 3',
+    'route4' => 'Route 4',
+    'route5' => 'Route 5',
     'active' => 'Active'
 ];

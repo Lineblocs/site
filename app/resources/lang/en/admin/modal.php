@@ -31,6 +31,7 @@ return [
     'termination' => 'Termination',
     'did_numbers' => 'DID Numbers',
     'rtpproxies' => 'RTP proxies',
+    'digitmapping' => 'Digit Mapping',
     'users' => 'Users',
     'add_alert' => 'Add alert'
 ];
