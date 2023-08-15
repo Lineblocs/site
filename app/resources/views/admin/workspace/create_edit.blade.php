@@ -118,7 +118,7 @@
         </div>
             @endif
        @if (isset($workspace))
-    <div class="tab-pane" id="tab-plandetails">
+    <div class="tab-pane" id="tab-plan">
         <div class="row">
             <div class="col-md-12">
                 <h3>Plan Details</h3>
