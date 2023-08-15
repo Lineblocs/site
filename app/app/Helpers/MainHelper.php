@@ -877,19 +877,6 @@ final class MainHelper {
       return sprintf("%s - %s", $site, $text);
     }
 
-    public static function billingData($user, $startDate, $endDate) {
-      $data  = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
-      where U.user_id = "%s"
-      and (U.created_at BETWEEN "%s" AND "%s")
-      ;', $user->id, $startDate, $endDate));
-        foreach ($data as $key => $item) {
-          $item->balance = MainHelper::toDollars($item->balance);
-          $item->dollars = MainHelper::toDollars($item->cents);
-          $data[ $key] = $item;
-        }
-
-      return $data;
-    }
     public static function getMonthlyInvoice($user, $monthDatetime) {
       $data  = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
       where U.user_id = "%s"

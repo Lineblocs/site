@@ -5,9 +5,17 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
-            @if (!empty($users))
+            @if (!empty($workspace))
      <li><a href="#tab-users" data-toggle="tab"> {{
             trans("admin/modal.users") }}</a></li>
+            @endif
+            @if (!empty($workspace))
+     <li><a href="#tab-billing" data-toggle="tab"> {{
+            trans("admin/modal.billing") }}</a></li>
+            @endif
+          @if (!empty($workspace))
+     <li><a href="#tab-plan" data-toggle="tab"> {{
+            trans("admin/modal.plandetails") }}</a></li>
             @endif
 
 </ul>
@@ -70,6 +78,68 @@
                                 <td>{{$user->created_at->format('Y-m-d')}}</td>
                                 <td>
                                 </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            @endif
+       @if (isset($workspace))
+    <div class="tab-pane" id="tab-billing">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Billing History</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date/time</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($billingHistory as $record)
+                            <tr>
+                                <td>{{$record->type}}</td>
+                                <td>{{$record->dollars}}</td>
+                                <td>{{$record->balance}}</td>
+                                <td>{{$record->created_at}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            @endif
+       @if (isset($workspace))
+    <div class="tab-pane" id="tab-plandetails">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Plan Details</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date/time</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($billingHistory as $record)
+                            <tr>
+                                <td>{{$record->type}}</td>
+                                <td>{{$record->dollars}}</td>
+                                <td>{{$record->balance}}</td>
+                                <td>{{$record->created_at}}</td>
                             </tr>
                         @endforeach
                         </tbody>

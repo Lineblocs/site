@@ -47,6 +47,7 @@ use App\Helpers\MainHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
+use App\Helpers\BillingDataHelper;
 
 use App\Helpers\PortalSearchHelper;
 use App\Helpers\BillingDataHelper;
@@ -240,7 +241,7 @@ class MergedController extends ApiAuthController
       }
       $graph = ['labels' => $labels, 'data' => $data];
       $user = $this->getUser($request);
-        $billingInfo = $user->getBillingInfo($plan);
+        $billingInfo = BillingDataHelper::getBillingInfo($user, $plan);
        $billing = [
           'info' => $billingInfo
         ];
@@ -295,7 +296,7 @@ class MergedController extends ApiAuthController
     public function billing(Request $request)
     {
         $user = $this->getUser($request);
-        $billingInfo = $user->getBillingInfo();
+        $billingInfo = BillingDataHelper::getBillingInfo($user);
        $billing = [
           'info' => $billingInfo
         ];
