@@ -19,38 +19,8 @@ use Log;
 class WorkspaceRoutingACLController extends ApiAuthController {
     public function listACLs(Request $request)
     {
-        $workspace = $this->getWorkspace($request);
-        $acls = SIPRoutingACL::select(array(
-            'sip_routing_acl.iso',
-            'sip_routing_acl.name',
-            'sip_routing_acl.risk_level',
-            DB::raw('sip_routing_acl.enabled AS preset_acl_enabled'),
-            DB::raw('sip_routing_acl.id AS routing_acl_id'),
-            //DB::raw('workspace_routing_acl.id AS workspace_acl_id'),
-            //DB::raw('workspace_routing_acl.enabled AS enabled'),
-        ));
-        /*
-        $acls->leftJoin('workspace_routing_acl',
-          'workspace_routing_acl.routing_acl_id',
-          '=',
-          'sip_routing_acl.id');
-        $acls->where('workspace_routing_acl.workspace_id', $workspace->id);
-        */
-        $data = $acls->get()->toArray(); 
-        foreach ( $data as $cnt => $row ) {
-          $acl = WorkspaceRoutingACL::where('routing_acl_id',$row['routing_acl_id'])->first();
-          if ( $acl ) {
-            $data[$cnt]['workspace_acl_id'] = $acl->id;
-            $data[$cnt]['enabled'] = $acl->enabled;
-          }
-        }
-        /*
-        foreach ( $data as $cnt => $row ) {
-          if ( empty( $row['enabled'] )) {
-            $data[$cnt]['enabled'] = false;
-          }
-        }
-        */
+      $workspace = $this->getWorkspace( $request );
+        $data = WorkspaceHelper::getACLs($workspace);
         return $this->response->array($data);
     }
     public function saveACLs(Request $request)

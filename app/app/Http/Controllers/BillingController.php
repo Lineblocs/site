@@ -21,9 +21,11 @@ class BillingController extends ApiAuthController
     public function addUsageTrigger(Request $request) {
         $data = $request->json()->all();
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
         $trigger = UsageTrigger::create([
           'percentage' => $data['percentage'],
-          'user_id' => $user->id
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
         ]);
         return $this->response->noContent();
     }

@@ -3,7 +3,9 @@ namespace App\Helpers;
 use \Config;
 use \DateTime;
 use DB;
+use NumberFormatter;
 use App\Helpers\MainHelper;
+use App\Helpers\WorkspaceHelper;
 use App\Settings;
 use App\UserCredit;
 use App\UserDebit;
@@ -48,7 +50,7 @@ final class BillingDataHelper {
       where U.user_id = "%s"
       ;', $user->id);
     }
-    $data  = DB::select($data);
+    $data  = DB::select($query);
     foreach ($data as $key => $item) {
       $item->balance = self::toDollars($item->balance);
       $item->dollars = self::toDollars($item->cents);
@@ -118,7 +120,7 @@ final class BillingDataHelper {
             'invoices_by_email' => $user->invoices_by_email,
             'billing_package' => $user->billing_package
           ],
-          'limits' => $user->getLimits()
+          'limits' => WorkspaceHelper::getLimits($user)
 
       ];
       return $info;

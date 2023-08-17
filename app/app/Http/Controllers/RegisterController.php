@@ -337,7 +337,8 @@ class RegisterController extends ApiAuthController
       ]);
       PlanUsagePeriod::create([
         'workspace_id' => $workspace->id,
-        'plan' => 'trial'
+        'plan' => $plan,
+        'started_at' => new DateTime()
       ]);
       $attrs = [];
       return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);

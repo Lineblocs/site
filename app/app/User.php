@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use App\Helpers\MainHelper;
+use App\Helpers\BillingDataHelper;
 use App\UserCredit;
 use App\UserDebit;
 use App\UserInvoice;
@@ -57,7 +58,7 @@ class User extends Model implements AuthenticatableContract,
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
-      $balance = $this->getBillingInfo();
+      $balance = BillingDataHelper::getBillingInfo();
       if ($balance['remainingBalance']<=$cost && $workspace->plan == 'pay-as-you-go') {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }
