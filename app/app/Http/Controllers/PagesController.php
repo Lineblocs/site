@@ -29,19 +29,23 @@ class PagesController extends BaseController {
   public function serviceAgreement(){
     return view('pages.service_level_agreement');  
   }
+  
+  public function serverLevel(){
+    return view('pages.sla');
+  }
 
   public function emailTest(){
-    return 'Hello';
-    // $email = 'tgblinkss@gmail.com';
-    // $user = User::findOrFail(234);
+    // return 'Hello';
+    $email = 'tgblinkss@gmail.com';
+    $user = User::findOrFail(234);
 
-    // $link = route('email-verify', ['hash' => $user->email_verify_hash]);
-    // $data = [
-    //       'user' => $user,
-    //       'link' => $link
-    //     ];
-    // $subject =MainHelper::createEmailSubject("Verify Your Email");
-    // $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
+    $link = route('email-verify', ['hash' => $user->email_verify_hash]);
+    $data = [
+          'user' => $user,
+          'link' => $link
+        ];
+    $subject =MainHelper::createEmailSubject("Verify Your Email");
+    $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
 
     // $user = User::all()[0];
     // // $all = $request->all();
@@ -95,11 +99,13 @@ class PagesController extends BaseController {
               minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit 
               quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur',
           ];
-            $subject = "Admin Email";
+            $subject =MainHelper::createEmailSubject("Admin Email");
             $result = EmailHelper::sendEmail($subject, 'tgblinkss@gmail.com', 'admin_email' , $data);
         
 
     return json_encode($result);  
+
+
   }
 
 }

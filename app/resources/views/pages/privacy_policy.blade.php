@@ -10,23 +10,13 @@ Privacy Policy
 @section('content')
             <link rel="stylesheet" href="/css/legal.css">
 <body>
-     <div class="mobile-navbar">
-      <select class="browser-default" id="selectbox">
-        <option value="/pages/privacy-policy" selected>PRIVACY POLICY</option>
-        <option value="/pages/tos">TERMS OF SERVICE</option>
-        <option value="/pages/service-agreement" >SERVICE LEVEL AGREEMENT</option>
-      </select>
-     </div>    
+         
        <div class="container legal">
         <div class="effective-date">
           <i>Last Updated: September 20, 2020</i>
         </div>
         <div class="inner">
-          <div class="sidebar">
-        <p><a href="/pages/privacy-policy" class="active">PRIVACY POLICY</a></p>
-        <p><a href="/pages/tos">TERMS OF SERVICE</a></p>
-        <p><a href="/pages/tos"  >SERVICE LEVEL AGREEMENT</a></p>
-          </div>
+        @include('layouts.sidebar')
           <div class="content privacy-page"> 
             <h2>LINEBLOCS PRIVACY POLICY</h2>           
             <div class="block">

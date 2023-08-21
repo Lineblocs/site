@@ -44,6 +44,8 @@ Route::get('faqs', 'HomeController@faqs');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
 // service level agreement
 Route::get('/pages/service-agreement', 'PagesController@serviceAgreement');
+Route::get('/pages/sla', 'PagesController@serverLevel');
+
 Route::get('/pages/email', 'PagesController@emailTest');
 
 Route::get('/pages/tos', 'PagesController@termsOfService');

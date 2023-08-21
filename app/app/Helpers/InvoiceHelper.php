@@ -170,10 +170,12 @@ final class InvoiceHelper {
         'site' => $site
       ];
       $pdfLoaded = \PDF::loadView('pdf.pretty_monthly_invoice', $invoiceVars);
+      // $pdfLoaded = \PDF::loadView('pdf.invoice_new', $invoiceVars);
       $mergedValues = array_merge( $invoiceVars, [
         'pdf' => $pdfLoaded
       ] );
       $pdf = PDF::loadView('pdf.pretty_monthly_invoice', $mergedValues);
+      // $pdf = PDF::loadView('pdf.invoice_new', $mergedValues);
       return $pdf;
   }
 }

@@ -9,26 +9,16 @@ Terms of Service
 
 @section('content')
 
-            <link rel="stylesheet" href="/css/legal.css">
+ <link rel="stylesheet" href="/css/legal.css">
 
 <body>
-  <div class="mobile-navbar">
-    <select class="browser-default" id="selectbox">
-      <option value="/pages/privacy-policy">PRIVACY POLICY</option>
-      <option value="/pages/tos" selected="">TERMS OF SERVICE</option>
-      <option value="/pages/service-agreement" >SERVICE LEVEL AGREEMENT</option>
-    </select>
-  </div>
+  
   <div class="container legal">
     <div class="effective-date">
       <i>Last Updated: September 20, 2020</i>
     </div>
     <div class="inner">
-      <div class="sidebar">
-        <p><a href="/pages/privacy-policy">PRIVACY POLICY</a></p>
-        <p><a href="/pages/tos" class="active">TERMS OF SERVICE</a></p>
-        <p><a href="/pages/tos" >SERVICE LEVEL AGREEMENT</a></p>
-      </div>
+    @include('layouts.sidebar')
       <div class="content terms-page">
         <h2>LINEBLOCS TERMS OF SERVICE</h2>      
         <div class="block"> <b>This Software As A Service (Saas) Terms Of Service</b> (these “<b>Terms</b>” or this “<b>Agreement</b>”) govern the purchase of the license to the Software and access to Services (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) by the Customer and its Users (“<b>you</b>”, “<b>your</b>”, and terms of similar meaning) made available by Lineblocs Ltd. (“<b>we</b>”, “<b>us</b>”, and “<b>Provider</b>”, together with the Customer, the "<b>Parties</b>", and each, a "<b>Party</b>"), made pursuant to an Order Form. </div>

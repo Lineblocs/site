@@ -244,7 +244,7 @@
                                             <td valign="top" class="colWrap12">
                                               <table width="100%" class="wrap" border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
-                                                  <td valign="middle" align="center" style="">
+                                                <td valign="middle" align="center" style="">
                                                     <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank">
                                                       <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" alt="" title="" width="160" height="" style="display:block;" border="0" />
                                                     </a>
@@ -300,6 +300,26 @@
                                     </tr>
                                     <!-- Highlight One Column End  -->
                                     <!-- Header Banner One Column Start  -->
+                                    <tr>
+                                      <td valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="SubContainer" style="border-radius: 3px;">
+                                          <tr>
+                                            <td>
+                                              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td valign="top" height="25" class="vspacer20" style="mso-line-height-rule:exactly; font-size:1px; line-height:1px;">&nbsp;</td>
+                                                </tr>
+                                                <!-- <tr>
+                                                  <td align="center">
+                                                    <img src="{{\Config::get("app.url").'/email-images/'}}success.jpg" style="display: block;" width="80" alt="Invite" title="Invitation">
+                                                  </td>
+                                                </tr> -->
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
                                     <!-- Header Banner One Column End  -->
                                     <!-- Body Content One Column Start  --> @yield('content')
                                     <!-- Body Content One Column End  -->
@@ -362,36 +382,4 @@
                                 </td></tr><tr><td valign="top" height="20" style="mso-line-height-rule:exactly;font-size:1px;line-height:20px;">&nbsp;</td></tr><tr><td style="font-family: 'Roboto', Arial, Helvetica, sans-serif; font-size: 12px; text-align: center; color: #0a1247; line-height: 18px;" align="center">
                                 Advertising content 1
 
-                                </td></tr><tr><td valign="top" height="20" style="mso-line-height-rule:exactly;font-size:1px;line-height:20px;">&nbsp;</td></tr><tr><td><table align="center"><tbody><tr><td style="height: 40px; width: 160px; font-family: arial,helvetica,sans-serif; font-size: 16px; letter-spacing: 1px; text-align: center; color: #ffffff; border-radius: 3px;" align="left" bgcolor="#3f51b5"><a href="#" style="font-family:'Roboto', Arial, Helvetica, sans-serif; text-decoration: none; color: #ffffff; font-size: 16px; font-weight: bold; letter-spacing: 1px;">Get Started</a></td></tr><tr><td style="line-height: 30px; mso-line-height-rule: exactly; font-size: 0;" height="30">&nbsp;</td></tr></tbody></table></td></tr><tr><td style="line-height: 10px; mso-line-height-rule: exactly; font-size: 0;" height="10">&nbsp;</td></tr><tr><td style="line-height: 10px; mso-line-height-rule: exactly; font-size: 0;" height="10">&nbsp;</td></tr></table></td><td width="90" class="hide">&nbsp;</td></tr></table></td></tr>
--->
-                                      <tr>
-                                        <td style="line-height: 20px; mso-line-height-rule: exactly; font-size: 0;" height="20">&nbsp;</td>
-                                      </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td width="65" class="hide">&nbsp;</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <!-- Block Menu with Link End -->
-            <tr>
-              <td class="vspacer15" bgcolor="#f5f8fa" height="30" valign="top" style="font-size:1px; line-height:30px; mso-line-height-rule:exactly;">&nbsp;</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <table cellpadding="0" cellspacing="0" border="0" class="hide">
-      <tr>
-        <td height="1" class="hide" style="min-width:600px; font-size:0px;line-height:0px;">
-          <img height="1" width="600" alt="" src="blank.gif" style="min-width: 600px; border: none; -ms-interpolation-mode: bicubic;" />
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
+                                </td></tr><tr><td valign="top" height="20" style="mso-line-height-rule:exactly;fon
