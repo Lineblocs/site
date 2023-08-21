@@ -1,4 +1,7 @@
 @extends('emails.layouts.header')
+@section('title')
+Admin Email
+@endsection
 @section('content')
 <!-- Body Content One Column Start  -->
 <tr>

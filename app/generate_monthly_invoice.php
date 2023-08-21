@@ -89,5 +89,5 @@ UserInvoiceLineItem::create([
 
 echo "billing data".PHP_EOL;
 $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $invoice);
-//$pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
+// $pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
 $pdf->save(public_path('./monthly_invoice.pdf'));

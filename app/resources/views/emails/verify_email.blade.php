@@ -14,10 +14,10 @@ Email Verification
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td valign="top" height="20"
                                         style="mso-line-height-rule:exactly;font-size:1px;line-height:20px;">&nbsp;</td>
-                                </tr>
+                                </tr> -->
 
                                 <tr>
                                     <td align="left" valign="top"
