@@ -129,7 +129,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('provider/{provider}/delete', 'Admin\SIPProviderController@delete');
     Route::resource('provider', 'Admin\SIPProviderController');
 
-
+    # SIPRegions
+    Route::get('region/data', 'Admin\SIPRegionController@data');
+    Route::get('region/{region}/show', 'Admin\SIPRegionController@show');
+    Route::get('region/{region}/edit', 'Admin\SIPRegionController@edit');
+    Route::get('region/{region}/delete', 'Admin\SIPRegionController@delete');
+    Route::resource('region', 'Admin\SIPRegionController');
+    
 
      # CallRates
     Route::get('rate/data', 'Admin\CallRateController@data');
@@ -244,6 +250,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('number/import', 'Admin\NumberInventoryController@import');
     Route::post('number/import', 'Admin\NumberInventoryController@import_save');
     Route::resource('number', 'Admin\NumberInventoryController');
+
+    # SIPPoPRegions
+    Route::get('popregion/data', 'Admin\SIPPoPRegionController@data');
+    Route::get('popregion/{region}/show', 'Admin\SIPPoPRegionController@show');
+    Route::get('popregion/{region}/edit', 'Admin\SIPPoPRegionController@edit');
+    Route::get('popregion/{region}/delete', 'Admin\SIPPoPRegionController@delete');
+    Route::resource('popregion', 'Admin\SIPPoPRegionController');
 
 
      # SIPCountrys

@@ -12,6 +12,7 @@ return [
     'region' => 'Region',
     'type_of_provider' => 'Type of provider',
     'ani' => 'ANI',
+    'server' => 'Server',
     'route1' => 'Route 1',
     'route2' => 'Route 2',
     'route3' => 'Route 3',

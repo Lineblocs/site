@@ -54,6 +54,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/popregion')}}">
+                                <i class="glyphicon glyphicon-user"></i> PoP Regions 
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/country')}}">
                                 <i class="glyphicon glyphicon-user"></i> Service Countries
                             </a>

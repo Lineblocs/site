@@ -8,6 +8,7 @@ use App\Workspace;
 use App\PortNumber;
 use App\MediaServer;
 use App\SIPProvider;
+use App\SIPPoPRegion;
 use App\Http\Requests\Admin\SIPRouterRequest;
 use App\Helpers\MainHelper;
 use App\SIPRouterMediaServer;
@@ -45,7 +46,7 @@ class SIPRouterController extends AdminController
     public function create()
     {
         $ranges = MainHelper::$ipRanges;
-        $regions = MainHelper::$regions;
+        $regions = SIPPoPregion::createSelectOptions();
         return view('admin.siprouter.create_edit', compact('ranges', 'regions'));
     }
 
@@ -71,7 +72,7 @@ class SIPRouterController extends AdminController
     public function edit(SIPRouter $router)
     {
         $ranges = MainHelper::$ipRanges;
-        $regions = MainHelper::$regions;
+        $regions = SIPPoPregion::createSelectOptions();
         $digitMappings = SIPRouterDigitMapping::select(array(
             'sip_routers_digit_mappings.*',
             DB::raw( 'route1.name AS route1_name' ),
