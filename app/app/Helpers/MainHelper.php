@@ -45,9 +45,6 @@ final class MainHelper {
             'moderate' => 'Moderate',
             'low' => 'Low'
       ];
-    public static $regions = [
-      'ca-central-1' => 'ca-central-1' 
-    ];
 
     public static function initStripe() {
         $stripe = \Config::get("stripe");

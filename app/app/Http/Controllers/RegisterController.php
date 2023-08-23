@@ -32,6 +32,7 @@ use App\WorkspaceEvent;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
+use App\SIPPoPRegion;
 use DateTime;
 
 class RegisterController extends ApiAuthController
@@ -194,8 +195,8 @@ class RegisterController extends ApiAuthController
         $customizations =Customizations::getRecord();
         $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail()->toArray();
         //$plan = $plans[$data['plan']];
-        $region = "ca-central-1";
-        $info = MainHelper::getHostIPForUser($region, $user);
+        $region = SIPPoPRegion::findOrFail( $customizations->default_region );
+        $info = MainHelper::getHostIPForUser($region->code, $user);
           //$reservedIp = AWSHelper::reserveIP($region, $ip['main'], $ip['reservedIp']);
           //$reservedIp = VultrHelper::reserveIP($region, $ip['main'], $ip."/32");
           /*
@@ -208,7 +209,7 @@ class RegisterController extends ApiAuthController
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
           // setup default region
           $workspace->update([
-            'default_region' => $region
+            'default_region' => $region->code
           ]);
           $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
 

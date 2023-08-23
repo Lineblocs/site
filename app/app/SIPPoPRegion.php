@@ -10,11 +10,15 @@ class SIPPoPRegion extends Model {
 
   protected $guarded  = array('id');
   protected $table  = "sip_pop_regions";
-  public static function createSelectOptions() {
+  public static function createSelectOptions($useIDValues=FALSE) {
     $records = self::all();
     $result = [];
     foreach ( $records as $record ) {
-      $result[$record->code] = sprintf("%s (%s)", $record->name, $record->code);
+      if ($useIDValues) {
+        $result[$record->id] = sprintf("%s (%s)", $record->name, $record->code);
+      } else {
+        $result[$record->code] = sprintf("%s (%s)", $record->name, $record->code);
+      }
       // TODO: add foreign keys to sip routers and use IDs as values in SIP router region column
       //$result[$record->id] = sprintf("%s (%s)", $record->name, $record->code);
     }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\User;
 use App\Customizations;
 use App\ApiCredential;
+use App\SIPPoPRegion;
 use Illuminate\Http\Request;
 use Exception;
 use Log;
@@ -31,7 +32,8 @@ class CustomizationsController extends AdminController {
 		$maintenanceTimes = [
 			'03:00–11:00 UTC'
 		];
-		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes]);
+		$regions = SIPPoPRegion::all();
+		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions]);
 	}
 
 	private function storeUploadedFile( $file, $file_name ) {

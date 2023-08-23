@@ -178,6 +178,22 @@
                 <hr/>
             </div>
             <div class="row form-group">
+                <label for="app_logo">Default Region</label>
+                <div class="controls">
+                    <select name="default_region" class="form-control" id="default_region">
+                        @foreach ($regions as $region)
+                            @if ( $record->default_region == $region->id )
+                                <option selected value="{{$region->id}}">{{$region->name}} ({{$region->code}})</option>
+                            @else
+                                <option value="{{$region->id}}">{{$region->name}} ({{$region->code}})</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="app_logo">Verification workflow</label>
                 <div class="controls">
                     <select name="verification_workflow" class="form-control" id="verification_workflow">
