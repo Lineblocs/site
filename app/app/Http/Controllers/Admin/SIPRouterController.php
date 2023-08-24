@@ -50,6 +50,28 @@ class SIPRouterController extends AdminController
         return view('admin.siprouter.create_edit', compact('ranges', 'regions'));
     }
 
+    public function processRequest( $request ) {
+        $data = $request->all();
+        $result = [];
+        $booleanKeys = [
+            'udp_support',
+            'tcp_support',
+            'tls_support'
+        ];
+        foreach ( $data as $key => $value ) {
+            if ( in_array( $key, $booleanKeys )) {
+                $result[$key] = boolval( $value );
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        foreach ($booleanKeys as $key) {
+            if(!isset($data[$key])) {
+                $result[$key] = false;
+            }
+        }
+        return $result;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -57,8 +79,8 @@ class SIPRouterController extends AdminController
      */
     public function store(SIPRouterRequest $request)
     {
-
-        $router = new SIPRouter ($request->all());
+        $data = $this->processRequest( $request );
+        $router = new SIPRouter ($data);
         $router->save();
         header("X-Goto-URL: /admin/router/" . $router->id . "/edit");
     }
@@ -109,7 +131,8 @@ class SIPRouterController extends AdminController
      */
     public function update(SIPRouterRequest $request, SIPRouter $router)
     {
-        $router->update($request->all());
+        $data = $this->processRequest( $request );
+        $router->update($data);
         header("X-Goto-URL: /admin/router/" . $router->id . "/edit");
     }
 

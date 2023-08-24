@@ -70,12 +70,58 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
                 {!! Form::label('region', trans("admin/siprouters.region"), array('class' => 'control-label')) !!}
                 <div class="controls">
                     {!! Form::select('region', $regions, null, array('class' => 'form-control')) !!}
                     <span class="help-block">{{ $errors->first('region', ':message') }}</span>
                 </div>
+        </div>
+
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('udp_support', trans("admin/siprouters.udp_support"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('udp_support', "true", $router->udp_support) !!}
+                    <span class="help-block">{{ $errors->first('udp_support', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                    {!! Form::label('udp_port', trans("admin/siprouters.udp_port"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::text('udp_port', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('udp_port', ':message') }}</span>
+                    </div>
+        </div>
+
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('tcp_support', trans("admin/siprouters.tcp_support"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('tcp_support', "true", $router->tcp_support) !!}
+                    <span class="help-block">{{ $errors->first('tcp_support', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                    {!! Form::label('tcp_port', trans("admin/siprouters.tcp_port"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::text('tcp_port', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('tcp_port', ':message') }}</span>
+                    </div>
+        </div>
+
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('tls_support', trans("admin/siprouters.tls_support"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('tls_support', "true", $router->tls_support) !!}
+                    <span class="help-block">{{ $errors->first('tls_support', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                    {!! Form::label('tls_port', trans("admin/siprouters.tls_port"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::text('tls_port', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('tls_port', ':message') }}</span>
+                    </div>
         </div>
 
         <div class="form-group  {{ $errors->has('active') ? 'has-error' : '' }}">

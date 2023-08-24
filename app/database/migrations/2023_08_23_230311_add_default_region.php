@@ -14,8 +14,8 @@ class AddDefaultRegion extends Migration
     {
         Schema::table('customizations', function (Blueprint $table) {
             //
-            $table->integer('default_region')->unsigned();
-            $table->foreign('default_region')->references('id')->on('sip_pop_regions')->onDelete('CASCADE');
+            $table->integer('default_region')->nullable()->unsigned();
+            $table->foreign('default_region')->references('id')->on('sip_pop_regions')->onDelete('SET NULL');
 
         });
     }

@@ -18,5 +18,11 @@ return [
     'route3' => 'Route 3',
     'route4' => 'Route 4',
     'route5' => 'Route 5',
-    'active' => 'Active'
+    'active' => 'Active',
+    'udp_support' => 'UDP Support',
+    'udp_port' => 'UDP Port',
+    'tcp_support' => 'TCP Support',
+    'tcp_port' => 'TCP Port',
+    'tls_support' => 'TLS Support',
+    'tls_port' => 'TLS Port'
 ];
