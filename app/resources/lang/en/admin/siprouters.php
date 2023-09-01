@@ -12,6 +12,7 @@ return [
     'region' => 'Region',
     'type_of_provider' => 'Type of provider',
     'ani' => 'ANI',
+    'dnis' => 'DNIS',
     'server' => 'Server',
     'route1' => 'Route 1',
     'route2' => 'Route 2',
@@ -20,9 +21,11 @@ return [
     'route5' => 'Route 5',
     'active' => 'Active',
     'udp_support' => 'UDP Support',
+    'udp_autoscaling' => 'UDP Autoscaling',
     'udp_port' => 'UDP Port',
     'tcp_support' => 'TCP Support',
     'tcp_port' => 'TCP Port',
+    'tcp_autoscaling' => 'TCP Autoscaling',
     'tls_support' => 'TLS Support',
     'tls_port' => 'TLS Port'
 ];

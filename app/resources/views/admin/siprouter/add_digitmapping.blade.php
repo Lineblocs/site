@@ -25,6 +25,13 @@
                 <span class="help-block">{{ $errors->first('ani', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('dnis') ? 'has-error' : '' }}">
+            {!! Form::label('dnis', trans("admin/siprouters.dnis"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('dnis', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('dnis', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('route1') ? 'has-error' : '' }}">
             {!! form::label('route1', trans("admin/siprouters.route1"), array('class' => 'control-label')) !!}
             <div class="controls">

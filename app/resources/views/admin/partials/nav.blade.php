@@ -105,7 +105,7 @@
                         </li>
                         <li>
                             <a href="{{url('admin/rate')}}">
-                                <i class="glyphicon glyphicon-user"></i> Call Rates
+                                <i class="glyphicon glyphicon-user"></i> Rate Deck
                             </a>
                         </li>
 

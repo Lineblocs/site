@@ -55,7 +55,9 @@ class SIPRouterController extends AdminController
         $result = [];
         $booleanKeys = [
             'udp_support',
+            'udp_autoscaling',
             'tcp_support',
+            'tcp_autoscaling',
             'tls_support'
         ];
         foreach ( $data as $key => $value ) {

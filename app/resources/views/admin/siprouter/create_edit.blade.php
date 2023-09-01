@@ -87,6 +87,13 @@
                 </div>
      </div>
         <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('udp_autoscaling', trans("admin/siprouters.udp_autoscaling"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('udp_autoscaling', "true", $router->udp_autoscaling) !!}
+                    <span class="help-block">{{ $errors->first('udp_autoscaling', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
                     {!! Form::label('udp_port', trans("admin/siprouters.udp_port"), array('class' => 'control-label')) !!}
                     <div class="controls">
                         {!! Form::text('udp_port', null, array('class' => 'form-control')) !!}
@@ -99,6 +106,13 @@
                 <div class="controls">
                     {!! Form::checkbox('tcp_support', "true", $router->tcp_support) !!}
                     <span class="help-block">{{ $errors->first('tcp_support', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('tcp_autoscaling', trans("admin/siprouters.tcp_autoscaling"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('tcp_autoscaling', "true", $router->tcp_autoscaling) !!}
+                    <span class="help-block">{{ $errors->first('tcp_autoscaling', ':message') }}</span>
                 </div>
      </div>
         <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
@@ -163,6 +177,7 @@
                 <table class="table stripped">
                     <thead>
                         <th>ANI</th>
+                        <th>DNIS</th>
                         <th>Route 1</th>
                         <th>Route 2</th>
                         <th>Route 3</th>
@@ -174,6 +189,7 @@
                         @foreach ($digitMappings as $mapping)
                             <tr>
                                 <td>{{$mapping->ani}}</td>
+                                <td>{{$mapping->dnis}}</td>
                                 <td>{{$mapping->route1_name}}</td>
                                 <td>{{$mapping->route2_name}}</td>
                                 <td>{{$mapping->route3_name}}</td>
