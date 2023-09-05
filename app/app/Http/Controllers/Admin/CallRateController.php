@@ -217,6 +217,50 @@ class CallRateController extends AdminController
         $session->flash('message', 'Rate(s) uploaded');
         return view('admin.number.import');
     }
+
+    public function upload_rates(Request $request, CallRate $rate)
+    {
+        $session = $request->session();
+        if(!$request->hasFile('rate_deck_import') || ($request->hasFile('file') && !$request->file('file')->isValid())) {
+            return view('admin.number.import');
+        }
+        $file = $request->file('rate_deck_import');
+        $size = $file->getSize();
+        $mime = $file->getMimeType();
+        $path = $file->getPathName();
+        $extension = $file->getClientOriginalExtension();
+        $type = MainHelper::determineFileType($mime, $extension);
+
+        if ( !$type ) {
+            return response()->json(['success' => false, 'msg' => 'File not compatible']);
+        }
+        $file_name = str_random(30) . '.' . $file->getClientOriginalExtension();
+        $contents = file_get_contents($file->getRealPath());
+        if ( $type == 'csv' ) {
+            $records = $this->parseRateDeckCSV( $path ); 
+        } else if ( $type == 'tsv' ) {
+            $records = $this->parseRateDeckCSV( $path ); 
+        } else if ( $type == 'xls' ) {
+            $records = $this->parseRateDeckXLS( $path ); 
+        } else if ( $type == 'xlsx' ) {
+            $records = $this->parseRateDeckXLS( $path ); 
+        }
+        foreach ( $records as $record ) {
+            $data = $record;
+            $prefix = $record['dial_prefix'];
+            $destination  = $record['destination'];
+            $rate  = $record['rate'];
+            CallRateDialPrefix::create([
+                    'call_rate_id' => $rate->id,
+                    'dial_prefix' => $prefix,
+                    'destination' => $destination,
+                    'rate' => $rate
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     private function parseCSV( $path, $delim="," )
     {
         $row = 0;
@@ -254,6 +298,43 @@ class CallRateController extends AdminController
                 } else {
                     $item[ $header ] = $value;
                 }
+            }
+
+            $items[] = $item;
+
+        }
+        fclose($handle);
+        return $items;
+    }
+
+    private function parseRateDeckCSV( $path, $delim="," )
+    {
+        $row = 0;
+        $map = array(
+            0 => "destination",
+            1 => "dial_prefix",
+            2 => "rate"
+        );
+
+
+        $items = [];
+        $handle = fopen($path, "r");
+
+        if ( $handle == FALSE ) {
+            return FALSE;
+        }
+        while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+            $num = count($data);
+            $row++;
+            if ( $row == 1 ) {
+                continue; // headers
+            }
+            $item = [];
+            $prefixesToAdd = [];
+            for ($c=0; $c < $num; $c++) {
+                $header = $map[$c];
+                $value = $data[$c];
+                $item[ $header ] = $value;
             }
 
             $items[] = $item;

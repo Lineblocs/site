@@ -34,5 +34,6 @@ return [
     'digitmapping' => 'Digit Mapping',
     'plandetails' => 'Plan Details',
     'users' => 'Users',
-    'add_alert' => 'Add alert'
+    'add_alert' => 'Add alert',
+    'rates' => 'Rates'
 ];

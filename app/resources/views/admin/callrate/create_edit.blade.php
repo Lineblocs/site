@@ -6,7 +6,7 @@
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
     <li><a href="#tab-prefixes" data-toggle="tab"> {{
-            trans("admin/modal.prefixes") }}</a></li>
+            trans("admin/modal.rates") }}</a></li>
 </ul>
 <!-- ./ tabs -->
 @if (isset($rate))
@@ -77,8 +77,36 @@
         <your rate>
 
         If multiple routes are matched during routing, the one with the most digits has the highest precedence.
-</div>
     </p>
+</div>
+<div class="import-rate">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <form method="POST" action="./upload-rates">
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <h3>Import rates</h3>
+                        </div>
+                    </div>
+                    <div class="row upload-part">
+                        <div class="col-md-12">
+                            <input type="file" name="rate_deck_import" />
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <button class="btn btn-success btn-sm">Upload</button>
+                        </div>
+                    </div>
+                    <br />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
         <table class="table stripped larger-hdgs">
             <thead>
                 <th>Destination</th>

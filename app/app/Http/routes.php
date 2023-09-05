@@ -139,6 +139,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 
      # CallRates
     Route::get('rate/data', 'Admin\CallRateController@data');
+    Route::post('rate/{rate}/upload-rates', 'Admin\CallRateController@upload_rates');
     Route::get('rate/{rate}/show', 'Admin\CallRateController@show');
     Route::get('rate/{rate}/edit', 'Admin\CallRateController@edit');
     Route::get('rate/{rate}/delete', 'Admin\CallRateController@delete');
