@@ -62,19 +62,21 @@
     <div class="tab-pane" id="tab-prefixes">
         <br/>
     <div class="alert alert-warning" role="alert">
-        <p style="white-space: break;"><strong>Note:</strong> you can add many prefixes as needed. Also, you may input a range of prefixes by separating the range with a hyphen.<br/><br/>
+        <p style="white-space: break;"><strong>Note:</strong> you can add many prefixes as needed. Also, if you need match on a subscriber code you can add a hyphen next to the dial prefix followed by the subscriber code
 
-        For example if you wanted to set one rate for any destinations matching 907 to 955 you would use the following:<br/>
+        For example if you wanted to set a rate for the 955 subscriber code you would add the following:<br?
         Destination:<br/>
         907-955<br/>
         Rate:<br/>
         <your rate><br/><br/>
 
-        If your trying to set a rate for only one destination you can refer to this example:
+        If your trying to set one rate for all subscriber codes you can add it without any hyphens or subscriber codes.
         Destination:<br/>
         955<br/>
         Rate:<br/>
         <your rate>
+
+        If multiple routes are matched during routing, the one with the most digits has the highest precedence.
 </div>
     </p>
         <table class="table stripped larger-hdgs">
