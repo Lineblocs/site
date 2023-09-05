@@ -15632,3 +15632,7 @@ table.dataTable thead .sorting:after {
 .grey-txt {
 	color: #3D3D3D;
 }
+
+.larger-hdgs thead th {
+	font-size: 18px;
+}

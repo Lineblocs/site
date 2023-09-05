@@ -64,6 +64,8 @@ class CallRateController extends AdminController
         foreach ($prefixes as $prefix) {
             CallRateDialPrefix::create([
                 'dial_prefix' => $prefix['dial_prefix'],
+                'destination' => $prefix['destination'],
+                'rate' => $prefix['rate'],
                 'call_rate_id' => $rate->id
             ]);
         }
@@ -104,6 +106,8 @@ class CallRateController extends AdminController
                 if( !$found ) {
             CallRateDialPrefix::create([
                 'dial_prefix' => $prefix['dial_prefix'],
+                'destination' => $prefix['destination'],
+                'rate' => $prefix['rate'],
                 'call_rate_id' => $rate->id
             ]);
                 }

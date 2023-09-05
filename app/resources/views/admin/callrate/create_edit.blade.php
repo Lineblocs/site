@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="form-group  {{ $errors->has('call_rate') ? 'has-error' : '' }}">
-            {!! Form::label('call_rate', trans("admin/callrates.call_rate"), array('class' => 'control-label')) !!}
+            {!! Form::label('call_rate', trans("admin/callrates.default_call_rate"), array('class' => 'control-label')) !!}
             <div class="controls">
                 {!! Form::text('call_rate', null, array('class' => 'form-control')) !!}
                 <span class="help-block">{{ $errors->first('call_rate', ':message') }}</span>
@@ -58,11 +58,30 @@
         </button>
         </div>
     </div>
-    <!-- General tab -->
+    <!-- Rate deck definitions tab -->
     <div class="tab-pane" id="tab-prefixes">
-        <table class="table stripped">
+        <br/>
+    <div class="alert alert-warning" role="alert">
+        <p style="white-space: break;"><strong>Note:</strong> you can add many prefixes as needed. Also, you may input a range of prefixes by separating the range with a hyphen.<br/><br/>
+
+        For example if you wanted to set one rate for any destinations matching 907 to 955 you would use the following:<br/>
+        Destination:<br/>
+        907-955<br/>
+        Rate:<br/>
+        <your rate><br/><br/>
+
+        If your trying to set a rate for only one destination you can refer to this example:
+        Destination:<br/>
+        955<br/>
+        Rate:<br/>
+        <your rate>
+</div>
+    </p>
+        <table class="table stripped larger-hdgs">
             <thead>
+                <th>Destination</th>
                 <th>Prefix</th>
+                <th>Rate/minute</th>
                 <th>&nbsp;</th>
             </thead>
             <tbody id="prefixes">
@@ -81,20 +100,30 @@
             var prefixes = [];
             @endif
 
-            function addPrefix(prefix) {
+            function createField(name, prefix) {
                 var container =$("#prefixes");
                 var length = container.find("tr").length;
-                var tr = $("<tr></tr>");
                 var td = $("<td></td>");
-                var key = "prefixes[" + length + "][dial_prefix]";
+                var key = "prefixes[" + length + "][" + name + "]";
                 var input = $("<input class='form-control'/>");
                 if ( prefix ) {
-                    input.val( prefix.dial_prefix );
+                    input.val( prefix[name] );
                 }
 
                 input.attr("name", key);
                 input.appendTo(td);
+                return td;
+            }
+            function addPrefix(prefix) {
+                var container =$("#prefixes");
+                var length = container.find("tr").length;
+                var tr = $("<tr></tr>");
+                createField("destination", prefix).appendTo( tr );
+                createField("dial_prefix", prefix).appendTo( tr );
+                createField("rate", prefix).appendTo( tr );
 
+
+                var td = $("<td></td>");
                 var key = "prefixes[" + length + "][id]";
                 var input = $("<input class='id' type='hidden'/>");
                 if ( prefix ) {
