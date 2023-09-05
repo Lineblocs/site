@@ -67,6 +67,16 @@
                 <span class="help-block">{{ $errors->first('webrtc_optimized', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('passthru') ? 'has-error' : '' }}">
+            {!! Form::label('passthru', trans("admin/admin.passthru"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::label('passthru', trans("admin/users.yes"), array('class' => 'control-label')) !!}
+                {!! Form::radio('passthru', '1', @isset($user)? $user->passthru : 'false') !!}
+                {!! Form::label('passthru', trans("admin/users.no"), array('class' => 'control-label')) !!}
+                {!! Form::radio('passthru', '0', @isset($user)? $user->passthru : 'true') !!}
+                <span class="help-block">{{ $errors->first('passthru', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group">
         <button type="submit" class="btn btn-sm btn-success">
             <span class="glyphicon glyphicon-ok-circle"></span>
