@@ -24,6 +24,7 @@
         <thead>
         <tr>
             <th>{!! trans("admin/siptrunks.name") !!}</th>
+            <th>{!! trans("admin/siptrunks.register_enabled") !!}</th>
             <th>{!! trans("admin/siptrunks.active") !!}</th>
             <th>{!! trans("admin/siptrunks.workspace_id") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>

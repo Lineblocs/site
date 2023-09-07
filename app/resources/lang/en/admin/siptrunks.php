@@ -5,5 +5,8 @@ return [
     'name' =>   'Name',
     'active' => 'Active',
     'workspace_id' => 'Workspace ID',
-    'record' => 'Record'
+    'record' => 'Record',
+    'register_enabled' => 'Register Enabled',
+    'register_username' => 'Register Username',
+    'register_password' => 'Register Password',
 ];
