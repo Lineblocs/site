@@ -65,6 +65,25 @@
                 <span class="help-block">{{ $errors->first('dial_prefix', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('cps_enabled') ? 'has-error' : '' }}">
+            {!! Form::label('cps_enabled', trans("admin/sipproviders.cps_enabled"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::label('cps_enabled', trans("admin/admin.yes"), array('class' => 'control-label')) !!}
+                {!! Form::radio('cps_enabled', '1', @isset($provider)? $provider->cps_enabled : 'false') !!}
+                {!! Form::label('cps_enabled', trans("admin/admin.no"), array('class' => 'control-label')) !!}
+                {!! Form::radio('cps_enabled', '0', @isset($provider)? $provider->cps_enabled : 'true') !!}
+                <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group  {{ $errors->has('cps') ? 'has-error' : '' }}">
+            {!! Form::label('cps', trans("admin/sipproviders.cps"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::number('cps', null, array('class' => 'form-control', 'min' => '1', 'max' => '1000')) !!}
+                <span class="help-block">{{ $errors->first('cps', ':message') }}</span>
+            </div>
+        </div>
+
+
         <div class="form-group  {{ $errors->has('priority') ? 'has-error' : '' }}">
             {!! Form::label('priority', trans("admin/sipproviders.priority"), array('class' => 'control-label')) !!}
             <div class="controls">
