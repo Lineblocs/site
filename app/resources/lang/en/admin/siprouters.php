@@ -27,5 +27,6 @@ return [
     'tcp_port' => 'TCP Port',
     'tcp_autoscaling' => 'TCP Autoscaling',
     'tls_support' => 'TLS Support',
-    'tls_port' => 'TLS Port'
+    'tls_port' => 'TLS Port',
+    'default' => 'Default'
 ];

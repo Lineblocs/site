@@ -11,6 +11,7 @@ use App\SIPProvider;
 use App\SIPPoPRegion;
 use App\Http\Requests\Admin\SIPRouterRequest;
 use App\Helpers\MainHelper;
+use App\Helpers\SIPRouterHelper;
 use App\SIPRouterMediaServer;
 use App\SIPRouterDigitMapping;
 use Datatables;
@@ -82,8 +83,13 @@ class SIPRouterController extends AdminController
     public function store(SIPRouterRequest $request)
     {
         $data = $this->processRequest( $request );
+        if ($data['default']) {
+            SIPRouter::update(['default' => FALSE]);
+        }
         $router = new SIPRouter ($data);
         $router->save();
+        SIPRouterHelper::updateRouterIPs($router);
+
         header("X-Goto-URL: /admin/router/" . $router->id . "/edit");
     }
 
@@ -134,7 +140,12 @@ class SIPRouterController extends AdminController
     public function update(SIPRouterRequest $request, SIPRouter $router)
     {
         $data = $this->processRequest( $request );
+        if ($data['default']) {
+            SIPRouter::where('id', '!=', $router->id)->update(['default' => FALSE]);
+        }
+
         $router->update($data);
+        SIPRouterHelper::updateRouterIPs($router);
         header("X-Goto-URL: /admin/router/" . $router->id . "/edit");
     }
 
@@ -254,10 +265,11 @@ class SIPRouterController extends AdminController
      */
     public function data()
     {
-        $routers = SIPRouter::select(array('sip_routers.id', 'sip_routers.name','sip_routers.active', 'sip_routers.region', 'sip_routers.created_at'));
+        $routers = SIPRouter::select(array('sip_routers.id', 'sip_routers.name','sip_routers.active', 'sip_routers.default', 'sip_routers.region', 'sip_routers.created_at'));
 
         return Datatables::of($routers)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->edit_column('default', '@if ($default=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
             ->add_column('actions', '<a href="{{{ url(\'admin/router/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/router/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')

@@ -31,6 +31,30 @@
                 <span class="help-block">{{ $errors->first('ip_address', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('register_enabled') ? 'has-error' : '' }}">
+            {!! Form::label('register_enabled', trans("admin/siphosts.register_enabled"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::label('register_enabled', trans("admin/admin.yes"), array('class' => 'control-label')) !!}
+                {!! Form::radio('register_enabled', '1', @isset($provider)? $provider->register_enabled : 'false') !!}
+                {!! Form::label('register_enabled', trans("admin/admin.no"), array('class' => 'control-label')) !!}
+                {!! Form::radio('register_enabled', '0', @isset($provider)? $provider->register_enabled : 'true') !!}
+                <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group  {{ $errors->has('register_username') ? 'has-error' : '' }}">
+            {!! Form::label('register_username', trans("admin/siphosts.register_username"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('register_username', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('register_username', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group  {{ $errors->has('register_password') ? 'has-error' : '' }}">
+            {!! Form::label('register_password', trans("admin/siphosts.register_password"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('register_password', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('register_password', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('priority_prefixes') ? 'has-error' : '' }}">
             {!! Form::label('priority_prefixes', trans("admin/siphosts.priority_prefixes"), array('class' => 'control-label')) !!}
             <div class="controls">

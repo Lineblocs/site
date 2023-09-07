@@ -141,6 +141,7 @@
                     <thead>
                         <th>Name</th>
                         <th>IP Address</th>
+                        <th>Register enabled</th>
                         <th>Priority</th>
                         <th>&nbsp;</th>
                     </thead>
@@ -149,6 +150,13 @@
                             <tr>
                                 <td>{{$host->name}}</td>
                                 <td>{{$host->ip_address}}</td>
+                                <td>
+                                    @if ($host->register_enabled) 
+                                        <span class="glyphicon glyphicon-ok"></span> 
+                                    @else
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    @endif
+                                </td>
                                 <td>{{$host->priority}}</td>
                                 <td>
                                     <a href="/admin/provider/{{$provider->id}}/edit_host/{{$host->id}}" class="btn btn-warning">Edit</a>

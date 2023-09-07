@@ -7,6 +7,7 @@ use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\SIPProviderRequest;
 use App\Helpers\MainHelper;
+use App\Helpers\SIPRouterHelper;
 use App\SIPProviderHost;
 use App\SIPProviderRate;
 use App\SIPProviderWhitelistIp;
@@ -144,6 +145,8 @@ class SIPProviderController extends AdminController
         $host = SIPProviderHost::create(array_merge([
             'provider_id' => $provider->id
         ], $data));
+        SIPRouterHelper::addUACRegistrant($host);
+
         return response("");
     }
 
@@ -157,7 +160,7 @@ class SIPProviderController extends AdminController
     {
         $data = $request->all();
         $host->update( $data );
-            
+        SIPRouterHelper::updateUACRegistrant($host);
         return response("");
     }
 
@@ -165,6 +168,7 @@ class SIPProviderController extends AdminController
     public function del_host(Request $request, SIPProvider $provider, SIPProviderHost $host)
     {
         $host->delete();
+        SIPRouterHelper::deleteUACRegistrant($host);
             
         return response("");
     }

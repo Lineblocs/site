@@ -137,7 +137,16 @@
                         <span class="help-block">{{ $errors->first('tls_port', ':message') }}</span>
                     </div>
         </div>
-
+        <div class="form-group  {{ $errors->has('default') ? 'has-error' : '' }}">
+            {!! Form::label('default', trans("admin/siprouters.default"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::label('default', trans("admin/admin.yes"), array('class' => 'control-label')) !!}
+                {!! Form::radio('default', '1', @isset($router)? $router->default : 'false') !!}
+                {!! Form::label('default', trans("admin/admin.no"), array('class' => 'control-label')) !!}
+                {!! Form::radio('default', '0', @isset($router)? $router->default : 'true') !!}
+                <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('active') ? 'has-error' : '' }}">
             {!! Form::label('active', trans("admin/siprouters.active"), array('class' => 'control-label')) !!}
             <div class="controls">
