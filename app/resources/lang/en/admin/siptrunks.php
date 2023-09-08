@@ -9,4 +9,5 @@ return [
     'register_enabled' => 'Register Enabled',
     'register_username' => 'Register Username',
     'register_password' => 'Register Password',
+    'secure_sip' => 'Secure SIP'
 ];

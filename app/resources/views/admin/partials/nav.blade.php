@@ -70,7 +70,7 @@
                         </li>
                         <li>
                             <a href="{{url('admin/trunk')}}">
-                                <i class="glyphicon glyphicon-user"></i> Trunks
+                                <i class="glyphicon glyphicon-user"></i> Hosted User Trunks
                             </a>
                         </li>
                         <li>

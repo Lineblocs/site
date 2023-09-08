@@ -84,6 +84,16 @@
                         <span class="help-block">{{ $errors->first('register_password', ':message') }}</span>
                     </div>
                 </div>
+                <div class="form-group  {{ $errors->has('secure_sip') ? 'has-error' : '' }}">
+                    {!! Form::label('secure_sip', trans("admin/siptrunks.secure_sip"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::label('secure_sip', trans("admin/admin.yes"), array('class' => 'control-label')) !!}
+                        {!! Form::radio('secure_sip', '1', @isset($trunk)? $trunk->secure_sip : 'false') !!}
+                        {!! Form::label('secure_sip', trans("admin/admin.no"), array('class' => 'control-label')) !!}
+                        {!! Form::radio('secure_sip', '0', @isset($trunk)? $trunk->secure_sip : 'true') !!}
+                        <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
+                    </div>
+                </div>
                 <div class="form-group  {{ $errors->has('active') ? 'has-error' : '' }}">
                     {!! Form::label('active', trans("admin/siptrunks.active"), array('class' => 'control-label')) !!}
                     <div class="controls">
