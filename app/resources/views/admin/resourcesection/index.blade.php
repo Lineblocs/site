@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/resourcesection.resource_sections") !!} :: @parent
+@section('title') {!! trans("admin/resources.resource_sections") !!} :: @parent
 @endsection
 
 {{-- Content --}}

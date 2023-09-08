@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'settings' => 'Settings'
+    'settings' => 'Settings',
+    'api_credentials' => 'API Credentials'
 ];

@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/callrates.call_rates") !!} :: @parent
+@section('title') {!! trans("admin/customizations.customizations") !!} :: @parent
 @endsection
 
 {{-- Content --}}
