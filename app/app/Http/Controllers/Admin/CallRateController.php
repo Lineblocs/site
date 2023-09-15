@@ -12,6 +12,7 @@ use Datatables;
 use DB;
 use Config;
 use Mail;
+use Log;
 use Illuminate\Http\Request;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
@@ -96,9 +97,11 @@ class CallRateController extends AdminController
     public function update(CallRateRequest $request, CallRate $rate)
     {
         $data = $request->all();
-        $prefixes = $data['prefixes'];
-        unset($data['prefixes']);
-        $rate->update($data);
+        $prefixes = [];
+        if ( isset($data['prefixes']) ) {
+            $prefixes = $data['prefixes'];
+            unset($data['prefixes']);
+        }
         $current = CallRateDialPrefix::where('call_rate_id', $rate->id)->get();
         foreach ($prefixes as $prefix) {
             $found = FALSE;
@@ -233,7 +236,11 @@ class CallRateController extends AdminController
         $mime = $file->getMimeType();
         $path = $file->getPathName();
         $extension = $file->getClientOriginalExtension();
-        $type = MainHelper::determineFileType($mime, $extension);
+        //$type = MainHelper::determineFileType($mime, $extension);
+        $type = $extension;
+        Log::info("uploaded file path = " . $path);
+        Log::info("uploaded file type = " . $type);
+        Log::info("uploaded extension = " . $extension);
 
         if ( !$type ) {
             return response()->json(['success' => false, 'msg' => 'File not compatible']);
@@ -253,12 +260,12 @@ class CallRateController extends AdminController
             $data = $record;
             $prefix = $record['dial_prefix'];
             $destination  = $record['destination'];
-            $rate  = $record['rate'];
+            $rateCost  = $record['rate'];
             CallRateDialPrefix::create([
                     'call_rate_id' => $rate->id,
                     'dial_prefix' => $prefix,
                     'destination' => $destination,
-                    'rate' => $rate
+                    'rate' => $rateCost
             ]);
         }
 
@@ -362,7 +369,12 @@ class CallRateController extends AdminController
         $items = [];
         # read each cell of each row of each sheet
         foreach ($reader->getSheetIterator() as $sheet) {
+            $rowCounter = 0;
             foreach ($sheet->getRowIterator() as $row) {
+                if ($rowCounter == 0) { // do not process header
+                    $rowCounter ++;
+                    continue;
+                }
                 $cells = $row->getCells();
                 $item = [];
                 foreach ($cells as $cnt => $cell) {
@@ -371,6 +383,7 @@ class CallRateController extends AdminController
                     $item[ $header ] = $value;
                 }
                 $items[] = $item;
+                $rowCounter ++;
             }
         }
         $reader->close();

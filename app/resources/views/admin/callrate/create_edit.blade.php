@@ -90,6 +90,7 @@
                 </div>
                 <div class="row upload-part">
                     <div class="col-md-12">
+                        <input type="hidden" name="upload_token" value="{!! csrf_token() !!}"/>
                         <input type="file" id="rateDeckFile" name="rate_deck_import" />
                     </div>
                 </div>
@@ -178,12 +179,20 @@
                 $("#addPrefixBtn").click(function() {
                     addPrefix();
                 });
-                $("#importRatesBtn").submit(function(ev) {
+                $("#importRatesBtn").click(function(ev) {
                     console.log("submitted upload form");
                     ev.stopPropagation();
                     ev.preventDefault();
                     const formData = new FormData();
-                    const fileInput = document.querySelector("#rateDeckFile");
+                    const fileSelector = document.querySelector("#rateDeckFile");
+                    if (fileSelector.files.length === 0) {
+                        alert("Please select a file.");
+                        return;
+                    }
+                    const fileInput = fileSelector.files[0];
+                    const token = $("input[name='upload_token']").val();
+                    formData.append('rate_deck_import', fileInput);
+                    formData.append('_token', token);
                     const postDataUrl = "./upload-rates";
                     $.ajax({
                         type: "POST",
@@ -194,10 +203,17 @@
                         dataType: "json",
                         success: function(data, textStatus, jqXHR) {
                             //process data
+                            if ( !data.success ) {
+                                alert("Error occured: " + data.msg);
+                                return;
+                            }
                             console.log("processed upload successfully")
+                            alert("Rates were uploaded successfully.");
+                            document.location.reload();
                         },
                         error: function(data, textStatus, jqXHR) {
                             //process error msg
+                            console.log("error uploading rate deck data ", arguments);
                         }
                     });
                 });
