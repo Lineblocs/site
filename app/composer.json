@@ -32,6 +32,7 @@
         "michelf/php-markdown": "^1.8",
         "guzzlehttp/guzzle": "^7.4",
         "barryvdh/laravel-dompdf": "v0.8.2",
+        "dompdf/dompdf": "v0.8.5",
         "mobiledetect/mobiledetectlib": "^2.8",
         "league/flysystem-aws-s3-v3": "~1.0",
         "hackzilla/password-generator": "dev-master",
@@ -41,7 +42,11 @@
         "spomky-labs/otphp": "v10.0.x-dev",
         "bacon/bacon-qr-code": "dev-master",
         "intergo/sms.to-php": "dev-master",
-        "haydenpierce/class-finder": "dev-master"
+        "haydenpierce/class-finder": "dev-master",
+        "faisalman/simple-excel-php": "dev-master",
+        "nyholm/psr7": "1.8.x-dev",
+        "php-http/message-factory": "^1.0@dev",
+        "box/spout": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -85,7 +90,8 @@
         "preferred-install": "dist",
         "allow-plugins": {
             "kylekatarnls/update-helper": true,
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "dev"

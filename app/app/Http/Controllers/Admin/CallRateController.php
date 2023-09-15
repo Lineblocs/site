@@ -13,6 +13,7 @@ use DB;
 use Config;
 use Mail;
 use Illuminate\Http\Request;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class CallRateController extends AdminController
 {
@@ -57,8 +58,11 @@ class CallRateController extends AdminController
     public function store(CallRateRequest $request)
     {
         $data = $request->all();
-        $prefixes = $data['prefixes'];
-        unset($data['prefixes']);
+        $prefixes = [];
+        if ( isset($data['prefixes']) ) {
+            $prefixes = $data['prefixes'];
+            unset($data['prefixes']);
+        }
         $rate = new CallRate ($data);
         $rate->save();
         foreach ($prefixes as $prefix) {
@@ -261,6 +265,9 @@ class CallRateController extends AdminController
         return response()->json(['success' => true]);
     }
 
+    private function createPrefixes($value) {
+        return implode(",", $value);
+    }
     private function parseCSV( $path, $delim="," )
     {
         $row = 0;
@@ -292,9 +299,7 @@ class CallRateController extends AdminController
                 $value = $data[$c];
                 if ( $header == 'prefixes' ) {
                     // check if need to lookup by name
-
-                    $prefixesToAdd = implode(",", $value);
-                    $item[ 'prefixes' ] = $prefixesToAdd;
+                    $item[ 'prefixes' ] = $this->createPrefixes ( $value );
                 } else {
                     $item[ $header ] = $value;
                 }
@@ -341,6 +346,70 @@ class CallRateController extends AdminController
 
         }
         fclose($handle);
+        return $items;
+    }
+
+    private function parseRateDeckXLS( $path ) {
+        $map = array(
+            0 => "destination",
+            1 => "dial_prefix",
+            2 => "rate"
+        );
+
+        # open the file
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($path);
+        $items = [];
+        # read each cell of each row of each sheet
+        foreach ($reader->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $row) {
+                $cells = $row->getCells();
+                $item = [];
+                foreach ($cells as $cnt => $cell) {
+                    $header = $map[$cnt];
+                    $value = $cell->getValue();
+                    $item[ $header ] = $value;
+                }
+                $items[] = $item;
+            }
+        }
+        $reader->close();
+        return $items;
+    }
+
+    private function parseXLS( $path ) {
+        $map = array(
+            0 => "name",
+            1 => "call_rate",
+            2 => "type",
+            3 => "inbound",
+            4 => "prefixes"
+        );
+
+
+        # open the file
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($path);
+        $items = [];
+        # read each cell of each row of each sheet
+        foreach ($reader->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $row) {
+                $cells = $row->getCells();
+                $item = [];
+                foreach ($cells as $cnt => $cell) {
+                    $header = $map[$cnt];
+                    $value = $cell->getValue();
+                    if ( $header == 'prefixes' ) {
+                        // check if need to lookup by name
+                        $item[ 'prefixes' ] = $this->createPrefixes ( $value );
+                    } else {
+                        $item[ $header ] = $value;
+                    }
+                }
+                $items[] = $item;
+            }
+        }
+        $reader->close();
         return $items;
     }
 }

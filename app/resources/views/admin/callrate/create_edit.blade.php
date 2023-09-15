@@ -83,25 +83,23 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <form method="POST" action="./upload-rates">
-                    <div class="row form-group">
-                        <div class="col-md-12">
-                            <h3>Import rates</h3>
-                        </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <h3>Import rates</h3>
                     </div>
-                    <div class="row upload-part">
-                        <div class="col-md-12">
-                            <input type="file" name="rate_deck_import" />
-                        </div>
+                </div>
+                <div class="row upload-part">
+                    <div class="col-md-12">
+                        <input type="file" id="rateDeckFile" name="rate_deck_import" />
                     </div>
-                    <div class="row">
+                </div>
+                <div class="row">
 
-                        <div class="col-md-12">
-                            <button class="btn btn-success btn-sm">Upload</button>
-                        </div>
+                    <div class="col-md-12">
+                        <button type="button" id="importRatesBtn" class="btn btn-success btn-sm">Upload</button>
                     </div>
-                    <br />
-                </form>
+                </div>
+                <br />
             </div>
         </div>
     </div>
@@ -179,6 +177,29 @@
                 });
                 $("#addPrefixBtn").click(function() {
                     addPrefix();
+                });
+                $("#importRatesBtn").submit(function(ev) {
+                    console.log("submitted upload form");
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    const formData = new FormData();
+                    const fileInput = document.querySelector("#rateDeckFile");
+                    const postDataUrl = "./upload-rates";
+                    $.ajax({
+                        type: "POST",
+                        url: postDataUrl,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: "json",
+                        success: function(data, textStatus, jqXHR) {
+                            //process data
+                            console.log("processed upload successfully")
+                        },
+                        error: function(data, textStatus, jqXHR) {
+                            //process error msg
+                        }
+                    });
                 });
             });
         </script>

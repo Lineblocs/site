@@ -1,0 +1,7 @@
+*.DS_Store
+vendor
+.idea
+auth.php
+contact.php
+sms.php
+composer.lock
