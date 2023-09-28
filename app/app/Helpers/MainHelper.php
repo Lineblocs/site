@@ -891,6 +891,7 @@ final class MainHelper {
       return "Credit Card";
     }
     public static function getBlogURL() {
-
+        $customizations = Customizations::getRecord();
+        return $customizations->blog_url;
     }
 }
