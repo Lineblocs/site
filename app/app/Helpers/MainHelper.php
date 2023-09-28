@@ -890,5 +890,7 @@ final class MainHelper {
     public static function getPrimaryPaymentMethod($workspace) {
       return "Credit Card";
     }
+    public static function getBlogURL() {
 
+    }
 }

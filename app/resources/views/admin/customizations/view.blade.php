@@ -173,6 +173,15 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+                <label for="blog_url">Blog URL</label>
+                <div class="controls">
+                    <input name="blog_url" class="form-control" value="{{$record->blog_url}}" />
+                </div>
+            </div>
+
+
+
             <div class="row">
                 <h3>Preferences</h3>
                 <hr/>
@@ -191,7 +200,6 @@
                     </select>
                 </div>
             </div>
-
 
             <div class="row form-group">
                 <label for="app_logo">Verification workflow</label>
