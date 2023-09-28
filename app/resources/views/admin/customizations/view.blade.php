@@ -305,6 +305,21 @@
             </div>
 
             <div class="row form-group">
+                <label for="default_currency">Default billing currency</label>
+                <div class="controls">
+                    <select name="default_currency" class="form-control" id="default_currency">
+                        @foreach ($currencies as $code => $currency)
+                            @if ($code == $record->default_currency)
+                                <option value="{{$code}}" selected>{{$currency}} ({{$code}})</option>
+                            @else
+                                <option value="{{$code}}">{{$currency}} ({{$code}})</option>
+                            @endif
+                        @endforeach 
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
                 <label for="payments_enabled">Billing retry enabled</label>
                 <div class="controls">
                     <select name="billing_retry_enabled" class="form-control" id="billing_retry_enabled">
