@@ -173,31 +173,12 @@ class HomeController extends BaseController {
   }
   public function contact(Request $request)
   {
+    $request->session()->forget('status');
     $customizations = Customizations::getRecord();
     $vars = [
       'customizations' => $customizations
     ];
     return view('pages.contact', $vars);
-  }
-
-  public function requestQuote(Request $request)
-  {
-    return view('pages.request_quote');
-  }
-
-  public function requestQuoteSubmit(Request $request)
-  {
-    return view('pages.request_quote');
-  }
-  public function alternative(Request $request)
-  {
-    $vars = [];
-    return view('pages.alternative', $vars);
-  }
-  public function alternativeSubmit(Request $request)
-  {
-    $vars = [];
-    return view('pages.alternative', $vars);
   }
   public function contactSubmit(Request $request)
   {
@@ -221,17 +202,6 @@ class HomeController extends BaseController {
       $request->session()->flash('status', 'Please fill in comments..');
       return view('pages.contact', $vars);
     }
-    if (empty($data['region'])) {
-      $region = $data['region'];
-    }
-    if (empty($data['country'])) {
-      $region = $data['country'];
-    }
-    if (empty($data['contact_reason'])) {
-      $reason = $data['contact_reason'];
-    }
-
-
 
     $template = [
       'first_name' => $data['first_name'],
@@ -242,31 +212,92 @@ class HomeController extends BaseController {
     $contact = CompanyRepresentative::getMainContact();
     $subject = 'New Lineblocs contact';
     $result = EmailHelper::sendEmail($subject, $contact->email_address, 'contact', $template);
-    /*
-    Mail::send('emails.contact', $template, function ($m) use ($contact, $template) {
-      $from =MainHelper::createEmail('contact');
-      $site =MainHelper::getSiteName();
-      $m->from($from,$site);
-
-      $m->to($contact->email_address, $contact->name)->subject('New Lineblocs contact');
-      $m->cc([$template['email']]);
-  });
-  */
     $result = EmailHelper::sendEmail($subject, $template['email'], 'contact_confirm', $template);
-    /*
-    Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {
-      $subject = 'Thanks for contacting us';
-      $from =MainHelper::createEmail('contact');
-      $site =MainHelper::getSiteName();
-      $m->from($from, $site);
-      $name = sprintf("%s %s", $template['first_name'], $template['last_name']);
-      $m->to($template['email'], $name)->subject($subject);
-  });
-  */
 
     $request->session()->flash('status', 'Thanks for contacting us we will get in touch with you within 24-78 hours.');
     return view('pages.contact', $vars);
   }
+  public function requestQuote(Request $request)
+  {
+    $request->session()->forget('status');
+    $customizations = Customizations::getRecord();
+    $teamSize = array(
+      'small' => '1-50 employees',
+      'medium' => '51-500 employees',
+      'large' => '500-10000 employees',
+      'really_large' => '10000+ employees',
+    );
+    $vars = [
+      'customizations' => $customizations,
+      'teamSize' => $teamSize
+    ];
+    return view('pages.request_quote', $vars);
+  }
+
+  public function requestQuoteSubmit(Request $request)
+  {
+    $data = $request->all();
+    $customizations = Customizations::getRecord();
+    $teamSize = array(
+      'small' => '1-50 employees',
+      'medium' => '51-500 employees',
+      'large' => '500-10000 employees',
+      'really_large' => '10000+ employees',
+    );
+    $vars = [
+      'customizations' => $customizations,
+      'teamSize' => $teamSize
+    ];
+
+    if (empty($data['first_name'])) {
+      $request->session()->flash('status', 'Please fill in first name..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['last_name'])) {
+      $request->session()->flash('status', 'Please fill in last name..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['phone'])) {
+      $request->session()->flash('status', 'Please fill in your phone number..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['email'])) {
+      $request->session()->flash('status', 'Please fill in email..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['comments']) && empty($data['comments_not_required'])) {
+      $request->session()->flash('status', 'Please fill in comments..');
+      return view('pages.request_quote', $vars);
+    }
+
+    $template = [
+      'first_name' => $data['first_name'],
+      'last_name' => $data['last_name'],
+      'company_name' => $data['company_name'],
+      'team_size' => $data['team_size'],
+      'phone' => $data['phone'],
+      'email' => $data['email'],
+      'comments' => $data['comments']
+    ];
+    $request_quote = CompanyRepresentative::getMainContact();
+    $subject = 'New Lineblocs request_quote';
+    $result = EmailHelper::sendEmail($subject, $request_quote->email_address, 'quote', $template);
+    $result = EmailHelper::sendEmail($subject, $template['email'], 'quote_confirm', $template);
+
+    $request->session()->flash('status', 'Thanks you, your request has been submitted successfully and someone will be in touch in 24-48 hours');
+    return view('pages.request_quote', $vars);
+  }
+  public function alternative(Request $request)
+  {
+    $vars = [];
+    return view('pages.alternative', $vars);
+  }
+  public function alternativeSubmit(Request $request)
+  {
+    $vars = [];
+    return view('pages.alternative', $vars);
+  }
+
   public function about(Request $request)
   {
     $vars = [];

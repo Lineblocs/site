@@ -35,7 +35,7 @@ Route::get('about', 'HomeController@about');
 Route::get('contact', 'HomeController@contact');
 Route::get('quote', 'HomeController@requestQuote');
 Route::post('quote', 'HomeController@requestQuoteSubmit');
-Route::post('contactSubmit', 'HomeController@contactSubmit');
+Route::post('contact', 'HomeController@contactSubmit');
 Route::get('login', 'HomeController@login');
 Route::get('pricing', 'HomeController@pricing');
 Route::get('rates', 'HomeController@rates1');

@@ -2,3 +2,18 @@
     padding: 24px;
     border-radius: 0 0 2px 2px;
 }
+
+.contact-form.quote {
+	border-top: none;
+	border-left: none !important;
+	padding-top: 50px !important;
+    padding-left: 0px !important;
+}
+
+.contact-form .dropdown-box {
+    margin-bottom: 20px; 
+}
+
+.thankyou {
+    padding: 150px 200px;
+}

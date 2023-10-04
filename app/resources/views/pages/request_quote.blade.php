@@ -3,6 +3,7 @@
 Contact
 @endsection
 @section('content')
+
     @if (Session::has('status'))
         <div class="blue-grey darken-1 thankyou">
             <center>
@@ -12,29 +13,17 @@ Contact
     @else
         <div class="contact-page">
             <section class="heading">
-                <h1>Contact</h1>
+                <h1>Requst Quote</h1>
             </section>
             <section class="content">
                 <div class="container">
                     <div class="row">
-                        <div class="col-12 col-lg-6 column">
-                            <div class="phone">
-                                <p>The {{\App\Helpers\MainHelper::getSiteName()}} Team is here to help answer any questions you may have. Fill out the form or call us at:</p>
-                                <a href="tel:{{$customizations->contact_phone_number}}">{{$customizations->contact_phone_number}}</a>
-                            </div>
-
-                            <div class="address">
-                                <span>Address</span>
-                                {!! nl2br($customizations->contact_address) !!}
-                            </div>
-                            <div class="email">
-                                <span>E-mail</span>
-                                <a href="mailto:{{$customizations->contact_email}}">{{$customizations->contact_email}}</a>
-                            </div>
+                        <div class="col-12 col-lg-12 contact-form quote">
+                        <div class="alert alert-info" role="alert">
+                            We can create a custom quote for you based on your business requirements.<br/><br/>
+                            Please feel free to fill out the form below and one of our specialists will be in touch to discuss further.</p>
                         </div>
-                        <div class="col-12 col-lg-6 contact-form column">
-                            <p>Have queries regarding our offerings? Feel free to contact us.</p>
-                            <form method="POST" action="/contact">
+                            <form method="POST" action="/quote">
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
@@ -45,19 +34,49 @@ Contact
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
-                                            <input name="last_name" id="first_name" type="text" class="validate no-special-chars form-control" minlength="1" maxlength="24" required="">
+                                            <input name="last_name" id="last_name" type="text" class="validate no-special-chars form-control" minlength="1" maxlength="24" required="">
                                             <span class="placeholder">Last Name</span>
                                         </div>
 
                                     </div>
                                 </div>
-                               <div class="row">
+                                <div class="row">
                                     <div class="col-12 col-md-12">
                                         <div class="wrapper">
-                                            <input name="email" id="email" type="text" class="validate form-control" minlength="1" maxlength="24" required="">
+                                            <input name="phone" id="phone" type="tel" class="validate form-control" minlength="1" maxlength="24" required="">
+                                            <span class="placeholder">Phone Number</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <div class="wrapper">
+                                            <input name="email" id="email" type="email" class="validate form-control" minlength="1" maxlength="24" required="">
                                             <span class="placeholder">Email</span>
                                         </div>
 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <div class="wrapper">
+                                            <input name="company_name" id="company_name" type="text" class="validate form-control" minlength="1" maxlength="24" required="">
+                                            <span class="placeholder">Company Name</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <div class="wrapper dropdown-box">
+                                            <select name="team_size" id="team_sizel" type="select" class="form-control" required="">
+                                                <option value="">Select team size</option>
+                                                @foreach ($teamSize as $key => $option)
+                                                    <option value="{{$key}}">{{$option}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
