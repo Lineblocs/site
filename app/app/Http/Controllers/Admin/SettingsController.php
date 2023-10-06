@@ -74,6 +74,7 @@ class SettingsController extends AdminController {
         'telerivet_project_id',
         'recaptcha_sitekey',
         'recaptcha_privatekey',
+        'disqus_site',
         ];
         $update = [];
         foreach ( $keys as $key ) {

@@ -213,6 +213,17 @@ class CustomizationsController extends AdminController {
 		$update_params['recaptcha_enabled'] = $recaptcha_enabled;
 
 
+		if ( !empty( $update_params['recaptcha_enabled'] ) ) {
+			$recaptcha_enabled = true;
+		}
+		$update_params['recaptcha_enabled'] = $recaptcha_enabled;
+
+		if ( !empty( $update_params['disqus_enabled'] ) ) {
+			$disqus_enabled = true;
+		}
+		$update_params['disqus_enabled'] = $disqus_enabled;
+
+
 
 
 

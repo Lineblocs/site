@@ -122,7 +122,12 @@
                 </div>
             </div>
 
-
+            <div class="row form-group">
+                <label for="disqus_site">Disqus site</label>
+                <div class="controls">
+                    <input id="disqus_site" type="text" class="form-control" name="disqus_site" value="{{$creds->disqus_site}}"/>
+                </div>
+            </div>
 
 
             <div class="row form-group">

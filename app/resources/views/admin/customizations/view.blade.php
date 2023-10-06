@@ -497,6 +497,21 @@
             </div>
 
             <div class="row form-group">
+                <label for="disqus_enabled">Disqus enabled</label>
+                <div class="controls">
+                    <select name="disqus_enabled" class="form-control" id="disqus_enabled">
+                        @if ( $record->disqus_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
                 <label for="dns_provider">DNS provider</label>
                 <small>note: if you are using the self managed option be sure to update the nameservers at your registrar to point to your deployment domain</small>
                 <div class="controls">
