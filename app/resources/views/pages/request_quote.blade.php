@@ -23,7 +23,7 @@ Contact
                             We can create a custom quote for you based on your business requirements.<br/><br/>
                             Please feel free to fill out the form below and one of our specialists will be in touch to discuss further.</p>
                         </div>
-                            <form method="POST" action="/quote">
+                            <form method="POST" action="/quote" id="quoteFrm">
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
@@ -92,7 +92,7 @@ Contact
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                                         @if ($customizations->recaptcha_enabled)
                                             <button class="g-recaptcha btn button"
-                                                    data-sitekey="{{$creds->recaptcha_site_key}}" 
+                                                    data-sitekey="{{$creds->recaptcha_sitekey}}" 
                                                     data-callback='onSubmit' 
                                                     data-action='submit'>Send message</button>
                                         @else
@@ -126,7 +126,7 @@ Contact
 @endif
 <script>
    function onSubmit(token) {
-     document.getElementById("contactFrm").submit();
+     document.getElementById("quoteFrm").submit();
    }
  </script>
 @endsection

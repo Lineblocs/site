@@ -74,7 +74,7 @@ Contact
 
                                         @if ($customizations->recaptcha_enabled)
                                             <button class="g-recaptcha btn button"
-                                                    data-sitekey="{{$creds->recaptcha_site_key}}" 
+                                                    data-sitekey="{{$creds->recaptcha_sitekey}}" 
                                                     data-callback='onSubmit' 
                                                     data-action='submit'>Send message</button>
                                         @else

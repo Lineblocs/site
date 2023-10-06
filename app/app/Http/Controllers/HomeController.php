@@ -187,12 +187,14 @@ class HomeController extends BaseController {
   public function contactSubmit(Request $request)
   {
     $data = $request->all();
-    $vars = [];
     $creds = ApiCredential::getRecord();
     $customizations = Customizations::getRecord();
+    $vars = [
+        'customizations' => $customizations
+    ];
 
     if($customizations->recaptcha_enabled) {
-      $recaptcha = new ReCaptcha($creds->recaptcha_private_key);
+      $recaptcha = new ReCaptcha($creds->recaptcha_privatekey);
       $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
 		  if (!$resp->isSuccess()) {
@@ -268,7 +270,7 @@ class HomeController extends BaseController {
     ];
 
     if($customizations->recaptcha_enabled) {
-      $recaptcha = new ReCaptcha($creds->recaptcha_private_key);
+      $recaptcha = new ReCaptcha($creds->recaptcha_privatekey);
       $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
 		  if (!$resp->isSuccess()) {
