@@ -90,7 +90,14 @@ Contact
                                 <div class="row">
                                     <div class="col">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                        <button class="btn button" type="submit">Send message</button>
+                                        @if ($customizations->recaptcha_enabled)
+                                            <button class="g-recaptcha btn button"
+                                                    data-sitekey="{{$creds->recaptcha_site_key}}" 
+                                                    data-callback='onSubmit' 
+                                                    data-action='submit'>Send message</button>
+                                        @else
+                                            <button class="btn button" type="submit">Send message</button>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="row">
@@ -114,4 +121,12 @@ Contact
   $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
 });
 </script>
+@if ($customizations->recaptcha_enabled)
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+@endif
+<script>
+   function onSubmit(token) {
+     document.getElementById("contactFrm").submit();
+   }
+ </script>
 @endsection

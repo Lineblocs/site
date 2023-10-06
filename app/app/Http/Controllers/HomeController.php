@@ -11,6 +11,7 @@ use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
 use App\Customizations;
+use App\ApiCredential;
 use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
 use Config;
 use Mail;
 use App\Helpers\MainHelper;
+use \ReCaptcha\ReCaptcha;
 
 class HomeController extends BaseController {
   /**
@@ -174,9 +176,11 @@ class HomeController extends BaseController {
   public function contact(Request $request)
   {
     $request->session()->forget('status');
+    $creds = ApiCredential::getRecord();
     $customizations = Customizations::getRecord();
     $vars = [
-      'customizations' => $customizations
+      'customizations' => $customizations,
+      'creds' => $creds
     ];
     return view('pages.contact', $vars);
   }
@@ -184,8 +188,18 @@ class HomeController extends BaseController {
   {
     $data = $request->all();
     $vars = [];
+    $creds = ApiCredential::getRecord();
+    $customizations = Customizations::getRecord();
 
+    if($customizations->recaptcha_enabled) {
+      $recaptcha = new ReCaptcha($creds->recaptcha_private_key);
+      $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
+		  if (!$resp->isSuccess()) {
+        $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
+        return view('pages.contact', $vars);
+		  }	
+    }
     if (empty($data['first_name'])) {
       $request->session()->flash('status', 'Please fill in first name..');
       return view('pages.contact', $vars);
@@ -221,6 +235,7 @@ class HomeController extends BaseController {
   {
     $request->session()->forget('status');
     $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
     $teamSize = array(
       'small' => '1-50 employees',
       'medium' => '51-500 employees',
@@ -229,6 +244,7 @@ class HomeController extends BaseController {
     );
     $vars = [
       'customizations' => $customizations,
+      'creds' => $creds,
       'teamSize' => $teamSize
     ];
     return view('pages.request_quote', $vars);
@@ -238,6 +254,8 @@ class HomeController extends BaseController {
   {
     $data = $request->all();
     $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+
     $teamSize = array(
       'small' => '1-50 employees',
       'medium' => '51-500 employees',
@@ -248,6 +266,16 @@ class HomeController extends BaseController {
       'customizations' => $customizations,
       'teamSize' => $teamSize
     ];
+
+    if($customizations->recaptcha_enabled) {
+      $recaptcha = new ReCaptcha($creds->recaptcha_private_key);
+      $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+
+		  if (!$resp->isSuccess()) {
+        $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
+        return view('pages.contact', $vars);
+		  }	
+    }
 
     if (empty($data['first_name'])) {
       $request->session()->flash('status', 'Please fill in first name..');

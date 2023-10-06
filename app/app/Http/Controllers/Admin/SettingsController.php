@@ -72,6 +72,8 @@ class SettingsController extends AdminController {
         'sentry_dsn',
         'telerivet_api_key',
         'telerivet_project_id',
+        'recaptcha_sitekey',
+        'recaptcha_privatekey',
         ];
         $update = [];
         foreach ( $keys as $key ) {

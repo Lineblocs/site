@@ -109,6 +109,20 @@
             </div>
 
 
+           <div class="row form-group">
+                <label for="recaptcha_sitekey">ReCaptcha site key</label>
+                <div class="controls">
+                    <input id="recaptcha_sitekey" type="text" class="form-control" name="recaptcha_sitekey" value="{{$creds->recaptcha_sitekey}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="recaptcha_privatekey">ReCaptcha Private key</label>
+                <div class="controls">
+                    <input id="recaptcha_privatekey" type="text" class="form-control" name="recaptcha_privatekey" value="{{$creds->recaptcha_privatekey}}"/>
+                </div>
+            </div>
+
+
 
 
             <div class="row form-group">

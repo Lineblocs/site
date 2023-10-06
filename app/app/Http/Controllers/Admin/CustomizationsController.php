@@ -205,6 +205,14 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['automatic_security_updates'] = $automatic_security_updates;
 
+		$recaptcha_enabled = false;
+
+		if ( !empty( $update_params['recaptcha_enabled'] ) ) {
+			$recaptcha_enabled = true;
+		}
+		$update_params['recaptcha_enabled'] = $recaptcha_enabled;
+
+
 
 
 

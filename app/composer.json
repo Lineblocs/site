@@ -46,7 +46,8 @@
         "faisalman/simple-excel-php": "dev-master",
         "nyholm/psr7": "1.8.x-dev",
         "php-http/message-factory": "^1.0@dev",
-        "box/spout": "^3.3"
+        "box/spout": "^3.3",
+        "google/recaptcha": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

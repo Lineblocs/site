@@ -482,6 +482,21 @@
             </div>
 
             <div class="row form-group">
+                <label for="recaptcha_enabled">ReCaptcha enabled</label>
+                <div class="controls">
+                    <select name="recaptcha_enabled" class="form-control" id="recaptcha_enabled">
+                        @if ( $record->recaptcha_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
                 <label for="dns_provider">DNS provider</label>
                 <small>note: if you are using the self managed option be sure to update the nameservers at your registrar to point to your deployment domain</small>
                 <div class="controls">
