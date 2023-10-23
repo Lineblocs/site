@@ -10,6 +10,7 @@ use App\FlowTemplate;
 use App\ExtensionCode;
 use App\UserCard;
 use App\Customizations;
+use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
 use DB;
@@ -1009,5 +1010,23 @@ final class MainHelper {
     public static function getBlogURL() {
         $customizations = Customizations::getRecord();
         return $customizations->blog_url;
+    }
+    public static function sendWhatsAppMessage($to, $body) {
+      $creds = ApiCredential::getRecord();
+      $service = "https://graph.facebook.com";
+      $path = sprintf( "/v18.0/%s/messages", $creds->whatsapp_phone_number_id);
+      $headers = [
+        sprintf( 'Authorization: Bearer %s', $creds->whatsapp_access_token)
+      ];
+      $method = "POST";
+      $params = [
+        "messaging_product" => "whatsapp",
+        "to" => $to,
+        "text" => [
+          "body" => $body
+        ]
+        ];
+      $result = WebSvcHelper::request( $service, $path, $method, $params, $headers );
+      return $result;
     }
 }

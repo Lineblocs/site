@@ -108,7 +108,19 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+                <label for="whatsapp_phone_number_id">WhatsApp Phone Number ID</label>
+                <div class="controls">
+                    <input id="whatsapp_phone_number_id" type="text" class="form-control" name="whatsapp_phone_number_id" value="{{$creds->whatsapp_phone_number_id}}"/>
+                </div>
+            </div>
 
+            <div class="row form-group">
+                <label for="whatsapp_access_token">WhatsApp Access Token</label>
+                <div class="controls">
+                    <input id="whatsapp_access_token" type="text" class="form-control" name="whatsapp_access_token" value="{{$creds->whatsapp_access_token}}"/>
+                </div>
+            </div>
            <div class="row form-group">
                 <label for="recaptcha_sitekey">ReCaptcha site key</label>
                 <div class="controls">

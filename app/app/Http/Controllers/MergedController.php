@@ -860,6 +860,15 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->array([
           'success' => true
       ]);
+    } else if ( $type_of_2fa == 'whatsapp') {
+      $from = '';
+      $to = $user->phone_number;
+      $otp = TOTP::create($user->secret_code_2fa);
+      $body = sprintf("Your confirmation code for 2FA is: %s", $otp);
+      MainHelper::sendWhatsAppMessage($to, $body);
+      return $this->response->array([
+          'success' => true
+      ]);
     }
     return $this->response->array([
         'success' => true
@@ -890,6 +899,14 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $otp = TOTP::create($user->secret_code_2fa);
       $body = sprintf("Your OTP is %s", $otp->now());
       SMSHelper::sendSMS($from, $to, $body);
+      return $this->response->array([
+          'success' => true
+      ]);
+    } elseif ( $user->type_of_2fa == 'whatsapp') {
+      $to = $user->phone_number;
+      $otp = TOTP::create($user->secret_code_2fa);
+      $body = sprintf("Your OTP is %s", $otp->now());
+      MainHelper::sendWhatsAppMessage($to, $body);
       return $this->response->array([
           'success' => true
       ]);
