@@ -15,6 +15,8 @@ final class EmailHelper {
     $customizations = Customizations::getRecord();
     $dns_provider = $customizations->dns_provider;
     $mail = Config::get('mail');
+    $data['customizations'] = $customizations;
+    $data['site_name'] = MainHelper::getSiteName();
     if ( $customizations->mail_provider == 'smtp-gateway') {
       try {
         Mail::send('emails.'.$template, $data, function ($message) use ($subject, $to, $mail) {

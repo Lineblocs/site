@@ -347,8 +347,8 @@
                                               <td style="font-family: 'Roboto', Arial, Helvetica, sans-serif; font-size: 12px; text-align: center; color: #0a1247; line-height: 18px;" align="center"> For customer service inqueries, please contact customer support at {{\App\Helpers\MainHelper::createEmail('support')}}
                                               </td>
                                             <tr>
-                                              <td style="mso-height-rule:exactly;text-align:center; font-size: 12px; line-height: 20px; font-weight: normal; color: #566e89;"> LineBlocs <br /> xxx Massachusetts Ave. <br /> Cambridge, MA XXXX, USA <br />
-                                                <br>
+                                              <td style="mso-height-rule:exactly;text-align:center; font-size: 12px; line-height: 20px; font-weight: normal; color: #566e89;"> 
+                                                {{$site_name}} <br /> {!! nl2br($customizations->contact_address) !!}<br/>
                                               </td>
                                             </tr>
                                             <tr>
