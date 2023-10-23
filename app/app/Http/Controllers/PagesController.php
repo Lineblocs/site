@@ -45,7 +45,7 @@ class PagesController extends BaseController {
           'link' => $link
         ];
     $subject =MainHelper::createEmailSubject("Verify Your Email");
-    $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
+    // $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
 
     // $user = User::all()[0];
     // // $all = $request->all();
@@ -99,8 +99,8 @@ class PagesController extends BaseController {
               minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit 
               quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur',
           ];
-            $subject =MainHelper::createEmailSubject("Admin Email");
-            $result = EmailHelper::sendEmail($subject, 'tgblinkss@gmail.com', 'admin_email' , $data);
+            $subject =MainHelper::createEmailSubject("Password Reset");
+            $result = EmailHelper::sendEmail($subject, 'tgblinkss@gmail.com', 'password_was_reset' , $data);
         
 
     return json_encode($result);  
