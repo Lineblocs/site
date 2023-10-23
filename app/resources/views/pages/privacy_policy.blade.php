@@ -18,7 +18,7 @@ Privacy Policy
         <div class="inner">
         @include('layouts.sidebar')
           <div class="content privacy-page"> 
-            <h2>LINEBLOCS PRIVACY POLICY</h2>           
+            <h2>{{strtoupper(\App\Helpers\MainHelper::getSiteName())}} PRIVACY POLICY</h2>           
             <div class="block">
               Lineblocs Ltd. and its affiliates (referred to collectively as “<b>Lineblocs</b>”, “<b>we</b>”, “<b>us</b>” and terms of similar meaning) respect your privacy and is committed to protecting it by complying with the terms outlined in this Lineblocs Privacy Policy (“<b>Privacy Policy</b>”). This Privacy Policy describes how we collect, use, share and protect personal information from our users and contractors (“<b>you</b>”) through providing the Lineblocs unified communications platform (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) (the “<b>Services</b>”).
             </div>

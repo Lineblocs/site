@@ -17,19 +17,21 @@ Service Level Agreement
             <div class="content terms-page">
                 <div class="lb-col lb-tiny-24 lb-mid-14">
                     <div class="lb-rtxt">
-                        <h2 style="padding-left: 100px;">LINEBLOCS SERVICE LEVEL AGREEMENT</h2>
+                        <h2>
+                            {{strtoupper(\App\Helpers\MainHelper::getSiteName())}} SERVICE LEVEL AGREEMENT
+                        </h2>
                         <p>
-                            AWS commits to offer Service Level Agreements (SLAs) and publish Service Level Objectives (SLOs) for all paid, generally available services. We encourage customers to visit our
-                            <a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html">well architected documentation</a> for further details regarding
-                            SLOs.&nbsp;
+                        {{\App\Helpers\MainHelper::getSiteName()}} is dedicated to providing Service Level Agreements (SLAs) and sharing Service Level Objectives (SLOs) for all of our paid, widely accessible services. We invite our customers to refer to our comprehensive "well architected documentation" for additional information on SLOs.
                         </p>
                         <p><span>Note -&nbsp;The percentages below are provided for illustration only and subject to the applicable full SLA terms.</span></p>
                     </div>
-                    <div class="table-container">
+                    <div class="table-container sla-card">
                         <li class="lb-xbcol m-card m-list-card">
                             <div class="m-card-container">
                                 <div class="m-hd">
-                                    <h3 class="m-category"><span>Alexa for Business</span></h3>
+                                    <h3 class="m-category">
+                                        <span>VoIP services</span>
+                                    </h3>
                                 </div>
                                 <div class="m-card-main">
                                     <div class="m-content">
@@ -62,157 +64,7 @@ Service Level Agreement
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <p><a class="test" href="sla" rel="noopener" target="_blank">Alexa for Business Full SLA</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="m-ft">
-                                     
-                                    <div class="m-ft-cta"></div>
-                                </div>
-                            </div>
-                        </li>
-                    </div>
-                    <div class="table-container">
-                        <li class="lb-xbcol m-card m-list-card" >
-                            <div class="m-card-container">
-                                <div class="m-hd">
-                                    <h3 class="m-category"><span>Alexa for Business</span></h3>
-                                </div>
-                                <div class="m-card-main">
-                                    <div class="m-content">
-                                        <div class="m-content-hd">
-                                            <div class="m-content-type"></div>
-                                        </div>
-                                        <div class="m-headline-container">
-                                            <div>
-                                                <h2 class="m-headline"><a href="pages/sla" target="_blank" rel="noopener"></a></h2>
-                                                <div class="m-desc">
-                                                    <div class="table-responsive">
-                                                        <table class="lb-tbl-p" style="min-width: 100%;">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th>Monthly Uptime Percentage</th>
-                                                                    <th>Service Credit Percentage</th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 99.9% but greater than or equal to 99.0%</td>
-                                                                    <td>10%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 99.0% but equal to or greater than 95.0%</td>
-                                                                    <td>25%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 95.0%</td>
-                                                                    <td>100%</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <p><a class="test" href="sla" rel="noopener" target="_blank">Alexa for Business Full SLA</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="m-ft">
-                                     
-                                    <div class="m-ft-cta"></div>
-                                </div>
-                            </div>
-                        </li>
-                    </div>
-                    <div class="table-container">
-                        <li class="lb-xbcol m-card m-list-card" >
-                            <div class="m-card-container">
-                                <div class="m-hd">
-                                    <h3 class="m-category"><span>Alexa for Business</span></h3>
-                                </div>
-                                <div class="m-card-main">
-                                    <div class="m-content">
-                                        <div class="m-content-hd">
-                                            <div class="m-content-type"></div>
-                                        </div>
-                                        <div class="m-headline-container">
-                                            <div>
-                                                <h2 class="m-headline"><a href="https://aws.amazon.com/alexaforbusiness/sla/?did=sla_card&amp;trk=sla_card" target="_blank" rel="noopener"></a></h2>
-                                                <div class="m-desc">
-                                                    <div class="table-responsive">
-                                                        <table class="lb-tbl-p" style="min-width: 100%;">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th>Monthly Uptime Percentage</th>
-                                                                    <th>Service Credit Percentage</th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 99.9% but greater than or equal to 99.0%</td>
-                                                                    <td>10%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 99.0% but equal to or greater than 95.0%</td>
-                                                                    <td>25%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 95.0%</td>
-                                                                    <td>100%</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <p><a class="test" href="sla" rel="noopener" target="_blank">Alexa for Business Full SLA</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="m-ft">
-                                     
-                                    <div class="m-ft-cta"></div>
-                                </div>
-                            </div>
-                        </li>
-                    </div>
-                    <div class="table-container">
-                        <li class="lb-xbcol m-card m-list-card" >
-                            <div class="m-card-container">
-                                <div class="m-hd">
-                                    <h3 class="m-category"><span>Alexa for Business</span></h3>
-                                </div>
-                                <div class="m-card-main">
-                                    <div class="m-content">
-                                        <div class="m-content-hd">
-                                            <div class="m-content-type"></div>
-                                        </div>
-                                        <div class="m-headline-container">
-                                            <div>
-                                                <h2 class="m-headline"><a href="https://aws.amazon.com/alexaforbusiness/sla/?did=sla_card&amp;trk=sla_card" target="_blank" rel="noopener"></a></h2>
-                                                <div class="m-desc">
-                                                    <div class="table-responsive">
-                                                        <table class="lb-tbl-p" style="min-width: 100%;">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th>Monthly Uptime Percentage</th>
-                                                                    <th>Service Credit Percentage</th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 99.9% but greater than or equal to 99.0%</td>
-                                                                    <td>10%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 99.0% but equal to or greater than 95.0%</td>
-                                                                    <td>25%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Less than 95.0%</td>
-                                                                    <td>100%</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <p><a class="test" href="sla" rel="noopener" target="_blank">Alexa for Business Full SLA</a></p>
+                                                    <p><a class="test sla-link" href="/pages/sla/voip" rel="noopener" target="_blank">Full SLA</a></p>
                                                 </div>
                                             </div>
                                         </div>

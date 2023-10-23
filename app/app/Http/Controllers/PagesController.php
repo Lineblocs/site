@@ -30,8 +30,8 @@ class PagesController extends BaseController {
     return view('pages.service_level_agreement');  
   }
   
-  public function serverLevel(){
-    return view('pages.sla');
+  public function serviceLevelVoip(){
+    return view('pages.sla_voip');
   }
 
   public function emailTest(){

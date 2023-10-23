@@ -20,7 +20,7 @@ Terms of Service
     <div class="inner">
     @include('layouts.sidebar')
       <div class="content terms-page">
-        <h2>LINEBLOCS TERMS OF SERVICE</h2>      
+        <h2>{{strtoupper(\App\Helpers\MainHelper::getSiteName())}} TERMS OF SERVICE</h2>      
         <div class="block"> <b>This Software As A Service (Saas) Terms Of Service</b> (these “<b>Terms</b>” or this “<b>Agreement</b>”) govern the purchase of the license to the Software and access to Services (located at <a href="https://lineblocs.com">https://lineblocs.com</a>) by the Customer and its Users (“<b>you</b>”, “<b>your</b>”, and terms of similar meaning) made available by Lineblocs Ltd. (“<b>we</b>”, “<b>us</b>”, and “<b>Provider</b>”, together with the Customer, the "<b>Parties</b>", and each, a "<b>Party</b>"), made pursuant to an Order Form. </div>
         <div class="block"> By executing an Order Form, or by accessing or using the Services, you agree to be bound by these Terms, and all terms, policies and guidelines incorporated by reference in these Terms. By accessing or using the Services, you, or the entity on behalf of whom you are acting, agree to be legally bound by these Terms and all terms, policies and guidelines incorporated by reference in these Terms. If you do not agree with these Terms, you may not access or use the Services. </div>
         <div class="parent-group">
