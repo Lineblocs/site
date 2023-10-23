@@ -637,3 +637,29 @@ button:focus,
 }
 
 
+.unsubscribe-form {
+	margin-bottom: 100px;
+}
+
+.unsubscribe-form button{
+    color: #0A1247;
+    border: 2px solid #0A1247;
+    border-radius: 10px;
+    background: #fff;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 100%;
+    /* identical to box height, or 18px */
+    text-align: center;
+    color: #0A1247;
+    padding: 16px 26px;
+    margin-bottom: 30px;
+}
+
+.unsubscribe-form button:hover{
+    background: #0A1247;
+    border-radius: 10px;
+    color: #fff;
+}

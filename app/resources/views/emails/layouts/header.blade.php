@@ -380,6 +380,7 @@
                                               style="mso-height-rule:exactly;text-align:center; font-size: 12px; line-height: 20px; font-weight: normal; color: #566e89;">
                                               {{$site_name}} <br /> {!! nl2br($customizations->contact_address) !!}
                                               <br />
+                                              <a href="{{\App\Helpers\MainHelper::createUrl('/email/unsubscribe')}}">Unsubscribe</a> from future email notifications
                                               <br>
                                             </td>
                                           </tr>

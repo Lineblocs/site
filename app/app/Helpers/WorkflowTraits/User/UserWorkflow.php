@@ -8,6 +8,7 @@ use \Illuminate\Http\Request;
 use \App\User;
 use \App\Flow;
 use \App\FlowTemplate;
+use \App\UserEmailOption;
 use \App\Transformers\FlowTransformer;
 use \App\Transformers\FlowTemplateTransformer;
 use \App\Helpers\MainHelper;
@@ -76,7 +77,11 @@ trait UserWorkflow {
         $attrs = $data['roles'];
         $attrs['user_id'] = $reqUser->id;
         $attrs['workspace_id'] = $workspace->id;
+
         $resource = WorkspaceUser::create($attrs);
+        UserEmailOption::create([
+            'user_id' =>$resource->id,
+        ]);
         $invite = $this->createInvite($resource);
         $this->sendInvite($invite, $reqUser,$resource, $workspace);
         return $this->response->array($resource->toArray())->withHeader('X-WorkspaceUser-ID', $resource->public_id);
