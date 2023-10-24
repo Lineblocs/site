@@ -18,16 +18,19 @@ Contact
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-lg-12 unsubscribe-form">
-                            <p>Please select the option(s) you want to unsubscribe from. If you want to unsubscribe from all alerts please select "all".</p>
+                            <p>Please select the option(s) you want to unsubscribe from. If you want to unsubscribe from all alerts please click "Select All".</p>
+                            <a id="toggleAll" style="cursor:pointer;color:blue;">Select All</a>
+                            <br/>
+                            <hr/>
                             <form method="POST" action="/email/unsubscribe" id="emailUnsubscribeFrm">
                                 @foreach ($emailOptions as $option)
                                     <div class="row">
                                             <div class="col-12 col-md-12">
                                                 <div class="wrapper">
                                                     @if ($option['enabled'])
-                                                        <input name="{{$option['name']}}" id="{{$option['name']}}" type="checkbox" class="validate" checked />
+                                                        <input name="{{$option['name']}}" id="{{$option['name']}}" type="checkbox" class="validate email-option" checked />
                                                     @else
-                                                        <input name="{{$option['name']}}" id="{{$option['name']}}" type="checkbox" class="validate" />
+                                                        <input name="{{$option['name']}}" id="{{$option['name']}}" type="checkbox" class="validate email-option" />
                                                     @endif
                                                     <label>{{$option['label']}}</label>
                                                 </div>
@@ -35,6 +38,7 @@ Contact
                                             </div>
                                         </div>
                                     @endforeach
+                                    <br/>
                                 <div class="row">
                                     <div class="col">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -59,5 +63,8 @@ Contact
    function onSubmit(token) {
      document.getElementById("emailUnsubscribeFrm").submit();
    }
+    $("#toggleAll").on("click", function() {
+        $(".email-option").prop('checked', true); 
+    })
  </script>
 @endsection
