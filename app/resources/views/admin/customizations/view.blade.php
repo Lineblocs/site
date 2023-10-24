@@ -342,6 +342,14 @@
                 </div>
             </div>
 
+
+           <div class="row form-group">
+                <label for="grace_period_billing_days">Grace period for overdue invoices (in days)</label>
+                <div class="controls">
+                    <input name="grace_period_billing_days" class="form-control" value="{{$record->grace_period_billing_days}}" />
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="register_credits_enabled">Register credits enabled</label>
                 <div class="controls">

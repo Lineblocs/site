@@ -171,7 +171,11 @@ final class MainHelper {
     $uuid4 = Uuid::uuid4(); 
     return sprintf("%s-%s",$prefix, $uuid4->toString());
   }
-  public static function toDollars($cents) {
+  public static function toDollars($cents, $currency=NULL) {
+    if (!is_null($currency)) {
+      return sprintf("%s %s", number_format(($cents /100), 2, '.', ' '), $currency);
+    }
+
     return number_format(($cents /100), 2, '.', ' ');
   }
   public static function toCents($dollars) {

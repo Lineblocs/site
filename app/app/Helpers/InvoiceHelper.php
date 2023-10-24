@@ -132,6 +132,8 @@ final class InvoiceHelper {
         $invoiceItemsTax += $itemTax;
         $invoiceItemsTotal += ($itemPrice + $itemTax);
       }
+
+      $customizations = Customizations::getRecord();
       $paymentMethod = MainHelper::getPrimaryPaymentMethod($workspace);
       $accountNo = $workspace->account_no;
       $invoiceVars = [
@@ -167,12 +169,15 @@ final class InvoiceHelper {
             'fixed_rate_rows' => $fixedLineItems
           ]
         ],
-        'site' => $site
+        'site' => $site,
+        'customizations' => $customizations
       ];
+
       $pdfLoaded = \PDF::loadView('pdf.pretty_monthly_invoice', $invoiceVars);
       // $pdfLoaded = \PDF::loadView('pdf.invoice_new', $invoiceVars);
       $mergedValues = array_merge( $invoiceVars, [
-        'pdf' => $pdfLoaded
+        'pdf' => $pdfLoaded,
+        'customizations' => $customizations
       ] );
       $pdf = PDF::loadView('pdf.pretty_monthly_invoice', $mergedValues);
       // $pdf = PDF::loadView('pdf.invoice_new', $mergedValues);
