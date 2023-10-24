@@ -134,6 +134,25 @@
                 </div>
             </div>
 
+           <div class="row form-group">
+                <label for="zendesk_subdomain">Zendesk subdomain</label>
+                <div class="controls">
+                    <input id="zendesk_subdomain" type="text" class="form-control" name="zendesk_subdomain" value="{{$creds->zendesk_subdomain}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="zendesk_username">Zendesk Username</label>
+                <div class="controls">
+                    <input id="zendesk_username" type="text" class="form-control" name="zendesk_username" value="{{$creds->zendesk_username}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="zendesk_token">Zendesk Token</label>
+                <div class="controls">
+                    <input id="zendesk_token" type="text" class="form-control" name="zendesk_token" value="{{$creds->zendesk_token}}"/>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="disqus_site">Disqus site</label>
                 <div class="controls">

@@ -367,6 +367,24 @@
 
 
             <div class="row form-group">
+                <label for="zendesk_enabled">Support desk enabled (Zendesk integration)</label>
+                <div class="controls">
+                    <select name="zendesk_enabled" class="form-control" id="zendesk_enabled">
+                        @if ( $record->zendesk_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="portal_analytics_enabled">Portal Analytics enabled</label>
                 <div class="controls">
                     <select name="portal_analytics_enabled" class="form-control" id="portal_analytics_enabled">

@@ -120,6 +120,16 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['billing_retry_enabled'] = $billing_retry_enabled;
 
+		$zendesk_enabled = false;
+
+		if ( $update_params['zendesk_enabled'] =='yes') {
+			$zendesk_enabled = true;
+		}
+		$update_params['zendesk_enabled'] = $zendesk_enabled;
+
+
+
+
 		$portal_analytics_enabled = false;
 
 		if ( $update_params['portal_analytics_enabled'] =='yes') {

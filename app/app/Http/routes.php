@@ -723,6 +723,16 @@ $api->version('v1', function($api) {
         $api->post("/saveACLs", "WorkspaceRoutingACLController@saveACLs");
     });
 
+    $api->group([ 'prefix' => 'supportTicket', 'namespace' => '\App\Http\Controllers\Api\SupportTicket'], function($api) {
+        $api->get("/list", "SupportTicketController@listSupportTickets");
+        $api->get("/{supportTicketId}", "SupportTicketController@supportTicketData");
+        $api->get("/{supportTicketId}/history", "SupportTicketController@supportTicketDataHistory");
+        $api->post("/", "SupportTicketController@saveSupportTicket");
+        $api->post("/{supportTicketId}", "SupportTicketController@updateSupportTicket");
+        $api->put("/{supportTicketId}", "SupportTicketController@updateSupportTicket");
+        $api->delete("/{supportTicketId}", "SupportTicketController@deleteSupportTicket");
+    });
+
     $api->group([ 'prefix' => 'settings', 'namespace' => '\App\Http\Controllers\Api\Settings'], function($api) {
       $api->group([ 'prefix' => 'verifiedCallerIDs'], function($api) {
         $api->get("/list", "VerifiedCallerIdsController@getVerified");

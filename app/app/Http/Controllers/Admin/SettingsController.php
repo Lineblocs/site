@@ -77,6 +77,9 @@ class SettingsController extends AdminController {
         'recaptcha_sitekey',
         'recaptcha_privatekey',
         'disqus_site',
+        'zendesk_subdomain',
+        'zendesk_username',
+        'zendesk_token',
         ];
         $update = [];
         foreach ( $keys as $key ) {

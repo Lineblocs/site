@@ -47,7 +47,8 @@
         "nyholm/psr7": "1.8.x-dev",
         "php-http/message-factory": "^1.0@dev",
         "box/spout": "^3.3",
-        "google/recaptcha": "^1.2"
+        "google/recaptcha": "^1.2",
+        "zendesk/zendesk_api_client_php": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
