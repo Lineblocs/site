@@ -133,6 +133,8 @@
         window.addEventListener("load", function () {
             $(".markdown a").each(function () {
                 $(this).attr("target", "_blank");
+                var icon = $("<img width='16' height='16' style='margin-top: -5px; margin-left: 5px;' src='/assets/img/new-window.png'></i>");
+                //$(this).parent().append(icon);
             });
             $("h2").each(function () {
                 var text = $(this).text();
