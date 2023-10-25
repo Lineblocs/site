@@ -215,8 +215,13 @@
 </head>
 
 <body style="margin:0; padding:0; mso-line-height-rule:exactly;" bgcolor="#f5f8fa">
-  <span class="preheader" style="font-size:0; line-height:0; padding:0; margin:0; color:#f5f8fa;">Preheader Text
-    Here</span>
+  <span class="preheader" style="font-size:0; line-height:0; padding:0; margin:0; color:#f5f8fa;">
+    @if (!empty($__env->yieldContent('preheader')))
+      @yield('preheader')
+    @else
+      {{$site_name}} email
+    @endif
+  </span>
   <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td>
