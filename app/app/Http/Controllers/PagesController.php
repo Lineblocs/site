@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\MainHelper;
 use App\Helpers\EmailHelper;
 use App\User;
+use App\PolicyPage;
 use \Config;
 use \Mail;
 use Illuminate\Http\Request;
@@ -18,16 +19,19 @@ class PagesController extends BaseController {
 
   public function privacyPolicy()
   {
-    return view('pages.privacy_policy');
+    $content = PolicyPage::getRecord();
+    return view('pages.privacy_policy', compact('content'));
   }
 
   public function termsOfService()
   {
-    return view('pages.terms_of_service');
+    $content = PolicyPage::getRecord();
+    return view('pages.terms_of_service', compact('content'));
   }
 
   public function serviceAgreement(){
-    return view('pages.service_level_agreement');  
+    $content = PolicyPage::getRecord();
+    return view('pages.service_level_agreement', compact('content'));  
   }
   
   public function serviceLevelVoip(){

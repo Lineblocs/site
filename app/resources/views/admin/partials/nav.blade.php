@@ -138,6 +138,16 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/policies')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Service terms & Policies
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/faqs')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> FAQs
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/resourcesection')}}">
                                 <i class="glyphicon glyphicon-list"></i> Resources
                             </a>

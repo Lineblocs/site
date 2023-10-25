@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Test User created with username user@user.com and password user');
         $this->command->info('Created default service plans.');
         $this->call(FlowTableSeeder::class);
+        $this->call(PoliciesSeeder::class);
         $this->call(LoadSampleCalls::class);
         $this->call(PhoneDefSeeder::class);
         $this->call(LoadPhoneData::class);
