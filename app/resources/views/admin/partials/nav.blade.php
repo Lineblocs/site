@@ -80,6 +80,12 @@
                         </li>
 
                         <li>
+                            <a href="{{url('admin/ddos')}}">
+                                <i class="glyphicon glyphicon-user"></i> DDoS Settings
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="{{url('admin/rtpproxy')}}">
                                 <i class="glyphicon glyphicon-user"></i> RTP proxies
                             </a>

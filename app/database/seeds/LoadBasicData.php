@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Helpers\MainHelper;
 use App\SIPRoutingACL;
 use App\SIPPoPRegion;
+use App\DDoSSetting;
 
 class LoadBasicData extends Seeder
 {
@@ -73,7 +74,11 @@ class LoadBasicData extends Seeder
             'enabled' => TRUE
         ]);
 
-
-
+        DDoSSetting::create([
+            'priority_aware_packet_policing' => FALSE,
+            'media_packet_policing' => FALSE,
+            'media_address_learning' => FALSE,
+            'application_level_cac' => FALSE
+        ]);
     }
 }

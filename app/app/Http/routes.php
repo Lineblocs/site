@@ -341,6 +341,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('customizations', 'Admin\CustomizationsController@view');
     Route::post('customizations', 'Admin\CustomizationsController@save');
 
+    Route::get('ddos', 'Admin\DDoSController@view');
+    Route::post('ddos', 'Admin\DDoSController@save');
+
     Route::get('faqs', 'Admin\FAQsController@view');
     Route::post('faqs', 'Admin\FAQsController@save');
 
