@@ -15,17 +15,9 @@
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="row form-group">
                 <div class="controls">
-                    @if ( $record->priority_aware_packet_policing )
-                        <input id="priority_aware_packet_policing" type="checkbox"  name="priority_aware_packet_policing" checked/>
-                    @else
-                        <input id="priority_aware_packet_policing" type="checkbox"  name="priority_aware_packet_policing"/>
-                    @endif
-                    <label>Priority Aware Packet Policing</label>
+                    <textarea name="opensips_config">{!! $opensips_config !!}</textarea>
                 </div>
             </div>
-
-
-
             <div class="row form-group">
                 <input type="hidden" name="_token" value="{{csrf_token()}}"/>
                 <button type="submit" class="btn btn-success">Save</button>

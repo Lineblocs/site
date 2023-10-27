@@ -332,7 +332,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
     Route::resource('errortrace', 'Admin\ErrorTraceController');
 
-
+    # system status
+    Route::get('routingeditor', 'Admin\RoutingEditorController@view');
+    Route::post('routingeditor', 'Admin\RoutingEditorController@save');
 
     Route::get('settings', 'Admin\SettingsController@view');
     Route::post('settings', 'Admin\SettingsController@save');
