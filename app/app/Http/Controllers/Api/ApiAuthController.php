@@ -42,6 +42,7 @@ class ApiAuthController extends ApiController {
           $data = WorkspaceUser::select(array('workspaces_users.*', 'workspaces.*', 'user_email_options.*'));
           $data->join('workspaces', 'workspaces.id', '=', 'workspaces_users.workspace_id');
           $data->join('user_email_options', 'user_email_options.user_id', '=', 'workspaces_users.id');
+          $workspace = $data->firstOrFail();
 
           return $workspace;
      }
