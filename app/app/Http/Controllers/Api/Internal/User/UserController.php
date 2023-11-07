@@ -415,13 +415,14 @@ class UserController extends ApiAuthController {
       $number = $request->get("number");
       $sourceIp = $request->get("source");
       $didArg = $request->get("did");
+      $domain = MainHelper::getDeploymentDomain();
       //$region = $request->get("region");
       \Log::info("blocked check number is: " . $didArg);
       $did = DIDNumber::where('api_number', $didArg)->first();
       if ($did) {
           $result = $this->checkPSTNIPWhitelist($did, $sourceIp);
           if (!$result) {
-            return $this->response->errorInternal( 'Lineblocs source IP not whitelisted.');
+            return $this->response->errorInternal( sprintf('%s source IP not whitelisted.', $domain) );
           }
           return $this->finishValidation($number, $did);
       }

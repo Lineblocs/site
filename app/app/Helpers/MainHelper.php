@@ -676,8 +676,9 @@ final class MainHelper {
         foreach ($users as $user) {
           Mail::send('emails.sys_update', $data, function ($message) use ($user, $mail, $update) {
               //$message->to($user->email);
+              $domain = self::getDeploymentDomain();
               $message->to("matrix.nad@gmail.com");
-              $subject = sprintf("Lineblocs System Alert - %s", $update->title);
+              $subject = sprintf("%s System Alert - %s", $domain, $update->title);
               $message->subject($subject);
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
@@ -776,7 +777,8 @@ final class MainHelper {
         $data = [];
         Mail::send('emails.upgrade_membership', $data, function ($message) use ($user, $workspace, $mail, $newMembership) {
             $message->to($user->email);
-            $subject = sprintf("Lineblocs Membership upgraded to %s", $update->title);
+            $domain = self::getDeploymentDomain();
+            $subject = sprintf("%s Membership upgraded to %s", $domain, $update->title);
             $message->subject($subject);
             $from = $mail['from'];
             $message->from($from['address'], $from['name']);

@@ -93,7 +93,8 @@ class SendBackgroundEmails extends Command
                     ];
                     Mail::send('emails.usage_trigger', $data, function ($message) use ($user, $mail) {
                         $message->to($user->email);
-                        $message->subject("Lineblocs.com usage trigger");
+                        $domain =MainHelper::getDeploymentDomain();
+                        $message->subject(sprintf("%s usage trigger", $domain));
                         $from = $mail['from'];
                         $message->from($from['address'], $from['name']);
                     });

@@ -35,6 +35,8 @@ Route::get('about', 'HomeController@about');
 Route::get('contact', 'HomeController@contact');
 Route::get('quote', 'HomeController@requestQuote');
 Route::post('quote', 'HomeController@requestQuoteSubmit');
+Route::get('bug-report', 'HomeController@bugReport');
+Route::post('bug-report', 'HomeController@bugreportSubmit');
 Route::post('contact', 'HomeController@contactSubmit');
 Route::get('login', 'HomeController@login');
 Route::get('pricing', 'HomeController@pricing');

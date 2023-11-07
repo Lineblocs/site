@@ -39,8 +39,8 @@
         <div class="trunking-networks-detail__nav">
           <!-- top navigation -->
           <div class="trunking-networks-detail__nav-links">
-            <a href="#">0 Comments</a>
-            <a href="#">Lineblocs</a>
+            <!--<a href="#">0 Comments</a>-->
+            <a href="#">{{$domain}}</a>
             <a href="#">
               <i class="tiny material-icons">lock</i>
               Discus' Privacy Policy</a
@@ -52,43 +52,15 @@
               >Login<i class="material-icons right">arrow_drop_down</i></a
             >
             <!-- Dropdown Structure -->
+            <!--
             <ul id="dropdown1" class="dropdown-content">
               <li><a href="#!">one</a></li>
               <li><a href="#!">two</a></li>
               <li class="divider"></li>
               <li><a href="#!">three</a></li>
             </ul>
+-->
           </div>
-        </div>
-
-        <div class="disqus">
-          <br />
-          <div id="disqus_thread"></div>
-          <script>
-            /**
-             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-            /*
-                var disqus_config = function () {
-                this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-                this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                };
-                */
-            (function () {
-              // DON'T EDIT BELOW THIS LINE
-              var d = document,
-                s = d.createElement("script");
-              s.src = "https://lineblocs.disqus.com/embed.js";
-              s.setAttribute("data-timestamp", +new Date());
-              (d.head || d.body).appendChild(s);
-            })();
-          </script>
-          <noscript
-            >Please enable JavaScript to view the
-            <a href="https://disqus.com/?ref_noscript"
-              >comments powered by Disqus.</a
-            ></noscript
-          >
         </div>
       </section>
     </main>

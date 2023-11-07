@@ -147,7 +147,9 @@ class RegisterController extends ApiAuthController
             return $this->response->array(['valid' => FALSE]);
           }
           $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
-        $message = sprintf("Your Lineblocs verification code is %s", $code);
+
+        $domain = MainHelper::getDeploymentDomain();
+        $message = sprintf("Your %s verification code is %s", $domain, $code);
         $from = $customizations->sms_from_number;
         try {
           SMSHelper::sendSMS( $from, $number, $message );

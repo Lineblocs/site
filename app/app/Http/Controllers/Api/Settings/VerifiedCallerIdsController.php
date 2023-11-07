@@ -25,12 +25,13 @@ class VerifiedCallerIdsController extends ApiAuthController {
     }
     public function postVerified(Request $request)
     {
+        $domain = MainHelper::getDeploymentDomain();
         $data = $request->all();
         $number = $data['number'];
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         $code = rand(100000, 999999); 
-        $message = sprintf("Your Lineblocs Caller ID verification code is %s", $code);
+        $message = sprintf("Your %s Caller ID verification code is %s", $domain, $code);
         try {
             $d7= Config::get('d7');
             $from=$d7['verification_number'];

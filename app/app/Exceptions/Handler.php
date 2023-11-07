@@ -81,6 +81,11 @@ class Handler extends ExceptionHandler
                 return response()->view('pages.notfound_404');
             }
         }
-        return parent::render($request, $e);
+        // Otherwise display internal error message
+        if(!env('APP_DEBUG', false)){
+            return response()->view('errors.500');
+        } else {
+            return parent::render($request, $e);
+        }
     }
 }

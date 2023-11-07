@@ -226,7 +226,8 @@ class HomeController extends BaseController {
       'comments' => $data['comments']
     ];
     $contact = CompanyRepresentative::getMainContact();
-    $subject = 'New Lineblocs contact';
+    $domain = MainHelper::getDeploymentDomain();
+    $subject = sprintf('New %s contact', $domain);
     $result = EmailHelper::sendEmail($subject, $contact->email_address, 'contact', $template);
     $result = EmailHelper::sendEmail($subject, $template['email'], 'contact_confirm', $template);
 
@@ -310,9 +311,94 @@ class HomeController extends BaseController {
       'comments' => $data['comments']
     ];
     $request_quote = CompanyRepresentative::getMainContact();
-    $subject = 'New Lineblocs request_quote';
+    $domain = 
+    $domain =MainHelper::getDeploymentDomain();
+    $subject = sprintf('New %s request_quote', $domain);
+
     $result = EmailHelper::sendEmail($subject, $request_quote->email_address, 'quote', $template);
     $result = EmailHelper::sendEmail($subject, $template['email'], 'quote_confirm', $template);
+
+    $request->session()->flash('status', 'Thanks you, your request has been submitted successfully and someone will be in touch in 24-48 hours');
+    return view('pages.request_quote', $vars);
+  }
+
+
+  public function bugReport(Request $request)
+  {
+    $request->session()->forget('status');
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+    $bugTypes = array(
+      'general' => 'Page not working',
+    );
+    $vars = [
+      'customizations' => $customizations,
+      'creds' => $creds,
+      'teamSize' => $teamSize
+    ];
+    return view('pages.bug_report', $vars);
+  }
+
+  public function bugReportSubmit(Request $request)
+  {
+    $data = $request->all();
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+
+    $bugTypes = array(
+      'general' => 'Page not working',
+    );
+
+    $vars = [
+      'customizations' => $customizations,
+      'teamSize' => $teamSize
+    ];
+
+    if($customizations->recaptcha_enabled) {
+      $recaptcha = new ReCaptcha($creds->recaptcha_privatekey);
+      $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+
+		  if (!$resp->isSuccess()) {
+        $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
+        return view('pages.contact', $vars);
+		  }	
+    }
+
+    if (empty($data['first_name'])) {
+      $request->session()->flash('status', 'Please fill in first name..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['last_name'])) {
+      $request->session()->flash('status', 'Please fill in last name..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['phone'])) {
+      $request->session()->flash('status', 'Please fill in your phone number..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['email'])) {
+      $request->session()->flash('status', 'Please fill in email..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['comments']) && empty($data['comments_not_required'])) {
+      $request->session()->flash('status', 'Please fill in comments..');
+      return view('pages.bug_report', $vars);
+    }
+
+
+
+    $template = [
+      'first_name' => $data['first_name'],
+      'last_name' => $data['last_name'],
+      'phone' => $data['phone'],
+      'email' => $data['email'],
+      'comments' => $data['comments'],
+      'bug_type' => $data['bug_type']
+    ];
+    $request_quote = CompanyRepresentative::getMainContact();
+    $domain =MainHelper::getDeploymentDomain();
+    $subject = sprintf('New %s bug_report', $domain);
+    $result = EmailHelper::sendEmail($subject, $request_quote->email_address, 'bug_report', $template);
 
     $request->session()->flash('status', 'Thanks you, your request has been submitted successfully and someone will be in touch in 24-48 hours');
     return view('pages.request_quote', $vars);
@@ -389,6 +475,7 @@ class HomeController extends BaseController {
   }
   public function faqs(Request $request)
   {
+    throw new \Exception("test");
     $faqs = Faq::all();
     return view('pages.faqs', compact('faqs'));
   }
@@ -458,8 +545,9 @@ class HomeController extends BaseController {
       $categories[] = $array;
     }
 
+    $domain =MainHelper::getDeploymentDomain();
     View::share("title", "Status");
-    View::share("description", "Status updates for Lineblocs DID availability, media storage, PoP network and more..");
+    View::share("description", "Status updates for ${domain} DID availability, media storage, PoP network and more..");
     View::share("tags", "system status, status, alerts");
     $date = new \DateTime();
     $date = $date->format("d F Y h:i A");
@@ -467,17 +555,19 @@ class HomeController extends BaseController {
   }
   public function status_category(Request $request, $categoryId)
   {
+    $domain =MainHelper::getDeploymentDomain();
     $category = SystemStatusCategory::findOrFail($categoryId);
     //$updates = SystemStatusUpdate::where('category_id', $category->id)->get();
     $updates = $category->getUpdates();
     View::share("title", $category->name . " Status");
-    View::share("description", "Status updates for Lineblocs " . $category->name);
+    View::share("description", "Status updates for ${domain} " . $category->name);
     View::share("tags", "system status, status, alerts");
 
     return view('status.category', compact('category', 'updates'));
   }
   public function status_update(Request $request, $categoryId, $updateId)
   {
+    $domain = MainHelper::getDeploymentDomain();
     $category = SystemStatusCategory::findOrFail($categoryId);
     $updateObj = SystemStatusUpdate::findOrFail($updateId);
     $update = $updateObj->toArray();
@@ -486,7 +576,7 @@ class HomeController extends BaseController {
     View::share("description", "Status update " . $updateObj->title);
     View::share("tags", "system status, status, alerts");
 
-    return view('status.update', compact('category', 'update'));
+    return view('status.update', compact('category', 'update', 'domain'));
 
   }
   public function notfound_404(Request $request)
