@@ -22,7 +22,7 @@ Contact
                         <div class="alert alert-info" role="alert">
                             Please let us know more about the issue and one of our team members will get back to you with a response within 48-72 hours
                         </div>
-                            <form method="POST" action="/quote" id="quoteFrm">
+                            <form method="POST" action="/bug-report" id="bugReportFrm">
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
@@ -35,6 +35,15 @@ Contact
                                         <div class="wrapper">
                                             <input name="last_name" id="last_name" type="text" class="validate no-special-chars form-control" minlength="1" maxlength="24" required="">
                                             <span class="placeholder">Last Name</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <div class="wrapper">
+                                            <input name="email" id="email" type="email" class="validate form-control" minlength="1" maxlength="24" required="">
+                                            <span class="placeholder">Email</span>
                                         </div>
 
                                     </div>
@@ -107,7 +116,7 @@ Contact
 @endif
 <script>
    function onSubmit(token) {
-     document.getElementById("quoteFrm").submit();
+     document.getElementById("bugReportFrm").submit();
    }
  </script>
 @endsection

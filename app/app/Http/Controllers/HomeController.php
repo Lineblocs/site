@@ -334,7 +334,7 @@ class HomeController extends BaseController {
     $vars = [
       'customizations' => $customizations,
       'creds' => $creds,
-      'teamSize' => $teamSize
+      'bugTypes' => $bugTypes
     ];
     return view('pages.bug_report', $vars);
   }
@@ -351,7 +351,7 @@ class HomeController extends BaseController {
 
     $vars = [
       'customizations' => $customizations,
-      'teamSize' => $teamSize
+      'bugTypes' => $bugTypes
     ];
 
     if($customizations->recaptcha_enabled) {
@@ -400,7 +400,7 @@ class HomeController extends BaseController {
     $subject = sprintf('New %s bug_report', $domain);
     $result = EmailHelper::sendEmail($subject, $request_quote->email_address, 'bug_report', $template);
 
-    $request->session()->flash('status', 'Thanks you, your request has been submitted successfully and someone will be in touch in 24-48 hours');
+    $request->session()->flash('status', 'Thanks you, your request has been submitted successfully. Someone will be in touch in 24-48 hours');
     return view('pages.request_quote', $vars);
   }
   public function alternative(Request $request)
