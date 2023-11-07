@@ -475,7 +475,6 @@ class HomeController extends BaseController {
   }
   public function faqs(Request $request)
   {
-    throw new \Exception("test");
     $faqs = Faq::all();
     return view('pages.faqs', compact('faqs'));
   }
