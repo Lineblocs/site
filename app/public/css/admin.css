@@ -15643,3 +15643,12 @@ table.dataTable thead .sorting:after {
 .import-rate .upload-part {
 	margin-bottom: 10px;
 }
+
+.route-editor {
+}
+.route-editor:after {
+	clear: both;
+	content: '';
+	margin: 0;
+	padding: 0;
+}

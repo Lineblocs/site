@@ -9,6 +9,7 @@ use App\SIPProvider;
 use App\SIPRateCenterProvider;
 use App\Workspace;
 use App\PortNumber;
+use App\Customizations;
 use App\Http\Requests\Admin\ErrorTraceRequest;
 use App\Helpers\MainHelper;
 use Datatables;
@@ -26,14 +27,19 @@ class RoutingEditorController extends AdminController
 
     public function view()
     {
-        $opensips_config = "";
+        $customizations = Customizations::getRecord(TRUE);
+        $opensips_config = $customizations->opensips_config;
         return view("admin.routingeditor.view", compact('opensips_config'));
     }
 
     public function save(Request $request)
     {
         $data =$request->all();
-        $opensips_config = "";
+
+        $customizations = Customizations::getRecord(TRUE);
+        $customizations->update([
+            'opensips_config' => $data['real_config_input']
+        ]);
 		$session = $request->session();
 		$session->flash('type', 'success');
 		$session->flash('message', 'Routing configuration updated successfully...');
