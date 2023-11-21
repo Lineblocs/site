@@ -16,6 +16,7 @@ class Customizations extends Model {
   protected $casts = array(
     "payment_gateway_enabled" => "boolean",
     "custom_code_containers_enabled" => "boolean",
+    "registration_questionnaire_enabled" => "boolean",
     "enable_google_signin" => "boolean",
     "enable_msft_signin" => "boolean",
     "enable_apple_signin" => "boolean",

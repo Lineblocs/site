@@ -150,6 +150,13 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['register_credits_enabled'] = $register_credits_enabled;
 
+		$registration_questionnaire_enabled = false;
+		if ( $update_params['registration_questionnaire_enabled'] =='yes') {
+			$registration_questionnaire_enabled = true;
+		}
+		$update_params['registration_questionnaire_enabled'] = $registration_questionnaire_enabled;
+
+
 
 		$enable_google_signin = false;
 

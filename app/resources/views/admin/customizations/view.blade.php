@@ -375,6 +375,40 @@
 
 
             <div class="row form-group">
+                <label for="register_credits_enabled">Register credits enabled</label>
+                <div class="controls">
+                    <select name="register_credits_enabled" class="form-control" id="register_credits_enabled">
+                        @if ( $record->register_credits_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="registration_questionnaire_enabled">Registeration questionnaire enabled</label>
+                <div class="controls">
+                    <select name="registration_questionnaire_enabled" class="form-control" id="registration_questionnaire_enabled">
+                        @if ( $record->registration_questionnaire_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
                 <label for="zendesk_enabled">Support desk enabled (Zendesk integration)</label>
                 <div class="controls">
                     <select name="zendesk_enabled" class="form-control" id="zendesk_enabled">

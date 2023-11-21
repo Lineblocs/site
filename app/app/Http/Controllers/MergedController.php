@@ -19,6 +19,8 @@ use App\SIPTrunk;
 use App\BillingCountry;
 use App\BillingRegion;
 use App\PhoneDefault;
+use App\RegistrationQuestionnaire;
+use App\RegistrationResponse;
 use App\Fax;
 use App\PlanUsagePeriod;
 use App\Extension;
@@ -694,8 +696,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $options = MainHelper::getRegions();
         return $this->response->array($options);
       }
-  public function getAllSettings(Request $request) {
 
+  public function getRegistrationQuestions(Request $request) {
+    $response = [];
+    $questions = RegistrationQuestionnaire::get();
+    foreach ( $questions as $item ) {
+      $item['responses'] = RegistrationResponse::where('response_id', $item->id)->get()->toArray();
+      $response[] = $item;
+    }
+    return $this->response->array($response);
+  }
+  public function getAllSettings(Request $request) {
         $apiCreds = APICredential::getFrontendValuesOnly();
         $customizations = Customizations::getRecord();
         $availableThemes = array(
