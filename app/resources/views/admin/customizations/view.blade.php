@@ -181,6 +181,15 @@
             </div>
 
 
+            <div class="row">
+                <h3>Registration Questionnaire</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <ul id="regQuestions">
+                </ul>
+                <button id="addRegQuestionBtn" type="button" class="btn btn-info">Add Question</button>
+            </div>
 
             <div class="row">
                 <h3>Preferences</h3>
@@ -670,5 +679,47 @@
 
 {{-- Scripts --}}
 @section('scripts')
+<script>
+
+var questionnaire = {!! json_encode( $questionnaire ) !!};
+function createKey(count, name) {
+    return "questionnaire[" + count + "]" + "[" + name + "]";
+}
+
+function addQuestion(data) {
+    var container= $("#regQuestions");
+    var count = $("#regQuestions li").length;
+    var li = $("<li></li>");
+    li.attr("class", "list-unstyled");
+    var field = $("<input type='text' class='form-control'/>")
+    var fieldName = createKey(count, "question");
+    field.attr("name", fieldName);
+    if (data) {
+        field.val( data.question );
+        var idField = $("<input type='hidden'/>");
+        var idKey = createKey( count, "id" );
+        idField.attr("name", idKey);
+        idField.val(data.id);
+        idField.appendTo( li );
+    }
+    field.appendTo( li );
+    var deleteBtn = $("<a class='delete cursor-pointer'>(Delete)</a>");
+    deleteBtn.click(function() {
+        $( li ).remove().end();
+    });
+
+    deleteBtn.appendTo( li );
+    li.appendTo( container );
+}
+$("#addRegQuestionBtn").click(function() {
+    addQuestion();
+ 
+});
+
+questionnaire.forEach((item) => {
+
+    addQuestion(item);
+});
+</script>
 @endsection
 

@@ -15652,3 +15652,15 @@ table.dataTable thead .sorting:after {
 	margin: 0;
 	padding: 0;
 }
+
+#regQuestions {
+	margin: 0;
+	padding: 0;
+}
+#regQuestions li {
+	margin-bottom: 10px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}

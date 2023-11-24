@@ -5,6 +5,7 @@ use App\User;
 use App\Customizations;
 use App\ApiCredential;
 use App\SIPPoPRegion;
+use App\RegistrationQuestionnaire;
 use App\Helpers\MainHelper;
 use Illuminate\Http\Request;
 use Exception;
@@ -17,6 +18,45 @@ class CustomizationsController extends AdminController {
         parent::__construct();
         view()->share('type', '');
     }
+
+	private function updateQuestionnaire($questionnaire) {
+		$currentQuestions = RegistrationQuestionnaire::all();
+		foreach ($questionnaire as $item) {
+			if (isset($item['id'])) {
+				$id = (int) $item['id'];
+				foreach ($currentQuestions as $question) {
+					if ($id == $question['id']) {
+						$params = [
+							'question' => $item['question']
+						];
+						$question->update( $params );
+					}	
+				}
+
+				continue;
+			}
+			$params = [
+				'question' => $item['question']
+			];
+			RegistrationQuestionnaire::create( $params );
+		}
+		foreach ($currentQuestions as $question) {
+			$isDelete = TRUE;
+			foreach ($questionnaire as $inputItem) {
+				if (!isset($inputItem['id'])) {
+					continue;
+				}
+				$id = (int) $inputItem['id'];
+				if ($id == $question['id']) {
+					$isDelete = FALSE;
+					break;
+				}
+			}
+			if ($isDelete) {
+				$question->delete();
+			}
+		}
+	}
 
 	public function view()
 	{
@@ -35,7 +75,8 @@ class CustomizationsController extends AdminController {
 		];
 		$currencies = MainHelper::$currencies;
 		$regions = SIPPoPRegion::all();
-		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions, 'currencies' => $currencies]);
+		$questionnaire = RegistrationQuestionnaire::all();
+		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions, 'currencies' => $currencies, 'questionnaire' => $questionnaire]);
 	}
 
 	private function storeUploadedFile( $file, $file_name ) {
@@ -241,8 +282,9 @@ class CustomizationsController extends AdminController {
 		$update_params['disqus_enabled'] = $disqus_enabled;
 
 
-
-
+		$questionnaire = $update_params['questionnaire'];
+		unset( $update_params['questionnaire'] );
+		$this->updateQuestionnaire($questionnaire);
 
 		$record->update( $update_params );
 		$session = $request->session();
