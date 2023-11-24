@@ -460,6 +460,7 @@ $api->version('v1', function($api) {
     $api->post('registerVerify', '\App\Http\Controllers\RegisterController@registerVerify');
     $api->post('registerVerifyHook', '\App\Http\Controllers\RegisterController@registerVerifyHook');
     $api->post('userSpinup', '\App\Http\Controllers\RegisterController@userSpinup');
+    $api->post('saveRegistrationQuestionResponses', '\App\Http\Controllers\RegisterController@saveRegistrationQuestionResponses');
     $api->post('provisionCallSystem', '\App\Http\Controllers\RegisterController@provisionCallSystem');
     $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
     $api->post('addCard', '\App\Http\Controllers\RegisterController@addCard');

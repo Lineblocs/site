@@ -700,10 +700,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function getRegistrationQuestions(Request $request) {
     $response = [];
     $questions = RegistrationQuestionnaire::get();
+    /*
+    TODO: implement code for multiple choice responses
     foreach ( $questions as $item ) {
       $item['responses'] = RegistrationResponse::where('response_id', $item->id)->get()->toArray();
       $response[] = $item;
     }
+    */
     return $this->response->array($response);
   }
   public function getAllSettings(Request $request) {

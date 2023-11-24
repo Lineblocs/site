@@ -18,6 +18,8 @@ class RegistrationQuestionnaireResponses extends Migration
             $table->string("text")->default("");
             $table->integer('question_id')->unsigned();
             $table->foreign('question_id')->references('id')->on('registration_questionnaire')->onDelete('CASCADE');
+
+
         });
     }
 

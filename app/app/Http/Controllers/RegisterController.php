@@ -33,6 +33,7 @@ use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
 use App\SIPPoPRegion;
+use App\UserRegistrationQuestionResponse;
 use DateTime;
 
 class RegisterController extends ApiAuthController
@@ -189,6 +190,20 @@ class RegisterController extends ApiAuthController
     return response((string) $response, 200, [
         'Content-Type' => 'application/xml'
       ]);
+    }
+    public function saveRegistrationQuestionResponses(Request $request)
+    {
+        $user = User::findOrFail($data['userId']);
+        $data = $request->json()->all();
+        foreach ($data['responses'] as $response) {
+          UserRegistrationQuestionResponse::create([
+            'user_id' => $user,
+            'question' => $response['question'],
+            'question_id' => $response['question_id'],
+            'response' => $response['response'],
+          ]);
+        }
+        return $this->response->array(['success' => TRUE]);
     }
     public function userSpinup(Request $request)
     {
