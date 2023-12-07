@@ -15632,3 +15632,35 @@ table.dataTable thead .sorting:after {
 .grey-txt {
 	color: #3D3D3D;
 }
+
+.larger-hdgs thead th {
+	font-size: 18px;
+}
+.box {
+	border: 1px solid #E3E3E3;
+	padding: 20px;
+}
+.import-rate .upload-part {
+	margin-bottom: 10px;
+}
+
+.route-editor {
+}
+.route-editor:after {
+	clear: both;
+	content: '';
+	margin: 0;
+	padding: 0;
+}
+
+#regQuestions {
+	margin: 0;
+	padding: 0;
+}
+#regQuestions li {
+	margin-bottom: 10px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}

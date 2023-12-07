@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/errortrace.system_status") !!} :: @parent
+@section('title') {!! trans("admin/errortrace.errortrace") !!} :: @parent
 @endsection
 
 {{-- Content --}}

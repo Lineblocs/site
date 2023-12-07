@@ -28,7 +28,8 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    // 'host' => env('MAIL_HOST', 'sandbox.smtp.mailtrap.io'),
+    'host' => env('MAIL_HOST', 'mail.smtp2go.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'info@example.org', 'name' => 'Example.org'],
+    'from' => ['address' => 'testing@infinitet3ch.com', 'name' => 'Lineblocs.com'],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +81,7 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' =>  env('MAIL_USERNAME', 'infinitet3ch.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +94,7 @@ return [
     |
     */
 
-    'password' => env('MAIL_PASSWORD'),
+    'password' => env('MAIL_PASSWORD', 'UA97xzxBOUqGgKra'),
 
     /*
     |--------------------------------------------------------------------------

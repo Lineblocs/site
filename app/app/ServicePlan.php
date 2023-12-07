@@ -7,6 +7,7 @@ use App\ApiResource;
 use App\Helpers\MainHelper;
 
 class ServicePlan extends Model {
+  use SoftDeletes;
   protected $dates = ['created_at', 'updated_at'];
 
   protected $guarded  = array('id');

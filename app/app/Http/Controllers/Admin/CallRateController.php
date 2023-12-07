@@ -12,7 +12,9 @@ use Datatables;
 use DB;
 use Config;
 use Mail;
+use Log;
 use Illuminate\Http\Request;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class CallRateController extends AdminController
 {
@@ -57,13 +59,18 @@ class CallRateController extends AdminController
     public function store(CallRateRequest $request)
     {
         $data = $request->all();
-        $prefixes = $data['prefixes'];
-        unset($data['prefixes']);
+        $prefixes = [];
+        if ( isset($data['prefixes']) ) {
+            $prefixes = $data['prefixes'];
+            unset($data['prefixes']);
+        }
         $rate = new CallRate ($data);
         $rate->save();
         foreach ($prefixes as $prefix) {
             CallRateDialPrefix::create([
                 'dial_prefix' => $prefix['dial_prefix'],
+                'destination' => $prefix['destination'],
+                'rate' => $prefix['rate'],
                 'call_rate_id' => $rate->id
             ]);
         }
@@ -90,9 +97,11 @@ class CallRateController extends AdminController
     public function update(CallRateRequest $request, CallRate $rate)
     {
         $data = $request->all();
-        $prefixes = $data['prefixes'];
-        unset($data['prefixes']);
-        $rate->update($data);
+        $prefixes = [];
+        if ( isset($data['prefixes']) ) {
+            $prefixes = $data['prefixes'];
+            unset($data['prefixes']);
+        }
         $current = CallRateDialPrefix::where('call_rate_id', $rate->id)->get();
         foreach ($prefixes as $prefix) {
             $found = FALSE;
@@ -104,6 +113,8 @@ class CallRateController extends AdminController
                 if( !$found ) {
             CallRateDialPrefix::create([
                 'dial_prefix' => $prefix['dial_prefix'],
+                'destination' => $prefix['destination'],
+                'rate' => $prefix['rate'],
                 'call_rate_id' => $rate->id
             ]);
                 }
@@ -213,6 +224,57 @@ class CallRateController extends AdminController
         $session->flash('message', 'Rate(s) uploaded');
         return view('admin.number.import');
     }
+
+    public function upload_rates(Request $request, CallRate $rate)
+    {
+        $session = $request->session();
+        if(!$request->hasFile('rate_deck_import') || ($request->hasFile('file') && !$request->file('file')->isValid())) {
+            return view('admin.number.import');
+        }
+        $file = $request->file('rate_deck_import');
+        $size = $file->getSize();
+        $mime = $file->getMimeType();
+        $path = $file->getPathName();
+        $extension = $file->getClientOriginalExtension();
+        //$type = MainHelper::determineFileType($mime, $extension);
+        $type = $extension;
+        Log::info("uploaded file path = " . $path);
+        Log::info("uploaded file type = " . $type);
+        Log::info("uploaded extension = " . $extension);
+
+        if ( !$type ) {
+            return response()->json(['success' => false, 'msg' => 'File not compatible']);
+        }
+        $file_name = str_random(30) . '.' . $file->getClientOriginalExtension();
+        $contents = file_get_contents($file->getRealPath());
+        if ( $type == 'csv' ) {
+            $records = $this->parseRateDeckCSV( $path ); 
+        } else if ( $type == 'tsv' ) {
+            $records = $this->parseRateDeckCSV( $path ); 
+        } else if ( $type == 'xls' ) {
+            $records = $this->parseRateDeckXLS( $path ); 
+        } else if ( $type == 'xlsx' ) {
+            $records = $this->parseRateDeckXLS( $path ); 
+        }
+        foreach ( $records as $record ) {
+            $data = $record;
+            $prefix = $record['dial_prefix'];
+            $destination  = $record['destination'];
+            $rateCost  = $record['rate'];
+            CallRateDialPrefix::create([
+                    'call_rate_id' => $rate->id,
+                    'dial_prefix' => $prefix,
+                    'destination' => $destination,
+                    'rate' => $rateCost
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    private function createPrefixes($value) {
+        return implode(",", $value);
+    }
     private function parseCSV( $path, $delim="," )
     {
         $row = 0;
@@ -244,9 +306,7 @@ class CallRateController extends AdminController
                 $value = $data[$c];
                 if ( $header == 'prefixes' ) {
                     // check if need to lookup by name
-
-                    $prefixesToAdd = implode(",", $value);
-                    $item[ 'prefixes' ] = $prefixesToAdd;
+                    $item[ 'prefixes' ] = $this->createPrefixes ( $value );
                 } else {
                     $item[ $header ] = $value;
                 }
@@ -256,6 +316,113 @@ class CallRateController extends AdminController
 
         }
         fclose($handle);
+        return $items;
+    }
+
+    private function parseRateDeckCSV( $path, $delim="," )
+    {
+        $row = 0;
+        $map = array(
+            0 => "destination",
+            1 => "dial_prefix",
+            2 => "rate"
+        );
+
+
+        $items = [];
+        $handle = fopen($path, "r");
+
+        if ( $handle == FALSE ) {
+            return FALSE;
+        }
+        while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+            $num = count($data);
+            $row++;
+            if ( $row == 1 ) {
+                continue; // headers
+            }
+            $item = [];
+            $prefixesToAdd = [];
+            for ($c=0; $c < $num; $c++) {
+                $header = $map[$c];
+                $value = $data[$c];
+                $item[ $header ] = $value;
+            }
+
+            $items[] = $item;
+
+        }
+        fclose($handle);
+        return $items;
+    }
+
+    private function parseRateDeckXLS( $path ) {
+        $map = array(
+            0 => "destination",
+            1 => "dial_prefix",
+            2 => "rate"
+        );
+
+        # open the file
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($path);
+        $items = [];
+        # read each cell of each row of each sheet
+        foreach ($reader->getSheetIterator() as $sheet) {
+            $rowCounter = 0;
+            foreach ($sheet->getRowIterator() as $row) {
+                if ($rowCounter == 0) { // do not process header
+                    $rowCounter ++;
+                    continue;
+                }
+                $cells = $row->getCells();
+                $item = [];
+                foreach ($cells as $cnt => $cell) {
+                    $header = $map[$cnt];
+                    $value = $cell->getValue();
+                    $item[ $header ] = $value;
+                }
+                $items[] = $item;
+                $rowCounter ++;
+            }
+        }
+        $reader->close();
+        return $items;
+    }
+
+    private function parseXLS( $path ) {
+        $map = array(
+            0 => "name",
+            1 => "call_rate",
+            2 => "type",
+            3 => "inbound",
+            4 => "prefixes"
+        );
+
+
+        # open the file
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($path);
+        $items = [];
+        # read each cell of each row of each sheet
+        foreach ($reader->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $row) {
+                $cells = $row->getCells();
+                $item = [];
+                foreach ($cells as $cnt => $cell) {
+                    $header = $map[$cnt];
+                    $value = $cell->getValue();
+                    if ( $header == 'prefixes' ) {
+                        // check if need to lookup by name
+                        $item[ 'prefixes' ] = $this->createPrefixes ( $value );
+                    } else {
+                        $item[ $header ] = $value;
+                    }
+                }
+                $items[] = $item;
+            }
+        }
+        $reader->close();
         return $items;
     }
 }

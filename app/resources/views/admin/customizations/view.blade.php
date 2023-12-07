@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/callrates.call_rates") !!} :: @parent
+@section('title') {!! trans("admin/customizations.customizations") !!} :: @parent
 @endsection
 
 {{-- Content --}}
@@ -173,10 +173,43 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+                <label for="blog_url">Blog URL</label>
+                <div class="controls">
+                    <input name="blog_url" class="form-control" value="{{$record->blog_url}}" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <h3>Registration Questionnaire</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <ul id="regQuestions">
+                </ul>
+                <button id="addRegQuestionBtn" type="button" class="btn btn-info">Add Question</button>
+            </div>
+
             <div class="row">
                 <h3>Preferences</h3>
                 <hr/>
             </div>
+            <div class="row form-group">
+                <label for="app_logo">Default Region</label>
+                <div class="controls">
+                    <select name="default_region" class="form-control" id="default_region">
+                        @foreach ($regions as $region)
+                            @if ( $record->default_region == $region->id )
+                                <option selected value="{{$region->id}}">{{$region->name}} ({{$region->code}})</option>
+                            @else
+                                <option value="{{$region->id}}">{{$region->name}} ({{$region->code}})</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="app_logo">Verification workflow</label>
                 <div class="controls">
@@ -281,6 +314,21 @@
             </div>
 
             <div class="row form-group">
+                <label for="default_currency">Default billing currency</label>
+                <div class="controls">
+                    <select name="default_currency" class="form-control" id="default_currency">
+                        @foreach ($currencies as $code => $currency)
+                            @if ($code == $record->default_currency)
+                                <option value="{{$code}}" selected>{{$currency}} ({{$code}})</option>
+                            @else
+                                <option value="{{$code}}">{{$currency}} ({{$code}})</option>
+                            @endif
+                        @endforeach 
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
                 <label for="payments_enabled">Billing retry enabled</label>
                 <div class="controls">
                     <select name="billing_retry_enabled" class="form-control" id="billing_retry_enabled">
@@ -300,6 +348,14 @@
                 <label for="billing_retry_enabled">Billing retry attempts</label>
                 <div class="controls">
                     <input name="billing_num_retries" class="form-control" id="billing_num_retries" value="{{$record->billing_num_retries}}"></input>
+                </div>
+            </div>
+
+
+           <div class="row form-group">
+                <label for="grace_period_billing_days">Grace period for overdue invoices (in days)</label>
+                <div class="controls">
+                    <input name="grace_period_billing_days" class="form-control" value="{{$record->grace_period_billing_days}}" />
                 </div>
             </div>
 
@@ -323,6 +379,58 @@
                 <label for="register_credits">Register credits</label>
                 <div class="controls">
                     <input name="register_credits" class="form-control" value="{{$record->register_credits}}" />
+                </div>
+            </div>
+
+
+            <div class="row form-group">
+                <label for="register_credits_enabled">Register credits enabled</label>
+                <div class="controls">
+                    <select name="register_credits_enabled" class="form-control" id="register_credits_enabled">
+                        @if ( $record->register_credits_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="registration_questionnaire_enabled">Registeration questionnaire enabled</label>
+                <div class="controls">
+                    <select name="registration_questionnaire_enabled" class="form-control" id="registration_questionnaire_enabled">
+                        @if ( $record->registration_questionnaire_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="zendesk_enabled">Support desk enabled (Zendesk integration)</label>
+                <div class="controls">
+                    <select name="zendesk_enabled" class="form-control" id="zendesk_enabled">
+                        @if ( $record->zendesk_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
                 </div>
             </div>
 
@@ -367,12 +475,19 @@
                         @if ( $record->sms_provider == 'd7networks')
                             <option value="d7networks" selected>D7Networks</option>
                             <option value="messagebird">Messagebird</option>
+                            <option value="telerivet">Telerivet</option>
                         @elseif ( $record->sms_provider == 'messagebird')
                             <option value="d7networks">D7Networks</option>
                             <option value="messagebird" selected>Messagebird</option>
+                            <option value="telerivet">Telerivet</option>
+                        @elseif ( $record->sms_provider == 'telerivet')
+                            <option value="d7networks">D7Networks</option>
+                            <option value="messagebird">Messagebird</option>
+                            <option value="telerivet" selected>Telerivet</option>
                         @else
                             <option value="d7networks">D7Networks</option>
                             <option value="messagebird">Messagebird</option>
+                            <option value="telerivet">Telerivet</option>
                         @endif
                         <!--<option>Wide</option>-->
                         <!--<option>Compact</option>-->
@@ -392,8 +507,15 @@
                 <div class="controls">
                     <input name="sms_api_secret" class="form-control" value="{{$record->sms_api_secret}}" />
                 </div>
+
             </div>
 
+         <div class="row form-group">
+                <label for="sms_from_number">SMS from number</label>
+                <div class="controls">
+                    <input name="sms_from_number" class="form-control" id="sms_from_number" value="{{$record->sms_from_number}}"/>
+                </div>
+            </div>
 
             <div class="row form-group">
                 <label for="custom_code_containers_enabled">Allow users to run custom code</label>
@@ -418,6 +540,36 @@
                 <div class="controls">
                     <select name="signup_requires_payment_detail" class="form-control" id="signup_requires_payment_detail">
                         @if ( $record->signup_requires_payment_detail)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="recaptcha_enabled">ReCaptcha enabled</label>
+                <div class="controls">
+                    <select name="recaptcha_enabled" class="form-control" id="recaptcha_enabled">
+                        @if ( $record->recaptcha_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="disqus_enabled">Disqus enabled</label>
+                <div class="controls">
+                    <select name="disqus_enabled" class="form-control" id="disqus_enabled">
+                        @if ( $record->disqus_enabled)
                             <option value="yes" selected>Yes</option>
                             <option value="no">No</option>
                         @else
@@ -460,8 +612,6 @@
                     </select>
                 </div>
             </div>
-
-
 
             <div class="row">
                 <h3>Maintenance and upgrade settings</h3>
@@ -529,4 +679,47 @@
 
 {{-- Scripts --}}
 @section('scripts')
+<script>
+
+var questionnaire = {!! json_encode( $questionnaire ) !!};
+function createKey(count, name) {
+    return "questionnaire[" + count + "]" + "[" + name + "]";
+}
+
+function addQuestion(data) {
+    var container= $("#regQuestions");
+    var count = $("#regQuestions li").length;
+    var li = $("<li></li>");
+    li.attr("class", "list-unstyled");
+    var field = $("<input type='text' class='form-control'/>")
+    var fieldName = createKey(count, "question");
+    field.attr("name", fieldName);
+    if (data) {
+        field.val( data.question );
+        var idField = $("<input type='hidden'/>");
+        var idKey = createKey( count, "id" );
+        idField.attr("name", idKey);
+        idField.val(data.id);
+        idField.appendTo( li );
+    }
+    field.appendTo( li );
+    var deleteBtn = $("<a class='delete cursor-pointer'>(Delete)</a>");
+    deleteBtn.click(function() {
+        $( li ).remove().end();
+    });
+
+    deleteBtn.appendTo( li );
+    li.appendTo( container );
+}
+$("#addRegQuestionBtn").click(function() {
+    addQuestion();
+ 
+});
+
+questionnaire.forEach((item) => {
+
+    addQuestion(item);
+});
+</script>
 @endsection
+

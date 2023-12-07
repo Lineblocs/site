@@ -3,5 +3,6 @@
 return [
     'sip_countries' => 'SIP Countries',
     'iso' => 'ISO',
-    'name' =>   'Name'
+    'name' =>   'Name',
+    'country_code' => 'Country Code'
 ];

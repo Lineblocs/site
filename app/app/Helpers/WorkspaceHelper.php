@@ -2,10 +2,16 @@
 namespace App\Helpers;
 use Config;
 use DB;
+use Log;
 
 use App\User;
 use App\Workspace;
 use App\WorkspaceUser;
+use App\WorkspaceRoutingACL;
+use App\SIPRoutingACL;
+use App\ServicePlan;
+use App\UsageTrigger;
+
 final class WorkspaceHelper {
   public static function getMyWorkspaces($user) {
     $workspaces =  WorkspaceUser::select(DB::raw("workspaces_users.*"));
@@ -105,5 +111,47 @@ case 'create_trunks':
 
       
     }
+  }
+
+  public static function getLimits($user, $plan=NULL) {
+    $workspace = \App\Workspace::where('creator_id', $user->id)->first();
+
+    if ( $workspace ) {
+      // FIXME: need to add better handling for database I/O
+      if (!empty($plan)) {
+          return $plan;
+      }
+
+      Log::info(sprintf("looking up service plan key_name = %s", $workspace->plan));
+      $plan = ServicePlan::where('key_name', $workspace->plan)->firstOrFail()->toArray();
+      return $plan;
+    } else {
+      return [
+        'call_duration' => 'N/A',
+        'recording_space' => 'N/A',
+      ];
+    }
+  }
+
+  public static function getACLs($workspace)
+  {
+      $acls = SIPRoutingACL::select(array(
+          'sip_routing_acl.iso',
+          'sip_routing_acl.name',
+          'sip_routing_acl.risk_level',
+          DB::raw('sip_routing_acl.enabled AS preset_acl_enabled'),
+          DB::raw('sip_routing_acl.id AS routing_acl_id'),
+          //DB::raw('workspace_routing_acl.id AS workspace_acl_id'),
+          //DB::raw('workspace_routing_acl.enabled AS enabled'),
+      ));
+      $data = $acls->get()->toArray(); 
+      foreach ( $data as $cnt => $row ) {
+        $acl = WorkspaceRoutingACL::where('routing_acl_id',$row['routing_acl_id'])->first();
+        if ( $acl ) {
+          $data[$cnt]['workspace_acl_id'] = $acl->id;
+          $data[$cnt]['enabled'] = $acl->enabled;
+        }
+      }
+      return $data;
   }
 }

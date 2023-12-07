@@ -44,6 +44,10 @@ class Workspace extends Model {
     //return $plans[ $this->plan ];
     return ServicePlan::where('key_name', $this->plan)->firstOrFail();
   }
+
+  public function getCreator() {
+    return User::findOrFail($this->creator_id);
+  }
   public static function asSelect() {
     $items = Workspace::all();
     $results = [];

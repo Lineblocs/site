@@ -340,3 +340,13 @@ ul:not(.browser-default) {
 .white {
   color: #FFFFFF;
 }
+
+
+
+.sla-card h3.m-category {
+  margin: 10px 15px 0;
+}
+
+.sla-card .sla-link {
+  margin: 0 15px;
+}

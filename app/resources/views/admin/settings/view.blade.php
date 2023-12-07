@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/callrates.call_rates") !!} :: @parent
+@section('title') {!! trans("admin/settings.api_credentials") !!} :: @parent
 @endsection
 
 {{-- Content --}}
@@ -94,6 +94,72 @@
                     </select>
                 </div>
             </div>
+
+           <div class="row form-group">
+                <label for="telerivet_api_key">Telerivet API key</label>
+                <div class="controls">
+                    <input id="telerivet_api_key" type="text" class="form-control" name="telerivet_api_key" value="{{$creds->telerivet_api_key}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="telerivet_project_id">Telerivet Project ID</label>
+                <div class="controls">
+                    <input id="telerivet_project_id" type="text" class="form-control" name="telerivet_project_id" value="{{$creds->telerivet_project_id}}"/>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="whatsapp_phone_number_id">WhatsApp Phone Number ID</label>
+                <div class="controls">
+                    <input id="whatsapp_phone_number_id" type="text" class="form-control" name="whatsapp_phone_number_id" value="{{$creds->whatsapp_phone_number_id}}"/>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="whatsapp_access_token">WhatsApp Access Token</label>
+                <div class="controls">
+                    <input id="whatsapp_access_token" type="text" class="form-control" name="whatsapp_access_token" value="{{$creds->whatsapp_access_token}}"/>
+                </div>
+            </div>
+           <div class="row form-group">
+                <label for="recaptcha_sitekey">ReCaptcha site key</label>
+                <div class="controls">
+                    <input id="recaptcha_sitekey" type="text" class="form-control" name="recaptcha_sitekey" value="{{$creds->recaptcha_sitekey}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="recaptcha_privatekey">ReCaptcha Private key</label>
+                <div class="controls">
+                    <input id="recaptcha_privatekey" type="text" class="form-control" name="recaptcha_privatekey" value="{{$creds->recaptcha_privatekey}}"/>
+                </div>
+            </div>
+
+           <div class="row form-group">
+                <label for="zendesk_subdomain">Zendesk subdomain</label>
+                <div class="controls">
+                    <input id="zendesk_subdomain" type="text" class="form-control" name="zendesk_subdomain" value="{{$creds->zendesk_subdomain}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="zendesk_username">Zendesk Username</label>
+                <div class="controls">
+                    <input id="zendesk_username" type="text" class="form-control" name="zendesk_username" value="{{$creds->zendesk_username}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="zendesk_token">Zendesk Token</label>
+                <div class="controls">
+                    <input id="zendesk_token" type="text" class="form-control" name="zendesk_token" value="{{$creds->zendesk_token}}"/>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="disqus_site">Disqus site</label>
+                <div class="controls">
+                    <input id="disqus_site" type="text" class="form-control" name="disqus_site" value="{{$creds->disqus_site}}"/>
+                </div>
+            </div>
+
 
             <div class="row form-group">
                 <label for="smtp_host">SMTP host</label>

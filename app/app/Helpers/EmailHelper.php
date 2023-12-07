@@ -15,18 +15,19 @@ final class EmailHelper {
     $customizations = Customizations::getRecord();
     $dns_provider = $customizations->dns_provider;
     $mail = Config::get('mail');
+    $data['customizations'] = $customizations;
+    $data['site_name'] = MainHelper::getSiteName();
     if ( $customizations->mail_provider == 'smtp-gateway') {
       try {
         Mail::send('emails.'.$template, $data, function ($message) use ($subject, $to, $mail) {
             $message->to($to);
-            //$message->subject("Lineblocs.com - Verify Your Email");
             $message->subject($subject);
             $from = $mail['from'];
             $message->from($from['address'], $from['name']);
         });
       } catch (Exception $ex) {
         Log::error('could not send email. tried sending email with template: ' . $template . ' data was: ' . json_encode($data));
-        return FALSE;
+        return $ex->getMessage();
       }
       return TRUE;
     } else if ( $customizations->mail_provider == 'ses') {

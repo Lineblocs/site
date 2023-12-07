@@ -254,9 +254,7 @@ td[class="CtaText"] {
                                                 <td style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:10px;line-height:18px;color:#ffffff; text-align: left;">
                                                   
                            
-LineBlocs<br />
-xxx Massachusetts Ave.<br />
-Cambridge, MA XXXX, USA
+                                        {{$site_name}} <br /> {!! nl2br($customizations->contact_address) !!}<br/>
                                                 </td>
                                               </tr>
                                               <tr>

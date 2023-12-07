@@ -32,7 +32,8 @@ class SettingsController extends AdminController {
             "ap-south-1" => "India (Mumbai)"
         );
         if ( empty( $creds->aws_region )){
-            $selected_region = $aws_regions[0];
+            $region_keys = array_keys( $aws_regions );
+            $selected_region = $region_keys[0];
         } else {
             $selected_region = $creds->aws_region;
         }
@@ -69,6 +70,16 @@ class SettingsController extends AdminController {
         'google_analytics_script_tag',
         'matomo_script_tag',
         'sentry_dsn',
+        'telerivet_api_key',
+        'telerivet_project_id',
+        'whatsapp_phone_number_id',
+        'whatsapp_access_token',
+        'recaptcha_sitekey',
+        'recaptcha_privatekey',
+        'disqus_site',
+        'zendesk_subdomain',
+        'zendesk_username',
+        'zendesk_token',
         ];
         $update = [];
         foreach ( $keys as $key ) {

@@ -10,6 +10,7 @@ use App\PortNumber;
 use App\DIDNumber;
 use App\Http\Requests\Admin\UserRequest;
 use App\Helpers\MainHelper;
+use App\Helpers\BillingDataHelper;
 use App\Helpers\AdminUIHelper;
 use App\Helpers\EmailHelper;
 use Datatables;
@@ -92,8 +93,8 @@ class UserController extends AdminController
          $dids = $dids->get();
 
 
-         $billingHistory = MainHelper::getBillingHistory($user);
-         $billingInfo = $user->getBillingInfo();
+         $billingHistory = BillingDataHelper::getBillingHistory($user);
+         $billingInfo = BillingDataHelper::getBillingInfo($user);
          $countries = MainHelper::getCountries();
          $cannedEmails = AdminUIHelper::getCannedEmails();
          $sipcountries = SIPCountry::select(array('sip_countries.iso', 'sip_countries.name', 'workspaces_routing_flows.flow_id', \DB::raw('workspaces_routing_flows.id AS wflow_id')));

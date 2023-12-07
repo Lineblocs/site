@@ -13,7 +13,7 @@ class CompanyRepresentative extends Model {
     "main_contact" => "boolean"
   );
   public static function getMainContact() {
-    return self::where('main_contact', '1')->firstOrFail();
+    return self::where('main_contact', '1')->first();
   }
 }
 

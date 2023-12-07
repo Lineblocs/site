@@ -1,4 +1,4 @@
-@extends('emails.layouts.alert_email')
+@extends('emails.layouts.header')
 @section('title')
 Congratulations
 @endsection
@@ -22,8 +22,8 @@ Congratulations
 
                                 <tr>
                                     <td align="left" valign="top"
-                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:14px;line-height:23px;color:#252f5a; text-align: left;">
-                                        This email confirms you have created a new phone below are the phone details
+                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:14px;line-height:23px;color:#252f5a; text-align: center;">
+                                        &nbsp;
                                     </td>
                                 </tr>
                                 <tr>

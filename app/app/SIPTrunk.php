@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SIPTrunk extends PublicResource {
   public static $publicPrefix = "st";
   protected $casts = array(
-    "record" => "boolean"
+    "record" => "boolean",
+    "register_enabled" => "boolean",
   );
   protected $dates = ['created_at', 'updated_at'];
 

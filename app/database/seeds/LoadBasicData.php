@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\Helpers\MainHelper;
 use App\SIPRoutingACL;
+use App\SIPPoPRegion;
+use App\DDoSSetting;
 
 class LoadBasicData extends Seeder
 {
@@ -42,6 +44,21 @@ class LoadBasicData extends Seeder
         require_once($dir2."load_sip_us_data.php");
         */
 
+        // create some default regions
+        SIPPoPRegion::create([
+            'name' => 'N Virginia',
+            'code' => 'us-east-1'
+        ]);
+        SIPPoPRegion::create([
+            'name' => 'Canada Central',
+            'code' => 'ca-central-1'
+        ]);
+        SIPRoutingACL::create([
+            'iso' => 'us',
+            'name' => 'United States',
+            'risk_level' => 'low',
+            'enabled' => TRUE
+        ]);
         // load SIP routing ACLs
         $riskLevels = MainHelper::$aclRiskLevels;
         SIPRoutingACL::create([
@@ -57,5 +74,11 @@ class LoadBasicData extends Seeder
             'enabled' => TRUE
         ]);
 
+        DDoSSetting::create([
+            'priority_aware_packet_policing' => FALSE,
+            'media_packet_policing' => FALSE,
+            'media_address_learning' => FALSE,
+            'application_level_cac' => FALSE
+        ]);
     }
 }

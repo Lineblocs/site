@@ -11,6 +11,7 @@ use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
 use App\Customizations;
+use App\ApiCredential;
 use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
@@ -19,6 +20,8 @@ use View;
 use Illuminate\Http\Request;
 use Config;
 use Mail;
+use App\Helpers\MainHelper;
+use \ReCaptcha\ReCaptcha;
 
 class HomeController extends BaseController {
   /**
@@ -172,38 +175,33 @@ class HomeController extends BaseController {
   }
   public function contact(Request $request)
   {
+    $request->session()->forget('status');
+    $creds = ApiCredential::getRecord();
     $customizations = Customizations::getRecord();
     $vars = [
-      'customizations' => $customizations
+      'customizations' => $customizations,
+      'creds' => $creds
     ];
     return view('pages.contact', $vars);
-  }
-
-  public function requestQuote(Request $request)
-  {
-    return view('pages.request_quote');
-  }
-
-  public function requestQuoteSubmit(Request $request)
-  {
-    return view('pages.request_quote');
-  }
-  public function alternative(Request $request)
-  {
-    $vars = [];
-    return view('pages.alternative', $vars);
-  }
-  public function alternativeSubmit(Request $request)
-  {
-    $vars = [];
-    return view('pages.alternative', $vars);
   }
   public function contactSubmit(Request $request)
   {
     $data = $request->all();
-    $vars = [];
+    $creds = ApiCredential::getRecord();
+    $customizations = Customizations::getRecord();
+    $vars = [
+        'customizations' => $customizations
+    ];
 
+    if($customizations->recaptcha_enabled) {
+      $recaptcha = new ReCaptcha($creds->recaptcha_privatekey);
+      $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
+		  if (!$resp->isSuccess()) {
+        $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
+        return view('pages.contact', $vars);
+		  }	
+    }
     if (empty($data['first_name'])) {
       $request->session()->flash('status', 'Please fill in first name..');
       return view('pages.contact', $vars);
@@ -220,17 +218,6 @@ class HomeController extends BaseController {
       $request->session()->flash('status', 'Please fill in comments..');
       return view('pages.contact', $vars);
     }
-    if (empty($data['region'])) {
-      $region = $data['region'];
-    }
-    if (empty($data['country'])) {
-      $region = $data['country'];
-    }
-    if (empty($data['contact_reason'])) {
-      $reason = $data['contact_reason'];
-    }
-
-
 
     $template = [
       'first_name' => $data['first_name'],
@@ -239,33 +226,194 @@ class HomeController extends BaseController {
       'comments' => $data['comments']
     ];
     $contact = CompanyRepresentative::getMainContact();
-    $subject = 'New Lineblocs contact';
+    $domain = MainHelper::getDeploymentDomain();
+    $subject = sprintf('New %s contact', $domain);
     $result = EmailHelper::sendEmail($subject, $contact->email_address, 'contact', $template);
-    /*
-    Mail::send('emails.contact', $template, function ($m) use ($contact, $template) {
-      $from =MainHelper::createEmail('contact');
-      $site =MainHelper::getSiteName();
-      $m->from($from,$site);
-
-      $m->to($contact->email_address, $contact->name)->subject('New Lineblocs contact');
-      $m->cc([$template['email']]);
-  });
-  */
     $result = EmailHelper::sendEmail($subject, $template['email'], 'contact_confirm', $template);
-    /*
-    Mail::send('emails.contact_confirm', $template, function ($m) use ($config, $template) {
-      $subject = 'Thanks for contacting us';
-      $from =MainHelper::createEmail('contact');
-      $site =MainHelper::getSiteName();
-      $m->from($from, $site);
-      $name = sprintf("%s %s", $template['first_name'], $template['last_name']);
-      $m->to($template['email'], $name)->subject($subject);
-  });
-  */
 
     $request->session()->flash('status', 'Thanks for contacting us we will get in touch with you within 24-78 hours.');
     return view('pages.contact', $vars);
   }
+  public function requestQuote(Request $request)
+  {
+    $request->session()->forget('status');
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+    $teamSize = array(
+      'small' => '1-50 employees',
+      'medium' => '51-500 employees',
+      'large' => '500-10000 employees',
+      'really_large' => '10000+ employees',
+    );
+    $vars = [
+      'customizations' => $customizations,
+      'creds' => $creds,
+      'teamSize' => $teamSize
+    ];
+    return view('pages.request_quote', $vars);
+  }
+
+  public function requestQuoteSubmit(Request $request)
+  {
+    $data = $request->all();
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+
+    $teamSize = array(
+      'small' => '1-50 employees',
+      'medium' => '51-500 employees',
+      'large' => '500-10000 employees',
+      'really_large' => '10000+ employees',
+    );
+    $vars = [
+      'customizations' => $customizations,
+      'teamSize' => $teamSize
+    ];
+
+    if($customizations->recaptcha_enabled) {
+      $recaptcha = new ReCaptcha($creds->recaptcha_privatekey);
+      $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+
+		  if (!$resp->isSuccess()) {
+        $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
+        return view('pages.contact', $vars);
+		  }	
+    }
+
+    if (empty($data['first_name'])) {
+      $request->session()->flash('status', 'Please fill in first name..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['last_name'])) {
+      $request->session()->flash('status', 'Please fill in last name..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['phone'])) {
+      $request->session()->flash('status', 'Please fill in your phone number..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['email'])) {
+      $request->session()->flash('status', 'Please fill in email..');
+      return view('pages.request_quote', $vars);
+    }
+    if (empty($data['comments']) && empty($data['comments_not_required'])) {
+      $request->session()->flash('status', 'Please fill in comments..');
+      return view('pages.request_quote', $vars);
+    }
+
+    $template = [
+      'first_name' => $data['first_name'],
+      'last_name' => $data['last_name'],
+      'company_name' => $data['company_name'],
+      'team_size' => $data['team_size'],
+      'phone' => $data['phone'],
+      'email' => $data['email'],
+      'comments' => $data['comments']
+    ];
+    $request_quote = CompanyRepresentative::getMainContact();
+    $domain = 
+    $domain =MainHelper::getDeploymentDomain();
+    $subject = sprintf('New %s request_quote', $domain);
+
+    $result = EmailHelper::sendEmail($subject, $request_quote->email_address, 'quote', $template);
+    $result = EmailHelper::sendEmail($subject, $template['email'], 'quote_confirm', $template);
+
+    $request->session()->flash('status', 'Thanks you, your request has been submitted successfully and someone will be in touch in 24-48 hours');
+    return view('pages.request_quote', $vars);
+  }
+
+
+  public function bugReport(Request $request)
+  {
+    $request->session()->forget('status');
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+    $bugTypes = array(
+      'general' => 'Page not working',
+    );
+    $vars = [
+      'customizations' => $customizations,
+      'creds' => $creds,
+      'bugTypes' => $bugTypes
+    ];
+    return view('pages.bug_report', $vars);
+  }
+
+  public function bugReportSubmit(Request $request)
+  {
+    $data = $request->all();
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
+
+    $bugTypes = array(
+      'general' => 'Page not working',
+    );
+
+    $vars = [
+      'customizations' => $customizations,
+      'bugTypes' => $bugTypes
+    ];
+
+    if($customizations->recaptcha_enabled) {
+      $recaptcha = new ReCaptcha($creds->recaptcha_privatekey);
+      $resp = $recaptcha->verify($data['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+
+		  if (!$resp->isSuccess()) {
+        $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
+        return view('pages.contact', $vars);
+		  }	
+    }
+
+    if (empty($data['first_name'])) {
+      $request->session()->flash('status', 'Please fill in first name..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['last_name'])) {
+      $request->session()->flash('status', 'Please fill in last name..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['phone'])) {
+      $request->session()->flash('status', 'Please fill in your phone number..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['email'])) {
+      $request->session()->flash('status', 'Please fill in email..');
+      return view('pages.bug_report', $vars);
+    }
+    if (empty($data['comments']) && empty($data['comments_not_required'])) {
+      $request->session()->flash('status', 'Please fill in comments..');
+      return view('pages.bug_report', $vars);
+    }
+
+
+
+    $template = [
+      'first_name' => $data['first_name'],
+      'last_name' => $data['last_name'],
+      'phone' => $data['phone'],
+      'email' => $data['email'],
+      'comments' => $data['comments'],
+      'bug_type' => $data['bug_type']
+    ];
+    $request_quote = CompanyRepresentative::getMainContact();
+    $domain =MainHelper::getDeploymentDomain();
+    $subject = sprintf('New %s bug_report', $domain);
+    $result = EmailHelper::sendEmail($subject, $request_quote->email_address, 'bug_report', $template);
+
+    $request->session()->flash('status', 'Thanks you, your request has been submitted successfully. Someone will be in touch in 24-48 hours');
+    return view('pages.request_quote', $vars);
+  }
+  public function alternative(Request $request)
+  {
+    $vars = [];
+    return view('pages.alternative', $vars);
+  }
+  public function alternativeSubmit(Request $request)
+  {
+    $vars = [];
+    return view('pages.alternative', $vars);
+  }
+
   public function about(Request $request)
   {
     $vars = [];
@@ -396,8 +544,9 @@ class HomeController extends BaseController {
       $categories[] = $array;
     }
 
+    $domain =MainHelper::getDeploymentDomain();
     View::share("title", "Status");
-    View::share("description", "Status updates for Lineblocs DID availability, media storage, PoP network and more..");
+    View::share("description", "Status updates for ${domain} DID availability, media storage, PoP network and more..");
     View::share("tags", "system status, status, alerts");
     $date = new \DateTime();
     $date = $date->format("d F Y h:i A");
@@ -405,17 +554,19 @@ class HomeController extends BaseController {
   }
   public function status_category(Request $request, $categoryId)
   {
+    $domain =MainHelper::getDeploymentDomain();
     $category = SystemStatusCategory::findOrFail($categoryId);
     //$updates = SystemStatusUpdate::where('category_id', $category->id)->get();
     $updates = $category->getUpdates();
     View::share("title", $category->name . " Status");
-    View::share("description", "Status updates for Lineblocs " . $category->name);
+    View::share("description", "Status updates for ${domain} " . $category->name);
     View::share("tags", "system status, status, alerts");
 
     return view('status.category', compact('category', 'updates'));
   }
   public function status_update(Request $request, $categoryId, $updateId)
   {
+    $domain = MainHelper::getDeploymentDomain();
     $category = SystemStatusCategory::findOrFail($categoryId);
     $updateObj = SystemStatusUpdate::findOrFail($updateId);
     $update = $updateObj->toArray();
@@ -424,7 +575,7 @@ class HomeController extends BaseController {
     View::share("description", "Status update " . $updateObj->title);
     View::share("tags", "system status, status, alerts");
 
-    return view('status.update', compact('category', 'update'));
+    return view('status.update', compact('category', 'update', 'domain'));
 
   }
   public function notfound_404(Request $request)

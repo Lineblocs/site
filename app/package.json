@@ -1,5 +1,6 @@
 {
   "private": true,
+  "private": true,
   "devDependencies": {
     "gulp": "^3.8.8",
     "gulp-bower": "0.0.10"

@@ -3,6 +3,9 @@ use \App\Helpers\MainHelper;
 ?>
 <body>
   <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
     table.bordered {
       border: 2px solid black;
     }
@@ -44,6 +47,10 @@ use \App\Helpers\MainHelper;
     .no_margins {
       margin: 0;
     }
+    .table-container {
+      margin-left: 20px; /* Adjust the value as needed */
+    }
+
     @page { margin-top: 120px; margin-bottom: 120px}
     header { position: fixed; left: 0px; top: -90px; right: 0px; height: 150px; text-align: center; }
     #footer { position: fixed; left: 0px; bottom: -145px; right: 0px; height: 150px; }
@@ -70,6 +77,7 @@ use \App\Helpers\MainHelper;
 </footer> 
   <div class="page1">
     <center>
+    <img src="{{\App\Helpers\MainHelper::appLogo()}}" alt="" title="" width="160" height="" style="display:block;" border="0" />
       <h1>{{$site}} monthly statement</h1>
     </center>
     <table width="100%">
@@ -119,33 +127,37 @@ use \App\Helpers\MainHelper;
           </table>
         </td>
         <td>
-          <table>   
-            <tr>
-              <td>
-                <strong>Account No: </strong> {{$vars['account_no']}}</td>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Invoice No: </strong> {{$vars['invoice_no']}}</td>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Statement date: </strong> {{$vars['statement_date']->format('Y-m-d')}}</td>
-              </td>
-            </tr>
-            <tr>
-              <td>
-            <strong>Due date: </strong> {{$vars['due_date']->format('Y-m-d')}}</td>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                &nbsp;
-              </td>
-            </tr>
-          </table>
+        <div class="table-container">
+        <table  style="float: right; width: 62%;">   
+          <tr>
+            <td width="100%" style="text-align: left;" >
+              <strong>Account No: </strong> {{$vars['account_no']}}
+            </td>
+          </tr>
+          <tr>
+            <td width="100%" style="text-align: left;">
+              <strong>Invoice No: </strong> {{$vars['invoice_no']}}
+            </td>
+          </tr>
+          <tr>
+            <td width="100%" style="text-align: left;" >
+              <strong>Statement date: </strong> {{$vars['statement_date']->format('Y-m-d')}}
+            </td>
+          </tr>
+          <tr>
+            <td width="100%" style="text-align: left;">
+              <strong>Due date: </strong> {{$vars['due_date']->format('Y-m-d')}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <!-- &nbsp; -->
+            </td>
+          </tr>
+        </table>
+      </div>
+      <br><br><br><br>
+      <br><br>
         </td>
       </tr>
     </table>
@@ -156,9 +168,10 @@ use \App\Helpers\MainHelper;
       <tr>
         <td>
           <ul>
-            <li>one</li>
-            <li>two</li>
-            <li>three</li>
+            <li>You can pay your invoice using any of the methods listed in the payment methods section</li>
+            <li>If your invoice is more than {{$customizations->grace_period_billing_days}} days overdue you will receive an email regarding suspension. </li>
+            <li>You can also view your invoice in the {{\App\Helpers\MainHelper::getSiteName()}} user portal</li>
+            <li>All amounts are billed in {{$customizations->default_currency}} currency</li>
           </ul>
         </td>
       </tr>
@@ -251,7 +264,7 @@ use \App\Helpers\MainHelper;
             </table>
           </td>
           <td>
-            <table>   
+            <table style="float: right; width: 62%;">   
               <tr>
                 <td>
                   <strong>Account No: </strong> {{$vars['account_no']}}</td>
@@ -278,6 +291,7 @@ use \App\Helpers\MainHelper;
                 </td>
               </tr>
             </table>
+            
           </td>
         </tr>
       </table>
@@ -374,7 +388,7 @@ use \App\Helpers\MainHelper;
             </table>
           </td>
           <td>
-            <table>   
+            <table style="float: right; width: 62%;">   
               <tr>
                 <td>
                   <strong>Account No: </strong> {{$vars['account_no']}}</td>

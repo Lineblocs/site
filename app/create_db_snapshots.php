@@ -2,8 +2,11 @@
 
 use App\User;
 use App\Workspace;
+use App\ApiCredential;
+use App\Customizations;
 use App\Helpers\MainHelper;
 use App\Helpers\SIPRouterHelper;
+use Illuminate\Support\Facades\Schema;
 
 if (!function_exists("backup_database")) {
     function backup_database($database='') {
@@ -31,6 +34,17 @@ if (!function_exists("run_artisan_command")) {
         $output = NULL;
         echo "running command " . $command . PHP_EOL;
         return exec($command, $output, $returnVar);
+    }
+}
+
+if (!function_exists("clean_table_columns")) {
+    function clean_table_columns($record) {
+        $columns = collect($record)->keys();
+        $updateAttrs = [];
+        foreach ( $columns as $col ) {
+            $updateAttrs[$col] = "";
+        }
+        $record->update($updateAttrs);
     }
 }
 

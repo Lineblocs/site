@@ -55,7 +55,7 @@ return [
         'Fraud Protection',
         'CRM Integrations (salesforce, zoho, zendesk)',
         'Phone Provisioner',
-        'Lineblocs VPN',
+        'Company VPN',
         'Bring Your Own Carrier',
         'Multiple SIP Domains'
     ]
@@ -92,7 +92,7 @@ return [
  'AI Based call routing',
  'Custom Branded SIP Apps',
  'Branded Softphone Apps',
- 'Dedicated Lineblocs Representitive'
+ 'Dedicated Representitive'
     ]
   ])
 
