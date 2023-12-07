@@ -2,11 +2,13 @@
 
 namespace App\Helpers\Sms;
 
-final class Base {
+class Base {
 
-    public function __construct($key, $secret) {
+    public function __construct() {
+        /*
         $this->key = $key;
         $this->secret = $secret;
+        */
     }
     public function sendSMS($from='', $to='', $body='') {
 

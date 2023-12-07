@@ -1,4 +1,4 @@
-@extends('emails.layouts.alert_email')
+@extends('emails.layouts.header')
 @section('title')
 Password Changed
 @endsection
@@ -23,7 +23,7 @@ Password Changed
                                 <tr>
                                     <td align="left" valign="top"
                                         style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:14px;line-height:23px;color:#252f5a; text-align: center;">
-                                        This email confirms that you successfully updated your password.
+                                        &nbsp;
                                     </td>
                                 </tr>
                                 <tr>
@@ -41,12 +41,22 @@ Password Changed
                                 </tr>
                                 <tr>
                                     <td valign="top">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0"
-                                            class="SubContainer" style="border-radius: 3px;">
-
-                                            <tbody>
-
-                                            </tbody>
+                                        <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1"
+                                            role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
+                                            width="100%">
+                                            <tr>
+                                                <td class="pad"
+                                                    style="width: 100%; padding-right: 0px; padding-left: 0px;">
+                                                    <div align="center" class="alignment" style="line-height: 10px;">
+                                                        <a href="{{\App\Helpers\MainHelper::createUrl()}}"
+                                                            target="_blank">
+                                                            <img src="{{\Config::get("app.url").'/email-images/'}}logo.png"
+                                                                style="display: block; height: auto; border: 0; max-width: 238px; width: 100%;"
+                                                                width="238" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </td>
                                 </tr>

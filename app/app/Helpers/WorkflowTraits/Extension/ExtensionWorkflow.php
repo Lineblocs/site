@@ -31,6 +31,7 @@ trait ExtensionWorkflow {
         $data = $request->only('username', 'secret', 'caller_id', 'flow_id', 'tags');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+        $workspaceUser = $this->getWorkspaceUserWithAllData($request);
         $info = $workspace->getPlanInfo();
 
         if (MainHelper::checkLimit($workspace, $user, "extensions")) {
@@ -96,7 +97,9 @@ trait ExtensionWorkflow {
             $mail = Config::get("mail");
             $data = compact('extension', 'workspace');
             $subject = "Extension Created";
-            $result = EmailHelper::sendEmail($subject, $user->email, 'extension_created', $data);
+            if ($workspaceUser->auditing) {
+                $result = EmailHelper::sendEmail($subject, $user->email, 'extension_created', $data);
+            }
             /*
             Mail::send('emails.extension_created', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);

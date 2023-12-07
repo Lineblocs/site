@@ -86,6 +86,9 @@
                                 <a class="nav-link" href="/features">Features</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="{{\App\Helpers\MainHelper::getBlogURL()}}">Blog</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/resources">Resources</a>
                             </li>
                             <li class="nav-item">
@@ -110,7 +113,7 @@
                             </div>
                             <div class="row rights">
                                 <div class="col">
-                                    <p>© 1999-2021 {{\App\Helpers\MainHelper::getSiteName()}}. All rights reserved. </p>
+                                    <p>© 2023 {{\App\Helpers\MainHelper::getSiteName()}}. All rights reserved. </p>
                                 </div>
 
                             </div>
@@ -147,7 +150,7 @@
                     </div>
                 </div>
             </div>
-           <p>© 1999-2021 {{\App\Helpers\MainHelper::getSiteName()}}. All rights reserved. </p>
+           <p>© 2023 {{\App\Helpers\MainHelper::getSiteName()}}. All rights reserved. </p>
         </footer>
         @yield('scripts')
             <!-- Twitter universal website tag code -->

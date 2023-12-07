@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\ApiAuthController;
 use DB;
 use PDF;
 use App\Helpers\MainHelper;
+use App\Helpers\BillingDataHelper;
 use App\Helpers\WorkspaceHelper;
 use App\Helpers\InvoiceHelper;
 use DateTime;
@@ -20,9 +21,11 @@ class BillingController extends ApiAuthController
     public function addUsageTrigger(Request $request) {
         $data = $request->json()->all();
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
         $trigger = UsageTrigger::create([
           'percentage' => $data['percentage'],
-          'user_id' => $user->id
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
         ]);
         return $this->response->noContent();
     }
@@ -40,7 +43,7 @@ class BillingController extends ApiAuthController
     public function getBillingInfo(Request $request)
     {
         $user = $this->getUser($request);
-        $billingInfo = $user->getBillingInfo();
+        $billingInfo = BillingDataHelper::getBillingInfo($user);
         return $this->response->array([
           'info' => $billingInfo
         ]);
@@ -50,7 +53,7 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $all = $request->all();
-      $data = MainHelper::billingData($user, $all['startDate'], $all['endDate']);
+      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
       return $this->response->array($data);
 
     }

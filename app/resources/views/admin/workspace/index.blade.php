@@ -1,7 +1,7 @@
 @extends('admin.layouts.default')
 
 {{-- Web site Title --}}
-@section('title') {!! trans("admin/workspaces.sip_workspaces") !!} :: @parent
+@section('title') {!! trans("admin/workspaces.workspaces") !!} :: @parent
 @endsection
 
 {{-- Content --}}

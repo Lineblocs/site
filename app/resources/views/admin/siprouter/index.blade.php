@@ -25,6 +25,7 @@
         <tr>
             <th>{!! trans("admin/siprouters.name") !!}</th>
             <th>{!! trans("admin/siprouters.active") !!}</th>
+            <th>{!! trans("admin/siprouters.default") !!}</th>
             <th>{!! trans("admin/siprouters.region") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>
             <th>{!! trans("admin/admin.action") !!}</th>

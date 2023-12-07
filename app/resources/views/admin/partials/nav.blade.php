@@ -54,6 +54,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/popregion')}}">
+                                <i class="glyphicon glyphicon-user"></i> PoP Regions 
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/country')}}">
                                 <i class="glyphicon glyphicon-user"></i> Service Countries
                             </a>
@@ -65,12 +70,18 @@
                         </li>
                         <li>
                             <a href="{{url('admin/trunk')}}">
-                                <i class="glyphicon glyphicon-user"></i> Trunks
+                                <i class="glyphicon glyphicon-user"></i> Hosted User Trunks
                             </a>
                         </li>
                         <li>
                             <a href="{{url('admin/routingacl')}}">
                                 <i class="glyphicon glyphicon-user"></i> Routing ACL
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{url('admin/ddos')}}">
+                                <i class="glyphicon glyphicon-user"></i> DDoS Settings
                             </a>
                         </li>
 
@@ -100,7 +111,7 @@
                         </li>
                         <li>
                             <a href="{{url('admin/rate')}}">
-                                <i class="glyphicon glyphicon-user"></i> Call Rates
+                                <i class="glyphicon glyphicon-user"></i> Rate Deck
                             </a>
                         </li>
 
@@ -125,6 +136,16 @@
                         <li>
                             <a href="{{url('admin/serviceplan')}}">
                                 <i class="glyphicon glyphicon-user"></i> Service Plan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/faqs')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> FAQs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/policies')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Service terms & Policies
                             </a>
                         </li>
                         <li>
@@ -166,6 +187,11 @@
                         <li>
                             <a href="{{url('admin/errortrace')}}">
                                 <i class="glyphicon glyphicon-user"></i> Error Trace
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/routingeditor')}}">
+                                <i class="glyphicon glyphicon-user"></i> Routing Editor
                             </a>
                         </li>
                     </ul>

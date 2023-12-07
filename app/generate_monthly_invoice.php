@@ -24,6 +24,7 @@ $faxCosts = 100*20;
 $numberCosts = 100*20;
 $tax = \App\BillingTax::where('name', 'GST')->first();
 $taxAmount = InvoiceHelper::calculateTax($invoiceSubtotal, $tax);
+
 $invoiceTotal = $invoiceSubtotal+$taxAmount;
 //$invoice = MainHelper::getMonthlyInvoice($user, $month);
 $invoice = UserInvoice::create([
@@ -87,7 +88,6 @@ UserInvoiceLineItem::create([
 
 
 echo "billing data".PHP_EOL;
-echo var_dump($invoice);
 $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $invoice);
-//$pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
+// $pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
 $pdf->save(public_path('./monthly_invoice.pdf'));

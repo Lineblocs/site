@@ -26,13 +26,14 @@ class FlowController extends ApiAuthController {
         if (!empty($data['category'])) {
             $category = $data['category'];
         }
-        if ($data['template_id']) {
+        if (!empty( $data['template_id']))  {
           $flow = Flow::createFromTemplate( $data['name'], $user, $workspace, FlowTemplate::findOrFail($data['template_id'] ), $category);
         } else {
           $flow = Flow::create([
               'user_id' => $user->id,
               'workspace_id' => $workspace->id,
               'name' => $data['name'],
+              'orientation' => 'vertical',
               'flow_json' => $json,
               'category' => $category,
               'started' => TRUE
@@ -58,6 +59,9 @@ class FlowController extends ApiAuthController {
         $params['flow_json'] = $json;
         if (isset($data['name'])) { 
             $params['name'] = $data['name'];
+        }
+        if (isset($data['orientation'])) { 
+            $params['orientation'] = $data['orientation'];
         }
         if (isset($data['started'])) {
           $params['started'] = $data['started'];

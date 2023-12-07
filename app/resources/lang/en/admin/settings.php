@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'settings' => 'Settings'
+    'settings' => 'Settings',
+    'api_credentials' => 'API Credentials',
+    'ddos_settings' => 'DDoS Settings',
 ];

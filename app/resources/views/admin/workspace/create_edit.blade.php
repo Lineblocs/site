@@ -5,9 +5,17 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
-            @if (!empty($users))
+            @if (!empty($workspace))
      <li><a href="#tab-users" data-toggle="tab"> {{
             trans("admin/modal.users") }}</a></li>
+            @endif
+            @if (!empty($workspace))
+     <li><a href="#tab-billing" data-toggle="tab"> {{
+            trans("admin/modal.billing") }}</a></li>
+            @endif
+          @if (!empty($workspace))
+     <li><a href="#tab-plan" data-toggle="tab"> {{
+            trans("admin/modal.plandetails") }}</a></li>
             @endif
 
 </ul>
@@ -67,7 +75,7 @@
                         @foreach ($users as $user)
                             <tr>
                                 <td>{{$user->email}}</td>
-                                <td>{{$user->joined_at}}</td>
+                                <td>{{$user->created_at->format('Y-m-d')}}</td>
                                 <td>
                                 </td>
                             </tr>
@@ -77,6 +85,150 @@
                 </div>
             </div>
         </div>
+            @endif
+       @if (isset($workspace))
+    <div class="tab-pane" id="tab-billing">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Billing Overview</h3>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <strong>Account Balance</strong> <span>{{$billingInfo['accountBalance']}}
+                    <br/>
+                    <small>finalized invoices and payments</small>
+            </div>
+     </div>
+        <div class="row">
+            <div class="col-md-12">
+                <strong>Charges this month</strong> <span>{{$billingInfo['chargesThisMonth']}}
+                    <br/>
+                    <small>invoiced {{$billingInfo['nextInvoiceDue']}}</small>
+            </div>
+     </div>
+        <div class="row">
+            <div class="col-md-12">
+                <strong>Estimated balance</strong> <span>{{$billingInfo['estimatedBalance']}}
+                    <br/>
+                    <small>balance including charges this month.</small>
+            </div>
+     </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Billing History</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date/time</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($billingHistory as $record)
+                            <tr>
+                                <td>{{$record['type']}}</td>
+                                <td>{{$record['dollars']}}</td>
+                                <td>{{$record['balance']}}</td>
+                                <td>{{$record['created_at']}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            @endif
+       @if (isset($workspace))
+    <div class="tab-pane" id="tab-plan">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Plan Details</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <strong>Plan</strong> <span>{{$billingInfo['limits']['nice_name']}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <strong>Call duration</strong> <span>{{$billingInfo['limits']['call_duration']}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <strong>Recording storage</strong> <span>{{$billingInfo['limits']['recording_space']}}
+            </div>
+        </div>
+        <h4>Routing ACLs</h4>
+        <table class="table table-stripped">
+            <thead>
+                <th>ISO</th>
+                <th>Name</th>
+                <th>Risk Level</th>
+                <th>Enabled</th>
+     </thead>
+            <tbody>
+                
+        @foreach ($routingACLs as $item)
+                <tr>
+                    <td>{{$item['iso']}}</td>
+                    <td>{{$item['name']}}</td>
+                    <td>{{$item['risk_level']}}</td>
+                    <td>{{$item['enabled']?'Yes':'No'}}</td>
+     </tr>
+        @endforeach
+     </tbody>
+     </table>
+
+
+        <h4>Usage Triggers</h4>
+        <table class="table table-stripped">
+            <thead>
+                <th>Percentage</th>
+                <th>Created At</th>
+     </thead>
+            <tbody>
+                
+        @foreach ($usageTriggers as $trigger)
+                <tr>
+                    <td>{{$trigger->percentage}}</td>
+                    <td>{{$trigger->created_at}}</td>
+     </tr>
+        @endforeach
+     </tbody>
+     </table>
+
+
+        <h4>Plan History</h4>
+        <table class="table table-stripped">
+            <thead>
+                <th>Plan</th>
+                <th>Started At</th>
+                <th>Ended At</th>
+     </thead>
+            <tbody>
+                
+        @foreach ($planHistory as $item)
+                <tr>
+                    <td>{{$item->plan}}</td>
+                    <td>{{$item->started_at}}</td>
+                    <td>{{$item->ended_at}}</td>
+     </tr>
+        @endforeach
+     </tbody>
+     </table>
+
+     </div>
             @endif
     {!! Form::close() !!}
 </div>

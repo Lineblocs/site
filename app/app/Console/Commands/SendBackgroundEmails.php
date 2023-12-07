@@ -11,6 +11,7 @@ use App\UsageTrigger;
 use App\UsageTriggerResult;
 use App\UserCredit;
 use App\Helpers\MainHelper;
+use App\Helpers\BillingDatahelper;
 
 class SendBackgroundEmails extends Command
 {
@@ -73,7 +74,7 @@ class SendBackgroundEmails extends Command
         $users = User::all();
         foreach ($users as $user) {
             $triggers = UsageTrigger::where('user_id', '=', $user->id)->get();
-            $billingInfo = $user->getBillingInfo();
+            $billingInfo = BillingDataHelper::getBillingInfo($user);
             foreach ($triggers as $trigger) {
                 printf("checking trigger percentage %d on user %s", $trigger->percentage, $user->email);
                 $credits = UserCredit::where('user_id', '=', $user->id)->get();
@@ -92,7 +93,8 @@ class SendBackgroundEmails extends Command
                     ];
                     Mail::send('emails.usage_trigger', $data, function ($message) use ($user, $mail) {
                         $message->to($user->email);
-                        $message->subject("Lineblocs.com usage trigger");
+                        $domain =MainHelper::getDeploymentDomain();
+                        $message->subject(sprintf("%s usage trigger", $domain));
                         $from = $mail['from'];
                         $message->from($from['address'], $from['name']);
                     });

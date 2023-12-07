@@ -1,4 +1,4 @@
-@extends('emails.layouts.alert_email')
+@extends('emails.layouts.header')
 @section('title')
 Congratulations
 @endsection

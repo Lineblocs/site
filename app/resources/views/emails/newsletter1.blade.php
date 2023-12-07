@@ -103,7 +103,7 @@ You can make use of voicemail in your call flows and also view recordings in you
                                             </tr> 
                                               <tr>
                                                 <td style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:18px;color:#252f5a; text-align: left;">
-                                                  Lineblocs editor allows you to create call flows for handling simple and advanced incoming call needs. Below in this guide we will show you how to connect a call to a external phone number using the lineblocs flow editor.
+                                                  {{$domain}} editor allows you to create call flows for handling simple and advanced incoming call needs. Below in this guide we will show you how to connect a call to a external phone number using the lineblocs flow editor.
                                                 </td>
                                               </tr>
                                               <tr>

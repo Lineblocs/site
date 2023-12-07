@@ -11,6 +11,8 @@ use Symfony\Component\Yaml\Yaml;
 
 use App\ResourceArticle;
 use App\ResourceSection;
+use App\Customizations;
+use App\ApiCredential;
 use View;
 use Config;
 class ResourcesController extends BaseController {
@@ -187,10 +189,12 @@ class ResourcesController extends BaseController {
     $title = $article['name'];
     $tags = $article['seo_tags'];
     $description = $article['description'];
+    $customizations = Customizations::getRecord();
+    $creds = ApiCredential::getRecord();
     View::share('title', $title);
     View::share('tags', $tags);
     View::share('description', $description);
-    return view('resources.item', compact('html', 'related', 'title', 'section', 'article'));
+    return view('resources.item', compact('html', 'related', 'title', 'section', 'article', 'customizations', 'creds'));
   }
 
   public function articleInactive(Request $request)
