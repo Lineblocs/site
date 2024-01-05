@@ -63,6 +63,7 @@ trait SupportTicketWorkflow {
     }
     public function listSupportTickets(Request $request)
     {
+        $workspace = $this->getWorkspace($request);
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
         $supportTickets = SupportTicket::where('workspace_id', $workspace->id);
