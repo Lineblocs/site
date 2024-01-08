@@ -9,7 +9,7 @@ use App\Helpers\MainHelper;
 final class SupportTicketTransformer extends TransformerAbstract {
      public function transform(SupportTicket $supportTicket)
     {
-        $supportTicket->toArray();
+        $array = $supportTicket->toArray();
         return $array;
     }
 }

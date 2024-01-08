@@ -23,6 +23,12 @@ final class SupportHelper {
   }
 
   public static function createTicket($subject, $comment, $priority, $args=array()) {
+    $customizations = Customizations::getRecord();
+    $zendeskEnabled = $customizations->zendesk_enabled;
+
+    if (!$zendeskEnabled) {
+      return NULL;
+    }
     $client = self::getClient();
     // Create a new ticket
     $newTicket = $client->tickets()->create([

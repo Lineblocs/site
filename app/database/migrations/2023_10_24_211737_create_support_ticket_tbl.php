@@ -18,7 +18,7 @@ class CreateSupportTicketTbl extends Migration
             $table->string("subject")->default("");
             $table->string("comment")->default("");
             $table->string("priority")->default("");
-            $table->string("zendesk_id")->default("");
+            $table->string("zendesk_id")->nullable()->default(NULL);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
             $table->integer('workspace_id')->unsigned();

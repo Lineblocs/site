@@ -741,6 +741,8 @@ $api->version('v1', function($api) {
         $api->get("/{supportTicketId}/history", "SupportTicketController@supportTicketDataHistory");
         $api->post("/", "SupportTicketController@saveSupportTicket");
         $api->post("/{supportTicketId}", "SupportTicketController@updateSupportTicket");
+        $api->post("/{supportTicketId}/update", "SupportTicketController@createSupportTicketUpdate");
+        $api->get("/{supportTicketId}/update", "SupportTicketController@getSupportTicketUpdates");
         $api->put("/{supportTicketId}", "SupportTicketController@updateSupportTicket");
         $api->delete("/{supportTicketId}", "SupportTicketController@deleteSupportTicket");
     });

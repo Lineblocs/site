@@ -22,6 +22,7 @@ class Customizations extends Model {
     "enable_apple_signin" => "boolean",
     "signup_requires_payment_detail" => "boolean",
     "billing_retry_enabled" => "boolean",
+    "zendesk_enabled" => "boolean"
   );
   public static function getRecord($additionalColumns=false) {
     $all_columns = Customizations::getColumns();

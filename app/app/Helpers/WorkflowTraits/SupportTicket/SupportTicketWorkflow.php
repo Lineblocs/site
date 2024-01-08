@@ -8,9 +8,10 @@ use \Illuminate\Http\Request;
 use \App\User;
 use \App\Helpers\SupportHelper;
 use \App\SupportTicket;
-use \App\SupportTicketTag;
+use \App\SupportTicketUpdate;
 use \App\UserDebit;
 use \App\Flow;
+use App\Customizations;
 use \App\Transformers\SupportTicketTransformer;
 use App\SupportTicketService\SupportTicketService;
 use \App\Helpers\MainHelper;
@@ -21,23 +22,96 @@ use Config;
 
 
 trait SupportTicketWorkflow {
+    private function uploadAttachment(Request $request, $fileKey) {
+        $attachment = Input::file($fileKey);
+        if (!$attachment->isValid()) {
+            \Log::error(sprintf("attachment $fileKey is invalid, not processing"));
+            return;
+        }
+        $user = $this->getUser($request);
+        $size = $attachment->getSize();
+        $extension = $attachment->guessExtension();
+        \Log::info(sprintf("uploading file size: %d, format is %s", $size, $extension));
+        if (!in_array($extension, self::$acceptedDocumentFormats)) {
+          return FALSE;
+        }
+        $fileName = uniqid(TRUE).".".$extension;
+        if ( $size > self::$maxDocumentSizeBytes ) {
+          return FALSE;
+        }
+        $attachment->move(\Config::get("app.document_save_dir"), $fileName);
+        return $fileName;
+    }
+
+
     public function saveSupportTicket(Request $request)
     {
+        $customizations = Customizations::getRecord();
         $data = $request->only('subject', 'comment', 'priority');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+
         $subject = sprintf("[Workspace %s] %s", $workspace->name, $data['subject']);
         $comment = $data['comment'];
-        $priority = $data['priority'];
-        $id = SupportHelper::createTicket($subject, $comment, $priority);
-        SupportTicket::create([
+
+        $zendeskEnabled = $customizations->zendesk_enabled;
+        $supportTicketId = NULL;
+        if ($zendeskEnabled) {
+            $supportTicketId = SupportHelper::createTicket($subject, $comment, $priority);
+        }
+        //$priority = $data['priority'];
+        $priorityForUserTickets = 1;
+        $openingStatus = 'OPEN';
+
+
+        $supportTicket= SupportTicket::create([
             'comment' => $comment,
-            'priority' => $priority,
             'subject' => $subject,
-            'zendesk_id' => $id
+            'status' => $openingStatus,
+            'zendesk_id' => $supportTicketId,
+            'priority' => $priorityForUserTickets,
+            'workspace_id' => $workspace->id,
+            'user_id' => $user->id,
         ]);
 
-        return $this->errorInternal($request, 'Provision extension error..');
+        //return $this->errorInternal($request, 'Provision extension error..');
+        return $this->response->array($supportTicket)->withHeader('X-Supportticket-ID', $supportTicket->public_id);
+    }
+
+    public function createSupportTicketUpdate(Request $request, $ticketId)
+    {
+        $customizations = Customizations::getRecord();
+        $data = $request->only('comment');
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+
+        $attachment1 = $this->uploadAttachment($request, "attachment1");
+        $attachment2 = $this->uploadAttachment($request, "attachment2");
+        $attachment3 = $this->uploadAttachment($request, "attachment3");
+
+        $params = [
+            'comment' => $comment,
+            'ticket_id' => $ticketId
+        ];
+        if (!empty($attachment1)) {
+            $params['attachment1'] = $attachment1;
+        }
+        if (!empty($attachment2)) {
+            $params['attachment2'] = $attachment2;
+        }
+        if (!empty($attachment3)) {
+            $params['attachment3'] = $attachment3;
+        }
+
+        $update= SupportTicketUpdate::create($params);
+        return $this->response->array($update->toArray());
+    }
+
+    public function getSupportTicketUpdates(Request $request, $ticketId)
+    {
+        $customizations = Customizations::getRecord();
+        $ticketUpdates = SupportTicketUpdate::where('ticket_id', $ticketId)->get();
+        return $this->response->array($ticketUpdates->toArray());
     }
     public function updateSupportTicket(Request $request, $supportTicketId)
     {
@@ -47,8 +121,11 @@ trait SupportTicketWorkflow {
         if (!$this->hasPermissions($request, $supportTicket, 'manage_support_tickets')) {
             return $this->response->errorForbidden();
         }
-
-        SupportHelper::updateTicket($supportTicket->zendesk_id, $args);
+        $customizations = Customizations::getRecord();
+        $zendeskEnabled = $customizations->zendesk_enabled;
+        if ($zendeskEnabled) {
+            SupportHelper::updateTicket($supportTicket->zendesk_id, $args);
+        }
         $supportTicket->update($data);
     }
     public function supportTicketData(Request $request, $supportTicketId)
