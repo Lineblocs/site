@@ -16,6 +16,7 @@ use \App\Transformers\SupportTicketTransformer;
 use App\SupportTicketService\SupportTicketService;
 use \App\Helpers\MainHelper;
 use \DB;
+use Input;
 use Mail;
 use Config;
 
@@ -24,7 +25,7 @@ use Config;
 trait SupportTicketWorkflow {
     private function uploadAttachment(Request $request, $fileKey) {
         $attachment = Input::file($fileKey);
-        if (!$attachment->isValid()) {
+        if (empty($attachment) || ($attachment && !$attachment->isValid())) {
             \Log::error(sprintf("attachment $fileKey is invalid, not processing"));
             return;
         }
@@ -84,14 +85,16 @@ trait SupportTicketWorkflow {
         $data = $request->only('comment');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+        $ticket = SupportTicket::where('public_id', $ticketId)->firstOrFail();
 
         $attachment1 = $this->uploadAttachment($request, "attachment1");
         $attachment2 = $this->uploadAttachment($request, "attachment2");
         $attachment3 = $this->uploadAttachment($request, "attachment3");
 
         $params = [
-            'comment' => $comment,
-            'ticket_id' => $ticketId
+            'comment' => $data['comment'],
+            'ticket_id' => $ticket->id,
+            'direction' => 'ENDUSER'
         ];
         if (!empty($attachment1)) {
             $params['attachment1'] = $attachment1;
@@ -136,6 +139,26 @@ trait SupportTicketWorkflow {
             return $this->response->errorForbidden();
         }
         $array = $supportTicket->toArray();
+        // get any updates
+        $ticketUpdates = SupportTicketUpdate::where('ticket_id', $supportTicket->id)->get();
+        $updates = [];
+        foreach ( $ticketUpdates as $update ) {
+            $item = $update->toArray();
+            $attachments = [];
+            if (!empty($update->attachment1)) {
+               $attachments[] = $update->attachment1; 
+            }
+            if (!empty($update->attachment2)) {
+               $attachments[] = $update->attachment2; 
+            }
+            if (!empty($update->attachment3)) {
+               $attachments[] = $update->attachment3; 
+            }
+            $item['attachments'] = $attachments;
+            $updates[] = $item;
+        }
+
+        $array['updates'] = $updates;
         return $this->response->array($array);
     }
     public function listSupportTickets(Request $request)
@@ -158,6 +181,5 @@ trait SupportTicketWorkflow {
         SupportHelper::deleteTicket($supportTicket->zendesk_id);
         return $this->response->noContent();
     }
-
 
 }

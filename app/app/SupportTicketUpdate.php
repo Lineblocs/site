@@ -9,6 +9,7 @@ class SupportTicketUpdate extends Model {
   protected $dates = ['created_at', 'updated_at'];
 
   protected $guarded  = array('id');
+  protected $table  = 'support_tickets_updates';
 }
 
 
