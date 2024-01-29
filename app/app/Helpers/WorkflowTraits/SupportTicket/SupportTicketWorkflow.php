@@ -15,6 +15,7 @@ use App\Customizations;
 use \App\Transformers\SupportTicketTransformer;
 use App\SupportTicketService\SupportTicketService;
 use \App\Helpers\MainHelper;
+use \App\Helpers\EmailHelper;
 use \DB;
 use Input;
 use Mail;
@@ -76,6 +77,13 @@ trait SupportTicketWorkflow {
         ]);
 
         //return $this->errorInternal($request, 'Provision extension error..');
+        // send email notification about new support ticket
+        $subject = "New support ticket created";
+        $data = [
+            'user' => $user,
+            'ticket' => $supportTicket
+        ];
+        $result = EmailHelper::sendEmail($subject, $user->email, 'support_ticket_created', $data);
         return $this->response->array($supportTicket)->withHeader('X-Supportticket-ID', $supportTicket->public_id);
     }
 
@@ -107,6 +115,14 @@ trait SupportTicketWorkflow {
         }
 
         $update= SupportTicketUpdate::create($params);
+        $subject = "New support ticket updated";
+        $data = [
+            'user' => $user,
+            'ticket' => $supportTicket,
+            'update' => $update
+        ];
+        $result = EmailHelper::sendEmail($subject, $user->email, 'support_ticket_updated', $data);
+
         return $this->response->array($update->toArray());
     }
 
