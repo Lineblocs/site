@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'testing@infinitet3ch.com', 'name' => 'Line Blocks'],
+    'from' => ['address' => 'testing@infinitet3ch.com', 'name' => 'Lineblocs.com'],
 
     /*
     |--------------------------------------------------------------------------

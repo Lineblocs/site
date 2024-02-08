@@ -290,9 +290,8 @@
                                                                 mso-line-height-alt: 18px;
                                                             "
                                                         >
-                                                            <p style="margin: 0; word-break: break-word;"><span>LineBlocs</span></p>
-                                                            <p style="margin: 0; word-break: break-word;"><span>xxx Massachusetts Ave. </span></p>
-                                                            <p style="margin: 0; word-break: break-word;"><span>Cambridge, MA XXXX, USA </span></p>
+                                                            <p style="margin: 0; word-break: break-word;"><span>{{$site_name}}</span></p>
+                                                            <p style="margin: 0; word-break: break-word;"><span>{!! nl2br($customizations->contact_address) !!}</span></p>
                                                         </div>
                                                     </td>
                                                 </tr>

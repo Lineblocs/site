@@ -17,6 +17,7 @@ use \App\WorkspaceRoutingFlow;
 use \App\SIPProviderWhitelistIp;
 use \App\SIPRouter;
 use \App\SIPRouterMediaServer;
+use \App\SIPRouterDigitMapping;
 use \App\MediaServer;
 use \App\CallRate;
 use App\ErrorUserTrace;
@@ -68,6 +69,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('ip', SIPProviderWhitelistIp::class);
        \Route::model('router', SIPRouter::class);
        \Route::model('routerServer', SIPRouterMediaServer::class);
+       \Route::model('digitMapping', SIPRouterDigitMapping::class);
        \Route::model('server', MediaServer::class);
        \Route::model('rate', CallRate::class);
        \Route::model('country', SIPCountry::class);

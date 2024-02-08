@@ -35,7 +35,9 @@ Route::get('about', 'HomeController@about');
 Route::get('contact', 'HomeController@contact');
 Route::get('quote', 'HomeController@requestQuote');
 Route::post('quote', 'HomeController@requestQuoteSubmit');
-Route::post('contactSubmit', 'HomeController@contactSubmit');
+Route::get('bug-report', 'HomeController@bugReport');
+Route::post('bug-report', 'HomeController@bugReportSubmit');
+Route::post('contact', 'HomeController@contactSubmit');
 Route::get('login', 'HomeController@login');
 Route::get('pricing', 'HomeController@pricing');
 Route::get('rates', 'HomeController@rates1');
@@ -44,7 +46,7 @@ Route::get('faqs', 'HomeController@faqs');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
 // service level agreement
 Route::get('/pages/service-agreement', 'PagesController@serviceAgreement');
-Route::get('/pages/sla', 'PagesController@serverLevel');
+Route::get('/pages/sla/voip', 'PagesController@serviceLevelVoip');
 
 Route::get('/pages/email', 'PagesController@emailTest');
 
@@ -89,6 +91,9 @@ Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //Route::post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
 Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
 
+Route::get('/email/unsubscribe', 'EmailController@unsubscribe');
+Route::post('/email/unsubscribe', 'EmailController@unsubscribe_update');
+
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
@@ -129,10 +134,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('provider/{provider}/delete', 'Admin\SIPProviderController@delete');
     Route::resource('provider', 'Admin\SIPProviderController');
 
-
+    # SIPRegions
+    Route::get('region/data', 'Admin\SIPRegionController@data');
+    Route::get('region/{region}/show', 'Admin\SIPRegionController@show');
+    Route::get('region/{region}/edit', 'Admin\SIPRegionController@edit');
+    Route::get('region/{region}/delete', 'Admin\SIPRegionController@delete');
+    Route::resource('region', 'Admin\SIPRegionController');
+    
 
      # CallRates
     Route::get('rate/data', 'Admin\CallRateController@data');
+    Route::post('rate/{rate}/upload-rates', 'Admin\CallRateController@upload_rates');
     Route::get('rate/{rate}/show', 'Admin\CallRateController@show');
     Route::get('rate/{rate}/edit', 'Admin\CallRateController@edit');
     Route::get('rate/{rate}/delete', 'Admin\CallRateController@delete');
@@ -195,6 +207,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::post('router/{router}/add_server', 'Admin\SIPRouterController@add_server_save');
     Route::get('router/{router}/edit_server/{routerServer}', 'Admin\SIPRouterController@edit_server');
     Route::post('router/{router}/del_server/{routerServer}', 'Admin\SIPRouterController@del_server');
+    Route::get('router/{router}/add_digitmapping', 'Admin\SIPRouterController@add_digitmapping');
+    Route::post('router/{router}/add_digitmapping', 'Admin\SIPRouterController@add_digitmapping_save');
+    Route::get('router/{router}/edit_digitmapping/{digitMapping}', 'Admin\SIPRouterController@edit_digitmapping');
+    Route::post('router/{router}/edit_digitmapping/{digitMapping}', 'Admin\SIPRouterController@edit_digitmapping_save');
+    Route::put('router/{router}/edit_digitmapping/{digitMapping}', 'Admin\SIPRouterController@edit_digitmapping_save');
+    Route::post('router/{router}/del_digitmapping/{digitMapping}', 'Admin\SIPRouterController@del_digitmapping');
     Route::resource('router', 'Admin\SIPRouterController');
     Route::resource('routerServer', 'Admin\SIPRouterController');
 
@@ -238,6 +256,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('number/import', 'Admin\NumberInventoryController@import');
     Route::post('number/import', 'Admin\NumberInventoryController@import_save');
     Route::resource('number', 'Admin\NumberInventoryController');
+
+    # SIPPoPRegions
+    Route::get('popregion/data', 'Admin\SIPPoPRegionController@data');
+    Route::get('popregion/{region}/show', 'Admin\SIPPoPRegionController@show');
+    Route::get('popregion/{region}/edit', 'Admin\SIPPoPRegionController@edit');
+    Route::get('popregion/{region}/delete', 'Admin\SIPPoPRegionController@delete');
+    Route::resource('popregion', 'Admin\SIPPoPRegionController');
 
 
      # SIPCountrys
@@ -309,7 +334,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
     Route::resource('errortrace', 'Admin\ErrorTraceController');
 
-
+    # system status
+    Route::get('routingeditor', 'Admin\RoutingEditorController@view');
+    Route::post('routingeditor', 'Admin\RoutingEditorController@save');
 
     Route::get('settings', 'Admin\SettingsController@view');
     Route::post('settings', 'Admin\SettingsController@save');
@@ -318,8 +345,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('customizations', 'Admin\CustomizationsController@view');
     Route::post('customizations', 'Admin\CustomizationsController@save');
 
+    Route::get('ddos', 'Admin\DDoSController@view');
+    Route::post('ddos', 'Admin\DDoSController@save');
+
     Route::get('faqs', 'Admin\FAQsController@view');
     Route::post('faqs', 'Admin\FAQsController@save');
+
+    Route::get('policies', 'Admin\PoliciesController@view');
+    Route::post('policies', 'Admin\PoliciesController@save');
 });
 // API routes
 $api = app('Dingo\Api\Routing\Router');
@@ -408,6 +441,7 @@ $api->version('v1', function($api) {
 
     $api->post('internalAppRedirect', '\App\Http\Controllers\MergedController@internalAppRedirect');
     $api->get('getAllSettings', '\App\Http\Controllers\MergedController@getAllSettings');
+    $api->get('getRegistrationQuestions', '\App\Http\Controllers\MergedController@getRegistrationQuestions');
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
 
     $api->group([ 'prefix' => 'jwt'], function($api) {
@@ -426,6 +460,7 @@ $api->version('v1', function($api) {
     $api->post('registerVerify', '\App\Http\Controllers\RegisterController@registerVerify');
     $api->post('registerVerifyHook', '\App\Http\Controllers\RegisterController@registerVerifyHook');
     $api->post('userSpinup', '\App\Http\Controllers\RegisterController@userSpinup');
+    $api->post('saveRegistrationQuestionResponses', '\App\Http\Controllers\RegisterController@saveRegistrationQuestionResponses');
     $api->post('provisionCallSystem', '\App\Http\Controllers\RegisterController@provisionCallSystem');
     $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
     $api->post('addCard', '\App\Http\Controllers\RegisterController@addCard');
@@ -488,6 +523,8 @@ $api->version('v1', function($api) {
     $api->post('saveUpdatedPresets', '\App\Http\Controllers\MergedController@saveUpdatedPresets');
 
     $api->get('getPOPs', '\App\Http\Controllers\MergedController@getPOPs');
+
+    $api->post('sendEmail', '\App\Http\Controllers\MiscController@sendEmail');
 
     $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
       $api->post('', 'WidgetTemplateController@saveWidget');
@@ -696,6 +733,18 @@ $api->version('v1', function($api) {
 
         $api->get("/list", "WorkspaceRoutingACLController@listACLs");
         $api->post("/saveACLs", "WorkspaceRoutingACLController@saveACLs");
+    });
+
+    $api->group([ 'prefix' => 'supportTicket', 'namespace' => '\App\Http\Controllers\Api\SupportTicket'], function($api) {
+        $api->get("/list", "SupportTicketController@listSupportTickets");
+        $api->get("/{supportTicketId}", "SupportTicketController@supportTicketData");
+        $api->get("/{supportTicketId}/history", "SupportTicketController@supportTicketDataHistory");
+        $api->post("/", "SupportTicketController@saveSupportTicket");
+        $api->post("/{supportTicketId}", "SupportTicketController@updateSupportTicket");
+        $api->post("/{supportTicketId}/update", "SupportTicketController@createSupportTicketUpdate");
+        $api->get("/{supportTicketId}/update", "SupportTicketController@getSupportTicketUpdates");
+        $api->put("/{supportTicketId}", "SupportTicketController@updateSupportTicket");
+        $api->delete("/{supportTicketId}", "SupportTicketController@deleteSupportTicket");
     });
 
     $api->group([ 'prefix' => 'settings', 'namespace' => '\App\Http\Controllers\Api\Settings'], function($api) {

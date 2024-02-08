@@ -70,6 +70,16 @@ class SettingsController extends AdminController {
         'google_analytics_script_tag',
         'matomo_script_tag',
         'sentry_dsn',
+        'telerivet_api_key',
+        'telerivet_project_id',
+        'whatsapp_phone_number_id',
+        'whatsapp_access_token',
+        'recaptcha_sitekey',
+        'recaptcha_privatekey',
+        'disqus_site',
+        'zendesk_subdomain',
+        'zendesk_username',
+        'zendesk_token',
         ];
         $update = [];
         foreach ( $keys as $key ) {

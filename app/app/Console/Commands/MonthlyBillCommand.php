@@ -8,7 +8,8 @@ use App\UserDebit;
 use App\DIDNumber;
 use App\Recording;
 use App\Fax;
-use App\PlanUsagePeriod;
+use App\PlaonUsagePeriod;
+use App\Helpers\BillingDatahelper;
 use DateTime;
 use Config;
 
@@ -79,7 +80,7 @@ class MonthlyBillCommand extends Command
           $recordingCosts = 0;
           $faxCosts = 0;
           $monthlyNumberRentals =  0;
-          $balance = $user->getBillingInfo();
+          $balance = BillingDataHelper::getBillingInfo($user);
           $plans = Config::get("service_plans");
           $membershipCosts = $plan['per_month'];
           $invoiceDesc=  sprintf("LineBlocs invoice for %s", $balance['thisInvoiceDue']);

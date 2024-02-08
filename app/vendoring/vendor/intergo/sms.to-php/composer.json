@@ -1,0 +1,28 @@
+{
+    "name": "intergo/sms.to-php",
+    "description": "A PHP library for communicating with the SMS.to REST API",
+    "keywords": [
+        "php",
+        "sms",
+        "bulksms",
+        "marketing"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sujit Baniya",
+            "email": "sujit@intergo.com.cy",
+            "homepage": "https://intergo.com.cy",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "guzzlehttp/guzzle": "^7.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Intergo\\SmsTo\\": "src/"
+        }
+    }
+}

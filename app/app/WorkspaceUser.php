@@ -3,6 +3,7 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \App\UserEmailOption;
 
 class WorkspaceUser extends PublicResource {
   protected $dates = ['created_at', 'updated_at', 'joined_at'];
@@ -92,8 +93,14 @@ class WorkspaceUser extends PublicResource {
       }
       $attrs['user_id'] = $user->id;
       $attrs['workspace_id'] = $workspace->id;
+
       $attrs = array_merge( $attrs, $extras );
-      return WorkspaceUser::create($attrs);
+      $user= WorkspaceUser::create($attrs);
+      // create email options
+      UserEmailOption::create([
+          'user_id' =>$user->id,
+      ]);
+      return $user;
   }
   public static function updateSuperAdmin($workspace, $user) {
       $user = WorkspaceUser::where('user_id', $user->id)->where('workspace_id', $workspace->id)->firstOrFail();

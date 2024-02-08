@@ -5,8 +5,12 @@ use App\User;
 use App\Workspace;
 use App\WorkspaceUser;
 use App\PortNumber;
+use App\UsageTrigger;
+use App\PlanUsagePeriod;
 use App\Http\Requests\Admin\WorkspaceRequest;
 use App\Helpers\MainHelper;
+use App\Helpers\WorkspaceHelper;
+use App\Helpers\BillingDataHelper;
 use Datatables;
 use DB;
 use Config;
@@ -64,8 +68,14 @@ class WorkspaceController extends AdminController
     {
         $users = WorkspaceUser::select(array('workspaces_users.*', 'users.email'));
         $users->join('users', 'users.id', '=', 'workspaces_users.user_id');
-        $users->where('workspace_id', $workspace->id)->get();
-        return view('admin.workspace.create_edit', compact('workspace', 'users'));
+        $users = $users->where('workspace_id', $workspace->id)->get();
+        $creator = $workspace->getCreator();
+        $billingHistory = BillingDataHelper::getBillingHistory($creator);
+        $billingInfo = BillingDataHelper::getBillingInfo($creator);
+        $usageTriggers = UsageTrigger::where("workspace_id", $workspace->id)->get();
+        $routingACLs = WorkspaceHelper::getACLs($workspace);
+        $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory'));
     }
 
     /**

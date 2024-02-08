@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use App\Helpers\MainHelper;
+use App\Helpers\BillingDataHelper;
 use App\UserCredit;
 use App\UserDebit;
 use App\UserInvoice;
@@ -44,75 +45,6 @@ class User extends Model implements AuthenticatableContract,
       "enable_2fa" => "boolean",
       "confirmed" => "boolean"
     );
-
-    public function getBillingInfo() {
-        $remainingBalance = 0;
-        $chargesThisMonth = 0;
-        $accountBalance = 0;
-        $estimatedBalance = 0;
-        $amountOwed = 0;
-        $credits = UserCredit::where('user_id', '=',$this->id)->where('status', 'approved')->get();
-        $debits = UserDebit::where('user_id', '=',$this->id)->get();
-        $invoices = UserInvoice::where('user_id', '=',$this->id)->get();
-        $now = new DateTime();
-        $monthStart = new DateTime('first day of this month');
-        $monthLast = new DateTime('last day of this month');
-        $monthNext = new DateTime('first day of next month');
-        foreach ($credits as $credit) {
-            $remainingBalance += $credit->cents;
-        }
-        foreach ($debits as $debit) {
-            if ($debit->created_at >= $monthStart && $debit->created_at <= $monthLast) {
-                $chargesThisMonth += $debit->cents;
-            }
-            $remainingBalance -= $debit->cents;
-        }
-        foreach ($invoices as $invoice) {
-            if ($invoice->status != 'completed') {
-              $accountBalance += $invoice->cents;
-            }
-            if ($invoice->source == 'CREDITS') {
-              $remainingBalance -= $invoice->cents;
-            }
-        }
-        $estimatedBalance = $chargesThisMonth + $accountBalance;
-        $locale = 'en_US';
-        $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
-        $month = $monthNext->format('M');
-        $date = $monthNext->format('d');
-        $date = $nf->format($date);
-        $nextInvoiceDue =$month . ' ' . $date;
-        $month = $monthStart->format('M');
-        $date = $monthStart->format('d');
-        $date = $nf->format($date);
-        $thisInvoiceDue =$month . ' ' . $date;
-
-        $info =[
-            'chargesThisMonthCents' => $chargesThisMonth,
-            'chargesThisMonth' => MainHelper::toDollars($chargesThisMonth),
-            'remainingBalanceCents' => $remainingBalance,
-            'remainingBalance' => MainHelper::toDollars($remainingBalance),
-            'accountBalanceCents' => $accountBalance,
-            'accountBalance' => MainHelper::toDollars($accountBalance),
-            'estimatedBalanceCents' => $estimatedBalance,
-            'estimatedBalance' => MainHelper::toDollars($estimatedBalance),
-            'nextInvoiceDue' => $nextInvoiceDue,
-            'thisInvoiceDue' => $thisInvoiceDue,
-            'trialMode' => $this->trial_mode,
-            'settings' => [
-              'auto_recharge' => $this->auto_recharge,
-              'auto_recharge_top_up' => $this->auto_recharge_top_up,
-              'auto_recharge_top_up_dollars' => MainHelper::toDollars($this->auto_recharge_top_up),
-              'invoices_by_email' => $this->invoices_by_email,
-              'billing_package' => $this->billing_package
-            ],
-            'limits' => $this->getLimits()
-
-        ];
-        return $info;
-
-
-    }
     public function getSIPURL() {
       //return sprintf("%s:%s", $this->ip_address, $this->sip_port);
       return MainHelper::createSubdomainUrl($this->container_name, "");
@@ -126,7 +58,7 @@ class User extends Model implements AuthenticatableContract,
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
-      $balance = $this->getBillingInfo();
+      $balance = BillingDataHelper::getBillingInfo();
       if ($balance['remainingBalance']<=$cost && $workspace->plan == 'pay-as-you-go') {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }

@@ -1,14 +1,14 @@
 <?php
 namespace App\Helpers;
 final class WebSvcHelper {
-  public static function request( $service, $path, $method, $params = array())
+  public static function request( $service, $path, $method, $params = array(), $headers = array())
   {
     $url = sprintf("http://%s%s", $service, $path);
     if ( $method == 'GET' ) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array());
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close( $ch );
@@ -23,9 +23,9 @@ final class WebSvcHelper {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($headers, array(                                                                          
             'Content-Length: ' . strlen($data_string))
-        );                                                                                                                   
+        ));                                                                                                                   
                                                                                                                         
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

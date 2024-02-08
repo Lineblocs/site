@@ -575,3 +575,8 @@ section.gray {
 .white {
   color: #FFFFFF;
 }
+.contact-form.quote {
+	border-top: none;
+	border-left: none;
+	padding-top: 100px;
+}

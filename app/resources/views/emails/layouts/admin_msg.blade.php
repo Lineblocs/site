@@ -292,12 +292,7 @@ td[class="CtaText"] {
                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#f5f8fa">
                     <tr>
                         <td style="mso-height-rule:exactly;text-align:center; font-size: 12px; line-height: 20px; font-weight: normal; color: #566e89;">
-
-                           
-LineBlocs<br />
-xxx Massachusetts Ave.<br />
-Cambridge, MA XXXX, USA<br />
-                            <br>
+                             {{$site_name}} <br /> {!! nl2br($customizations->contact_address) !!}<br/>
                         </td>
                     </tr>
                 </table>

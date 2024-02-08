@@ -5,6 +5,9 @@ use \Log;
 use \DB;
 use App\Helpers\MainHelper;
 use App\Helpers\WebSvcHelper;
+use App\SIPRouter;
+use App\SIPProviderHost;
+
 final class SIPRouterHelper {
   public static function request($url, $body) 
   {
@@ -81,6 +84,55 @@ final class SIPRouterHelper {
       $domain = MainHelper::makeDomainName($workspace['name'], $region['internal_code']);
       $conn->insert('INSERT INTO `domain` (`domain`) VALUES (?)', [$domain]);
     }
+  }
+
+  public static function addUACRegistrant($providerHost) {
+    $conn = DB::connection('mysql-opensips');
+    // e.g: 368391xxx:hTdTeeF3pHxX@ip.example.org
+    $user = $providerHost->register_username;
+    $password = $providerHost->register_password;
+    $ipAddress = $providerHost->ip_address;
+    $defaultRouter = SIPRouter::getMainRouter();
+    $routerIP = $defaultRouter->ip_address;
+    $registrationURI = sprintf("%s:%s@%s", $user, $password, $ipAddress);
+    $aor = sprintf("%s:%s@%s", $user, $password, $ipAddress);
+
+    // used in the Contact header for SIP
+    $bindingURI = sprintf("%s@%s", $user, $routerIP);
+
+    $conn->insert('INSERT INTO `registrant` (`registrar`, `aor`, `username`, `password`, `binding_URI`, `lineblocs_id`) VALUES (?, ?, ?, ?, ?, ?)', [$registrationURI, $user, $password, $aor, $bindingURI, $providerHost->id]);
+  }
+
+  public static function updateUACRegistrant($providerHost) {
+    $conn = DB::connection('mysql-opensips');
+    // e.g: 368391xxx:hTdTeeF3pHxX@ip.example.org
+    $user = $providerHost->register_username;
+    $password = $providerHost->register_password;
+    $ipAddress = $providerHost->ip_address;
+    $registrationURI = sprintf("%s:%s@%s", $user, $password, $ipAddress);
+    $aor = sprintf("%s:%s@%s", $user, $password, $ipAddress);
+
+    $defaultRouter = SIPRouter::getMainRouter();
+    $routerIP = $defaultRouter->ip_address;
+    // used in the Contact header for SIP
+    $bindingURI = sprintf("%s@%s", $user, $routerIP);
+
+    $conn->update('UPDATE `registrant` SET `registrar` = ?, `aor` = ?, `username` = ?, `password` = ?, `binding_URI` = ? WHERE `lineblocs_id` = ?', [$registrationURI, $user, $password, $aor, $bindingURI, $providerHost->id]);
+  }
+  public static function updateRouterIPs($defaultSIPRouter) {
+    $conn = DB::connection('mysql-opensips');
+    // e.g: 368391xxx:hTdTeeF3pHxX@ip.example.org
+    $hosts = SIPProviderHost::all();
+    $routerIP = $defaultSIPRouter->ip_address;
+    foreach ( $hosts as $host ) {
+      $bindingURI = sprintf("%s@%s", $host->user, $routerIP);
+      $conn->update('UPDATE `registrant` SET `binding_URI` = ? WHERE `lineblocs_id` = ?', [$bindingURI, $host->id]);
+    }
+  }
+
+  public static function deleteUACRegistrant($providerHost) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->delete('DELETE FROM `registrant` WHERE `lineblocs_id` = ?', [$providerHost->id]);
   }
 
   public static function reloadRTPProxies() {

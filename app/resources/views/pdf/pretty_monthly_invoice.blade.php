@@ -77,7 +77,7 @@ use \App\Helpers\MainHelper;
 </footer> 
   <div class="page1">
     <center>
-    <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" alt="" title="" width="160" height="" style="display:block;" border="0" />
+    <img src="{{\App\Helpers\MainHelper::appLogo()}}" alt="" title="" width="160" height="" style="display:block;" border="0" />
       <h1>{{$site}} monthly statement</h1>
     </center>
     <table width="100%">
@@ -168,9 +168,10 @@ use \App\Helpers\MainHelper;
       <tr>
         <td>
           <ul>
-            <li>one</li>
-            <li>two</li>
-            <li>three</li>
+            <li>You can pay your invoice using any of the methods listed in the payment methods section</li>
+            <li>If your invoice is more than {{$customizations->grace_period_billing_days}} days overdue you will receive an email regarding suspension. </li>
+            <li>You can also view your invoice in the {{\App\Helpers\MainHelper::getSiteName()}} user portal</li>
+            <li>All amounts are billed in {{$customizations->default_currency}} currency</li>
           </ul>
         </td>
       </tr>

@@ -216,10 +216,11 @@ class SIPTrunkController extends AdminController
      */
     public function data()
     {
-        $trunks = SIPTrunk::select(array('sip_trunks.id', 'sip_trunks.name','sip_trunks.active', 'sip_trunks.workspace_id', 'sip_trunks.created_at'));
+        $trunks = SIPTrunk::select(array('sip_trunks.id', 'sip_trunks.name', 'sip_trunks.register_enabled', 'sip_trunks.active', 'sip_trunks.workspace_id', 'sip_trunks.created_at'));
 
         return Datatables::of($trunks)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->edit_column('register_enabled', '@if ($register_enabled=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
             ->add_column('actions', '<a href="{{{ url(\'admin/trunk/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/trunk/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')

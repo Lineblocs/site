@@ -8,5 +8,6 @@ return [
     'active' => 'Active',
     'workspace_id' => 'Workspace ID',
     'record' => 'Record',
-    'view_articles' => 'View articles'
+    'view_articles' => 'View articles',
+    'image' => 'Image'
 ];

@@ -19,6 +19,8 @@ use App\SIPTrunk;
 use App\BillingCountry;
 use App\BillingRegion;
 use App\PhoneDefault;
+use App\RegistrationQuestionnaire;
+use App\RegistrationResponse;
 use App\Fax;
 use App\PlanUsagePeriod;
 use App\Extension;
@@ -47,9 +49,10 @@ use App\Helpers\MainHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
+use App\Helpers\BillingDataHelper;
 
 use App\Helpers\PortalSearchHelper;
-use App\Helpers\BillingDataHelper;
+use App\Helpers\SMSHelper;
 
 use App\PhoneGlobalSetting;
 use App\PhoneGlobalSettingValue;
@@ -204,8 +207,14 @@ class MergedController extends ApiAuthController
       "new_plan" => $plan
     );
     WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
-
-        return $this->response->noContent();
+    // send an email including new plan details
+      $data = [
+        'user' => $user,
+        'plan' => $plan
+      ];
+      $subject =MainHelper::createEmailSubject(sprintf("Upgraded plan to %s", $plan));
+      $result = EmailHelper::sendEmail($subject, $user->email, 'plan_upgraded', $data);
+      return $this->response->noContent();
     }
 
     public function dashboard(Request $request)
@@ -239,7 +248,7 @@ class MergedController extends ApiAuthController
       }
       $graph = ['labels' => $labels, 'data' => $data];
       $user = $this->getUser($request);
-        $billingInfo = $user->getBillingInfo($plan);
+        $billingInfo = BillingDataHelper::getBillingInfo($user, $plan);
        $billing = [
           'info' => $billingInfo
         ];
@@ -294,7 +303,7 @@ class MergedController extends ApiAuthController
     public function billing(Request $request)
     {
         $user = $this->getUser($request);
-        $billingInfo = $user->getBillingInfo();
+        $billingInfo = BillingDataHelper::getBillingInfo($user);
        $billing = [
           'info' => $billingInfo
         ];
@@ -687,8 +696,20 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $options = MainHelper::getRegions();
         return $this->response->array($options);
       }
-  public function getAllSettings(Request $request) {
 
+  public function getRegistrationQuestions(Request $request) {
+    $response = [];
+    $questions = RegistrationQuestionnaire::get();
+    /*
+    TODO: implement code for multiple choice responses
+    foreach ( $questions as $item ) {
+      $item['responses'] = RegistrationResponse::where('response_id', $item->id)->get()->toArray();
+      $response[] = $item;
+    }
+    */
+    return $this->response->array($response);
+  }
+  public function getAllSettings(Request $request) {
         $apiCreds = APICredential::getFrontendValuesOnly();
         $customizations = Customizations::getRecord();
         $availableThemes = array(
@@ -803,13 +824,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $user->update($updateParams);
         return $this->response->noContent();
       }
-      $confirmationCode = $data['confirmation_code'];
-      $otp = TOTP::create($user->secret_code_2fa);
-      if ( $otp->verify($confirmationCode)) {
+      if (!empty( $data['confirmation_code'] ) ) {
+        $confirmationCode = $data['confirmation_code'];
+        $otp = TOTP::create($user->secret_code_2fa);
+        if ( $otp->verify($confirmationCode)) {
+          return $this->response->errorBadRequest();
+        }
         $user->update($updateParams);
         return $this->response->noContent();
       }
-      return $this->response->errorBadRequest();
+      $user->update($updateParams);
+      return $this->response->noContent();
     }
     $user->update($updateParams);
     return $this->response->noContent();
@@ -851,7 +876,16 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $to = $user->phone_number;
       $otp = TOTP::create($user->secret_code_2fa);
       $body = sprintf("Your confirmation code for 2FA is: %s", $otp);
-      MainHelper::sendSMS($from, $to, $body);
+      SMSHelper::sendSMS($from, $to, $body);
+      return $this->response->array([
+          'success' => true
+      ]);
+    } else if ( $type_of_2fa == 'whatsapp') {
+      $from = '';
+      $to = $user->phone_number;
+      $otp = TOTP::create($user->secret_code_2fa);
+      $body = sprintf("Your confirmation code for 2FA is: %s", $otp);
+      MainHelper::sendWhatsAppMessage($to, $body);
       return $this->response->array([
           'success' => true
       ]);
@@ -882,8 +916,17 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     } elseif ( $user->type_of_2fa == 'sms') {
       $from = '';
       $to = $user->phone_number;
-      $body = sprintf("Your OTP is %d", $otp);
-      //MainHelper::sendSMS($from, $to, $body);
+      $otp = TOTP::create($user->secret_code_2fa);
+      $body = sprintf("Your OTP is %s", $otp->now());
+      SMSHelper::sendSMS($from, $to, $body);
+      return $this->response->array([
+          'success' => true
+      ]);
+    } elseif ( $user->type_of_2fa == 'whatsapp') {
+      $to = $user->phone_number;
+      $otp = TOTP::create($user->secret_code_2fa);
+      $body = sprintf("Your OTP is %s", $otp->now());
+      MainHelper::sendWhatsAppMessage($to, $body);
       return $this->response->array([
           'success' => true
       ]);

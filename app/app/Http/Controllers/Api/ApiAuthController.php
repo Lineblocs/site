@@ -37,6 +37,15 @@ class ApiAuthController extends ApiController {
           }
           return $workspace;
      }
+     public function getWorkspaceUserWithAllData(Request $request, $soft=FALSE) {
+          $id = $request->header('X-Workspace-ID');
+          $data = WorkspaceUser::select(array('workspaces_users.*', 'workspaces.*', 'user_email_options.*'));
+          $data->join('workspaces', 'workspaces.id', '=', 'workspaces_users.workspace_id');
+          $data->join('user_email_options', 'user_email_options.user_id', '=', 'workspaces_users.id');
+          $workspace = $data->firstOrFail();
+
+          return $workspace;
+     }
     public function getUser(Request $request, $soft=FALSE) {
           $admin = $request->header('X-Admin-Token');
           $workspaceId = $request->header('X-Workspace-ID');

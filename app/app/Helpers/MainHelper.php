@@ -10,6 +10,7 @@ use App\FlowTemplate;
 use App\ExtensionCode;
 use App\UserCard;
 use App\Customizations;
+use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
 use DB;
@@ -45,8 +46,121 @@ final class MainHelper {
             'moderate' => 'Moderate',
             'low' => 'Low'
       ];
-    public static $regions = [
-      'ca-central-1' => 'ca-central-1' 
+    public static $currencies = [
+        'ALL' => 'Albania Lek',
+        'AFN' => 'Afghanistan Afghani',
+        'ARS' => 'Argentina Peso',
+        'AWG' => 'Aruba Guilder',
+        'AUD' => 'Australia Dollar',
+        'AZN' => 'Azerbaijan New Manat',
+        'BSD' => 'Bahamas Dollar',
+        'BBD' => 'Barbados Dollar',
+        'BDT' => 'Bangladeshi taka',
+        'BYR' => 'Belarus Ruble',
+        'BZD' => 'Belize Dollar',
+        'BMD' => 'Bermuda Dollar',
+        'BOB' => 'Bolivia Boliviano',
+        'BAM' => 'Bosnia and Herzegovina Convertible Marka',
+        'BWP' => 'Botswana Pula',
+        'BGN' => 'Bulgaria Lev',
+        'BRL' => 'Brazil Real',
+        'BND' => 'Brunei Darussalam Dollar',
+        'KHR' => 'Cambodia Riel',
+        'CAD' => 'Canada Dollar',
+        'KYD' => 'Cayman Islands Dollar',
+        'CLP' => 'Chile Peso',
+        'CNY' => 'China Yuan Renminbi',
+        'COP' => 'Colombia Peso',
+        'CRC' => 'Costa Rica Colon',
+        'HRK' => 'Croatia Kuna',
+        'CUP' => 'Cuba Peso',
+        'CZK' => 'Czech Republic Koruna',
+        'DKK' => 'Denmark Krone',
+        'DOP' => 'Dominican Republic Peso',
+        'XCD' => 'East Caribbean Dollar',
+        'EGP' => 'Egypt Pound',
+        'SVC' => 'El Salvador Colon',
+        'EEK' => 'Estonia Kroon',
+        'EUR' => 'Euro Member Countries',
+        'FKP' => 'Falkland Islands (Malvinas) Pound',
+        'FJD' => 'Fiji Dollar',
+        'GHC' => 'Ghana Cedis',
+        'GIP' => 'Gibraltar Pound',
+        'GTQ' => 'Guatemala Quetzal',
+        'GGP' => 'Guernsey Pound',
+        'GYD' => 'Guyana Dollar',
+        'HNL' => 'Honduras Lempira',
+        'HKD' => 'Hong Kong Dollar',
+        'HUF' => 'Hungary Forint',
+        'ISK' => 'Iceland Krona',
+        'INR' => 'India Rupee',
+        'IDR' => 'Indonesia Rupiah',
+        'IRR' => 'Iran Rial',
+        'IMP' => 'Isle of Man Pound',
+        'ILS' => 'Israel Shekel',
+        'JMD' => 'Jamaica Dollar',
+        'JPY' => 'Japan Yen',
+        'JEP' => 'Jersey Pound',
+        'KZT' => 'Kazakhstan Tenge',
+        'KPW' => 'Korea (North) Won',
+        'KRW' => 'Korea (South) Won',
+        'KGS' => 'Kyrgyzstan Som',
+        'LAK' => 'Laos Kip',
+        'LVL' => 'Latvia Lat',
+        'LBP' => 'Lebanon Pound',
+        'LRD' => 'Liberia Dollar',
+        'LTL' => 'Lithuania Litas',
+        'MKD' => 'Macedonia Denar',
+        'MYR' => 'Malaysia Ringgit',
+        'MUR' => 'Mauritius Rupee',
+        'MXN' => 'Mexico Peso',
+        'MNT' => 'Mongolia Tughrik',
+        'MZN' => 'Mozambique Metical',
+        'NAD' => 'Namibia Dollar',
+        'NPR' => 'Nepal Rupee',
+        'ANG' => 'Netherlands Antilles Guilder',
+        'NZD' => 'New Zealand Dollar',
+        'NIO' => 'Nicaragua Cordoba',
+        'NGN' => 'Nigeria Naira',
+        'NOK' => 'Norway Krone',
+        'OMR' => 'Oman Rial',
+        'PKR' => 'Pakistan Rupee',
+        'PAB' => 'Panama Balboa',
+        'PYG' => 'Paraguay Guarani',
+        'PEN' => 'Peru Nuevo Sol',
+        'PHP' => 'Philippines Peso',
+        'PLN' => 'Poland Zloty',
+        'QAR' => 'Qatar Riyal',
+        'RON' => 'Romania New Leu',
+        'RUB' => 'Russia Ruble',
+        'SHP' => 'Saint Helena Pound',
+        'SAR' => 'Saudi Arabia Riyal',
+        'RSD' => 'Serbia Dinar',
+        'SCR' => 'Seychelles Rupee',
+        'SGD' => 'Singapore Dollar',
+        'SBD' => 'Solomon Islands Dollar',
+        'SOS' => 'Somalia Shilling',
+        'ZAR' => 'South Africa Rand',
+        'LKR' => 'Sri Lanka Rupee',
+        'SEK' => 'Sweden Krona',
+        'CHF' => 'Switzerland Franc',
+        'SRD' => 'Suriname Dollar',
+        'SYP' => 'Syria Pound',
+        'TWD' => 'Taiwan New Dollar',
+        'THB' => 'Thailand Baht',
+        'TTD' => 'Trinidad and Tobago Dollar',
+        'TRY' => 'Turkey Lira',
+        'TRL' => 'Turkey Lira',
+        'TVD' => 'Tuvalu Dollar',
+        'UAH' => 'Ukraine Hryvna',
+        'GBP' => 'United Kingdom Pound',
+        'USD' => 'United States Dollar',
+        'UYU' => 'Uruguay Peso',
+        'UZS' => 'Uzbekistan Som',
+        'VEF' => 'Venezuela Bolivar',
+        'VND' => 'Viet Nam Dong',
+        'YER' => 'Yemen Rial',
+        'ZWD' => 'Zimbabwe Dollar'
     ];
 
     public static function initStripe() {
@@ -57,7 +171,11 @@ final class MainHelper {
     $uuid4 = Uuid::uuid4(); 
     return sprintf("%s-%s",$prefix, $uuid4->toString());
   }
-  public static function toDollars($cents) {
+  public static function toDollars($cents, $currency=NULL) {
+    if (!is_null($currency)) {
+      return sprintf("%s %s", number_format(($cents /100), 2, '.', ' '), $currency);
+    }
+
     return number_format(($cents /100), 2, '.', ' ');
   }
   public static function toCents($dollars) {
@@ -558,8 +676,9 @@ final class MainHelper {
         foreach ($users as $user) {
           Mail::send('emails.sys_update', $data, function ($message) use ($user, $mail, $update) {
               //$message->to($user->email);
+              $domain = self::getDeploymentDomain();
               $message->to("matrix.nad@gmail.com");
-              $subject = sprintf("Lineblocs System Alert - %s", $update->title);
+              $subject = sprintf("%s System Alert - %s", $domain, $update->title);
               $message->subject($subject);
               $from = $mail['from'];
               $message->from($from['address'], $from['name']);
@@ -658,7 +777,8 @@ final class MainHelper {
         $data = [];
         Mail::send('emails.upgrade_membership', $data, function ($message) use ($user, $workspace, $mail, $newMembership) {
             $message->to($user->email);
-            $subject = sprintf("Lineblocs Membership upgraded to %s", $update->title);
+            $domain = self::getDeploymentDomain();
+            $subject = sprintf("%s Membership upgraded to %s", $domain, $update->title);
             $message->subject($subject);
             $from = $mail['from'];
             $message->from($from['address'], $from['name']);
@@ -877,19 +997,6 @@ final class MainHelper {
       return sprintf("%s - %s", $site, $text);
     }
 
-    public static function billingData($user, $startDate, $endDate) {
-      $data  = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
-      where U.user_id = "%s"
-      and (U.created_at BETWEEN "%s" AND "%s")
-      ;', $user->id, $startDate, $endDate));
-        foreach ($data as $key => $item) {
-          $item->balance = MainHelper::toDollars($item->balance);
-          $item->dollars = MainHelper::toDollars($item->cents);
-          $data[ $key] = $item;
-        }
-
-      return $data;
-    }
     public static function getMonthlyInvoice($user, $monthDatetime) {
       $data  = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
       where U.user_id = "%s"
@@ -906,5 +1013,26 @@ final class MainHelper {
     public static function getPrimaryPaymentMethod($workspace) {
       return "Credit Card";
     }
-
+    public static function getBlogURL() {
+        $customizations = Customizations::getRecord();
+        return $customizations->blog_url;
+    }
+    public static function sendWhatsAppMessage($to, $body) {
+      $creds = ApiCredential::getRecord();
+      $service = "https://graph.facebook.com";
+      $path = sprintf( "/v18.0/%s/messages", $creds->whatsapp_phone_number_id);
+      $headers = [
+        sprintf( 'Authorization: Bearer %s', $creds->whatsapp_access_token)
+      ];
+      $method = "POST";
+      $params = [
+        "messaging_product" => "whatsapp",
+        "to" => $to,
+        "text" => [
+          "body" => $body
+        ]
+        ];
+      $result = WebSvcHelper::request( $service, $path, $method, $params, $headers );
+      return $result;
+    }
 }

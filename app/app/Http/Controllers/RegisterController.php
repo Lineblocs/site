@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
+use App\Helpers\SMSHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
@@ -31,6 +32,8 @@ use App\WorkspaceEvent;
 use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
+use App\SIPPoPRegion;
+use App\UserRegistrationQuestionResponse;
 use DateTime;
 
 class RegisterController extends ApiAuthController
@@ -118,6 +121,7 @@ class RegisterController extends ApiAuthController
      $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
       $number = $data['mobile_number'];
       $user = User::findOrFail($data['userId']);
+      $customizations = Customizations::getRecord();
       $reuse = [
           '+17808503688',
           '+15874874526'
@@ -128,11 +132,7 @@ class RegisterController extends ApiAuthController
               return $this->response->array(['valid' => FALSE, 'message' => 'Number is already registered..']);
         }
       }
-      $isTest = FALSE;
-      if ($this->isTestNumber($number)) {
-        $number = $number . "-" . uniqid(TRUE);
-        $isTest = TRUE;
-      }
+
       $current = $user->where('mobile_number', $number)->first();
       if ( $current ) {
           return $this->response->array(['valid' => FALSE, 'error' => 'User with mobile number already exists.']);
@@ -141,23 +141,22 @@ class RegisterController extends ApiAuthController
         'pending_number' => $number,
         'call_code' => $code
       ]);
-      if ($isTest) {
 
-          return $this->response->array(['valid' => TRUE]);
-      }
       try {
           $numberProto = $phoneUtil->parse($number, "US");
           if ( !  $phoneUtil->isValidNumber($numberProto) ) {
             return $this->response->array(['valid' => FALSE]);
           }
           $number =$phoneUtil->format($numberProto, \libphonenumber\PhoneNumberFormat::E164);
-          $d7= Config::get('d7');
-        $message = sprintf("Your Lineblocs verification code is %s", $code);
-        if (!$isTest) {
-          $sent = MainHelper::sendSMS( $d7['verification_number'], $number, $message );
-          if (!$sent) {
-            return $this->response->array(['valid' => FALSE, 'error' => 'could not send SMS']);
-          }
+
+        $domain = MainHelper::getDeploymentDomain();
+        $message = sprintf("Your %s verification code is %s", $domain, $code);
+        $from = $customizations->sms_from_number;
+        try {
+          SMSHelper::sendSMS( $from, $number, $message );
+        } catch ( Exception $ex ) {
+          Log::error("error sending SMS message: " . $ex->getMessage());
+          return $this->response->array(['valid' => FALSE, 'error' => 'could not send SMS']);
         }
           return $this->response->array(['valid' => TRUE]);
       } catch (\libphonenumber\NumberParseException $e) {
@@ -192,6 +191,20 @@ class RegisterController extends ApiAuthController
         'Content-Type' => 'application/xml'
       ]);
     }
+    public function saveRegistrationQuestionResponses(Request $request)
+    {
+        $user = User::findOrFail($data['userId']);
+        $data = $request->json()->all();
+        foreach ($data['responses'] as $response) {
+          UserRegistrationQuestionResponse::create([
+            'user_id' => $user,
+            'question' => $response['question'],
+            'question_id' => $response['question_id'],
+            'response' => $response['response'],
+          ]);
+        }
+        return $this->response->array(['success' => TRUE]);
+    }
     public function userSpinup(Request $request)
     {
         $data = $request->all();
@@ -199,8 +212,8 @@ class RegisterController extends ApiAuthController
         $customizations =Customizations::getRecord();
         $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail()->toArray();
         //$plan = $plans[$data['plan']];
-        $region = "ca-central-1";
-        $info = MainHelper::getHostIPForUser($region, $user);
+        $region = SIPPoPRegion::findOrFail( $customizations->default_region );
+        $info = MainHelper::getHostIPForUser($region->code, $user);
           //$reservedIp = AWSHelper::reserveIP($region, $ip['main'], $ip['reservedIp']);
           //$reservedIp = VultrHelper::reserveIP($region, $ip['main'], $ip."/32");
           /*
@@ -213,7 +226,7 @@ class RegisterController extends ApiAuthController
           $workspace = Workspace::where('creator_id', '=', $user->id)->first();
           // setup default region
           $workspace->update([
-            'default_region' => $region
+            'default_region' => $region->code
           ]);
           $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
 
@@ -342,7 +355,8 @@ class RegisterController extends ApiAuthController
       ]);
       PlanUsagePeriod::create([
         'workspace_id' => $workspace->id,
-        'plan' => 'trial'
+        'plan' => $plan,
+        'started_at' => new DateTime()
       ]);
       $attrs = [];
       return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);
