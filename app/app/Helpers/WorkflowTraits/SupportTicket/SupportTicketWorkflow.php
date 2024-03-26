@@ -83,6 +83,10 @@ trait SupportTicketWorkflow {
             'user' => $user,
             'ticket' => $supportTicket
         ];
+        $feedbackLink = MainHelper::createUrl('/leave-feedback');
+        if ($customizations->app_feedback_enabled) {
+            $result = EmailHelper::sendEmail($subject, $user->email, 'app_feedback_request', ['user' => $user, 'feedbackLink' => $feedbackLink]);
+        }
         $result = EmailHelper::sendEmail($subject, $user->email, 'support_ticket_created', $data);
         return $this->response->array($supportTicket)->withHeader('X-Supportticket-ID', $supportTicket->public_id);
     }

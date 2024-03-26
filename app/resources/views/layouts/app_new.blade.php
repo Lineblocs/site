@@ -163,5 +163,8 @@
                     twq('track','PageView');
                 </script>
                 <!-- End Twitter universal website tag code -->
+@if (\App\Helpers\MainHelper::getCustomization('live_chat_enabled'))
+    @include('partials.livechat')
+@endif
 </body>
 </html>

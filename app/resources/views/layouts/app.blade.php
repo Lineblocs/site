@@ -41,6 +41,9 @@
 
 <!-- Scripts -->
 @yield('scripts')
+@if (\App\Helpers\MainHelper::getCustomization('live_chat_enabled'))
+    @include('partials.livechat')
+@endif
 
 </body>
 </html>

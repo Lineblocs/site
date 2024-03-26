@@ -300,11 +300,16 @@
                     </select>
                 </div>
             </div>
-            <div class="row form-group">
+
+           <div class="row form-group">
                 <label for="payment_gateway">Payment gateway</label>
                 <div class="controls">
                     <select name="payment_gateway" class="form-control" id="payment_gateway">
                         @if ( $record->payment_gateway == 'stripe')
+                            <option value="" selected>Select payment gateway</option>
+                            <option value="stripe" selected>Stripe</option>
+                        @else
+                            <option value="">Select payment gateway</option>
                             <option value="stripe" selected>Stripe</option>
                         @endif
                         <!--<option>Wide</option>-->
@@ -312,6 +317,41 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row form-group">
+                <label for="live_chat_enabled">Live chat enabled</label>
+                <div class="controls">
+                    <select name="live_chat_enabled" class="form-control" id="live_chat_enabled">
+                        @if ( $record->live_chat_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="live_chat_provider">Live chat provider</label>
+                <div class="controls">
+                    <select name="live_chat_provider" class="form-control" id="live_chat_provider">
+                        @if ( $record->live_chat_provider == 'intercom')
+                            <option value="">Select provider</option>
+                            <option value="intercom" selected>Intercom</option>
+                        @else
+                            <option value="" selected>Select provider</option>
+                            <option value="intercom">Intercom</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
 
             <div class="row form-group">
                 <label for="default_currency">Default billing currency</label>
@@ -612,6 +652,52 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row">
+                <h3>App feedback settings</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <div class="controls">
+                    @if ( $record->allow_app_feedback )
+                        <input id="allow_app_feedback" type="checkbox"  name="allow_app_feedback" checked/>
+                    @else
+                        <input id="allow_app_feedback" type="checkbox"  name="allow_app_feedback"/>
+                    @endif
+                    <label>Allow app feedback</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="feedback_platform">Feedback platform</label>
+                <div class="controls">
+                    <select name="feedback_platform" class="form-control" id="feedback_platform">
+                        @foreach ($feedbackPlatforms as $platform)
+                            @if ($platform == $record->feedback_platform)
+                                <option value="{{$platform}}" selected>{{$platform}}</option>
+                            @else
+                                <option value="{{$platform}}">{{$platform}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="trustpilot_url">TrustPilot link</label>
+                <div class="controls">
+                    <input type="text" name="trustpilot_url" class="form-control" id="trustpilot_url" value="{{$record->trustpilot_url}}" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="g2_url">G2 Crowd link</label>
+                <div class="controls">
+                    <input type="text" name="g2_url" class="form-control" id="g2_url" value="{{$record->g2_url}}" />
+                </div>
+            </div>
+
+
 
             <div class="row">
                 <h3>Maintenance and upgrade settings</h3>

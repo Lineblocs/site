@@ -76,7 +76,11 @@ class CustomizationsController extends AdminController {
 		$currencies = MainHelper::$currencies;
 		$regions = SIPPoPRegion::all();
 		$questionnaire = RegistrationQuestionnaire::all();
-		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions, 'currencies' => $currencies, 'questionnaire' => $questionnaire]);
+		$feedbackPlatforms = [
+			'TrustPilot',
+			'G2 Crowd',
+		];
+		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions, 'currencies' => $currencies, 'questionnaire' => $questionnaire, 'feedbackPlatforms' => $feedbackPlatforms]);
 	}
 
 	private function storeUploadedFile( $file, $file_name ) {
@@ -153,6 +157,16 @@ class CustomizationsController extends AdminController {
 			$payments_enabled = true;
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
+
+
+		$live_chat_enabled = false;
+
+		if ( $update_params['live_chat_enabled'] =='yes') {
+			$live_chat_enabled = true;
+		}
+		$update_params['live_chat_enabled'] = $live_chat_enabled;
+
+
 
 		$billing_retry_enabled = false;
 
@@ -258,10 +272,15 @@ class CustomizationsController extends AdminController {
 
 		$automatic_security_updates = false;
 
-		if ( !empty( $update_params['automatic_security_updates'] ) ) {
-			$automatic_security_updates = true;
+		$allow_app_feedback = false;
+
+		if ( !empty( $update_params['allow_app_feedback'] ) ) {
+			$allow_app_feedback = true;
 		}
-		$update_params['automatic_security_updates'] = $automatic_security_updates;
+		$update_params['allow_app_feedback'] = $allow_app_feedback;
+
+
+
 
 		$recaptcha_enabled = false;
 

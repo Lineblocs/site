@@ -154,6 +154,15 @@
             </div>
 
             <div class="row form-group">
+                <label for="intercom_workspace_id">Intercom workspace ID</label>
+                <div class="controls">
+                    <input id="intercom_workspace_id" type="text" class="form-control" name="intercom_workspace_id" value="{{$creds->intercom_workspace_id}}"/>
+                </div>
+            </div>
+
+
+
+            <div class="row form-group">
                 <label for="disqus_site">Disqus site</label>
                 <div class="controls">
                     <input id="disqus_site" type="text" class="form-control" name="disqus_site" value="{{$creds->disqus_site}}"/>

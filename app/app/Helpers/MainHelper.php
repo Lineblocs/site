@@ -10,6 +10,7 @@ use App\FlowTemplate;
 use App\ExtensionCode;
 use App\UserCard;
 use App\Customizations;
+use App\ApiCredential;
 use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
@@ -1034,5 +1035,14 @@ final class MainHelper {
         ];
       $result = WebSvcHelper::request( $service, $path, $method, $params, $headers );
       return $result;
+    }
+    public static function getCustomization($field) {
+      $creds = Customizations::getRecord();
+      return $creds[$field];
+    }
+    public static function getCredential($field) {
+      $creds = ApiCredential::getRecord();
+      return $creds[$field];
+
     }
 }

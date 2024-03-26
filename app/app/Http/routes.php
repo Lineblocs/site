@@ -43,6 +43,7 @@ Route::get('pricing', 'HomeController@pricing');
 Route::get('rates', 'HomeController@rates1');
 Route::get('rates/{countryId}', 'HomeController@rates');
 Route::get('faqs', 'HomeController@faqs');
+Route::get('leave-feedback', 'HomeController@leaveFeedback');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
 // service level agreement
 Route::get('/pages/service-agreement', 'PagesController@serviceAgreement');

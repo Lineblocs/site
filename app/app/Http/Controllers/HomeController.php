@@ -403,6 +403,16 @@ class HomeController extends BaseController {
     $request->session()->flash('status', 'Thanks you, your request has been submitted successfully. Someone will be in touch in 24-48 hours');
     return view('pages.request_quote', $vars);
   }
+
+  public function leaveFeedback(Request $request)
+  {
+    $data = $request->all();
+    $customizations = Customizations::getRecord();
+    $vars = [
+      'customizations' => $customizations
+    ];
+    return view('pages.leave_feedback', $vars);
+  }
   public function alternative(Request $request)
   {
     $vars = [];
