@@ -706,6 +706,7 @@ $api->version('v1', function($api) {
         $api->post("/checkoutWithPayPal", "CreditController@checkoutWithPayPal");
         $api->get("/checkoutWithPayPalDone", "CreditController@checkoutWithPayPalDone")->name('checkout_paypal_done');
         $api->get("/checkoutWithPayPalFail", "CreditController@checkoutWithPayPalFail")->name('checkout_paypal_fail');
+        $api->get("/ipnNotification", "CreditController@ipnNotification")->name('ipn_notification');
     });
 
     $api->group([ 'prefix' => 'card', 'namespace' => '\App\Http\Controllers\Api\Card'], function($api) {

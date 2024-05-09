@@ -22,6 +22,8 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 use PayPal\Api\PaymentExecution;
 
+use App\Helpers\EmailHelper;
+
 use \Config;
 use \Exception;
 use \Log;
@@ -239,6 +241,98 @@ class CreditController extends HasStripeController {
   public function checkoutWithPayPalFail(Request $request)
     {
           return redirect("/back-to-billing-cancel");
+  }
+
+  public function ipnNotification(Request $request)
+  {
+    // check if billing agreement is cancelled
+    // PayPal IPN listener script
+
+    // Step 1: Read the IPN notification from PayPal and create the response array
+    $raw_post_data = file_get_contents('php://input');
+    $raw_post_array = explode('&', $raw_post_data);
+    $myPost = [];
+    foreach ($raw_post_array as $keyval) {
+        $keyval = explode('=', $keyval);
+        if (count($keyval) == 2) {
+            $myPost[$keyval[0]] = urldecode($keyval[1]);
+        }
+    }
+    // Read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
+    $req = 'cmd=_notify-validate';
+    if (function_exists('get_magic_quotes_gpc')) {
+        $get_magic_quotes_exists = true;
+    }
+    foreach ($myPost as $key => $value) {
+        if ($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
+            $value = urlencode(stripslashes($value));
+        } else {
+            $value = urlencode($value);
+        }
+        $req .= "&$key=$value";
+    }
+
+    // Step 2: Post IPN data back to PayPal to validate
+    $ch = curl_init('https://ipnpb.paypal.com/cgi-bin/webscr');
+    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+
+    // In sandbox mode, use:
+    // $ch = curl_init('https://ipnpb.sandbox.paypal.com/cgi-bin/webscr');
+
+    if (!($res = curl_exec($ch))) {
+        // HTTP error
+        curl_close($ch);
+        exit;
+    }
+
+    // Step 3: Handle the response from PayPal
+    curl_close($ch);
+
+    // Check if IPN response is valid
+    if (strcmp($res, 'VERIFIED') == 0) {
+        // IPN is verified, process the transaction
+        $payment_status = $_POST['payment_status'];
+        $txn_type = $_POST['txn_type'];
+
+        // Check if it's a cancellation notification
+        if ($payment_status === 'Canceled_Reversal' && $txn_type === 'mp_cancel') {
+            // Handle the cancellation here, such as updating your database or sending notifications
+            // For example:
+            $payer_email = $_POST['payer_email'];
+            $subscription_id = $_POST['subscr_id'];
+            $user = User::where('email', $payer_email)->first();
+            if (!$user) {
+              Log::error(sprintf("couldnt find payer %s when processing paypal IPN", $payer_email));
+              return $this->response->errorInternal();
+            }
+
+            // Log the cancellation or send a notification
+            // mail($your_email, "Subscription Canceled", "The subscription for $payer_email with ID $subscription_id has been canceled.");
+            $data = [
+                'user' => $user,
+            ];
+            $result = EmailHelper::sendEmail($subject, $user->email, 'billing_agreement_cancelled', $data);
+
+
+        } else {
+            // Handle other types of transactions or notifications if needed
+        }
+
+    } else if (strcmp($res, 'INVALID') == 0) {
+        // IPN is invalid, log for manual investigation
+        // Log the invalid IPN
+        return $this->response->errorInternal();
+    }
+
+    // Reply with an empty 200 response to indicate the IPN was received correctly
+    return $this->response->noContent();
   }
 
 }
