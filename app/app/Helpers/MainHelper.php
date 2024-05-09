@@ -840,7 +840,7 @@ final class MainHelper {
       $card = \Stripe\Customer::createSource(
           $user->stripe_id,
           [
-              'source' => $data['stripe_token']
+              'source' => $data['card_token']
           ]
       );
       //$all = UserCard::where('workspace_id', $workspace->id)->get();

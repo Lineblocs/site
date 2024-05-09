@@ -1030,11 +1030,20 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     // set the billing region
     $region = $data['billing_region_id'];
     $gateway = $data['payment_gateway'];
+    $paymentCard = $data['payment_card'];
+    $paymentValues = $data['payment_values'];
     $billingData = $data;
     $result = BillingDataHelper::updateWorkspaceBilling($gateway, $billingData, $user, $workspace);
     if (!$result) {
       return $this->response->errorBaRrequest();
     }
+
+    $cardData = [
+      'card_token' => $paymentValues['card_token'],
+      'last_4' => $paymentValues['last_4'],
+    ];
+
+    $card = MainHelper::addCard($cardData, $user, $workspace, TRUE, $gateway);
 
     $workspace->update([
       'billing_region_id' => $region
