@@ -698,6 +698,47 @@
             </div>
 
 
+            <div class="row">
+                <h3>Billing settings</h3>
+                <hr/>
+            </div>
+
+
+            <div class="row form-group">
+                <label for="billing_frequency">Billing frequency</label>
+                <br/>
+                <small>note: this setting will be used to calculate total billing cost per call (outgoing or incoming). 
+                Also, calls billed by the minute will be rounded up to the next minute. For example if you made a call for 3 minutes and 45 seconds it will automatically round up to 4 minutes total. 
+                If you would like more precise billing it is suggested to bill calls by the second. </small>
+                <div class="controls">
+                    <select name="billing_frequency" class="form-control" id="billing_frequency">
+                        @if ( $record->billing_frequency == 'PER_MINUTE')
+                            <option value="PER_MINUTE" selected>Total minutes</option>
+                            <option value="PER_SECOND">Total seconds</option>
+                        @elseif ( $record->billing_frequency == 'PER_SECOND')
+                            <option value="PER_MINUTE">Total minutes</option>
+                            <option value="PER_SECOND" selected>Total seconds</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="maintenance_window_time">Maintenance window time</label>
+                <div class="controls">
+                    <select name="maintenance_window_time" class="form-control" id="maintenance_window_time">
+                        @foreach ($maintenanceTimes as $time)
+                            @if ($time == $record->maintenance_window_time)
+                                <option value="{{$time}}" selected>{{$time}}</option>
+                            @else
+                                <option value="{{$time}}">{{$time}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
 
             <div class="row">
                 <h3>Maintenance and upgrade settings</h3>
