@@ -117,7 +117,6 @@ class CostSavingController extends AdminController
             ->add_column('actions', '<a href="{{{ url(\'admin/costsaving/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
                     <a href="{{{ url(\'admin/costsaving/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
 
-            ->edit_column('featured_plan', '@if ($featured_plan=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
             ->remove_column('id')
             ->make();
     }

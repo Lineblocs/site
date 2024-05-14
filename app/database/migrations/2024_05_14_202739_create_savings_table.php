@@ -22,7 +22,9 @@ class CreateSavingsTable extends Migration
             $table->string('local_number_monthly')->nullable();
             $table->string('toll_free_number_monthly')->nullable();
             $table->string('sms_send_via_local_number')->nullable();
+            $table->string('sms_receive_via_local_number')->nullable();
             $table->string('sms_send_via_toll_free_number')->nullable();
+            $table->string('sms_receive_via_toll_free_number')->nullable();
             $table->string('sms_send_via_short_code')->nullable();
             $table->string('sms_receive_via_short_code')->nullable();
 
