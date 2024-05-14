@@ -297,6 +297,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
     Route::resource('serviceplan', 'Admin\ServicePlanController');
 
+     # costsaving
+    Route::get('costsaving/data', 'Admin\CostSavingController@data');
+    Route::get('costsaving/{costsaving}/show', 'Admin\CostSavingController@show');
+    Route::get('costsaving/{costsaving}/edit', 'Admin\CostSavingController@edit');
+    Route::get('costsaving/{costsaving}/delete', 'Admin\CostSavingController@delete');
+    Route::resource('costsaving', 'Admin\CostSavingController');
+
+     # competitor
+    Route::get('competitor/data', 'Admin\CompetitorController@data');
+    Route::get('competitor/{competitor}/show', 'Admin\CompetitorController@show');
+    Route::get('competitor/{competitor}/edit', 'Admin\CompetitorController@edit');
+    Route::get('competitor/{competitor}/delete', 'Admin\CompetitorController@delete');
+    Route::resource('competitor', 'Admin\CompetitorController');
+
+
 
     # SIPRoutingACL
     Route::get('routingacl/data', 'Admin\SIPRoutingACLController@data');

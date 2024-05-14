@@ -149,6 +149,16 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/competitor')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Competitors
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/costsaving')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Cost Savings
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/faqs')}}">
                                 <i class="glyphicon glyphicon-bullhorn"></i> FAQs
                             </a>

@@ -36,6 +36,8 @@ use \App\ResourceSection;
 use \App\ResourceArticle;
 use \App\CompanyRepresentative;
 use \App\SIPRoutingACL;
+use \App\Competitor;
+use \App\CostSaving;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -91,6 +93,8 @@ class RouteServiceProvider extends ServiceProvider
 
        \Route::model('companyrepresentative',CompanyRepresentative::class);
        \Route::model('routingacl',SIPRoutingACL::class);
+       \Route::model('competitor',Competitor::class);
+       \Route::model('costsaving',CostSaving::class);
     }
 
     /**
