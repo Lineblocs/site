@@ -12,6 +12,8 @@ use App\User;
 use App\ServicePlan;
 use App\Customizations;
 use App\ApiCredential;
+use App\Competitor;
+use App\CostSaving;
 use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
@@ -59,8 +61,15 @@ class HomeController extends BaseController {
   {
     $plans = ServicePlan::where('include_in_pricing_pages', '1')->get();
     $plans = ServicePlan::sortPlansByFeatures($plans);
+    $competitors = Competitor::all();
+    $savings = CostSaving::select(array('cost_savings.*', DB::raw('competitors.name AS competitor_name')));
+    $savings = $savings->join('competitors', 'competitors.id', '=', 'cost_savings.competitor_id');
+    $savings = $savings->get();
+
     return view('pages.pricing', [
-      'plans' => $plans
+      'plans' => $plans,
+      'savings' => $savings,
+      'competitors' => $competitors
     ]);
   }
 

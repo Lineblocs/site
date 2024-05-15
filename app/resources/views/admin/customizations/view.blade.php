@@ -284,6 +284,21 @@
                 </div>
             </div>
 
+            <div class="row">
+                <h4>Content to display</h4>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <div class="controls">
+                    @if ( $record->show_savings_content )
+                        <input id="show_savings_content" type="checkbox"  name="show_savings_content" checked/>
+                    @else
+                        <input id="show_savings_content" type="checkbox"  name="show_savings_content"/>
+                    @endif
+                    <label>Price Savings</label>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="payments_enabled">Payments enabled</label>
                 <div class="controls">

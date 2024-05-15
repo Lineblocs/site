@@ -7,7 +7,11 @@ Pricing plans for all
 @endsection
 
 @section('content')
-
+<style>
+.price-comparison {
+  margin-top: 15px;
+}
+</style>
 <div class="pricing">
     <section class="cards-section">
       <div class="container">
@@ -247,6 +251,33 @@ Pricing plans for all
       </div>
     </section> -->
 
+    @if (\App\Helpers\CustomizationsHelper::get('show_savings_content'))
+      <section class="cards-section">
+        <div class="learn_more-section">
+          <div class="container">
+            <div class="learn_more-content">
+              <h3 class="learn_more-heading">How {{\App\Helpers\MainHelper::getSiteName()}} compares</h3>
+              <p class="learn_more-para">Select a competing service below to find out how our prices compare.</p>
+              <select class="form-control" name="savings_competitor" id="savingsCompetitor">
+                @foreach ($competitors as $competitor)
+                  <option value="{{$competitor->id}}">{{$competitor->name}}</option>
+                @endforeach
+              </select>
+              <div class="price-comparison">
+                <h4>VoIP & calling rates</h4>
+                <table class="table table-striped" id="voipRates">
+                  <thead>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    @endif
+
     <section class="cards-section">
       <div class="learn_more-section">
         <div class="container">
@@ -265,13 +296,62 @@ Pricing plans for all
 @endsection
 @section('scripts')
 <script>
+  const ourPricingData = {};
+
+  function addRowItem(tbody,savingsData,dataKey,label) {
+    var tr = $("<tr></tr>");
+    var labelTd = $("<td></td>");
+    labelTd.text( label );
+    labelTd.appendTo( tr );
+
+    var theirRateTd = $("<td></td>");
+    theirRateTd.text( savingsData[dataKey] )
+    theirRateTd.appendTo( tr );
+
+    var ourRateTd = $("<td></td>");
+    ourRateTd.text( ourPricingData[dataKey] )
+    ourRateTd.appendTo( tr );
+
+    tr.appendTo( tbody );
+  }
   $(document).ready(function () {
-    $('select').formSelect();
-    var select = $("#countries");
-    var form = document.forms['pricing'];
-    $(select).change(function () {
-      form.submit();
-    });
+    var costSavings = {!! json_encode($savings->toArray()) !!}
+    $("#savingsCompetitor").change(function() {
+      var competitor = $(this).val();
+
+      // only get the first result for now.
+      // todo: change this to selectively pick which record to get based on what
+      // regiont he user is interested in viewing.
+      const savingsData = costSavings.find( (item) => {
+        if ( item.competitor_id.toString() === competitor ) {
+          return true;
+        }
+        
+        return false;
+      });
+      console.log('savings data ', savingsData);
+
+      const thead = $("table#voipRates thead");
+      thead.children().remove().end();
+      const tr = $("<tr></tr>");
+      $("<td>Category</td>").appendTo( tr );
+      $("<td>Their rate</td>").appendTo( tr );
+      $("<td>Our rate</td>").appendTo( tr );
+      tr.appendTo( thead );
+
+
+      const tbody = $("table#voipRates tbody");
+      tbody.children().remove().end();
+      addRowItem(tbody,savingsData,'pstn_calls', 'PSTN calls');
+      addRowItem(tbody,savingsData,'receive_calls_on_local_number', 'Receive calls on local number');
+      addRowItem(tbody,savingsData,'webrtc_calling_rates', 'WebRTC calling rates');
+      addRowItem(tbody,savingsData,'call_recordings', 'Call Recordings');
+      addRowItem(tbody,savingsData,'call_recordings_storage', 'Call Recordings Storage');
+      addRowItem(tbody,savingsData,'conference_calls', 'Conference calls');
+    })
+
+
+    $("#savingsCompetitor").change();
   });
 </script>
 @endsection

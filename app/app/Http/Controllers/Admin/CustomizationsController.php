@@ -232,6 +232,15 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['enable_apple_signin'] = $enable_apple_signin;
 
+		$show_savings_content = false;
+
+		if ( !empty( $update_params['show_savings_content'] ) ) {
+			$show_savings_content = true;
+		}
+		$update_params['show_savings_content'] = $show_savings_content;
+
+
+
 		$search_include_portal_views = false;
 		$search_include_blog_views = false;
 		$search_include_resources = false;
