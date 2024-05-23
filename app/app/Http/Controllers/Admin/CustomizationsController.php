@@ -211,7 +211,11 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['registration_questionnaire_enabled'] = $registration_questionnaire_enabled;
 
-
+		$customer_satisfaction_survey_enabled = false;
+		if ( $update_params['customer_satisfaction_survey_enabled'] =='yes') {
+			$customer_satisfaction_survey_enabled = true;
+		}
+		$update_params['customer_satisfaction_survey_enabled'] = $customer_satisfaction_survey_enabled;
 
 		$enable_google_signin = false;
 

@@ -191,6 +191,18 @@
                 <button id="addRegQuestionBtn" type="button" class="btn btn-info">Add Question</button>
             </div>
 
+
+            <div class="row">
+                <h3>Survey links</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <label for="customer_satisfaction_survey_url">Customer satisfaction survey</label>
+                <div class="controls">
+                    <input type="text" name="customer_satisfaction_survey_url" class="form-control" id="customer_satisfaction_survey_url" value="{{$record->customer_satisfaction_survey_url }}" />
+                </div>
+            </div>
+
             <div class="row">
                 <h3>Preferences</h3>
                 <hr/>
@@ -460,6 +472,23 @@
                 <div class="controls">
                     <select name="registration_questionnaire_enabled" class="form-control" id="registration_questionnaire_enabled">
                         @if ( $record->registration_questionnaire_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="customer_satisfaction_survey_enabled">Customer satisfaction survey enabled</label>
+                <div class="controls">
+                    <select name="customer_satisfaction_survey_enabled" class="form-control" id="customer_satisfaction_survey_enabled">
+                        @if ( $record->customer_satisfaction_survey_enabled)
                             <option value="yes" selected>Yes</option>
                             <option value="no">No</option>
                         @else
