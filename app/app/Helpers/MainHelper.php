@@ -976,6 +976,24 @@ final class MainHelper {
       $domain = self::getDeploymentDomain();
       return sprintf("%s@%s", $user, $domain);
     }
+
+    // TODO: find a better way to get the IP incase
+    // this is not running behind a apache server
+    public static function getLocalIP() {
+
+      if (array_key_exists($_SERVER, 'SERVER_ADDR')) {
+        return $_SERVER['SERVER_ADDR']; 
+      }
+
+      $conn = curl_init();
+      curl_setopt($conn, CURLOPT_URL, 'example.org');
+      curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1);
+      $resp = curl_exec($conn);
+      $defaultIP = curl_getinfo($conn)['local_ip'];
+
+      return $defaultIP;
+    }
+
     public static function getDeploymentDomain() {
       $domain = env('DEPLOYMENT_DOMAIN');
       return $domain;
