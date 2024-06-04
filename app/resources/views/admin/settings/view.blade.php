@@ -215,8 +215,8 @@
             </div>
 
             <div class="row form-group">
-            <h1>SSO credentials</h1>
-</div>
+                <h1>SSO credentials</h1>
+            </div>
             <hr/>
 
             <div class="row form-group">
@@ -272,6 +272,58 @@
                     <input id="apple_signin_client_secret" class="form-control" name="apple_signin_client_secret" value="{{$creds->apple_signin_client_secret}}" />
                 </div>
             </div>
+
+
+            <div class="row form-group">
+                <h3>DNS provider API keys</h3>
+            </div>
+
+            <div class="row form-group">
+                <label for="namecheap_api_key">Namecheap API key</label>
+                <div class="controls">
+                    <input id="namecheap_api_key" class="form-control" name="namecheap_api_key" value="{{$creds->namecheap_api_key}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="namecheap_api_user">Namecheap API user</label>
+                <div class="controls">
+                    <input id="namecheap_api_user" class="form-control" name="namecheap_api_user" value="{{$creds->namecheap_api_user}}" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+            <h3>Microsoft details</h3>
+</div>
+            <div class="row form-group">
+                <label for="msft_signin_client_id">Client ID</label>
+                <div class="controls">
+                    <input id="msft_signin_client_id" class="form-control" name="msft_signin_client_id" value="{{$creds->msft_signin_client_id}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="msft_signin_client_secret">Client secret</label>
+                <div class="controls">
+                    <input id="msft_signin_client_secret" class="form-control" name="msft_signin_client_secret" value="{{$creds->msft_signin_client_secret}}" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+            <h3>Apple details</h3>
+</div>
+            <div class="row form-group">
+                <label for="apple_signin_client_id">Client ID</label>
+                <div class="controls">
+                    <input id="apple_signin_client_id" class="form-control" name="apple_signin_client_id" value="{{$creds->apple_signin_client_id}}" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="apple_signin_client_secret">Client secret</label>
+                <div class="controls">
+                    <input id="apple_signin_client_secret" class="form-control" name="apple_signin_client_secret" value="{{$creds->apple_signin_client_secret}}" />
+                </div>
+            </div>
+
+
             <div class="row form-group">
             <h1>Analytics keys</h1>
 </div>

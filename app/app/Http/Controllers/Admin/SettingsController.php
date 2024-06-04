@@ -80,7 +80,9 @@ class SettingsController extends AdminController {
         'zendesk_subdomain',
         'zendesk_username',
         'zendesk_token',
-        'intercom_workspace_id'
+        'intercom_workspace_id',
+        'namecheap_api_key',
+        'namecheap_api_user',
         ];
         $update = [];
         foreach ( $keys as $key ) {
