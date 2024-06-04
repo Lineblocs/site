@@ -1,5 +1,6 @@
 <?php
-$ingress = env('INGRESS_IP', '159.203.49.210');
+$ingress = env('INGRESS_IP', $_SERVER['SERVER_ADDR']);
+
 return [
   'ingress' => $ingress
 ];

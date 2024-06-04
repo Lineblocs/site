@@ -31,7 +31,7 @@ final class DNSHelper {
     $dns = Config::get("dns");
     $ingress = $dns['ingress'];
     $sandbox = FALSE;
-    $baseEecordHosts = [
+    $baseRecordHosts = [
         '@',
         'app',
         'editor',
@@ -55,7 +55,7 @@ final class DNSHelper {
       ], $sandbox);
 
       $baseRecords = [];
-      foreach ( $baseEecordHosts as $host ) {
+      foreach ( $baseRecordHosts as $host ) {
         $baseRecords[] = [
               'host' => $host,
               'type' => 'A',
@@ -164,7 +164,7 @@ final class DNSHelper {
 
           $HostedZoneId = $customizations->aws_route53_zone_id;
           $baseRecords = [];
-          foreach ( $baseEecordHosts as $host ) {
+          foreach ( $baseRecordHosts as $host ) {
             $baseRecords[] = [
                 'Action'            => 'CREATE',
                 "ResourceRecordSet" => [
