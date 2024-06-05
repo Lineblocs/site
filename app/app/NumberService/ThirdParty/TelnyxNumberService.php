@@ -5,6 +5,9 @@ use Session;
 use App\NumberService\NumberService;
 final class TelnyxNumberService {
 
+    public function __construct($serviceData=NULL) {
+    }
+
     public static function cachePut($key, $value)
     {
       Session::put($key, $value);

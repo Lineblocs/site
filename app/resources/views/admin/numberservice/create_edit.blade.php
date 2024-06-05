@@ -50,7 +50,10 @@
             </div>
         </div>
 
-    
+
+        <h2>Config</h2>
+        <hr/>
+
         <div class="form-group">
         <button type="submit" class="btn btn-sm btn-success">
             <span class="glyphicon glyphicon-ok-circle"></span>

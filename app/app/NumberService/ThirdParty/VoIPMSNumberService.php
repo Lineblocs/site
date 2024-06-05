@@ -7,13 +7,18 @@ use App\Helpers\MainHelper;
 use App\NumberService\NumberService;
 use App\Classes\VoIPms;
 class VoIPMSNumberService extends NumberService {
-    public function __construct() {
-      // login
-      $this->config = Config::get("number_services.voipms");
+    public function __construct($serviceData=NULL) {
       $this->clazz = new VoIPms();
-      $this->clazz->api_username = $this->config['api_username'];
-      $this->clazz->api_password =  $this->config['api_password'];
+      if (empty($serviceData) || empty($serviceData['api_key']) || empty($serviceData['api_secret'])) {
+        $this->isUsable = false;
+        return;
+      }
+
+      $this->clazz->api_username = $serviceData['api_key'];
+      $this->clazz->api_password =  $serviceData['api_secret'];
+      $this->isUsable = true;
     }
+
     public function getName() {
       return "VoIPMS";
     }

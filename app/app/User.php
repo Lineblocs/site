@@ -58,7 +58,7 @@ class User extends Model implements AuthenticatableContract,
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
-      $balance = BillingDataHelper::getBillingInfo();
+      $balance = BillingDataHelper::getBillingInfo($this);
       if ($balance['remainingBalance']<=$cost && $workspace->plan == 'pay-as-you-go') {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }

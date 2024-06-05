@@ -11,8 +11,11 @@ use App\SIPRateCenterProvider;
 use App\SIPProvider;
 use DB;
 use App\NumberService\ThirdParty\VoIPMSNumberService;
+use App\NumberService as NumberServiceData;
 
 abstract class NumberService {
+    public $isUsable = false;
+
     public static function listNumbers($country, $region, $prefix, $center=NULL, $params=array()){
         $amount = 50;
       $providers =  SIPProvider::select(DB::raw("DISTINCT(sip_providers.id), sip_providers.api_name, sip_regions.code, sip_countries.iso"));
@@ -51,6 +54,7 @@ abstract class NumberService {
       $numbers = [];
 
       // first check inventory
+      Log::info("looking up numbers in inventory");
       $inventory = new \App\NumberService\InventoryService();
       $inventoryNumbers = $inventory->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
       list( $numbers, $exceededAllowedAmount ) = NumberService::addNumbers( $numbers, $inventoryNumbers, $amount );
@@ -60,8 +64,14 @@ abstract class NumberService {
           break;
         }
 
-        $provider = NumberService::getProvider($provider->api_name) ;
-        $providerNumbers = $provider->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
+        Log::info("looking up numbers with provider " . $provider->api_name);
+
+        $numberSvc = NumberService::getProvider($provider->api_name);
+        if (!$numberSvc->isUsable) {
+          Log::debug(sprintf("%s API is not usable", $provider->api_name));
+          continue;
+        }
+        $providerNumbers = $numberSvc->listNumbersAPI($country, $region, $prefix, $center, $type, $for, $extras);
         list( $numbers, $exceededAllowedAmount ) = NumberService::addNumbers( $numbers, $providerNumbers, $amount );
         if ( $exceededAllowedAmount ) {
           break;
@@ -105,8 +115,12 @@ abstract class NumberService {
         return new \App\NumberService\InventoryService();
 
       }
+
+      // lookup number service data for this API provider
+      $serviceData = NumberServiceData::where('key_name', $name)->first();
+
       $full = "\\App\\NumberService\\ThirdParty\\".$name."NumberService";
-      return new $full;
+      return new $full($serviceData);
     }
 
     public static function getDIDProvider($country) {
