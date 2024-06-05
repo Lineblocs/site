@@ -250,13 +250,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 
 
     # NumberInventorys
-    Route::get('number/data', 'Admin\NumberInventoryController@data');
-    Route::get('number/{number}/show', 'Admin\NumberInventoryController@show');
-    Route::get('number/{number}/edit', 'Admin\NumberInventoryController@edit');
-    Route::get('number/{number}/delete', 'Admin\NumberInventoryController@delete');
-    Route::get('number/import', 'Admin\NumberInventoryController@import');
-    Route::post('number/import', 'Admin\NumberInventoryController@import_save');
-    Route::resource('number', 'Admin\NumberInventoryController');
+    Route::get('numberinventory/data', 'Admin\NumberInventoryController@data');
+    Route::get('numberinventory/{numberinventory}/show', 'Admin\NumberInventoryController@show');
+    Route::get('numberinventory/{numberinventory}/edit', 'Admin\NumberInventoryController@edit');
+    Route::get('numberinventory/{numberinventory}/delete', 'Admin\NumberInventoryController@delete');
+    Route::get('numberinventory/import', 'Admin\NumberInventoryController@import');
+    Route::post('numberinventory/import', 'Admin\NumberInventoryController@import_save');
+    Route::resource('numberinventory', 'Admin\NumberInventoryController');
 
     # SIPPoPRegions
     Route::get('popregion/data', 'Admin\SIPPoPRegionController@data');
@@ -303,6 +303,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('costsaving/{costsaving}/edit', 'Admin\CostSavingController@edit');
     Route::get('costsaving/{costsaving}/delete', 'Admin\CostSavingController@delete');
     Route::resource('costsaving', 'Admin\CostSavingController');
+
+     # numberservice
+    Route::get('numberservice/data', 'Admin\NumberServiceController@data');
+    Route::get('numberservice/{numberservice}/show', 'Admin\NumberServiceController@show');
+    Route::get('numberservice/{numberservice}/edit', 'Admin\NumberServiceController@edit');
+    Route::get('numberservice/{numberservice}/delete', 'Admin\NumberServiceController@delete');
+    Route::resource('numberservice', 'Admin\NumberServiceController');
+
+
+
 
      # competitor
     Route::get('competitor/data', 'Admin\CompetitorController@data');

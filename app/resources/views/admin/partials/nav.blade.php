@@ -105,7 +105,7 @@
                     </a>
                     <ul class="nav collapse">
                         <li>
-                            <a href="{{url('admin/number')}}">
+                            <a href="{{url('admin/numberinventory')}}">
                                 <i class="glyphicon glyphicon-user"></i> Number Inventory
                             </a>
                         </li>
@@ -151,6 +151,11 @@
                         <li>
                             <a href="{{url('admin/competitor')}}">
                                 <i class="glyphicon glyphicon-bullhorn"></i> Competitors
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/numberservice')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Number Services
                             </a>
                         </li>
                         <li>

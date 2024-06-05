@@ -8,7 +8,7 @@
 
         <p>
             Please upload file using a supported format (.CSV, .TSV). To view an example of the file format, please click 
-            <a href="/admin/number/sample" target="_blank">here</a>
+            <a href="/admin/numberinventory/sample" target="_blank">here</a>
         </p>
         <hr/>
         <form id="fupload" action="" method="POST" enctype="multipart/form-data">

@@ -996,6 +996,10 @@ final class MainHelper {
       return $domain;
     }
 
+    public static function getAppDomain() {
+      return sprintf('app.%s', self::getDeploymentDomain());
+    }
+
     public static function getSiteName() {
       return Config::get("app.site_name");
     }

@@ -23,7 +23,9 @@ final class DNSHelper {
   public static function refreshIPs() {
 
     $routerDNS = MainHelper::createDNSRecordsForRouters();
-    $domain = env('DEPLOYMENT_DOMAIN');
+    $domain = MainHelper::getDeploymentDomain();
+    $appDomain = MainHelper::getAppDomain();
+
     $sip_trunk_terminations = SIPTrunkTermination::all();
     $nc = array();
     $api_credentials = ApiCredential::getRecord();
@@ -118,7 +120,7 @@ final class DNSHelper {
         $value = sprintf("%s.app", $info['workspace']['name']);
         $nc['HostName'.$number] = $value;
         $nc['RecordType'.$number] = 'CNAME';
-        $nc['Address'.$number] = $domain;
+        $nc['Address'.$number] = $appDomain;
         // incase of A records
         //$nc['Address'.$number] = $web_portal_ip;
         $nc['TTL'.$number] = '60';

@@ -21,7 +21,7 @@ class NumberInventoryController extends AdminController
 {
     public function __construct()
     {
-        view()->share('type', 'number');
+        view()->share('type', 'numberinventory');
     }
     public function getCountries()
     {
@@ -44,7 +44,7 @@ $countries = [
         $providers = SIPProvider::asSelect();
         $routers = SIPRouter::asSelect();
         $countries =$this->getCountries();
-        return view('admin.number.index', compact('providers', 'countries', 'routers'));
+        return view('admin.numberinventory.index', compact('providers', 'countries', 'routers'));
     }
 
     /**
@@ -57,7 +57,7 @@ $countries = [
         $countries =$this->getCountries();
         $providers = SIPProvider::asSelect();
         $routers = SIPRouter::asSelect();
-        return view('admin.number.create_edit', compact('providers', 'countries', 'routers'));
+        return view('admin.numberinventory.create_edit', compact('providers', 'countries', 'routers'));
     }
 
     /**
@@ -68,9 +68,9 @@ $countries = [
     public function store(NumberInventoryRequest $request)
     {
 
-        $number = new NumberInventory ($request->all());
-        $number->save();
-        header("X-Goto-URL: /admin/number/" . $number->id . "/edit");
+        $numberinventory = new NumberInventory ($request->all());
+        $numberinventory->save();
+        header("X-Goto-URL: /admin/numberinventory/" . $numberinventory->id . "/edit");
     }
 
     /**
@@ -79,12 +79,12 @@ $countries = [
      * @param $user
      * @return Response
      */
-    public function edit(NumberInventory $number)
+    public function edit(NumberInventory $numberinventory)
     {
     $providers = SIPProvider::asSelect();
         $countries =$this->getCountries();
         $routers = SIPRouter::asSelect();
-        return view('admin.number.create_edit', compact('providers', 'number', 'countries', 'routers'));
+        return view('admin.numberinventory.create_edit', compact('providers', 'numberinventory', 'countries', 'routers'));
     }
 
     /**
@@ -93,10 +93,10 @@ $countries = [
      * @param $user
      * @return Response
      */
-    public function update(NumberInventoryRequest $request, NumberInventory $number)
+    public function update(NumberInventoryRequest $request, NumberInventory $numberinventory)
     {
-        $number->update($request->all());
-        header("X-Goto-URL: /admin/number/" . $number->id . "/edit");
+        $numberinventory->update($request->all());
+        header("X-Goto-URL: /admin/numberinventory/" . $numberinventory->id . "/edit");
     }
 
     /**
@@ -106,9 +106,9 @@ $countries = [
      * @return Response
      */
 
-    public function delete(NumberInventory $number)
+    public function delete(NumberInventory $numberinventory)
     {
-        return view('admin.number.delete', compact('number'));
+        return view('admin.numberinventory.delete', compact('numberinventory'));
     }
 
     /**
@@ -117,25 +117,25 @@ $countries = [
      * @param $user
      * @return Response
      */
-    public function destroy(NumberInventory $number)
+    public function destroy(NumberInventory $numberinventory)
     {
-        $number->delete();
+        $numberinventory->delete();
     }
 
 
     public function import(Request $request)
     {
-        return view('admin.number.import');
+        return view('admin.numberinventory.import');
     }
 
     public function import_save(Request $request)
     {
         $session = $request->session();
         if(!$request->hasFile('file')) {
-            return view('admin.number.import');
+            return view('admin.numberinventory.import');
         }
         if($request->hasFile('file') && !$request->file('file')->isValid()){
-            return view('admin.number.import');
+            return view('admin.numberinventory.import');
         }
         $file = $request->file('file');
         $size = $file->getSize();
@@ -147,7 +147,7 @@ $countries = [
         if ( !$type ) {
             $session->flash('type', 'danger');
             $session->flash('message', 'Password did not match');
-            return view('admin.number.import');
+            return view('admin.numberinventory.import');
         }
         $file_name = str_random(30) . '.' . $file->getClientOriginalExtension();
         $contents = file_get_contents($file->getRealPath());
@@ -161,11 +161,11 @@ $countries = [
             $records = $this->parseXLS( $path );
         }
         foreach ( $records as $record ) {
-                $number = NumberInventory::create( $record );
+                $numberinventory = NumberInventory::create( $record );
         }
         $session->flash('type', 'success');
         $session->flash('message', 'Number(s) uploaded');
-        return view('admin.number.import');
+        return view('admin.numberinventory.import');
     }
 
     private function parseCSV( $path, $delim="," )
@@ -257,19 +257,19 @@ $countries = [
      */
     public function data()
     {
-        $numbers = NumberInventory::select(
+        $numberinventorys = NumberInventory::select(
             array('number_inventory.id', 
             'number_inventory.number',
             'number_inventory.region', 
             DB::raw('sip_providers.name'), 
             'number_inventory.created_at')
         );
-        $numbers->join('sip_providers', 'sip_providers.id', '=', 'number_inventory.provider_id');
+        $numberinventorys->join('sip_providers', 'sip_providers.id', '=', 'number_inventory.provider_id');
 
-        return Datatables::of($numbers)
+        return Datatables::of($numberinventorys)
             //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
-            ->add_column('actions', '<a href="{{{ url(\'admin/number/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
-                    <a href="{{{ url(\'admin/number/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
+            ->add_column('actions', '<a href="{{{ url(\'admin/numberinventory/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+                    <a href="{{{ url(\'admin/numberinventory/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
     }

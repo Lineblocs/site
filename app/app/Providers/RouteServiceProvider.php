@@ -38,6 +38,7 @@ use \App\CompanyRepresentative;
 use \App\SIPRoutingACL;
 use \App\Competitor;
 use \App\CostSaving;
+use \App\NumberService;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -79,7 +80,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('center', SIPRateCenter::class);
        \Route::model('systemstatus', SystemStatusCategory::class);
        \Route::model('errortrace', ErrorUserTrace::class);
-       \Route::model('number', NumberInventory::class);
+       \Route::model('numberinventory', NumberInventory::class);
        \Route::model('routerflow', RouterFlow::class);
        \Route::model('rtpproxy', RTPProxy::class);
        \Route::model('workspace', Workspace::class);
@@ -95,6 +96,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('routingacl',SIPRoutingACL::class);
        \Route::model('competitor',Competitor::class);
        \Route::model('costsaving',CostSaving::class);
+       \Route::model('numberservice',NumberService::class);
     }
 
     /**

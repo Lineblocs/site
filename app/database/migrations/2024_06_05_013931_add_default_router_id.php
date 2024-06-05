@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDefaultRegionIdToWorkspaces extends Migration
+class AddDefaultRouterId extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddDefaultRegionIdToWorkspaces extends Migration
     {
         Schema::table('workspaces', function (Blueprint $table) {
             //
-            $table->integer('default_region_id')->nullable()->unsigned();
-            $table->foreign('default_region_id')->references('id')->on('sip_pop_regions')->onDelete('SET NULL');
+            $table->integer('default_router_id')->nullable()->unsigned();
+            $table->foreign('default_router_id')->references('id')->on('sip_routers')->onDelete('SET NULL');
 
         });
     }
