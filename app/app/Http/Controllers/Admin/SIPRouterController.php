@@ -47,13 +47,14 @@ class SIPRouterController extends AdminController
     public function create()
     {
         $ranges = MainHelper::$ipRanges;
-        $regions = SIPPoPregion::createSelectOptions();
+        $regions = SIPPoPregion::createSelectOptions(TRUE);
         return view('admin.siprouter.create_edit', compact('ranges', 'regions'));
     }
 
     public function processRequest( $request ) {
         $data = $request->all();
         $result = [];
+        $result['region_id'] = $data['region_id'];
         $booleanKeys = [
             'udp_support',
             'udp_autoscaling',
@@ -102,7 +103,7 @@ class SIPRouterController extends AdminController
     public function edit(SIPRouter $router)
     {
         $ranges = MainHelper::$ipRanges;
-        $regions = SIPPoPregion::createSelectOptions();
+        $regions = SIPPoPregion::createSelectOptions(TRUE);
         $digitMappings = SIPRouterDigitMapping::select(array(
             'sip_routers_digit_mappings.*',
             DB::raw( 'route1.name AS route1_name' ),

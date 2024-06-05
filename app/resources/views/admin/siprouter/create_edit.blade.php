@@ -71,11 +71,11 @@
             </div>
         </div>
 
-        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
-                {!! Form::label('region', trans("admin/siprouters.region"), array('class' => 'control-label')) !!}
+        <div class="form-group no-padding {{ $errors->has('region_id') ? 'has-error' : '' }}">
+                {!! Form::label('region_id', trans("admin/siprouters.region"), array('class' => 'control-label')) !!}
                 <div class="controls">
-                    {!! Form::select('region', $regions, null, array('class' => 'form-control')) !!}
-                    <span class="help-block">{{ $errors->first('region', ':message') }}</span>
+                    {!! Form::select('region_id', $regions, null, array('class' => 'form-control')) !!}
+                    <span class="help-block">{{ $errors->first('region_id', ':message') }}</span>
                 </div>
         </div>
 

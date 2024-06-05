@@ -33,6 +33,7 @@ use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
 use App\SIPPoPRegion;
+use App\SIPRouter;
 use App\UserRegistrationQuestionResponse;
 use DateTime;
 
@@ -77,13 +78,15 @@ class RegisterController extends ApiAuthController
         }
         $trialMode =TRUE; 
 
+        $mainRouter = SIPRouter::getMainRouter();
         $workspace = Workspace::create([
         'creator_id' => $user->id,
         'name' => $unique,
         'api_token' => MainHelper::createAPIToken(),
         'api_secret' => MainHelper::createAPISecret(),
         'plan' => $plan,
-        'trial_mode' => $trialMode
+        'trial_mode' => $trialMode,
+        'default_router_id' => $mainRouter->id
       ]);
       WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
       WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
@@ -228,11 +231,15 @@ class RegisterController extends ApiAuthController
           $workspace->update([
             'default_region' => $region->code
           ]);
+
+          Log::info('adding new user to SIP proxy database tables.');
           $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
 
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
+
+          Log::info('added user successfully.');
 
 
           // create k8s deployments
@@ -244,17 +251,23 @@ class RegisterController extends ApiAuthController
           );
 
           if ( $customizations->custom_code_containers_enabled  ) {
+            Log::info('deploying new container for custom user functions');
             $result = WebSvcHelper::post($svc, '/createContainer', $params);
             if (!$result) {
               return $this->errorInternal($request, 'Error occured when creating user containers');
             }
+
+            Log::info('deployed container successfully.');
           }
 
 
+          Log::info('updating DNS records.');
           $result = DNSHelper::refreshIPs();
           if (!$result) {
             return $this->errorInternal($request, 'DNS error occured');
           }
+
+          Log::info('updated DNS successfully.');
 
           //add register credit for user
           $amountInCents = $customizations->register_credits*100;
@@ -292,8 +305,11 @@ class RegisterController extends ApiAuthController
             'user' => $user,
             'link' => $link
           ];
+
+          Log::info('sending new user verification email');
           $subject =MainHelper::createEmailSubject("Verify Your Email");
           $result = EmailHelper::sendEmail($subject, $user->email, 'verify_email', $data);
+
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
 

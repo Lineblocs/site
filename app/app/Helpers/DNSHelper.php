@@ -12,6 +12,7 @@ use App\SipTrunkTermination;
 use App\Customizations;
 use App\ApiCredential;
 use App\DNSRecord;
+use App\User;
 use App\Classes\GoDaddyDDNS;
 use Config;
 use Exception;
@@ -97,10 +98,14 @@ final class DNSHelper {
 
         foreach ( $info['regions'] as $code => $region ) {
           // best way to make increment also increase ? look into better solution when possible
-          $increment = $increment + 1;
-          $number = $cnt + $increment;
           //region PoP
-          $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+          $number ++;
+          if ( $region['default'] ) {
+            $value = sprintf("%s", $info['workspace']['name']);
+          } else {
+            $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+          }
+
           $nc['HostName'.$number] = $value;
           $nc['RecordType'.$number] = 'A';
           $nc['Address'.$number] = $region['router_ip'];
@@ -108,20 +113,19 @@ final class DNSHelper {
         }
 
         // add records for web portal
-        $increment = $increment + 1;
-          $number = $cnt + $increment;
+        $number ++;
 
-          $value = sprintf("%s.app", $info['workspace']['name']);
-          $nc['HostName'.$number] = $value;
-          $nc['RecordType'.$number] = 'CNAME';
-          $nc['Address'.$number] = $domain;
-          // incase of A records
-          //$nc['Address'.$number] = $web_portal_ip;
-          $nc['TTL'.$number] = '60';
+        $value = sprintf("%s.app", $info['workspace']['name']);
+        $nc['HostName'.$number] = $value;
+        $nc['RecordType'.$number] = 'CNAME';
+        $nc['Address'.$number] = $domain;
+        // incase of A records
+        //$nc['Address'.$number] = $web_portal_ip;
+        $nc['TTL'.$number] = '60';
 
         foreach ($sip_trunk_terminations as $cnt => $term_settings) {
           $host = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr );
-          $number = $cnt + $increment;
+          $number ++;
           //main PoP
           $nc['HostName'.$number] = $host;
           $nc['RecordType'.$number] = 'A';
@@ -130,8 +134,6 @@ final class DNSHelper {
         }
       }
 
-
-      echo var_dump($nc);
       $result = $namecheap->dnsSetHosts($domain, $nc);
       if (!$result) {
         \Log::error( "NAMECHEAP error occured: " . $namecheap->Error);

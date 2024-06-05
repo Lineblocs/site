@@ -5,6 +5,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\DIDNumber;
 use App\Extension;
 use App\Workspace;
+use App\SIPPoPRegion;
 use App\Flow;
 use App\FlowTemplate;
 use App\ExtensionCode;
@@ -270,27 +271,23 @@ final class MainHelper {
       $config = Config::get("siprouter");
       $workspaces = Workspace::all();
       $routers = SIPRouter::all();
-      foreach ($workspaces as $item) {
-        if ( empty( $region ) ) {
-          Log::error('region was empty..');
-          continue;
-        }
-        $router = NULL;
-        foreach ( $routers as $item ) {
-          if ( $router->region == $item->region ) {
-            $router = $item;
-          }
-        }
+      foreach ($workspaces as $workspace) {
+        $router = SIPRouter::select( array('sip_routers.*', 'sip_pop_regions.code') );
+        $router->join('sip_pop_regions', 'sip_pop_regions.id', '=', 'sip_routers.region_id');
+        $router = $router->first();
+        
         if ( empty( $router ) ) {
           Log::error('SIP router not found for workspace region ' . $item->region);
           continue;
         }
+
         $user = User::find($workspace->creator_id);
         //$regions = WorkspaceRegion::where('workspace_id', $item->id)->get()->toArray();
         $regions = [
           [
-            'internal_code' => $item['region'],
-            'router_ip' => $item['public_i[']
+            'internal_code' => $router->code,
+            'router_ip' => $router->ip_address,
+            'default' => $router->default
           ]
           ];
         $data[] = [
@@ -981,7 +978,7 @@ final class MainHelper {
     // this is not running behind a apache server
     public static function getLocalIP() {
 
-      if (array_key_exists($_SERVER, 'SERVER_ADDR')) {
+      if (array_key_exists('SERVER_ADDR', $_SERVER)) {
         return $_SERVER['SERVER_ADDR']; 
       }
 
