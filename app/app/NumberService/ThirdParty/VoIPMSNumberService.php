@@ -7,13 +7,14 @@ use App\Helpers\MainHelper;
 use App\NumberService\NumberService;
 use App\Classes\VoIPms;
 class VoIPMSNumberService extends NumberService {
-    public function __construct($serviceData=NULL) {
+    public function __construct($serviceData=NULL, $config=[]) {
       $this->clazz = new VoIPms();
       if (empty($serviceData) || empty($serviceData['api_key']) || empty($serviceData['api_secret'])) {
         $this->isUsable = false;
         return;
       }
 
+      $this->config = $config;
       $this->clazz->api_username = $serviceData['api_key'];
       $this->clazz->api_password =  $serviceData['api_secret'];
       $this->isUsable = true;

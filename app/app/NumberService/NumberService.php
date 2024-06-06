@@ -11,6 +11,7 @@ use App\SIPRateCenterProvider;
 use App\SIPProvider;
 use DB;
 use App\NumberService\ThirdParty\VoIPMSNumberService;
+use App\NumberServiceConfig;
 use App\NumberService as NumberServiceData;
 
 abstract class NumberService {
@@ -118,9 +119,10 @@ abstract class NumberService {
 
       // lookup number service data for this API provider
       $serviceData = NumberServiceData::where('key_name', $name)->first();
+      $serviceConfig = NumberServiceConfig::getValues($serviceData->id);
 
       $full = "\\App\\NumberService\\ThirdParty\\".$name."NumberService";
-      return new $full($serviceData);
+      return new $full($serviceData, $serviceConfig);
     }
 
     public static function getDIDProvider($country) {

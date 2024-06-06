@@ -11,6 +11,17 @@ class NumberServiceConfig extends Model {
   protected $table = "number_services_config";
   protected $casts = array(
   );
+
+  public static function getValues($serviceId) {
+    $records = self::where('number_service_id', $serviceId)->get();
+    $result = [];
+    foreach ($records as $record) {
+      $result[$record['param']] = $record['value'];
+    }
+
+    return $result;
+  }
+
 }
 
 

@@ -582,6 +582,7 @@ $api->version('v1', function($api) {
         $api->get("/{numberId}", "DIDNumberController@numberData");
         $api->post("/", "DIDNumberController@saveNumber");
         $api->put("/{numberId}", "DIDNumberController@updateNumber");
+        $api->post("/{numberId}", "DIDNumberController@updateNumber");
         $api->delete("/{numberId}", "DIDNumberController@deleteNumber");
     });
 
