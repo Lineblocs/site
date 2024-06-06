@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\NumberService;
+use App\NumberServiceConfig;
 use App\NumberServiceDialPrefix;
 use App\Workspace;
 use App\PortNumber;
@@ -13,6 +14,7 @@ use Datatables;
 use DB;
 use Config;
 use Mail;
+use Log;
 use Illuminate\Http\Request;
 
 class NumberServiceController extends AdminController
@@ -51,8 +53,17 @@ class NumberServiceController extends AdminController
     public function store(NumberServiceRequest $request)
     {
         $data = $request->all();
+        if (empty($data['config_params'])) {
+            $input_before = [];
+        } else {
+            $input_before = $data['config_params'];
+        }
+
+        unset($data['config_params']);
         $numberservice = new NumberService ($data);
         $numberservice->save();
+        $config = [];
+        $this->patchConfig( $numberservice, $config, $input_before );
     }
 
     /**
@@ -63,7 +74,11 @@ class NumberServiceController extends AdminController
      */
     public function edit(NumberService $numberservice)
     {
-        return view('admin.numberservice.create_edit', compact('numberservice'));
+        $config = NumberServiceConfig::where('number_service_id', $numberservice->id)
+                                        ->get()
+                                        ->toArray();
+
+        return view('admin.numberservice.create_edit', compact('numberservice', 'config'));
     }
 
     /**
@@ -75,7 +90,17 @@ class NumberServiceController extends AdminController
     public function update(NumberServiceRequest $request, NumberService $numberservice)
     {
         $data = $request->all();
+        if (empty($data['config_params'])) {
+            $input_before = [];
+        } else {
+            $input_before = $data['config_params'];
+        }
+
+        unset($data['config_params']);
         $numberservice->update($data);
+        $config = NumberServiceConfig::where('number_service_id', $numberservice->id)->get();
+        //Log::info(sprintf('input before %s', json_encode($input_before, JSON_PRETTY_PRINT)));
+        $this->patchConfig( $numberservice, $config, $input_before );
     }
 
     /**
@@ -99,6 +124,73 @@ class NumberServiceController extends AdminController
     public function destroy(NumberService $numberservice)
     {
         $numberservice->delete();
+    }
+
+    private function transformFormInput( $input ) { // multi dimensional array
+        //Log::info(sprintf('transform input is %s', json_encode($input, JSON_PRETTY_PRINT)));
+        $keys = array_keys( $input );
+        $results = [];
+        if ( count( $keys ) == 0 ){
+            return $results;
+        }
+
+        $item_keys = array_keys($input['param']);
+        $results = [];
+        foreach ($item_keys as $item_key) {
+            $item = [];
+            $item['param'] = $input['param'][$item_key];
+            $item['value'] = $input['value'][$item_key];
+            if (isset($input['id'][$item_key])) {
+                $item['id'] = $input['id'][$item_key];
+            }
+            $results[] = $item;
+        }
+     
+        return $results;
+    }
+
+    private function patchConfig( $number_service, $config, $input_before )
+    {
+        $input = $this->transformFormInput($input_before);
+        //Log::info(sprintf('config input = %s', json_encode($input, JSON_PRETTY_PRINT)));
+
+        foreach ( $config as $item ) {
+            $found = FALSE;
+            foreach ( $input as $item2 ) {
+                if ( !isset( $item2['id'] ) ) {
+                    continue;
+                }
+
+                $id = (int)  $item2['id'];
+                if ( $item['id'] == $id ) {
+                    $found = TRUE;
+                }
+            }
+            if ( !$found ) {
+                $item->delete();
+            }
+        }
+        foreach ( $input as $item ) {
+            $found = FALSE;
+
+            foreach ( $config as $item2 ) {
+                if ( !isset( $item['id'] ) ) {
+                    continue;
+                }
+                $id = (int)  $item['id'];
+                if ( $id == $item2['id'] ) {
+                    $found = $item2;
+                }
+            }
+
+            if ( $found ) {
+                $found->update( $item );
+            } else {
+                NumberServiceConfig::create( array_merge([
+                    'number_service_id' => $number_service->id
+                ], $item ) );
+            }
+        }
     }
 
     /**

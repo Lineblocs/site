@@ -53,7 +53,12 @@
 
         <h2>Config</h2>
         <hr/>
-
+        <div id="configContainer">
+            <ul id="config">
+            </ul>
+            <button class="btn btn-info" type="button" id="addConfigBtn">Add Parameter</button>
+        </div>
+        
         <div class="form-group">
         <button type="submit" class="btn btn-sm btn-success">
             <span class="glyphicon glyphicon-ok-circle"></span>
@@ -69,6 +74,63 @@
     @endsection @section('scripts')
 
         <script type="text/javascript">
+            var currentConfig = null;
+            @if (!empty($config))
+                var currentConfig = {!! json_encode($config) !!};
+            @endif
+
+            var configList  = $("#config");
+
+            function createKey(name, num) {
+                var key = "config_params[" + name + "][" + num + "]";
+                return key;
+            }
+
+            function createField(name, num, placeholder, value) {
+                var key = createKey( name, num );
+                var input = $("<input class='form-control'/>");
+                input.attr('name', key);
+                input.attr('placeholder', placeholder);
+                input.attr('value', value);
+                return input;
+            }
+            function addConfigItem(currentValues) {
+                var num = $("ul#config li").length;
+                var param = createField('param', num, 'Param', currentValues['param']);
+                var value = createField('value', num, 'Value', currentValues['value']);
+                var item = $("<li></li>");
+                param.appendTo( item );
+                value.appendTo( item );
+
+                var remove = $("<button class='btn btn-danger btn-sm remove'>X</button>");
+                remove.click( function() {
+                    item.remove();
+                });
+                remove.appendTo( item );
+
+                if (currentValues['id']) {
+                    var id = $('<input type="hidden"/>');
+                    var key = createKey( 'id', num );
+                    id.attr('name', key);
+                    id.attr('value', currentValues['id']);
+                    id.appendTo( item );
+                }
+
+                item.appendTo( configList );
+            }
+            $("#addConfigBtn").click(function() {
+                var initialValues = {
+                    param: '',
+                    value: ''
+                };
+                addConfigItem(initialValues);
+            });
+
+            if (currentConfig) {
+                currentConfig.forEach((item) => {
+                    addConfigItem( item );
+                });
+            }
         </script>
 </div>
 @endsection

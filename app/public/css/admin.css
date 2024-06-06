@@ -15671,3 +15671,42 @@ ul#providers {
 	padding: 10px !important;
 	border: 1px solid #E3E3E3;
 }
+
+ul#config {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+ul#config:after {
+	clear: both;
+	content: '';
+	display: block;
+	margin: 0;
+}
+
+#configContainer {
+	margin: 0  0 15px 0;
+}
+
+
+#configContainer ul li {
+	margin-bottom: 10px;
+}
+#configContainer ul li:after {
+	clear: both;
+	content: '';
+	display: block;
+	margin: 0;
+}
+
+
+#configContainer ul li input {
+	float: left;
+	margin-right: 10px;
+	width: 150px;
+}
+
+#configContainer ul li button.remove {
+	float: left;
+}
