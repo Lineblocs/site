@@ -490,8 +490,35 @@ final class MainHelper {
       ->setNumbers()
       ->setSymbols(TRUE)
       ->setLength(24);
-      $password = $generator->generatePasswords(1);
-      return $password[0];
+      $password = $generator->generatePasswords(1)[0];
+
+      $passwordIsComplaint = false;
+      while (!$passwordIsComplaint) {
+        $hasNumber = false;
+        $hasSymbol = false;
+        $hasLetter = false;
+
+        if (preg_match('/\d+/', $password)) {
+            $hasNumber = true;
+        }
+
+        if (preg_match('/[\W_]/', $password)) {
+            $hasSymbol = true;
+        }
+
+        if (preg_match('/[a-zA-Z]/', $password)) {
+          $hasLetter = true;
+        }
+
+        if (!$hasNumber || !$hasSymbol || !$hasLetter) {
+          $password = $generator->generatePasswords(1)[0];
+          continue;
+        }
+
+        $passwordIsComplaint = TRUE;
+      }
+
+      return $password;
   }
   public static function verifyPasswordStrength() {
   }
