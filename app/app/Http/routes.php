@@ -260,9 +260,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 
     # SIPPoPRegions
     Route::get('popregion/data', 'Admin\SIPPoPRegionController@data');
-    Route::get('popregion/{region}/show', 'Admin\SIPPoPRegionController@show');
-    Route::get('popregion/{region}/edit', 'Admin\SIPPoPRegionController@edit');
-    Route::get('popregion/{region}/delete', 'Admin\SIPPoPRegionController@delete');
+    Route::get('popregion/{popregion}/show', 'Admin\SIPPoPRegionController@show');
+    Route::get('popregion/{popregion}/edit', 'Admin\SIPPoPRegionController@edit');
+    Route::get('popregion/{popregion}/delete', 'Admin\SIPPoPRegionController@delete');
     Route::resource('popregion', 'Admin\SIPPoPRegionController');
 
 

@@ -64,9 +64,9 @@ class SIPPoPRegionController extends AdminController
      * @param $user
      * @return Response
      */
-    public function edit(SIPPoPRegion $region)
+    public function edit(SIPPoPRegion $popregion)
     {
-        return view('admin.sippopregion.create_edit', compact('region'));
+        return view('admin.sippopregion.create_edit', compact('popregion'));
     }
 
 
@@ -76,10 +76,10 @@ class SIPPoPRegionController extends AdminController
      * @param $user
      * @return Response
      */
-    public function update(SIPPoPRegionRequest $request, SIPPoPRegion $region)
+    public function update(SIPPoPRegionRequest $request, SIPPoPRegion $popregion)
     {
-        $region->update($request->all());
-        header("X-Goto-URL: /admin/region/" . $region->id . "/edit");
+        $popregion->update($request->all());
+        header("X-Goto-URL: /admin/popregion/" . $popregion->id . "/edit");
     }
 
     /**
@@ -89,9 +89,9 @@ class SIPPoPRegionController extends AdminController
      * @return Response
      */
 
-    public function delete(SIPPoPRegion $region)
+    public function delete(SIPPoPRegion $popregion)
     {
-        return view('admin.sippopregion.delete', compact('region'));
+        return view('admin.sippopregion.delete', compact('popregion'));
     }
 
     /**
@@ -100,9 +100,9 @@ class SIPPoPRegionController extends AdminController
      * @param $user
      * @return Response
      */
-    public function destroy(SIPPoPRegion $region)
+    public function destroy(SIPPoPRegion $popregion)
     {
-        $region->delete();
+        $popregion->delete();
     }
 
     public function data()
@@ -119,8 +119,8 @@ class SIPPoPRegionController extends AdminController
             ->remove_column('id')
             ->make();
             */
-            ->add_column('actions', '<a href="{{{ url(\'admin/region/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
-                    <a href="{{{ url(\'admin/region/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
+            ->add_column('actions', '<a href="{{{ url(\'admin/popregion/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+                    <a href="{{{ url(\'admin/popregion/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
     }

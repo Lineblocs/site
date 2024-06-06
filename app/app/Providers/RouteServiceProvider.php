@@ -10,6 +10,7 @@ use \App\DIDNumber;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
 use \App\SIPProviderRate;
+use \App\SIPPoPRegion;
 use \App\DNSRecord;
 use \App\ServicePlan;
 use \App\Workspace;
@@ -77,6 +78,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('rate', CallRate::class);
        \Route::model('country', SIPCountry::class);
        \Route::model('region', SIPRegion::class);
+       \Route::model('popregion', SIPPoPRegion::class);
        \Route::model('center', SIPRateCenter::class);
        \Route::model('systemstatus', SystemStatusCategory::class);
        \Route::model('errortrace', ErrorUserTrace::class);
