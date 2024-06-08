@@ -1091,4 +1091,25 @@ final class MainHelper {
       return $creds[$field];
 
     }
+
+    // ensure input conforms to opensips format. e.g:
+    // {proto}:{ip_addr}:{port}
+    // examples:
+    // udp:127.0.0.1:7722
+    // tcp:127.0.0.1:7722
+    public static function validateRTPProxyAddress($addr)  {
+      $parts = explode(":", $addr);
+      if (count($parts)!=3) {
+        return FALSE;
+      }
+      if ($parts[0] != 'udp' && $parts[0] != 'tcp') {
+        return FALSE;
+      }
+
+      if (!is_numeric($parts[2])) {
+        return FALSE;
+      }
+
+      return TRUE;
+    }
 }

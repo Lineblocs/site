@@ -71,6 +71,10 @@ class RTPProxyController extends AdminController
     {
 
         $rtpproxy = new RTPProxy ($request->all());
+        if (!MainHelper::validateRTPProxyAddress($rtpproxy->rtpproxy_sock)) {
+            return abort(500, 'RTP proxy socket address is invalid');
+        }
+
         $rtpproxy->save();
         SIPRouterHelper::addRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
@@ -97,7 +101,13 @@ class RTPProxyController extends AdminController
      */
     public function update(RTPProxyRequest $request, RTPProxy $rtpproxy)
     {
-        $rtpproxy->update($request->all());
+        $data = $request->all();
+
+        if (!MainHelper::validateRTPProxyAddress($data['rtpproxy_sock'])) {
+            return abort(500, 'RTP proxy socket address is invalid');
+        }
+
+        $rtpproxy->update($data);
         SIPRouterHelper::updateRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }

@@ -20,7 +20,7 @@
         <div class="form-group  {{ $errors->has('rtpproxy_sock') ? 'has-error' : '' }}">
             {!! Form::label('rtpproxy_sock', trans("admin/rtpproxies.rtpproxy_sock"), array('class' => 'control-label')) !!}
             <div class="controls">
-                {!! Form::text('rtpproxy_sock', null, array('class' => 'form-control')) !!}
+                {!! Form::text('rtpproxy_sock', null, array('class' => 'form-control', 'placeholder' => 'e.g: udp:127.0.0.1:7722')) !!}
                 <span class="help-block">{{ $errors->first('rtpproxy_sock', ':message') }}</span>
             </div>
         </div>
