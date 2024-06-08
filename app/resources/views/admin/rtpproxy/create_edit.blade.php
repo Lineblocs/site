@@ -24,6 +24,13 @@
                 <span class="help-block">{{ $errors->first('rtpproxy_sock', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('ip_address') ? 'has-error' : '' }}">
+            {!! Form::label('ip_address', trans("admin/rtpproxies.ip_address"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('ip_address', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('ip_address', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  no-padding {{ $errors->has('set_id') ? 'has-error' : '' }}">
             <div class="col-md-6">
                 {!! Form::label('set_id', trans("admin/rtpproxies.set_id"), array('class' => 'control-label')) !!}
@@ -48,6 +55,17 @@
                     <span class="help-block">{{ $errors->first('router', ':message') }}</span>
                 </div>
         </div>
+        <div class="form-group  {{ $errors->has('on_same_network_as_router') ? 'has-error' : '' }}">
+            {!! Form::label('on_same_network_as_router', trans("admin/rtpproxies.on_same_network_as_router"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::label('on_same_network_as_router', trans("admin/users.yes"), array('class' => 'control-label')) !!}
+                {!! Form::radio('on_same_network_as_router', '1', @isset($rtpproxy)? $rtpproxy->on_same_network_as_router : 'false') !!}
+                {!! Form::label('on_same_network_as_router', trans("admin/users.no"), array('class' => 'control-label')) !!}
+                {!! Form::radio('on_same_network_as_router', '0', @isset($rtpproxy)? $rtpproxy->on_same_network_as_router : 'true') !!}
+                <span class="help-block">{{ $errors->first('on_same_network_as_router', ':message') }}</span>
+            </div>
+        </div>
+
         <div class="form-group">
         <button type="submit" class="btn btn-sm btn-success">
             <span class="glyphicon glyphicon-ok-circle"></span>

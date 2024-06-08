@@ -134,7 +134,7 @@ class RTPProxyController extends AdminController
      */
     public function data()
     {
-        $rtpproxys = RTPProxy::select(array('rtpproxy_sockets.id', 'rtpproxy_sockets.rtpproxy_sock','rtpproxy_sockets.cpu_pct', 'rtpproxy_sockets.mem_pct', 'rtpproxy_sockets.created_at'));
+        $rtpproxys = RTPProxy::select(array('rtpproxy_sockets.id', 'rtpproxy_sockets.rtpproxy_sock', 'rtpproxy_sockets.ip_address', 'rtpproxy_sockets.cpu_pct', 'rtpproxy_sockets.mem_pct', 'rtpproxy_sockets.created_at'));
 
         return Datatables::of($rtpproxys)
             //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')

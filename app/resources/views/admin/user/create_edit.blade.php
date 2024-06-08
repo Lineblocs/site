@@ -140,10 +140,6 @@ true)) !!}
             </div>
         </div>
 
-
-
-
-
         <div class="form-group  {{ $errors->has('confirmed') ? 'has-error' : '' }}">
             {!! Form::label('confirmed', trans("admin/admin.active"), array('class' => 'control-label')) !!}
             <div class="controls">
