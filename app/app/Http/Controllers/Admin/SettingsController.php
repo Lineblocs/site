@@ -21,6 +21,7 @@ class SettingsController extends AdminController {
             "us-east-1" => "US East (N. Virginia)",
             "us-west-2" => "US West (Oregon)",
             "us-west-1" => "US West (N. California)",
+            "ca-central-1" => "Canada Central",
             "eu-west-1" => "EU (Ireland)",
             "eu-central-1" => "EU (Frankfurt)",
             "ap-southeast-1" => "Asia Pacific (Singapore)",

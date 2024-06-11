@@ -28,24 +28,24 @@
             </div>
 
             <div class="row form-group">
-                <label for="google_service_account_json">Google service account JSON</label>
-                <div class="controls">
-                    <textarea id="google_service_account_json"  class="form-control" name="google_service_account_json">{{$creds->google_service_account_json}}</textarea>
-                </div>
-            </div>
-
-            <div class="row form-group">
                 <label for="aws_region">AWS region</label>
                 <div class="controls">
                     <select class="form-control" name="aws_region" id="aws_region">
                         @foreach ( $aws_regions as $key => $region )
-                            @if ($region==$selected_region)
+                            @if ($key==$selected_region)
                                 <option value="{{$key}}" selected>{{$region}}</option>
                             @else
                                 <option value="{{$key}}">{{$region}}</option>
                             @endif
                         @endforeach
                     </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="google_service_account_json">Google service account JSON</label>
+                <div class="controls">
+                    <textarea id="google_service_account_json"  class="form-control" name="google_service_account_json">{{$creds->google_service_account_json}}</textarea>
                 </div>
             </div>
 
