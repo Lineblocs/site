@@ -43,6 +43,13 @@
             </div>
 
             <div class="row form-group">
+                <label for="s3_bucket">S3 bucket</label>
+                <div class="controls">
+                    <input id="s3_bucket" type="text" class="form-control" name="s3_bucket" value="{{$creds->s3_bucket}}"/>
+                </div>
+            </div>
+
+            <div class="row form-group">
                 <label for="google_service_account_json">Google service account JSON</label>
                 <div class="controls">
                     <textarea id="google_service_account_json"  class="form-control" name="google_service_account_json">{{$creds->google_service_account_json}}</textarea>

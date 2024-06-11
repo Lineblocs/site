@@ -49,6 +49,7 @@ class SettingsController extends AdminController {
         'aws_access_key_id',
         'aws_secret_access_key',
         'aws_region',
+        's3_bucket',
         'google_service_account_json',
         'stripe_pub_key',
         'stripe_private_key',
