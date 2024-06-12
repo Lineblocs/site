@@ -122,7 +122,7 @@ trait SupportTicketWorkflow {
         $subject = "New support ticket updated";
         $data = [
             'user' => $user,
-            'ticket' => $supportTicket,
+            'ticket' => $ticket,
             'update' => $update
         ];
         $result = EmailHelper::sendEmail($subject, $user->email, 'support_ticket_updated', $data);

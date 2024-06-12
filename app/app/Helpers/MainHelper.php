@@ -1112,4 +1112,11 @@ final class MainHelper {
 
       return TRUE;
     }
+    public static function createHumanReadableDate($date) {
+      // Format the date into a human-readable string
+      $readableDate = $date->format('l, F j, Y g:i A');
+
+      // Output the formatted date
+      return $readableDate;
+    }
 }

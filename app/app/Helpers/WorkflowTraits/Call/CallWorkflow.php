@@ -42,6 +42,7 @@ trait CallWorkflow {
         $calls = Call::select(DB::raw("DISTINCT(calls.id), calls.*, calls.from AS call_from, calls.to AS call_to, calls.status AS call_status, calls.direction AS call_direction, (SELECT GROUP_CONCAT(call_tags.tag) FROM call_tags WHERE call_tags.call_id = calls.id) AS tags"));
         $calls->leftJoin('call_tags', 'call_tags.call_id', '=', 'calls.id');
         $calls->where('calls.user_id', '=', $user->id);
+        $calls->orderBy('calls.created_at', 'DESC');
         $search = $request->get("tags");
         if ( $search ) {
            \Log::info("tags are: " . $search);
