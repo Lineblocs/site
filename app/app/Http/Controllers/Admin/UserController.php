@@ -119,7 +119,13 @@ class UserController extends AdminController
                 $user->password = bcrypt($password);
             }
         }
-        $user->update($request->except('password','password_confirmation'));
+        
+        $data = $request->except('password','password_confirmation');
+        if (isset($data['mobile_number']) && $data['mobile_number'] == '') {
+            unset( $data['mobile_number'] );
+        }
+
+        $user->update($data);
     }
 
     /**

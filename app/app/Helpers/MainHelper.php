@@ -166,8 +166,13 @@ final class MainHelper {
     ];
 
     public static function initStripe() {
-        $stripe = \Config::get("stripe");
-        \Stripe\Stripe::setApiKey($stripe['secret_key']);
+        $credentials = ApiCredential::getRecord();
+
+        if ($credentials['stripe_mode'] == 'live') {
+          \Stripe\Stripe::setApiKey($credentials['stripe_private_key']);
+        } else if ($credentials['stripe_mode'] == 'test') {
+          \Stripe\Stripe::setApiKey($credentials['stripe_test_private_key']);
+        }
     }
   public static function createApiId($prefix="") {
     $uuid4 = Uuid::uuid4(); 
@@ -301,9 +306,16 @@ final class MainHelper {
   }
   public static function getPublicConfig()
     {
+        $credentials = ApiCredential::getRecord();
         $data = [];
         $data['stripe'] = [];
-        $data['stripe']['key'] = Config::get("stripe.public_key");
+
+        if ($credentials['stripe_mode'] == 'live') {
+          $data['stripe']['key'] = $credentials['stripe_pub_key'];
+        } else if ($credentials['stripe_mode'] == 'test') {
+          $data['stripe']['key'] = $credentials['stripe_test_pub_key'];
+        }
+
         return $data;
     }
 

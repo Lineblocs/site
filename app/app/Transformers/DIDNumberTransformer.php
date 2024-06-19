@@ -30,6 +30,10 @@ final class DIDNumberTransformer extends TransformerAbstract {
           $array['is_already_integrated'] = TRUE;
           $array['integrated_with'] = 'trunk';
         }
+        $array['friendly_amounts'] = [
+            'monthly_cost' => MainHelper::toDollars($array['monthly_cost']),
+            'setup_cost' => MainHelper::toDollars($array['setup_cost']),
+        ];
         return $array;
     }
 }
