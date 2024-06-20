@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'yajra\\Datatables' => array($vendorDir . '/yajra/laravel-datatables-oracle/src'),
+    'Zendesk\\Console\\' => array($vendorDir . '/zendesk/zendesk_api_client_php/src'),
+    'Zendesk\\API\\' => array($vendorDir . '/zendesk/zendesk_api_client_php/src'),
     'UpdateHelper\\' => array($vendorDir . '/kylekatarnls/update-helper/src'),
     'SimpleExcel\\' => array($vendorDir . '/faisalman/simple-excel-php/src'),
     'Sentry\\Laravel\\' => array($vendorDir . '/sentry/sentry-laravel/src'),
@@ -17,6 +19,7 @@ return array(
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'JakubOnderka\\PhpConsoleHighlighter' => array($vendorDir . '/jakub-onderka/php-console-highlighter/src'),
     'Intergo\\SmsTo\\' => array($vendorDir . '/intergo/sms.to-php/src'),
+    'Inflect' => array($vendorDir . '/mmucklo/inflect/src'),
     'Dotenv' => array($vendorDir . '/vlucas/phpdotenv/src'),
     'Diff' => array($vendorDir . '/phpspec/php-diff/lib'),
     'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
