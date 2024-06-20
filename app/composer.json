@@ -24,7 +24,7 @@
         "doctrine/dbal": "^2.9",
         "ramsey/uuid": "^3.8.0",
         "telnyx/telnyx-php": "^0.0.1",
-        "stripe/stripe-php": "^6.43",
+        "stripe/stripe-php": "^13.15",
         "nubs/random-name-generator": "^2.1",
         "giggsey/libphonenumber-for-php": "^8.10",
         "twilio/sdk": "^5.35",

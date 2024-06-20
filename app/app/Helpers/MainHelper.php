@@ -31,6 +31,7 @@ use App\SIPRateCenter;
 use App\SIPRouter;
 use App\CallRate;
 use App\CallRateDialPrefix;
+use Stripe\StripeClient;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Mail;
 
@@ -174,6 +175,42 @@ final class MainHelper {
           \Stripe\Stripe::setApiKey($credentials['stripe_test_private_key']);
         }
     }
+
+    public static function initStripeClient() {
+        $credentials = ApiCredential::getRecord();
+
+        $key = NULL;
+        if ($credentials['stripe_mode'] == 'live') {
+          $key = $credentials['stripe_private_key'];
+        } else if ($credentials['stripe_mode'] == 'test') {
+          $key = $credentials['stripe_test_private_key'];
+        }
+
+        return new StripeClient($key);
+    }
+
+  public static function createStripeCustomer($user, $paymentMethodId) {
+    $stripe = self::initStripeClient();
+
+    $email = $user->email;
+    $subscription = NULL;
+    $site = self::getSiteName();
+    $description = sprintf('%s customer', $site);
+    // Create a customer with the payment method ID
+    $customer = $stripe->customers->create([
+        'email' => $email, // Customer's email address
+        'description' => $description,
+        'payment_method' => $paymentMethodId,
+        'invoice_settings' => [
+            'default_payment_method' => $paymentMethodId,
+        ],
+        // You can add more details like email, name, etc. as needed
+    ]);
+
+    Log::info(sprintf("created new stripe customer (%s)", $customer->id));
+    return $customer;
+  }
+
   public static function createApiId($prefix="") {
     $uuid4 = Uuid::uuid4(); 
     return sprintf("%s-%s",$prefix, $uuid4->toString());
@@ -872,17 +909,24 @@ final class MainHelper {
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
     if ( $paymentGateway == 'stripe' ) {
-      MainHelper::initStripe();
+      $paymentMethodId = $data['payment_method_id'];
+      $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
+      Log::info(sprintf('created stripe customer %s', $customer->id));
+      $user->update([
+        'stripe_id' => $customer->id
+      ]);
+      /*
       $card = \Stripe\Customer::createSource(
           $user->stripe_id,
           [
               'source' => $data['card_token']
           ]
       );
+      */
       //$all = UserCard::where('workspace_id', $workspace->id)->get();
       if ( $isDefault ) {
         // update invoice settings to use this card as the default payment method
-        \Stripe\Customer::update(
+        $customer->update(
             $user->stripe_id,
             array(
                 'invoice_settings' => array(
@@ -891,12 +935,15 @@ final class MainHelper {
             )
         );
       }
+
+      $cardIssuer = $data['issuer'];
+      $last4 =  $data['last_4'];
       $params = [
-          'last_4' => $data['last_4'],
-          'stripe_id' => $card->id,
+          'last_4' => $last4,
+          'stripe_payment_method_id' => $paymentMethodId,
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,
-          'issuer' => $card->brand
+          'issuer' => $cardIssuer,
       ];
       return UserCard::create($params);
     }
