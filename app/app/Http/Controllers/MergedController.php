@@ -1016,6 +1016,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     
       return $this->response->array($results);
   }
+
+  private function needsCustomPaymentForm() {
+    return FALSE;
+  }
+
   public function saveCustomerPaymentDetails(Request $request) 
   {
     $data = $request->json()->all();
@@ -1032,18 +1037,26 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $gateway = $data['payment_gateway'];
     $paymentCard = $data['payment_card'];
     $paymentValues = $data['payment_values'];
-    $billingData = $data;
-    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $billingData, $user, $workspace);
-    if (!$result) {
-      return $this->response->errorBaRrequest();
+
+    if (!$this->needsCustomPaymentForm()) {
+      $cardData = [
+        'payment_method_id' => $paymentValues['payment_method_id'],
+        'issuer' => $paymentValues['issuer'],
+        'last_4' => $paymentValues['last_4'],
+      ];
+    } else {
+      // get card data
+      $cardData = [
+        'payment_card_number' => $cardData['payment_card_number'],
+        'expiration_date' => $cardData['expiration_date'],
+        'security_code' => $cardData['security_code'],
+        'cardholder_name' => $cardData['cardholder_name']
+      ];
     }
-
-    $cardData = [
-      'card_token' => $paymentValues['card_token'],
-      'last_4' => $paymentValues['last_4'],
-    ];
-
-    $card = MainHelper::addCard($cardData, $user, $workspace, TRUE, $gateway);
+    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $cardData, $user, $workspace);
+    if (!$result) {
+      return $this->response->errorBadRequest();
+    }
 
     $workspace->update([
       'billing_region_id' => $region

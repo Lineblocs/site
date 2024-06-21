@@ -195,7 +195,7 @@ final class MainHelper {
     $email = $user->email;
     $subscription = NULL;
     $site = self::getSiteName();
-    $description = sprintf('%s customer', $site);
+    $description = sprintf('%s %s customer for %s', $user->first_name, $user->last_name, $site);
     // Create a customer with the payment method ID
     $customer = $stripe->customers->create([
         'email' => $email, // Customer's email address
@@ -909,6 +909,7 @@ final class MainHelper {
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
     if ( $paymentGateway == 'stripe' ) {
+      $stripe = self::initStripeClient();
       $paymentMethodId = $data['payment_method_id'];
       $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
       Log::info(sprintf('created stripe customer %s', $customer->id));
@@ -926,13 +927,14 @@ final class MainHelper {
       //$all = UserCard::where('workspace_id', $workspace->id)->get();
       if ( $isDefault ) {
         // update invoice settings to use this card as the default payment method
-        $customer->update(
-            $user->stripe_id,
-            array(
-                'invoice_settings' => array(
-                  'default_payment_method' => $card->id
-                )
-            )
+
+        $stripe->customers->update(
+          $user->stripe_id,
+          array(
+              'invoice_settings' => array(
+                'default_payment_method' => $paymentMethodId
+              )
+          )
         );
       }
 
