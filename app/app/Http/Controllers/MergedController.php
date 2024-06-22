@@ -46,6 +46,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
+use App\Helpers\EmailHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
@@ -185,10 +186,11 @@ class MergedController extends ApiAuthController
       $json = $request->json()->all();
       $plans = Config::get("service_plans");
       $plan = $json['plan'];
-      $selected = $plans[$plan];
+      //$selected = $plans[$plan];
+      $selected = ServicePlan::where('key_name', $plan)->first();
       $workspace = $this->getWorkspace($request);
       $user = $this->getUser($request);
-      $period = PlanUsagePeriod::where('workspace_id', $workspace->id)->where('active', '1')->firstOrFail();
+      $period = PlanUsagePeriod::where('workspace_id', $workspace->id)->whereNull('ended_at')->first();
       $now = new DateTime();
 
       $period->update([

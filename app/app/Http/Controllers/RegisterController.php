@@ -88,6 +88,10 @@ class RegisterController extends ApiAuthController
         'trial_mode' => $trialMode,
         'default_router_id' => $mainRouter->id
       ]);
+      $period = PlanUsagePeriod::create([
+        'workspace_id' => $workspace->id,
+        'started_at' => new DateTime()
+      ]);
       WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
       WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
         return $this->response->array([

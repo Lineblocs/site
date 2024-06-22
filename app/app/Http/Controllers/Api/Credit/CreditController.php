@@ -7,6 +7,7 @@ use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
+use \App\UserCard;
 use \App\Call;
 use \App\Transformers\CallTransformer;
 use \App\Helpers\MainHelper;
@@ -36,14 +37,10 @@ class CreditController extends HasStripeController {
     {
         $data = $request->all();
         $amountInCents = MainHelper::toCents($data['amount']);
+        $card = UserCard::find($data['card_id']);
         $user = $this->getUser($request);
         try {
-          \Stripe\Charge::create([
-            'amount' => $amountInCents,
-            'currency' => 'usd',
-            'description' => 'Charge for LineBlocs',
-            'customer' => $user->stripe_id
-          ]); 
+          MainHelper::chargeCard($user, $card, $amountInCents);
         } catch (Exception $ex) {
           \Log::error("error while charging stripe customer: " . $ex->getMessage());
           return $this->errorInternal($request, 'Error charging stripe user');
@@ -56,7 +53,12 @@ class CreditController extends HasStripeController {
           'status' => 'approved'
         ];
         UserCredit::create($credit);
-        if ($user->trial_mode) {
+      
+        // TODO: make this a database option. when it's enabled
+        // the user's workspace should be upgraded automatically. also,
+        // they should get emailed that the plan was upgraded.
+        $autoUpgradesEnabled = FALSE;
+        if ($autoUpgradesEnabled && $user->trial_mode) {
           $user->update([
             'trial_mode' => FALSE,
             'plan' => 'standard'

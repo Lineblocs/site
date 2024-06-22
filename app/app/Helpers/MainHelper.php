@@ -906,12 +906,41 @@ final class MainHelper {
     $hash = bin2hex(random_bytes(16));
     return $hash;
   }
+
+  public static function chargeCard($user, $card, $amountInCents)
+  {
+    // TODO pull currency from database
+    $currency = 'usd';
+    $stripe = self::initStripeClient();
+    $paymentMethodId = $card->stripe_payment_method_id;
+    Log::info(sprintf('charging user %s cents', $amountInCents));
+    $paymentIntent = $stripe->paymentIntents->create([
+      'amount' => $amountInCents,
+      'currency' => $currency,
+      'customer' => $user->stripe_id,
+      'payment_method' => $paymentMethodId,
+      'confirm' => TRUE,
+      'automatic_payment_methods' => [
+        'enabled' => true,
+        'allow_redirects' => 'never'
+      ],
+    ]);
+    $stripe->paymentIntents->capture($paymentIntent->id, []);
+  }
+
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
     if ( $paymentGateway == 'stripe' ) {
       $stripe = self::initStripeClient();
       $paymentMethodId = $data['payment_method_id'];
-      $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
+      if (empty($user->stripe_id)) {
+        $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
+        Log::info(sprintf('created stripe customer %s', $customer->id));
+      } else {
+        $customer = $stripe->customers->retrieve($user->stripe_id, []);
+        Log::info(sprintf('found stripe customer for user %s', $customer->id));
+      }
+
       Log::info(sprintf('created stripe customer %s', $customer->id));
       $user->update([
         'stripe_id' => $customer->id
@@ -946,6 +975,7 @@ final class MainHelper {
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,
           'issuer' => $cardIssuer,
+          'primary' => $isDefault
       ];
       return UserCard::create($params);
     }

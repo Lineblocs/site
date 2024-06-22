@@ -738,7 +738,7 @@ $api->version('v1', function($api) {
     $api->group([ 'prefix' => 'card', 'namespace' => '\App\Http\Controllers\Api\Card'], function($api) {
         $api->get("/list", "CardController@listCards");
         $api->post("/", "CardController@addCard");
-        $api->put("/{cardId}/sePprimary", "CardController@setPrimary");
+        $api->put("/{cardId}/setPrimary", "CardController@setPrimary");
         $api->delete("/{cardId}", "CardController@deleteCard");
     });
 
