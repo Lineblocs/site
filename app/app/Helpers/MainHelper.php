@@ -914,18 +914,19 @@ final class MainHelper {
     $stripe = self::initStripeClient();
     $paymentMethodId = $card->stripe_payment_method_id;
     Log::info(sprintf('charging user %s cents', $amountInCents));
+
+    $redirectUrl = self::createAppUrl('/confirm-payment-intent');
     $paymentIntent = $stripe->paymentIntents->create([
       'amount' => $amountInCents,
       'currency' => $currency,
+      // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+      'automatic_payment_methods' => ['enabled' => true],
       'customer' => $user->stripe_id,
       'payment_method' => $paymentMethodId,
-      'confirm' => TRUE,
-      'automatic_payment_methods' => [
-        'enabled' => true,
-        'allow_redirects' => 'never'
-      ],
+      'return_url' => $redirectUrl,
+      'off_session' => true,
+      'confirm' => true,
     ]);
-    $stripe->paymentIntents->capture($paymentIntent->id, []);
   }
 
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
