@@ -916,6 +916,8 @@ final class MainHelper {
     Log::info(sprintf('charging user %s cents', $amountInCents));
 
     $redirectUrl = self::createAppUrl('/confirm-payment-intent');
+    $site = self::getSiteName();
+    $descriptor = sprintf("credits for %s", $site);
     $paymentIntent = $stripe->paymentIntents->create([
       'amount' => $amountInCents,
       'currency' => $currency,
@@ -926,6 +928,7 @@ final class MainHelper {
       'return_url' => $redirectUrl,
       'off_session' => true,
       'confirm' => true,
+      'statement_descriptor' => $descriptor
     ]);
   }
 
