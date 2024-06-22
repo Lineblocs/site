@@ -76,6 +76,8 @@ class CreditController extends HasStripeController {
     public function checkoutWithPayPal(Request $request)
     {
         $user = $this->getUser($request);
+        $site = MainHelper::getSiteName();
+        $currency = MainHelper::getCurrency();
         \Log::info("using paypal user is: " .$user->id);
         $data = $request->all();
         $credits = $data['amount'];
@@ -91,8 +93,8 @@ class CreditController extends HasStripeController {
         // (Optional) Lets you specify item wise
         // information
         $item1 = new Item();
-        $item1->setName('LineBlocs credits')
-            ->setCurrency('USD')
+        $item1->setName(sprintf('%s credits', $site))
+            ->setCurrency($currency)
             ->setQuantity(1)
             //->setSku("123123") // Similar to `item_number` in Classic API
             ->setPrice($credits);
@@ -113,7 +115,7 @@ class CreditController extends HasStripeController {
         // You can also specify additional details
         // such as shipping, tax.
         $amount = new Amount();
-        $amount->setCurrency("USD")
+        $amount->setCurrency($currency)
             ->setTotal($credits)
             ->setDetails($details);
 
@@ -121,7 +123,6 @@ class CreditController extends HasStripeController {
         // A transaction defines the contract of a
         // payment - what is the payment for and who
         // is fulfilling it. 
-        $site =MainHelper::getSiteName();
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($itemList)

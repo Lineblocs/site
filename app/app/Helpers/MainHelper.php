@@ -254,11 +254,23 @@ final class MainHelper {
   }
   public static function getPayPalContext() {
 
-    $config = Config::get("paypal");
+    $apiCredentials = ApiCredential::getRecord();
+    $clientId = NULL;
+    $clientSecret = NULL;
+    $mode = $apiCredentials['paypal_api_mode'];
+    if ($mode) {
+      $clientId = $apiCredentials['paypal_live_client_id'];
+      $clientSecret = $apiCredentials['paypal_live_client_secret'];
+    } else {
+      $clientId = $apiCredentials['paypal_test_client_id'];
+      $clientSecret = $apiCredentials['paypal_test_client_secret'];
+    }
+
+    //$config = Config::get("paypal");
     $apiContext = new ApiContext(
         new OAuthTokenCredential(
-            $config['client_id'],
-            $config['client_secret']
+            $clientId,
+            $clientSecret
         )
     );
     // Comment this line out and uncomment the PP_CONFIG_PATH
@@ -266,7 +278,7 @@ final class MainHelper {
     // based configuration
     $apiContext->setConfig(
         array(
-            'mode' => $config['mode'],
+            'mode' => $mode,
             'log.LogEnabled' => true,
             'log.FileName' => base_path('logs/PayPal.log'),
             'log.LogLevel' => 'DEBUG', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
@@ -1124,6 +1136,10 @@ final class MainHelper {
 
     public static function getSiteName() {
       return Config::get("app.site_name");
+    }
+
+    public static function getCurrency() {
+      return 'USD';
     }
 
     public static function createEmailSubject($subject) {
