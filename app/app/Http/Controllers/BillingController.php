@@ -59,15 +59,21 @@ class BillingController extends ApiAuthController
     }
     public function downloadBillingHistory(Request $request)
     {
+      $site = MainHelper::getSiteName();
       $user = JWTAuth::parseToken('bearer', 'authorization', 'auth')->authenticate();
       $all = $request->all();
-      $start = DateTime::createFromFormat("Y-m-d H:i:s", $all['startDate']);
-      $end = DateTime::createFromFormat("Y-m-d H:i:s",$all['endDate']);
+      $start = DateTime::createFromFormat("Y-m-d", $all['startDate']);
+      $end = DateTime::createFromFormat("Y-m-d",$all['endDate']);
 
-      $data = MainHelper::billingData($user, $all['startDate'], $all['endDate']);
+      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
       $dateRange = sprintf("%s - %s", $start->format("Y-m-d"), $end->format("Y-m-d"));
-      $pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
-      return $pdf->download('invoice.pdf');
+      $pdf = PDF::loadView('pdf.invoice', [
+        'rows' => $data, 
+        'dateRange' => $dateRange,
+        'site' => $site,
+      ]);
+      $filename = sprintf("%s_billing_history.pdf", $site);
+      return $pdf->download($filename);
 
     }
 

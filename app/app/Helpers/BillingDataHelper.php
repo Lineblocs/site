@@ -3,6 +3,7 @@ namespace App\Helpers;
 use \Config;
 use \DateTime;
 use DB;
+use Log;
 use NumberFormatter;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
@@ -36,9 +37,10 @@ final class BillingDataHelper {
 
   public static function billingData($user, $startDate=NULL, $endDate=NULL) {
     if (!is_null($startDate)) {
+      Log::info(sprintf('billing data lookup between data ranges %s and %s', $startDate, $endDate));
       $query = sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
       where U.user_id = "%s"
-      and (U.created_at BETWEEN "%s" AND "%s")
+      and (DATE(U.created_at) BETWEEN \'%s\' AND \'%s\')
       ;', $user->id, $startDate, $endDate);
     } else {
       $query = sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 

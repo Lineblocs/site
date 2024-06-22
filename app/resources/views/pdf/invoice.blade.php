@@ -1,5 +1,5 @@
 <body>
-  <h1>Lineblocs.com Invoice</h1>
+  <h1>{{$site}} billing history</h1>
   <h4>{{$dateRange}}</h4>
   <hr/>
   <table width="100%">
