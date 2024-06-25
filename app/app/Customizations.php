@@ -8,7 +8,7 @@ use App\Helpers\MainHelper;
 use DB;
 use Schema;
 
-class Customizations extends Model {
+class Customizations extends SettingsRecord {
   protected $dates = ['created_at', 'updated_at'];
 
   protected $guarded  = array('id');
@@ -35,6 +35,7 @@ class Customizations extends Model {
 
     return Customizations::select($get_columns)->first();
   }
+
   public function toArray() {
     $result = parent::toArray();
     $result['app_logo'] = url('assets/img/' . $result['app_logo']);
@@ -42,16 +43,6 @@ class Customizations extends Model {
     $result['app_icon'] = url('assets/img/' . $result['app_icon']);
     $result['admin_portal_logo'] = url('assets/img/' . $result['admin_portal_logo']);
     return $result;
-  }
-  public static function getColumns() {
-    $db = DB::connection()->getPdo();
-    $rs = $db->query('SELECT * FROM customizations LIMIT 0');
-    for ($i = 0; $i < $rs->columnCount(); $i++) {
-            $col = $rs->getColumnMeta($i);
-            $columns[] = $col['name'];
-    }
-    //print_r($columns);
-    return $columns;
   }
 }
 

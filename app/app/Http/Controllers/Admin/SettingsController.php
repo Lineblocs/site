@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\ApiCredential;
+use App\ApiCredentialGroup2;
 use Illuminate\Http\Request;
 
 class SettingsController extends AdminController {
@@ -17,6 +18,7 @@ class SettingsController extends AdminController {
 	{
         $title = "Settings";
         $creds = ApiCredential::getRecord();
+        $creds2 = ApiCredentialGroup2::getRecord();
         $aws_regions = array( 
             "us-east-1" => "US East (N. Virginia)",
             "us-west-2" => "US West (Oregon)",
@@ -38,14 +40,14 @@ class SettingsController extends AdminController {
         } else {
             $selected_region = $creds->aws_region;
         }
-		return view('admin.settings.view',  compact('creds', 'aws_regions', 'selected_region'));
+		return view('admin.settings.view',  compact('creds', 'creds2', 'aws_regions', 'selected_region'));
 	}
 	public function save(Request $req)
 	{
         $data = $req->all();
         $title = "Settings";
         $creds = ApiCredential::getRecord();
-        $keys = [
+        $group1Keys = [
         'aws_access_key_id',
         'aws_secret_access_key',
         'aws_region',
@@ -86,11 +88,26 @@ class SettingsController extends AdminController {
         'namecheap_api_key',
         'namecheap_api_user',
         ];
+        $group2Keys = [
+        'paypal_api_mode',
+        'paypal_live_client_id',
+        'paypal_live_client_secret',
+        'paypal_test_client_id',
+        'paypal_test_client_secret',
+        ];
         $update = [];
-        foreach ( $keys as $key ) {
+        foreach ( $group1Keys as $key ) {
             $update[ $key ] = $data[ $key ];
         }
         $creds->update($update);
+
+        $creds2 = ApiCredentialGroup2::getRecord();
+        $update = [];
+        foreach ( $group2Keys as $key ) {
+            $update[ $key ] = $data[ $key ];
+        }
+        $creds2->update($update);
+
         $session = $req->session();
         $session->flash('type', 'success');
         $session->flash('message', 'Settings saved successfully..');

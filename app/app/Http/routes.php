@@ -360,6 +360,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
     Route::resource('errortrace', 'Admin\ErrorTraceController');
 
+     # support tickets
+    Route::get('support/ticket/data', 'Admin\SupportTicketController@data');
+    Route::get('support/ticket/{supportTicket}/show', 'Admin\SupportTicketController@show');
+    Route::get('support/ticket/{supportTicket}/edit', 'Admin\SupportTicketController@edit');
+    Route::get('support/ticket/{supportTicket}/delete', 'Admin\SupportTicketController@delete');
+    Route::resource('supportTicket', 'Admin\SupportTicketController');
+
+     # support category
+    Route::get('support/category/data', 'Admin\SupportCategoryController@data');
+    Route::get('support/category/{supportCategory}/show', 'Admin\SupportCategoryController@show');
+    Route::get('support/category/{supportCategory}/edit', 'Admin\SupportCategoryController@edit');
+    Route::get('support/category/{supportCategory}/delete', 'Admin\SupportCategoryController@delete');
+    Route::resource('supportCategory', 'Admin\SupportCategoryController');
+
     # system status
     Route::get('routingeditor', 'Admin\RoutingEditorController@view');
     Route::post('routingeditor', 'Admin\RoutingEditorController@save');

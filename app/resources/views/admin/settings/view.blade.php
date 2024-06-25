@@ -14,6 +14,11 @@
     <div class="col-md-12">
         <form method="POST" action="">
             <div class="row form-group">
+                <h1>AWS storage and TTS APIs</h1>
+            </div>
+            <hr/>
+
+            <div class="row form-group">
                 <label for="aws_access_key_id">AWS access key</label>
                 <div class="controls">
                     <input id="aws_access_key_id" type="text" class="form-control" name="aws_access_key_id" value="{{$creds->aws_access_key_id}}"/>
@@ -51,11 +56,16 @@
 
             <div class="row form-group">
                 <label for="google_service_account_json">Google service account JSON</label>
+                <small>note: GCP is currently used for all text to speech processing.</small>
                 <div class="controls">
                     <textarea id="google_service_account_json"  class="form-control" name="google_service_account_json">{{$creds->google_service_account_json}}</textarea>
                 </div>
             </div>
 
+            <div class="row form-group">
+                <h1>Stripe credentials</h1>
+            </div>
+            <hr/>
             <div class="row form-group">
                 <label for="stripe_private_key">Stripe Private Key</label>
                 <div class="controls">
@@ -102,6 +112,59 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+                <h1>PayPal REST API credentials</h1>
+            </div>
+            <hr/>
+
+            <div class="row form-group">
+                <label for="paypal_test_client_id">Test client ID</label>
+                <div class="controls">
+                    <input id="paypal_test_client_id" type="text" class="form-control" name="paypal_test_client_id" value="{{$creds2->paypal_test_client_id}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="paypal_test_client_secret">Test client secret</label>
+                <div class="controls">
+                    <input id="paypal_test_client_secret" type="text" class="form-control" name="paypal_test_client_secret" value="{{$creds2->paypal_test_client_secret}}"/>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="paypal_live_client_id">Live client ID</label>
+                <div class="controls">
+                    <input id="paypal_live_client_id" type="text" class="form-control" name="paypal_live_client_id" value="{{$creds2->paypal_live_client_id}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="paypal_live_client_secret">Live client secret</label>
+                <div class="controls">
+                    <input id="paypal_live_client_secret" type="text" class="form-control" name="paypal_live_client_secret" value="{{$creds2->paypal_live_client_secret}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label for="paypal_mode">API mode</label>
+                <div class="controls">
+                    <select class="form-control" name="paypal_api_mode" id="paypal_mode">
+                        @if ( $creds2->paypal_api_mode == 'live')
+                            <option value="live" selected>Live</option>
+                        @else
+                            <option value="live">Live</option>
+                        @endif
+                        @if ( $creds2->paypal_api_mode == 'sandbox')
+                            <option value="sandbox" selected>Sandbox</option>
+                        @else
+                            <option value="sandbox">Sandbox</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
+                <h1>SMS & messaging APIs</h1>
+            </div>
+            <hr/>
            <div class="row form-group">
                 <label for="telerivet_api_key">Telerivet API key</label>
                 <div class="controls">
@@ -128,6 +191,11 @@
                     <input id="whatsapp_access_token" type="text" class="form-control" name="whatsapp_access_token" value="{{$creds->whatsapp_access_token}}"/>
                 </div>
             </div>
+
+            <div class="row form-group">
+                <h1>Security & DDoS</h1>
+            </div>
+            <hr/>
            <div class="row form-group">
                 <label for="recaptcha_sitekey">ReCaptcha site key</label>
                 <div class="controls">
@@ -140,6 +208,11 @@
                     <input id="recaptcha_privatekey" type="text" class="form-control" name="recaptcha_privatekey" value="{{$creds->recaptcha_privatekey}}"/>
                 </div>
             </div>
+
+            <div class="row form-group">
+                <h1>Support ticket module APIs</h1>
+            </div>
+            <hr/>
 
            <div class="row form-group">
                 <label for="zendesk_subdomain">Zendesk subdomain</label>
@@ -177,6 +250,10 @@
             </div>
 
 
+            <div class="row form-group">
+                <h1>SMTP & mailing</h1>
+            </div>
+            <hr/>
             <div class="row form-group">
                 <label for="smtp_host">SMTP host</label>
                 <div class="controls">

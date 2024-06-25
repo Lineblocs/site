@@ -181,6 +181,25 @@
                     </ul>
                 </li>
 
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> Support
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/support/tickets')}}">
+                                <i class="glyphicon glyphicon-list"></i> Tickets
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/support/categories')}}">
+                                <i class="glyphicon glyphicon-list"></i> Categories
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
 
                 <li>
