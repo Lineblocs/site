@@ -361,18 +361,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::resource('errortrace', 'Admin\ErrorTraceController');
 
      # support tickets
-    Route::get('support/ticket/data', 'Admin\SupportTicketController@data');
-    Route::get('support/ticket/{supportTicket}/show', 'Admin\SupportTicketController@show');
-    Route::get('support/ticket/{supportTicket}/edit', 'Admin\SupportTicketController@edit');
-    Route::get('support/ticket/{supportTicket}/delete', 'Admin\SupportTicketController@delete');
-    Route::resource('supportTicket', 'Admin\SupportTicketController');
+    Route::get('supportticket/data', 'Admin\SupportTicketController@data');
+    Route::get('supportticket/{supportticket}/show', 'Admin\SupportTicketController@show');
+    Route::get('supportticket/{supportticket}/edit', 'Admin\SupportTicketController@edit');
+    Route::get('supportticket/{supportticket}/delete', 'Admin\SupportTicketController@delete');
+    Route::post('supportticket/{supportticket}/addUpdate', 'Admin\SupportTicketController@addUpdate');
+    Route::resource('supportticket', 'Admin\SupportTicketController');
 
      # support category
-    Route::get('support/category/data', 'Admin\SupportCategoryController@data');
-    Route::get('support/category/{supportCategory}/show', 'Admin\SupportCategoryController@show');
-    Route::get('support/category/{supportCategory}/edit', 'Admin\SupportCategoryController@edit');
-    Route::get('support/category/{supportCategory}/delete', 'Admin\SupportCategoryController@delete');
-    Route::resource('supportCategory', 'Admin\SupportCategoryController');
+    Route::get('supportcategory/data', 'Admin\SupportCategoryController@data');
+    Route::get('supportcategory/{supportcategory}/show', 'Admin\SupportCategoryController@show');
+    Route::get('supportcategory/{supportcategory}/edit', 'Admin\SupportCategoryController@edit');
+    Route::get('supportcategory/{supportcategory}/delete', 'Admin\SupportCategoryController@delete');
+    Route::resource('supportcategory', 'Admin\SupportCategoryController');
 
     # system status
     Route::get('routingeditor', 'Admin\RoutingEditorController@view');

@@ -35,5 +35,6 @@ return [
     'plandetails' => 'Plan Details',
     'users' => 'Users',
     'add_alert' => 'Add alert',
-    'rates' => 'Rates'
+    'rates' => 'Rates',
+    'updates' => 'Updates'
 ];

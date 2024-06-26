@@ -40,6 +40,8 @@ use \App\SIPRoutingACL;
 use \App\Competitor;
 use \App\CostSaving;
 use \App\NumberService;
+use \App\SupportTicket;
+use \App\SupportTicketCategory;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -99,6 +101,8 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('competitor',Competitor::class);
        \Route::model('costsaving',CostSaving::class);
        \Route::model('numberservice',NumberService::class);
+       \Route::model('supportticket',SupportTicket::class);
+       \Route::model('supportticketcategory',SupportTicketCategory::class);
     }
 
     /**

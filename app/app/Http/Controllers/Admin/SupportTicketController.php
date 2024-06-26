@@ -2,14 +2,15 @@
 
 use App\Http\Controllers\AdminController;
 use App\User;
-use App\ErrorUserTrace;
+use App\SupportTicket;
+use App\SupportTicketUpdate;
 use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPProvider;
 use App\SIPRateCenterProvider;
 use App\Workspace;
 use App\PortNumber;
-use App\Http\Requests\Admin\ErrorTraceRequest;
+use App\Http\Requests\Admin\SupportTicketRequest;
 use App\Helpers\MainHelper;
 use Datatables;
 use DB;
@@ -17,11 +18,11 @@ use Config;
 use Mail;
 use Illuminate\Http\Request;
 
-class ErrorTraceController extends AdminController
+class SupportTicketController extends AdminController
 {
     public function __construct()
     {
-        view()->share('type', 'errortrace');
+        view()->share('type', 'supportticket');
     }
 
     /*
@@ -32,7 +33,7 @@ class ErrorTraceController extends AdminController
     public function index()
     {
         // Show the page
-        return view('admin.errortrace.index');
+        return view('admin.supportticket.index');
     }
 
     /**
@@ -42,7 +43,7 @@ class ErrorTraceController extends AdminController
      */
     public function create()
     {
-        return view('admin.errortrace.create_edit');
+        return view('admin.supportticket.create_edit');
     }
 
     /**
@@ -50,7 +51,7 @@ class ErrorTraceController extends AdminController
      *
      * @return Response
      */
-    public function store(ErrorTraceRequest $request)
+    public function store(SupportTicketRequest $request)
     {
 
     }
@@ -61,9 +62,16 @@ class ErrorTraceController extends AdminController
      * @param $user
      * @return Response
      */
-    public function edit(ErrorTraceCategory $errortrace)
+    public function edit(SupportTicket $supportticket)
     {
-        return view('admin.errortrace.create_edit', compact('errortrace', 'updates'));
+        $priorities = array(
+            'LOW' => 'low',
+            'MEDIUM' => 'medium',
+            'HIGH' => 'high',
+        );
+        $updates = SupportTicketUpdate::where('ticket_id', $supportticket->id)->get();
+
+        return view('admin.supportticket.create_edit', compact('supportticket', 'priorities', 'updates'));
     }
 
     /**
@@ -72,7 +80,7 @@ class ErrorTraceController extends AdminController
      * @param $user
      * @return Response
      */
-    public function update(ErrorTraceRequest $request, ErrorTraceCategory $errortrace)
+    public function update(SupportTicketRequest $request, SupportTicket $supportticket)
     {
     }
 
@@ -83,7 +91,7 @@ class ErrorTraceController extends AdminController
      * @return Response
      */
 
-    public function delete(ErrorTrace $errortrace)
+    public function delete(SupportTicket $supportticket)
     {
     }
 
@@ -93,8 +101,20 @@ class ErrorTraceController extends AdminController
      * @param $user
      * @return Response
      */
-    public function destroy(ErrorTrace $errortrace)
+    public function destroy(SupportTicket $supportticket)
     {
+    }
+
+    public function addUpdate(Request $request, SupportTicket $supportticket)
+    {
+        $data = $request->all();
+        SupportTicketUpdate::create([
+            'comment' => $data['comment'],
+            'ticket_id' => $supportticket->id,
+            'direction' => 'STAFF'
+        ]);
+
+        return response();
     }
 
     /**
@@ -104,11 +124,11 @@ class ErrorTraceController extends AdminController
      */
     public function data()
     {
-        $errortraces = ErrorUserTrace::select(array('error_user_trace.id', 'users.email', 'workspaces.name',  'error_user_trace.message', 'error_user_trace.full_url', 'error_user_trace.created_at'));
-        $errortraces->leftJoin('users', 'users.id', '=', 'error_user_trace.user_id');
-        $errortraces->leftJoin('workspaces', 'workspaces.id', '=', 'error_user_trace.workspace_id');
+        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at'));
 
-        return Datatables::of($errortraces)
+        return Datatables::of($tickets)
+            ->add_column('actions', '<a href="{{{ url(\'admin/supportticket/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+                    <a href="{{{ url(\'admin/supportticket/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
     }

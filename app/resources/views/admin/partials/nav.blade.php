@@ -188,12 +188,12 @@
                     </a>
                     <ul class="nav collapse">
                         <li>
-                            <a href="{{url('admin/support/tickets')}}">
+                            <a href="{{url('admin/supportticket')}}">
                                 <i class="glyphicon glyphicon-list"></i> Tickets
                             </a>
                         </li>
                         <li>
-                            <a href="{{url('admin/support/categories')}}">
+                            <a href="{{url('admin/supportcategory')}}">
                                 <i class="glyphicon glyphicon-list"></i> Categories
                             </a>
                         </li>
