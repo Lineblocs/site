@@ -102,7 +102,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('costsaving',CostSaving::class);
        \Route::model('numberservice',NumberService::class);
        \Route::model('supportticket',SupportTicket::class);
-       \Route::model('supportticketcategory',SupportTicketCategory::class);
+       \Route::model('supportcategory',SupportTicketCategory::class);
     }
 
     /**
