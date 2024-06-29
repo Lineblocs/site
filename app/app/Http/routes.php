@@ -435,6 +435,7 @@ $api->version('v1', function($api) {
           $api->post("/", "BlockedNumberController@post");
           $api->post("/{blockedId}", "BlockedNumberController@put");
           $api->delete("/{blockedId}", "BlockedNumberController@delete");
+          $api->delete("/uploadList", "BlockedNumberController@uploadList");
       });
       $api->group([ 'prefix' => 'recording', 'namespace' => '\Recording'], function($api) {
           $api->get("/list", "RecordingController@list");
@@ -780,6 +781,7 @@ $api->version('v1', function($api) {
 
     $api->group([ 'prefix' => 'supportTicket', 'namespace' => '\App\Http\Controllers\Api\SupportTicket'], function($api) {
         $api->get("/list", "SupportTicketController@listSupportTickets");
+        $api->get("/categories", "SupportTicketController@listCategories");
         $api->get("/{supportTicketId}", "SupportTicketController@supportTicketData");
         $api->get("/{supportTicketId}/history", "SupportTicketController@supportTicketDataHistory");
         $api->post("/", "SupportTicketController@saveSupportTicket");

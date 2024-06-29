@@ -14,6 +14,7 @@ use App\Customizations;
 use App\ApiCredential;
 use App\Competitor;
 use App\CostSaving;
+use App\Call;
 use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
@@ -55,7 +56,12 @@ class HomeController extends BaseController {
         ]
     );
     $countries = SIPCountry::all();
-    return view('pages.home', compact('content', 'countries'));
+    $numCalls = Call::count();
+    $callStatistics = DB::select( DB::raw("SELECT SUM(ended_at-started_at) AS total_time FROM calls;") );
+    $totalTime = (int) $callStatistics[0]->total_time;
+
+    $totalCallMinutes = (int) round( $totalTime/60 );
+    return view('pages.home', compact('content', 'countries', 'numCalls', 'totalCallMinutes'));
   }
   public function pricing(Request $request)
   {

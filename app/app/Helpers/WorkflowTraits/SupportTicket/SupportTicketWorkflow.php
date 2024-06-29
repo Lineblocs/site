@@ -9,6 +9,7 @@ use \App\User;
 use \App\Helpers\SupportHelper;
 use \App\SupportTicket;
 use \App\SupportTicketUpdate;
+use \App\SupportTicketCategory;
 use \App\UserDebit;
 use \App\Flow;
 use App\Customizations;
@@ -189,6 +190,13 @@ trait SupportTicketWorkflow {
         $supportTickets = SupportTicket::where('workspace_id', $workspace->id);
         MainHelper::addSearch($request, $supportTickets, ['subject']);
         return $this->response->paginator($supportTickets->paginate($paginate), new SupportTicketTransformer);
+    }
+
+   public function listCategories(Request $request)
+    {
+        $workspace = $this->getWorkspace($request);
+        $categories = SupportTicketCategory::all();
+        return $this->response->array( $categories->toArray() );
     }
     public function deleteSupportTicket(Request $request, $supportTicketId)
     {

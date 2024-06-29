@@ -7,6 +7,7 @@ use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
 use \App\SupportTicket;
+use \App\SupportTicketCategory;
 use \App\UserDebit;
 use \App\Flow;
 use \App\Transformers\SupportTicketTransformer;

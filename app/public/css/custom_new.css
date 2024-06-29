@@ -350,3 +350,13 @@ ul:not(.browser-default) {
 .sla-card .sla-link {
   margin: 0 15px;
 }
+
+
+.home-stats {
+  margin-top: 20px;
+}
+.home-stats .box .content {
+  padding: 20px; 
+  border: 1px solid #E3E3E3;
+  border-radius: 7px;
+}

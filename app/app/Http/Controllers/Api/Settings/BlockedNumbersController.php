@@ -42,6 +42,40 @@ class BlockedNumbersController extends ApiAuthController {
         return $this->response->noContent();
     }
 
+    // parse CSV file
+    // and return a data structure including all the processed
+    // numbers
+    private function parseUploadedFile($user, $file) {
+        return [];
+    }
+
+    public function uploadList(Request $request)
+    {
+        $data = $request->json()->all();
+        if (!$this->hasPermissions($request, $number, 'manage_blocked_numbers')) {
+            return $this->response->errorForbidden();
+        }
+
+        $workspace = $this->getWorkspace($request);
+        $files = \Input::file("file");
+        $amountFailed = 0;
+        $user = $this->getUser($request);
+
+        foreach ($files as $file) {
+            $csvData = $this->parseUploadedFile($user, $file);
+            foreach ($csvData as $number) {
+                BlockedNumber::create([
+                    'user_id' => $user->id,
+                    'workspace_id' => $workspace->id,
+                    'number' => $number['number']
+                ]);
+            }
+        }
+
+        return $this->response->noContent();
+    }
+
+
 
 }
 

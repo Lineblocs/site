@@ -54,6 +54,28 @@ A customizable VoIP system
                 </div>
             </section>
 
+           <section class="stats">
+                <h2 class="text-center">How users have used our services</h2>
+                <div class="container">
+                    <div class="home-stats row">
+                        <div class="box col-md-6">
+                            <div class="content">
+                                <h4>{{$numCalls}}</h4>
+                                <small>calls</small>
+                            </div>
+                        </div>
+                        <div class="box col-md-6">
+                            <div class="content">
+                                <h4>{{$totalCallMinutes}}</h4>
+                                <small>minutes called</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+
             <section class="comparison">
                 <h2 class="text-center">Feature Comparison</h2>
                 <table class="comparison">
