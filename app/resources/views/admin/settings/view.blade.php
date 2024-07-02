@@ -120,38 +120,38 @@
             <div class="row form-group">
                 <label for="paypal_test_client_id">Test client ID</label>
                 <div class="controls">
-                    <input id="paypal_test_client_id" type="text" class="form-control" name="paypal_test_client_id" value="{{$creds2->paypal_test_client_id}}"/>
+                    <input id="paypal_test_client_id" type="text" class="form-control" name="paypal_test_client_id" value="{{$creds->paypal_test_client_id}}"/>
                 </div>
             </div>
             <div class="row form-group">
                 <label for="paypal_test_client_secret">Test client secret</label>
                 <div class="controls">
-                    <input id="paypal_test_client_secret" type="text" class="form-control" name="paypal_test_client_secret" value="{{$creds2->paypal_test_client_secret}}"/>
+                    <input id="paypal_test_client_secret" type="text" class="form-control" name="paypal_test_client_secret" value="{{$creds->paypal_test_client_secret}}"/>
                 </div>
             </div>
 
             <div class="row form-group">
                 <label for="paypal_live_client_id">Live client ID</label>
                 <div class="controls">
-                    <input id="paypal_live_client_id" type="text" class="form-control" name="paypal_live_client_id" value="{{$creds2->paypal_live_client_id}}"/>
+                    <input id="paypal_live_client_id" type="text" class="form-control" name="paypal_live_client_id" value="{{$creds->paypal_live_client_id}}"/>
                 </div>
             </div>
             <div class="row form-group">
                 <label for="paypal_live_client_secret">Live client secret</label>
                 <div class="controls">
-                    <input id="paypal_live_client_secret" type="text" class="form-control" name="paypal_live_client_secret" value="{{$creds2->paypal_live_client_secret}}"/>
+                    <input id="paypal_live_client_secret" type="text" class="form-control" name="paypal_live_client_secret" value="{{$creds->paypal_live_client_secret}}"/>
                 </div>
             </div>
             <div class="row form-group">
                 <label for="paypal_mode">API mode</label>
                 <div class="controls">
                     <select class="form-control" name="paypal_api_mode" id="paypal_mode">
-                        @if ( $creds2->paypal_api_mode == 'live')
+                        @if ( $creds->paypal_api_mode == 'live')
                             <option value="live" selected>Live</option>
                         @else
                             <option value="live">Live</option>
                         @endif
-                        @if ( $creds2->paypal_api_mode == 'sandbox')
+                        @if ( $creds->paypal_api_mode == 'sandbox')
                             <option value="sandbox" selected>Sandbox</option>
                         @else
                             <option value="sandbox">Sandbox</option>

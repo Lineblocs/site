@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
 use App\SIPPoPRegion;
 use App\RegistrationQuestionnaire;
@@ -60,7 +61,8 @@ class CustomizationsController extends AdminController {
 
 	public function view()
 	{
-		$record = Customizations::getRecord();
+		//$record = Customizations::getRecord();
+		$record = CustomizationsKVStore::getRecord();
 		$maintenanceDays = [
 			'monday',
 			'tuesday',
@@ -318,7 +320,14 @@ class CustomizationsController extends AdminController {
 		unset( $update_params['questionnaire'] );
 		$this->updateQuestionnaire($questionnaire);
 
-		$record->update( $update_params );
+		foreach ($update_params as $key => $value) {
+			if (is_string($value)) {
+				CustomizationsKVStore::upsert($key, 'string_value', $value);
+			} else if (is_bool($value)) {
+				CustomizationsKVStore::upsert($key, 'boolean_value', $value);
+			}
+		}
+
 		$session = $request->session();
 		$session->flash('type', 'success');
 		$session->flash('message', 'Settings updated...');

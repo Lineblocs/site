@@ -15,7 +15,7 @@ class CreateCustomizationsV2Table extends Migration
         Schema::create('customizations_kv_store', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('key');
+            $table->string('key')->unique();
             $table->string('value_type');
             $table->string('string_value');
             $table->integer('number_value');
