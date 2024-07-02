@@ -6,13 +6,14 @@ use App\Classes\namecheap;
 use App\SIPTrunk;
 use App\SipTrunkTermination;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use Config;
 use Log;
 use Exception;
 use Mail;
 final class EmailHelper {
   public static function sendEmail($subject, $to, $template, $data) {
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $dns_provider = $customizations->dns_provider;
     $mail = Config::get('mail');
     $data['customizations'] = $customizations;

@@ -10,7 +10,9 @@ use Aws\Route53\Exception\Route53Exception;
 use App\SIPTrunk;
 use App\SipTrunkTermination;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\DNSRecord;
 use App\User;
 use App\Classes\GoDaddyDDNS;
@@ -28,8 +30,8 @@ final class DNSHelper {
 
     $sip_trunk_terminations = SIPTrunkTermination::all();
     $nc = array();
-    $api_credentials = ApiCredential::getRecord();
-    $customizations = Customizations::getRecord();
+    $api_credentials = ApiCredentialKVStore::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $dns_provider = $customizations->dns_provider;
     $dns = Config::get("dns");
     $ingress = $dns['ingress'];

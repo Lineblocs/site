@@ -34,7 +34,9 @@ use App\BYOCarrier;
 use App\BYODIDNumber;
 
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\Phone;
 
 use App\PhoneGroup;
@@ -713,7 +715,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
   public function getAllSettings(Request $request) {
         $apiCreds = APICredential::getFrontendValuesOnly();
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $availableThemes = array(
           array(
             'name' => 'default',

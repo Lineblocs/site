@@ -4,6 +4,7 @@ use \Config;
 use \DateTime;
 use App\Settings;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use Zendesk\API\HttpClient as ZendeskAPI;
@@ -23,7 +24,7 @@ final class SupportHelper {
   }
 
   public static function createTicket($subject, $comment, $priority, $args=array()) {
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationskVStore::getRecord();
     $zendeskEnabled = $customizations->zendesk_enabled;
 
     if (!$zendeskEnabled) {

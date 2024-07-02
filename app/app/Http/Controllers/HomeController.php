@@ -11,6 +11,7 @@ use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
 use App\Competitor;
 use App\CostSaving;
@@ -192,7 +193,7 @@ class HomeController extends BaseController {
   {
     $request->session()->forget('status');
     $creds = ApiCredential::getRecord();
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $vars = [
       'customizations' => $customizations,
       'creds' => $creds
@@ -203,7 +204,7 @@ class HomeController extends BaseController {
   {
     $data = $request->all();
     $creds = ApiCredential::getRecord();
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $vars = [
         'customizations' => $customizations
     ];
@@ -252,7 +253,7 @@ class HomeController extends BaseController {
   public function requestQuote(Request $request)
   {
     $request->session()->forget('status');
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $creds = ApiCredential::getRecord();
     $teamSize = array(
       'small' => '1-50 employees',
@@ -271,7 +272,7 @@ class HomeController extends BaseController {
   public function requestQuoteSubmit(Request $request)
   {
     $data = $request->all();
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $creds = ApiCredential::getRecord();
 
     $teamSize = array(
@@ -341,7 +342,7 @@ class HomeController extends BaseController {
   public function bugReport(Request $request)
   {
     $request->session()->forget('status');
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $creds = ApiCredential::getRecord();
     $bugTypes = array(
       'general' => 'Page not working',
@@ -357,7 +358,7 @@ class HomeController extends BaseController {
   public function bugReportSubmit(Request $request)
   {
     $data = $request->all();
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $creds = ApiCredential::getRecord();
 
     $bugTypes = array(
@@ -422,7 +423,7 @@ class HomeController extends BaseController {
   public function leaveFeedback(Request $request)
   {
     $data = $request->all();
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $vars = [
       'customizations' => $customizations
     ];

@@ -7,6 +7,7 @@ use \PDF;
 use \DateTime;
 use App\Settings;
 use App\Customizations;
+use App\CustomizationsKVStroe;
 use App\BillingTax;
 use App\UserInvoiceLineItem;
 use App\Helpers\MainHelper;
@@ -133,7 +134,7 @@ final class InvoiceHelper {
         $invoiceItemsTotal += ($itemPrice + $itemTax);
       }
 
-      $customizations = Customizations::getRecord();
+      $customizations = CustomizationsKVStore::getRecord();
       $paymentMethod = MainHelper::getPrimaryPaymentMethod($workspace);
       $accountNo = $workspace->account_no;
       $invoiceVars = [

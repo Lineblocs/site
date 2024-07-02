@@ -21,6 +21,7 @@ use Twilio\TwiML\VoiceResponse;
 use App\UserCredit;
 use App\ServicePlan;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use Illuminate\Support\Facades\Password;
 use \Log;
 use App\UserDevice;
@@ -128,7 +129,7 @@ class RegisterController extends ApiAuthController
      $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
       $number = $data['mobile_number'];
       $user = User::findOrFail($data['userId']);
-      $customizations = Customizations::getRecord();
+      $customizations = CustomizationsKVStore::getRecord();
       $reuse = [
           '+17808503688',
           '+15874874526'
@@ -216,7 +217,7 @@ class RegisterController extends ApiAuthController
     {
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
-        $customizations =Customizations::getRecord();
+        $customizations =CustomizationsKVStore::getRecord();
         $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail()->toArray();
         //$plan = $plans[$data['plan']];
         $region = SIPPoPRegion::findOrFail( $customizations->default_region );

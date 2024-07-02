@@ -61,7 +61,6 @@ class CustomizationsController extends AdminController {
 
 	public function view()
 	{
-		//$record = Customizations::getRecord();
 		$record = CustomizationsKVStore::getRecord();
 		$maintenanceDays = [
 			'monday',
@@ -111,7 +110,6 @@ class CustomizationsController extends AdminController {
 	}
 	public function save(Request $request)
 	{
-		$record = Customizations::getRecord();
 		$update_params = $request->all();
 		if ($request->hasFile('app_logo')) {
 			$app_logo = $this->processUploadedFile($request, $record, 'app_logo');

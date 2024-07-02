@@ -11,7 +11,9 @@ use App\FlowTemplate;
 use App\ExtensionCode;
 use App\UserCard;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
@@ -167,7 +169,7 @@ final class MainHelper {
     ];
 
     public static function initStripe() {
-        $credentials = ApiCredential::getRecord();
+        $credentials = ApiCredentialKVStore::getRecord();
 
         if ($credentials['stripe_mode'] == 'live') {
           \Stripe\Stripe::setApiKey($credentials['stripe_private_key']);
@@ -177,7 +179,7 @@ final class MainHelper {
     }
 
     public static function initStripeClient() {
-        $credentials = ApiCredential::getRecord();
+        $credentials = ApiCredentialKVStore::getRecord();
 
         $key = NULL;
         if ($credentials['stripe_mode'] == 'live') {
@@ -254,7 +256,7 @@ final class MainHelper {
   }
   public static function getPayPalContext() {
 
-    $apiCredentials = ApiCredential::getRecord();
+    $apiCredentials = ApiCredentialKVStore::getRecord();
     $clientId = NULL;
     $clientSecret = NULL;
     $mode = $apiCredentials['paypal_api_mode'];
@@ -355,7 +357,7 @@ final class MainHelper {
   }
   public static function getPublicConfig()
     {
-        $credentials = ApiCredential::getRecord();
+        $credentials = ApiCredentialKVStore::getRecord();
         $data = [];
         $data['stripe'] = [];
 
@@ -402,7 +404,7 @@ final class MainHelper {
     }
   public static function createUser($data, $externalUser=FALSE) {
       $key = Config::get("stripe.secret_key");
-      $customization = Customizations::getRecord();
+      $customization = CustomizationsKVStore::getRecord();
       $user = MainHelper::createUserWithoutPaymentGateway($data);
       if ( $customization->payment_gateway_enabled && !$externalUser ) {
         if ( $customization->payment_gateway == 'stripe' ) {
@@ -838,7 +840,7 @@ final class MainHelper {
 
 
   public static function sendSMS($from='', $to='', $body='') {
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     ClassFinder::disablePSR4Vendors(); // Optional; see performance notes below
     $providers = ClassFinder::getClassesInNamespace('App\Helpers\Sms');
     $smsProvider = NULL;
@@ -1058,7 +1060,7 @@ final class MainHelper {
       return sprintf("%s.pstn", $trunk_name);
     }
     public static function adminLogo() {
-        $cust = Customizations::getRecord()->toArray();
+        $cust = CustomizationsKVStore::getRecord()->toArray();
         $logo = $cust['admin_portal_logo'];
         if ( !empty( $logo )) {
           return $logo;
@@ -1069,7 +1071,7 @@ final class MainHelper {
         return $default_logo;
     }
     public static function appLogo() {
-        $cust = Customizations::getRecord()->toArray();
+        $cust = CustomizationsKVStore::getRecord()->toArray();
         $logo = $cust['app_logo'];
         if ( !empty( $logo )) {
           return $logo;
@@ -1172,11 +1174,11 @@ final class MainHelper {
       return "Credit Card";
     }
     public static function getBlogURL() {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         return $customizations->blog_url;
     }
     public static function sendWhatsAppMessage($to, $body) {
-      $creds = ApiCredential::getRecord();
+      $creds = ApiCredentialKVStore::getRecord();
       $service = "https://graph.facebook.com";
       $path = sprintf( "/v18.0/%s/messages", $creds->whatsapp_phone_number_id);
       $headers = [
@@ -1194,11 +1196,11 @@ final class MainHelper {
       return $result;
     }
     public static function getCustomization($field) {
-      $creds = Customizations::getRecord();
+      $creds = CustomizationsKVStore::getRecord();
       return $creds[$field];
     }
     public static function getCredential($field) {
-      $creds = ApiCredential::getRecord();
+      $creds = ApiCredentialKVStore::getRecord();
       return $creds[$field];
 
     }

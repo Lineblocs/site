@@ -13,6 +13,7 @@ use \App\SupportTicketCategory;
 use \App\UserDebit;
 use \App\Flow;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use \App\Transformers\SupportTicketTransformer;
 use App\SupportTicketService\SupportTicketService;
 use \App\Helpers\MainHelper;
@@ -49,7 +50,7 @@ trait SupportTicketWorkflow {
 
     public function saveSupportTicket(Request $request)
     {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $data = $request->only('subject', 'comment', 'priority');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
@@ -94,7 +95,7 @@ trait SupportTicketWorkflow {
 
     public function createSupportTicketUpdate(Request $request, $ticketId)
     {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $data = $request->only('comment');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
@@ -133,7 +134,7 @@ trait SupportTicketWorkflow {
 
     public function getSupportTicketUpdates(Request $request, $ticketId)
     {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $ticketUpdates = SupportTicketUpdate::where('ticket_id', $ticketId)->get();
         return $this->response->array($ticketUpdates->toArray());
     }
@@ -145,7 +146,7 @@ trait SupportTicketWorkflow {
         if (!$this->hasPermissions($request, $supportTicket, 'manage_support_tickets')) {
             return $this->response->errorForbidden();
         }
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $zendeskEnabled = $customizations->zendesk_enabled;
         if ($zendeskEnabled) {
             SupportHelper::updateTicket($supportTicket->zendesk_id, $args);
