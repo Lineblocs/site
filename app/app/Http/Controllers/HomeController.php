@@ -13,6 +13,7 @@ use App\ServicePlan;
 use App\Customizations;
 use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\Competitor;
 use App\CostSaving;
 use App\Call;
@@ -192,7 +193,7 @@ class HomeController extends BaseController {
   public function contact(Request $request)
   {
     $request->session()->forget('status');
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $customizations = CustomizationsKVStore::getRecord();
     $vars = [
       'customizations' => $customizations,
@@ -203,7 +204,7 @@ class HomeController extends BaseController {
   public function contactSubmit(Request $request)
   {
     $data = $request->all();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $customizations = CustomizationsKVStore::getRecord();
     $vars = [
         'customizations' => $customizations
@@ -254,7 +255,7 @@ class HomeController extends BaseController {
   {
     $request->session()->forget('status');
     $customizations = CustomizationsKVStore::getRecord();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $teamSize = array(
       'small' => '1-50 employees',
       'medium' => '51-500 employees',
@@ -273,7 +274,7 @@ class HomeController extends BaseController {
   {
     $data = $request->all();
     $customizations = CustomizationsKVStore::getRecord();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
 
     $teamSize = array(
       'small' => '1-50 employees',
@@ -343,7 +344,7 @@ class HomeController extends BaseController {
   {
     $request->session()->forget('status');
     $customizations = CustomizationsKVStore::getRecord();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $bugTypes = array(
       'general' => 'Page not working',
     );
@@ -359,7 +360,7 @@ class HomeController extends BaseController {
   {
     $data = $request->all();
     $customizations = CustomizationsKVStore::getRecord();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
 
     $bugTypes = array(
       'general' => 'Page not working',

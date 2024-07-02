@@ -19,8 +19,7 @@ class SettingsController extends AdminController {
 	{
         $title = "Settings";
         $creds = ApiCredentialKVStore::getRecord();
-        //$creds = ApiCredential::getRecord();
-        //$creds2 = ApiCredentialGroup2::getRecord();
+
         $aws_regions = array( 
             "us-east-1" => "US East (N. Virginia)",
             "us-west-2" => "US West (Oregon)",
@@ -48,7 +47,7 @@ class SettingsController extends AdminController {
 	{
         $data = $req->all();
         $title = "Settings";
-        $creds = ApiCredential::getRecord();
+        $creds = ApiCredentialKVStore::getRecord();
         $keys = [
         'aws_access_key_id',
         'aws_secret_access_key',

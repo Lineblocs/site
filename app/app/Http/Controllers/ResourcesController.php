@@ -14,6 +14,7 @@ use App\ResourceSection;
 use App\Customizations;
 use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use View;
 use Config;
 class ResourcesController extends BaseController {
@@ -191,7 +192,7 @@ class ResourcesController extends BaseController {
     $tags = $article['seo_tags'];
     $description = $article['description'];
     $customizations = CustomizationsKVStore::getRecord();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     View::share('title', $title);
     View::share('tags', $tags);
     View::share('description', $description);

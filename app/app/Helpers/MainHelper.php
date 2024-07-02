@@ -1063,7 +1063,7 @@ final class MainHelper {
         $cust = CustomizationsKVStore::getRecord()->toArray();
         $logo = $cust['admin_portal_logo'];
         if ( !empty( $logo )) {
-          return $logo;
+          return sprintf("/assets/img/%s", $logo);
         }
         // old version
         //$default_logo = '/images/logo-white.png';
@@ -1071,10 +1071,10 @@ final class MainHelper {
         return $default_logo;
     }
     public static function appLogo() {
-        $cust = CustomizationsKVStore::getRecord()->toArray();
+        $cust = CustomizationsKVStore::getRecord();
         $logo = $cust['app_logo'];
         if ( !empty( $logo )) {
-          return $logo;
+          return sprintf("/assets/img/%s", $logo);
         }
         // old version
         //$default_logo = '/images/logo-white.png';

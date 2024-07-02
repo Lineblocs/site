@@ -47,6 +47,7 @@ use Twilio\Rest\Client;
 use Twilio\TwiML\VoiceResponse;
 use App\UserCredit;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use DateTime;
 use DateInterval;
 use DB;
@@ -64,7 +65,7 @@ class SetupController extends ApiAuthController
 
     public function getSettings(Request $request)
     {
-      $creds = ApiCredential::getRecord();
+      $creds = ApiCredentialKVStore::getRecord();
       if ($this->isSetupComplete($creds)) {
         return $this->response->errorForbidden();
       }
@@ -75,7 +76,7 @@ class SetupController extends ApiAuthController
 
     public function saveSettings(Request $request)
     {
-      $creds = ApiCredential::getRecord();
+      $creds = ApiCredentialKVStore::getRecord();
       if ($this->isSetupComplete($creds)) {
         return $this->response->errorForbidden();
       }
@@ -86,7 +87,7 @@ class SetupController extends ApiAuthController
 
     public function completeSetup(Request $request)
     {
-      $creds = ApiCredential::getRecord();
+      $creds = ApiCredentialKVStore::getRecord();
       if ($this->isSetupComplete($creds)) {
         return $this->response->errorForbidden();
       }

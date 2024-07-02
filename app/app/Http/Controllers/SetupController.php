@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\User;
 function getSavedValue($request, $creds,  $key) {
   $submitted = @$_POST[ $key ];
@@ -19,7 +20,7 @@ class SetupController extends BaseController {
   }
 
   private function save_settings($params, $data) {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $update = [];
     foreach ( $params as $item ) {
       $update[ $item ] = $data[ $item ];
@@ -28,7 +29,7 @@ class SetupController extends BaseController {
   }
   public function setup_storage(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
         $aws_regions = array( 
             "us-east-1" => "US East (N. Virginia)",
             "us-west-2" => "US West (Oregon)",
@@ -60,21 +61,21 @@ class SetupController extends BaseController {
   }
   public function save_storage(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
      $params = [
         'aws_access_key_id',
         'aws_secret_access_key',
         'aws_region',
         'storage_provider'
      ];
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $this->save_settings($params,$request->all());
     return redirect("/setup/tts");
   }
 
   public function setup_tts(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $google_service_account_json = getSavedValue($request, $creds,  'google_service_account_json');
     $provider = getSavedValue($request, $creds,  'tts_provider');
     $params = [
@@ -86,19 +87,19 @@ class SetupController extends BaseController {
   }
   public function save_tts(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
      $params = [
 'google_service_account_json',
 'tts_provider'
      ];
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $this->save_settings($params,$request->all());
     return redirect("/setup/payments");
   }
 
   public function setup_payments(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $stripe_pub_key = getSavedValue($request, $creds,  'stripe_pub_key');
     $stripe_private_key = getSavedValue($request, $creds,  'stripe_private_key');
     $stripe_test_pub_key = getSavedValue($request, $creds,  'stripe_test_pub_key');
@@ -116,20 +117,20 @@ class SetupController extends BaseController {
   }
   public function save_payments(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
      $params = [
       'stripe_pub_key',
       'stripe_private_key',
       'stripe_test_pub_key',
       'stripe_test_private_key'
      ];
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $this->save_settings($params,$request->all());
     return redirect("/setup/smtp");
   }
   public function setup_smtp(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $smtp_host= getSavedValue($request, $creds,  'smtp_host');
     $smtp_user= getSavedValue($request, $creds,  'smtp_user');
     $smtp_password= getSavedValue($request, $creds,  'smtp_password');
@@ -152,14 +153,14 @@ class SetupController extends BaseController {
       'smtp_password',
       'smtp_tls'
     ];
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $this->save_settings($params,$request->all());
     return redirect("/setup/admin");
   }
   public function save(Request $request)
   {
     $input = $request->all();
-    $settings = ApiCredential::getRecord();
+    $settings = ApiCredentialKVStore::getRecord();
   $keys = [
         'aws_access_key_id',
         'aws_secret_access_key',
@@ -190,7 +191,7 @@ class SetupController extends BaseController {
 
   public function setup_admin(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $user = User::getAdminRecord();
     $admin_email= getSavedValue($request, $user,  'email');
     $params = [
@@ -204,7 +205,7 @@ class SetupController extends BaseController {
     $data = $request->all();
 
     $session = $request->session();
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     if ( $data['admin_password'] != $data['admin_cpassword']) {
       $session->flash('type', 'danger');
       $session->flash('message', 'Password did not match');
@@ -241,7 +242,7 @@ class SetupController extends BaseController {
   }
 public function setup_complete(Request $request)
   {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $creds->update([
       'setup_complete' => TRUE
     ]);
@@ -254,7 +255,7 @@ public function setup_alreadycomplete(Request $request)
 public function setup_restart(Request $request)
   {
     /*
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $creds->update([
       'setup_complete' => FALSE
     ]);
