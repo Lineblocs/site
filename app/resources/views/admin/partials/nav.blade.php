@@ -183,7 +183,13 @@
 
                 <li>
                     <a href="#">
-                        <i class="glyphicon glyphicon-bullhorn"></i> Support
+                        <i class="glyphicon glyphicon-bullhorn"></i> 
+                        
+                        Support
+                        @if (\App\Helpers\MainHelper::numTicketsOpen()>0)
+                            <small>({{\App\Helpers\MainHelper::numTicketsOpen()}} open)</small>
+                        @endif
+
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav collapse">

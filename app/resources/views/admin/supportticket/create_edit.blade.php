@@ -10,9 +10,9 @@
 </ul>
 <!-- ./ tabs -->
 @if (isset($supportticket))
-{!! Form::model($supportticket, array('url' => url('admin/ticket') . '/' . $supportticket->id, 'method' => 'put', 'class' => 'bf', 'files'=> true)) !!}
+{!! Form::model($supportticket, array('url' => url('admin/supportticket') . '/' . $supportticket->id, 'method' => 'put', 'class' => 'bf', 'files'=> true)) !!}
 @else
-{!! Form::open(array('url' => url('admin/ticket'), 'method' => 'post', 'class' => 'bf', 'files'=> true)) !!}
+{!! Form::open(array('url' => url('admin/supportticket'), 'method' => 'post', 'class' => 'bf', 'files'=> true)) !!}
 @endif
         <!-- Tabs Content -->
 <div class="tab-content">
@@ -25,12 +25,43 @@
                 <span class="help-block">{{ $errors->first('subject', ':message') }}</span>
             </div>
         </div>
+        <div class="form-group  {{ $errors->has('comment') ? 'has-error' : '' }}">
+            {!! Form::label('comment', trans("admin/tickets.comment"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::textarea('comment', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('comment', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('priority') ? 'has-error' : '' }}">
 
             {!! Form::label('priority', trans("admin/tickets.priority"), array('class' => 'control-label')) !!}
             <div class="controls">
                 {!! Form::select('priority', $priorities, null, array('class' => 'form-control', 'id' => 'status')) !!}
                 <span class="help-block">{{ $errors->first('priority', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group  {{ $errors->has('status') ? 'has-error' : '' }}">
+
+            {!! Form::label('status', trans("admin/tickets.status"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::select('status', $statuses, null, array('class' => 'form-control', 'id' => 'status')) !!}
+                <span class="help-block">{{ $errors->first('status', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group  {{ $errors->has('category_id') ? 'has-error' : '' }}">
+
+            {!! Form::label('category_id', trans("admin/tickets.category_id"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::select('category_id', $categories, null, array('class' => 'form-control', 'id' => 'category_id')) !!}
+                <span class="help-block">{{ $errors->first('category_id', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group  {{ $errors->has('assigned_to_id') ? 'has-error' : '' }}">
+
+            {!! Form::label('assigned_to_id', trans("admin/tickets.assigned_to_id"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::select('assigned_to_id', $admins, null, array('class' => 'form-control', 'id' => 'assigned_to_id')) !!}
+                <span class="help-block">{{ $errors->first('assigned_to_id', ':message') }}</span>
             </div>
         </div>
         <div class="form-group">

@@ -14,6 +14,7 @@ use App\Customizations;
 use App\CustomizationsKVStore;
 use App\ApiCredential;
 use App\ApiCredentialKVStore;
+use App\SupportTicket;
 use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
@@ -1231,5 +1232,10 @@ final class MainHelper {
 
       // Output the formatted date
       return $readableDate;
+    }
+
+    public static function numTicketsOpen() {
+      $ticketsOpen = SupportTicket::where('status', 'OPEN')->count();
+      return $ticketsOpen;
     }
 }

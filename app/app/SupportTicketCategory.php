@@ -12,6 +12,14 @@ class SupportTicketCategory extends Model {
   protected $guarded  = array('id');
   protected $table = "support_tickets_categories";
 
+  public static function asSelect() {
+    $all = self::all();
+    $results = [];
+    foreach ($all as $item) {
+      $results[ $item->id ] = $item->name;
+    }
+    return $results;
+  }
 }
 
 

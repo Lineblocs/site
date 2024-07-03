@@ -17,6 +17,7 @@
     <table id="table" class="table table-striped table-hover">
         <thead>
         <tr>
+            <th>{!! trans("admin/tickets.workspace_id") !!}</th>
             <th>{!! trans("admin/tickets.subject") !!}</th>
             <th>{!! trans("admin/tickets.priority") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>

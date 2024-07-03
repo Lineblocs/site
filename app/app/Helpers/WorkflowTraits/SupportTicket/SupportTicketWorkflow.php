@@ -64,7 +64,7 @@ trait SupportTicketWorkflow {
             $supportTicketId = SupportHelper::createTicket($subject, $comment, $priority);
         }
         //$priority = $data['priority'];
-        $priorityForUserTickets = 1;
+        $priorityForUserTickets = 'LOW';
         $openingStatus = 'OPEN';
 
 
@@ -81,9 +81,11 @@ trait SupportTicketWorkflow {
         //return $this->errorInternal($request, 'Provision extension error..');
         // send email notification about new support ticket
         $subject = "New support ticket created";
+        $link = MainHelper::createUrl('/admin/supportticket/?id='.$supportTicket->id);
         $data = [
             'user' => $user,
-            'ticket' => $supportTicket
+            'ticket' => $supportTicket,
+            'ticketLink' => $link
         ];
         $feedbackLink = MainHelper::createUrl('/leave-feedback');
         if ($customizations->app_feedback_enabled) {

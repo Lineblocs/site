@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\User;
 use App\SupportTicket;
 use App\SupportTicketUpdate;
+use App\SupportTicketCategory;
 use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPProvider;
@@ -65,13 +66,24 @@ class SupportTicketController extends AdminController
     public function edit(SupportTicket $supportticket)
     {
         $priorities = array(
-            'LOW' => 'low',
-            'MEDIUM' => 'medium',
-            'HIGH' => 'high',
+            'LOW' => 'LOW',
+            'MEDIUM' => 'MEDIUM',
+            'HIGH' => 'HIGH'
         );
+        $statuses = array(
+            'OPEN' => 'OPEN',
+            'CLOSED' => 'CLOSED',
+        );
+        $adminRecords = User::where('admin', '1')->get();
+        $admins = [];
+        foreach ( $adminRecords as $user ) {
+            $admins[$user->id] = $user->email;
+        }
+
+        $categories = SupportTicketCategory::asSelect();
         $updates = SupportTicketUpdate::where('ticket_id', $supportticket->id)->get();
 
-        return view('admin.supportticket.create_edit', compact('supportticket', 'priorities', 'updates'));
+        return view('admin.supportticket.create_edit', compact('supportticket', 'priorities', 'updates', 'admins', 'statuses', 'categories'));
     }
 
     /**
@@ -82,6 +94,7 @@ class SupportTicketController extends AdminController
      */
     public function update(SupportTicketRequest $request, SupportTicket $supportticket)
     {
+        $supportticket->update( $request->all() );
     }
 
     /**
@@ -122,9 +135,17 @@ class SupportTicketController extends AdminController
      *
      * @return Datatables JSON
      */
-    public function data()
+    public function data(Request $request)
     {
-        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at'));
+        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.workspace_id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at'));
+        $workspaceId = $request->get('workspace_id');
+        if (!empty($workspaceId)) {
+            $tickets->where('workspace_id', $workspaceId);
+        }
+        $ticketId = $request->get('id');
+        if (!empty($ticketId)) {
+            $tickets->where('id', $ticketId);
+        }
 
         return Datatables::of($tickets)
             ->add_column('actions', '<a href="{{{ url(\'admin/supportticket/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>

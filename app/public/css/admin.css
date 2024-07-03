@@ -15747,3 +15747,21 @@ ul#config:after {
 	float:right;
 	background: #dfe3e6;
 }
+
+.nav-txt {
+	position: relative;
+}
+
+.red-notification-bubble {
+	width: 24px;
+	height: 24px;
+	background-color: red;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid #000; /* Adding a black 1px border */
+}

@@ -36,5 +36,6 @@ return [
     'users' => 'Users',
     'add_alert' => 'Add alert',
     'rates' => 'Rates',
-    'updates' => 'Updates'
+    'updates' => 'Updates',
+    'support_tickets' => 'Support tickets'
 ];

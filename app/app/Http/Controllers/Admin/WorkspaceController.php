@@ -125,6 +125,7 @@ class WorkspaceController extends AdminController
         return Datatables::of($workspaces)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
             ->add_column('actions', '<a href="{{{ url(\'admin/workspace/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+            <a href="{{{ url(\'admin/supportticket/?workspace_id=\' . $id) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-headphones"></span>  {{ trans("admin/modal.support_tickets") }}</a>
                     <a href="{{{ url(\'admin/workspace/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
