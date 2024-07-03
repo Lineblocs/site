@@ -44,7 +44,20 @@ trait RecordingWorkflow {
               $recordings->whereRaw("FIND_IN_SET(\"$tag\", (SELECT GROUP_CONCAT(recording_tags.tag) FROM recording_tags WHERE recording_tags.recording_id = recordings.id)) > 0");
             }
         }
+
+        $startDate = $request->get("start_date");
+        $endDate = $request->get("end_date");
+        if (!empty($startDate) && !empty($endDate)) {
+          $recordings->whereBetween('recordings.created_at', [$startDate, $endDate]);
+        } elseif (!empty($startDate)) {
+          $recordings->where('recordings.created_at', '>=', $startDate);
+        } elseif (!empty($endDate)) {
+          $recordings->where('recordings.created_at', '<=', $endDate);
+        }
+
         MainHelper::addSearch($request, $recordings, ['from', 'to', 'direction']);
+        $recordings->orderBy('recordings.created_at', 'DESC');
+
         \Log::info("query: " . $recordings->toSql());
         $results = $recordings->paginate($paginate);
 
