@@ -48,6 +48,10 @@ if (!function_exists("clean_table_columns")) {
     }
 }
 
+
+// Disable foreign key checks
+DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
 echo "Removing workspaces" .PHP_EOL;
 echo var_dump( DB::table('recordings')->delete() );
 echo var_dump( DB::table('calls')->delete() );
@@ -56,6 +60,7 @@ echo var_dump( DB::table('widget_templates_tags')->delete() );
 echo var_dump( DB::table('workspaces_events_properties')->delete() );
 echo var_dump( DB::table('workspaces_events')->delete() );
 echo var_dump( DB::table('workspaces')->delete() );
+
 
 echo "Removing users" .PHP_EOL;
 echo var_dump( DB::table('users')->delete() );
@@ -106,3 +111,6 @@ echo "creating db snapshot for opensips" .PHP_EOL;
 backup_database($opensips_database);
 
 echo "All tasks complete.".PHP_EOL;
+
+// Enable foreign key checks
+DB::statement('SET FOREIGN_KEY_CHECKS=1;');
