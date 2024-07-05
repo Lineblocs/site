@@ -9,6 +9,8 @@ use App\ApiCredentialKVStore;
 // please only run this to load the data from the older tables
 $customizations = Customizations::getRecord();
 $columns = Customizations::getColumns();
+
+echo "MIGRATING customizations table".PHP_EOL;
 foreach ($columns as $column) {
     $value = $customizations->{$column};
     if (is_string($value)) {
@@ -18,6 +20,10 @@ foreach ($columns as $column) {
     }
 }
 
+echo "done migrating".PHP_EOL;
+
+
+echo "MIGRATING api credentials table".PHP_EOL;
 $apiCreds = ApiCredential::getRecord();
 $columns = ApiCredential::getColumns();
 foreach ($columns as $column) {
@@ -28,3 +34,6 @@ foreach ($columns as $column) {
 		ApiCredentialKVStore::upsert($column, 'boolean_value', $value);
     }
 }
+
+echo "done migrating".PHP_EOL;
+echo "all done".PHP_EOL;
