@@ -17,7 +17,7 @@ class CreateCustomizationsV2Table extends Migration
             $table->timestamps();
             $table->string('key')->unique();
             $table->string('value_type');
-            $table->string('string_value', 1024);
+            $table->string('string_value', 4096);
             $table->integer('number_value');
             $table->boolean('boolean_value');
 
