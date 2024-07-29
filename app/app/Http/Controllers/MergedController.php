@@ -81,6 +81,7 @@ use App\UserCredit;
 use DateTime;
 use DateInterval;
 use DB;
+use Log;
 
 class MergedController extends ApiAuthController
 {
@@ -816,37 +817,44 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $data = $request->json()->all();
     $updateParams = [];
 
-    if (!empty($data['enable_2fa'])) {
-      $updateParams['enable_2fa'] = $data['enable_2fa'];
-    }
-    if (!empty($data['type_of_2fa'])) {
-      $updateParams['type_of_2fa'] = $data['type_of_2fa'];
+    if (!isset($data['enable_2fa'])) {
+      return $this->response->errorBadRequest('please send enable_2fa');
     }
 
-    if ( !empty( $data['type_of_2fa']) ) {
-      $type2fa = $data['type_of_2fa'];
+    $enable2fa = $data['enable_2fa'];
+
+    if ($enable2fa && !array_key_exists('type_of_2fa', $data)) {
+      return $this->response->errorBadRequest('if enabling 2fa setting, please send type_of_2fa');
     }
 
-    if ( !empty($data['enable_2fa']) && $data['enable_2fa']) {
-      $updateParams['enable_2fa'] = $data['enable_2fa'];
+    $updateParams['enable_2fa'] = $enable2fa;
+    Log::info('enable 2fa setting: ' . ((string) $enable2fa));
 
+    if ( $enable2fa ) {
       // ensure that the code is correct
-      if ( is_null($type2fa) || $type2fa == 'totp') {
+      $type2fa = $data['type_of_2fa'];
+      $updateparams['type_of_2fa'] = $type2fa;
+
+      if ( $type2fa == 'totp') {
         $user->update($updateParams);
         return $this->response->noContent();
-      }
-      if (!empty( $data['confirmation_code'] ) ) {
-        $confirmationCode = $data['confirmation_code'];
-        $otp = TOTP::create($user->secret_code_2fa);
-        if ( $otp->verify($confirmationCode)) {
-          return $this->response->errorBadRequest();
+      } else {
+
+        if (!empty( $data['confirmation_code'] ) ) {
+          $confirmationCode = $data['confirmation_code'];
+          $otp = TOTP::create($user->secret_code_2fa);
+          if ( $otp->verify($confirmationCode)) {
+            return $this->response->errorBadRequest();
+          }
+          $user->update($updateParams);
+          return $this->response->noContent();
         }
-        $user->update($updateParams);
-        return $this->response->noContent();
       }
+
       $user->update($updateParams);
       return $this->response->noContent();
     }
+
     $user->update($updateParams);
     return $this->response->noContent();
   }
