@@ -812,6 +812,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
   public function save2FASettings(Request $request) {
     $user = $this->getUser($request);
+    $type2fa = NULL;
     $data = $request->json()->all();
     $updateParams = [];
 
@@ -821,10 +822,16 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     if (!empty($data['type_of_2fa'])) {
       $updateParams['type_of_2fa'] = $data['type_of_2fa'];
     }
-    $type2fa = $data['type_of_2fa'];
-    if ( $updateParams['enable_2fa'] ) {
+
+    if ( !empty( $data['type_of_2fa']) ) {
+      $type2fa = $data['type_of_2fa'];
+    }
+
+    if ( !empty($data['enable_2fa']) && $data['enable_2fa']) {
+      $updateParams['enable_2fa'] = $data['enable_2fa'];
+
       // ensure that the code is correct
-      if ( $type2fa == 'totp') {
+      if ( is_null($type2fa) || $type2fa == 'totp') {
         $user->update($updateParams);
         return $this->response->noContent();
       }
