@@ -275,7 +275,12 @@ class RegisterController extends ApiAuthController
           Log::info('updated DNS successfully.');
 
           //add register credit for user
-          $amountInCents = $customizations->register_credits*100;
+          $registerCredits = 0;
+          if (!empty($customizations->register_credits)) {
+            $registerCredits = $customizations->register_credits;
+          }
+
+          $amountInCents = $registerCredits*100;
           $credit = [
             'cents' => $amountInCents,
             'card_id' => NULL,
