@@ -9,6 +9,11 @@ class RegistrationQuestionnaire extends Model {
 
   protected $guarded  = array('id');
   protected $table = "registration_questionnaire";
+  public function toArray() {
+    $array = parent::toArray();
+    $array['choices'] = json_decode($array['choices'], TRUE);
+    return $array;
+  }
 }
 
 

@@ -292,6 +292,40 @@ class MergedController extends ApiAuthController
         $workspace->toArrayWithRoles($user)
       ]);
     }
+
+    public function feed(Request $request)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $calls = Call::where('workspace_id', $workspace->id)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
+        ->get()
+        ->toArray();
+      $recordings = Recording::where('workspace_id', $workspace->id)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
+        ->get()
+        ->toArray();
+
+      $allRecords = $calls + $recordings;
+
+      $feedData = [
+        'items' => []
+      ];
+
+      // Sort array by 'created_at' in descending order
+      usort($allRecords, function ($a, $b) {
+          return $b['created_at'] <=> $a['created_at']; // Descending order
+      });
+  
+      // Return only the first 15 elements
+      $feedData['items'] = array_slice($allRecords, 0, 15);
+
+      return $this->response->array($feedData);
+    }
+
+
     public function fetchWorkspaceInfo(Request $request)
     {
       $hash = $request->get("hash");
@@ -705,15 +739,10 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function getRegistrationQuestions(Request $request) {
     $response = [];
     $questions = RegistrationQuestionnaire::get();
-    /*
-    TODO: implement code for multiple choice responses
-    foreach ( $questions as $item ) {
-      $item['responses'] = RegistrationResponse::where('response_id', $item->id)->get()->toArray();
-      $response[] = $item;
-    }
-    */
-    return $this->response->array($response);
+ 
+    return $this->response->array($questions->toArray());
   }
+
   public function getAllSettings(Request $request) {
         $apiCreds = APICredential::getFrontendValuesOnly();
         $customizations = CustomizationsKVStore::getRecord();

@@ -8,7 +8,7 @@ class UserRegistrationQuestionResponse extends Model {
   protected $dates = ['created_at', 'updated_at'];
 
   protected $guarded  = array('id');
-  protected $table = "registration_questionnaire_responses";
+  protected $table = "user_registration_question_responses";
 }
 
 

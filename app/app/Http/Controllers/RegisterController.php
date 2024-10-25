@@ -201,16 +201,17 @@ class RegisterController extends ApiAuthController
     }
     public function saveRegistrationQuestionResponses(Request $request)
     {
-        $user = User::findOrFail($data['userId']);
         $data = $request->json()->all();
+        $user = User::findOrFail($data['user_id']);
+
         foreach ($data['responses'] as $response) {
           UserRegistrationQuestionResponse::create([
-            'user_id' => $user,
-            'question' => $response['question'],
+            'user_id' => $user->id,
             'question_id' => $response['question_id'],
             'response' => $response['response'],
           ]);
         }
+
         return $this->response->array(['success' => TRUE]);
     }
     public function userSpinup(Request $request)

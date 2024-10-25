@@ -540,6 +540,7 @@ $api->version('v1', function($api) {
     $api->get('refreshWorkspaceTokens', '\App\Http\Controllers\MergedController@refreshWorkspaceTokens');
     $api->get('getConfig', '\App\Http\Controllers\ConfigController@getConfig');
     $api->get('dashboard', '\App\Http\Controllers\MergedController@dashboard');
+    $api->get('feed', '\App\Http\Controllers\MergedController@feed');
     $api->post('upgradePlan', '\App\Http\Controllers\MergedController@upgradePlan');
     $api->get('plans', '\App\Http\Controllers\MergedController@plans');
     $api->get('billing', '\App\Http\Controllers\MergedController@billing');
