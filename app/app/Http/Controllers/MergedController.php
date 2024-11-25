@@ -744,7 +744,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
 
   public function getAllSettings(Request $request) {
-        $apiCreds = APICredential::getFrontendValuesOnly();
+        $apiCreds = ApiCredentialKVStore::getFrontendValuesOnly();
         $customizations = CustomizationsKVStore::getRecord();
         $availableThemes = array(
           array(

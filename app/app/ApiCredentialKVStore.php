@@ -35,8 +35,9 @@ class ApiCredentialKVStore extends SettingsKVStoreModel {
     return "";
   }
   public static function getFrontendValuesOnly() {
-    extract( self::getRecord()->toArray() );
-    return compact(
+    $record = self::getKVPairs();
+    extract( $record );
+    $creds = compact(
 'google_signin_developer_key',
 'google_signin_client_id',
 'google_signin_app_id',
@@ -48,6 +49,11 @@ class ApiCredentialKVStore extends SettingsKVStoreModel {
 'matomo_script_tag',
 'stripe_pub_key'
     );
+    if ($record['stripe_mode'] == 'test') {
+      $result['stripe_pub_key'] = $record['stripe_test_pub_key'];
+    }
+
+    return $result;
   }
 
 }

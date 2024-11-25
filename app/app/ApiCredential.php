@@ -35,8 +35,9 @@ class ApiCredential extends SettingsRecord {
     return "";
   }
   public static function getFrontendValuesOnly() {
-    extract( self::getRecord()->toArray() );
-    return compact(
+    $creds = self::getRecord()->toArray();
+    extract( $creds );
+    $result = compact(
 'google_signin_developer_key',
 'google_signin_client_id',
 'google_signin_app_id',
@@ -48,6 +49,11 @@ class ApiCredential extends SettingsRecord {
 'matomo_script_tag',
 'stripe_pub_key'
     );
+    if ($creds['stripe_mode'] == 'test') {
+      $result['stripe_pub_key'] = $creds['stripe_test_pub_key'];
+    }
+
+    return $result;
   }
 
 }
