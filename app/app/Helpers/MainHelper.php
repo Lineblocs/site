@@ -931,8 +931,8 @@ final class MainHelper {
     Log::info(sprintf('charging user %s cents', $amountInCents));
 
     $redirectUrl = self::createAppUrl('/confirm-payment-intent');
-    $site = self::getSiteName();
-    $descriptor = sprintf("credits for %s", $site);
+    $site = self::getShortName(TRUE);
+    $descriptor = sprintf("%s credits", $site);
     $paymentIntent = $stripe->paymentIntents->create([
       'amount' => $amountInCents,
       'currency' => $currency,
@@ -943,7 +943,8 @@ final class MainHelper {
       'return_url' => $redirectUrl,
       'off_session' => true,
       'confirm' => true,
-      'statement_descriptor' => $descriptor
+      //'statement_descriptor' => $descriptor
+      'statement_descriptor_suffix' => $site
     ]);
   }
 
@@ -1141,6 +1142,10 @@ final class MainHelper {
       return Config::get("app.site_name");
     }
 
+    public static function getShortName() {
+      $site = self::getSiteName();
+      return strtoupper(preg_replace('/\.[^.]+$/', '', $site));
+    }
     public static function getCurrency() {
       return 'USD';
     }

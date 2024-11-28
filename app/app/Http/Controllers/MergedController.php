@@ -293,6 +293,17 @@ class MergedController extends ApiAuthController
       ]);
     }
 
+    private function mapFeedEvent($records, $eventType) {
+      $results = [];
+      foreach($records as $record) {
+        $item = array_merge([], $record);
+        $item['event_type'] = $eventType;
+        $results[] = $item;
+      }
+
+      return $results;
+    }
+
     public function feed(Request $request)
     {
       $user = $this->getUser($request);
@@ -308,7 +319,7 @@ class MergedController extends ApiAuthController
         ->get()
         ->toArray();
 
-      $allRecords = $calls + $recordings;
+      $allRecords = $this->mapFeedEvent($calls, 'calls') + $this->mapFeedEvent($recordings, 'recordings');
 
       $feedData = [
         'items' => []
