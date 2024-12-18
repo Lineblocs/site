@@ -318,8 +318,16 @@ class MergedController extends ApiAuthController
         ->limit(5)
         ->get()
         ->toArray();
+      $numbers = DIDNumber::where('workspace_id', $workspace->id)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
+        ->get()
+        ->toArray();
 
-      $allRecords = $this->mapFeedEvent($calls, 'calls') + $this->mapFeedEvent($recordings, 'recordings');
+      $allRecords = [];
+      $allRecords += $this->mapFeedEvent($numbers, 'did_numbers');
+      $allRecords += $this->mapFeedEvent($recordings, 'recordings');
+      $allRecords += $this->mapFeedEvent($calls, 'calls');
 
       $feedData = [
         'items' => []
@@ -331,7 +339,8 @@ class MergedController extends ApiAuthController
       });
   
       // Return only the first 15 elements
-      $feedData['items'] = array_slice($allRecords, 0, 15);
+      //$feedData['items'] = array_slice($allRecords, 0, 15);
+      $feedData['items'] = $allRecords;
 
       return $this->response->array($feedData);
     }

@@ -948,6 +948,24 @@ final class MainHelper {
     ]);
   }
 
+  public static function removePaymentMethod($workspace, $card, $paymentGateway='stripe') {
+    if ($paymentGateway == 'stripe' ) {
+      $stripe = self::initStripeClient();
+      $paymentMethodId = $card->stripe_payment_method_id;
+
+      // First, retrieve the payment method
+      $paymentMethod = $stripe->paymentMethods->retrieve($paymentMethodId);
+
+      
+      // Detach it from the customer
+      $paymentMethod->detach();
+      
+      return TRUE;
+    }
+    
+    return FALSE;
+  }
+
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
     if ( $paymentGateway == 'stripe' ) {
@@ -986,6 +1004,11 @@ final class MainHelper {
           )
         );
       }
+
+      $paymentMethod = $stripe->paymentMethods->attach(
+        $paymentMethodId,
+        ['customer' => $customer->id]
+      );
 
       $cardIssuer = $data['issuer'];
       $last4 =  $data['last_4'];
