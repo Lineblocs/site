@@ -58,7 +58,9 @@ trait DIDNumberWorkflow {
         $paginate = $this->getPaginate( $request );
         //$user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
-        $numbers = DIDNumber::where('workspace_id', $workspace->id);
+        $numbers = DIDNumber::select(array('did_numbers.*', DB::raw('flows.public_id AS flow_public_id')));;
+        $numbers->leftJoin('flows', 'flows.id', '=', 'did_numbers.flow_id');
+        $numbers = $numbers->where('did_numbers.workspace_id', $workspace->id);
         MainHelper::addSearch($request, $numbers, ['number', 'region']);
         return $this->response->paginator($numbers->paginate($paginate), new DIDNumberTransformer);
     }
