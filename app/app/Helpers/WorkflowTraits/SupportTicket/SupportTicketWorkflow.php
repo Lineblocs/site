@@ -191,6 +191,7 @@ trait SupportTicketWorkflow {
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
         $supportTickets = SupportTicket::where('workspace_id', $workspace->id);
+        $supportTickets->orderBy('created_at', 'DESC');
         MainHelper::addSearch($request, $supportTickets, ['subject']);
         return $this->response->paginator($supportTickets->paginate($paginate), new SupportTicketTransformer);
     }
