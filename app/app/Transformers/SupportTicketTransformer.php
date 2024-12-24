@@ -13,7 +13,7 @@ final class SupportTicketTransformer extends TransformerAbstract {
         $createdAt = $supportTicket['created_at'];
         $updatedAt = $supportTicket['updated_at'];
 
-        $array['friendly_dates'] = [
+        $array['friendly_dates'] =[
             'created_at' => MainHelper::createHumanReadableDate($createdAt),
             'updated_at' => MainHelper::createHumanReadableDate($updatedAt),
         ];

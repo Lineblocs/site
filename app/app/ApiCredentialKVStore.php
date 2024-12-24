@@ -49,11 +49,12 @@ class ApiCredentialKVStore extends SettingsKVStoreModel {
 'matomo_script_tag',
 'stripe_pub_key'
     );
+
     if ($record['stripe_mode'] == 'test') {
-      $result['stripe_pub_key'] = $record['stripe_test_pub_key'];
+      $creds['stripe_pub_key'] = $record['stripe_test_pub_key'];
     }
 
-    return $result;
+    return $creds;
   }
 
 }
