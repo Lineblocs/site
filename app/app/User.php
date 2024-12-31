@@ -43,7 +43,8 @@ class User extends Model implements AuthenticatableContract,
       "admin" => "boolean",
       "free_trial_started" => "date",
       "enable_2fa" => "boolean",
-      "confirmed" => "boolean"
+      "confirmed" => "boolean",
+      "auto_save_flows" => "boolean"
     );
     public function getSIPURL() {
       //return sprintf("%s:%s", $this->ip_address, $this->sip_port);
