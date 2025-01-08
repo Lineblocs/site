@@ -486,6 +486,13 @@ $api->version('v1', function($api) {
     $api->get('getRegistrationQuestions', '\App\Http\Controllers\MergedController@getRegistrationQuestions');
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
 
+
+    $api->group([ 'prefix' => 'paypal'], function($api) {
+      $api->post('createBillingAgreement', '\App\Http\Controllers\MergedController@createBillingAgreement');
+      $api->post('cancelBillingAgreement', '\App\Http\Controllers\MergedController@cancelBillingAgreement');
+      $api->post('executeBillingAgreement', '\App\Http\Controllers\MergedController@executeBillingAgreement');
+    });
+
     $api->group([ 'prefix' => 'jwt'], function($api) {
       $api->post('authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
       $api->post('publicAuthenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticatePublic');
