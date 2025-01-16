@@ -16,6 +16,7 @@ use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPTrunk;
+use App\SIPRouter;
 use App\BillingCountry;
 use App\BillingRegion;
 use App\PhoneDefault;
@@ -1141,12 +1142,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $extension->leftJoin('users', 'users.id', '=', 'workspaces_users.user_id');
     $extension->where('users.id', $user->id);
     $extension = $extension->first();
+    $sipRouter = SIPRouter::getMainRouter();
 
     $sipCredentials = [
       'username' => $extension['username'],
       'secret' => $extension['secret'],
       'host' => $workspace->sipURL(),
-      'port' => '5060'
+      'port' => $sipRouter['udp_port']
     ];
 
     return $this->response->array($sipCredentials);
