@@ -1132,4 +1132,23 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     return $this->response->noContent();
   }
 
+  public function getSIPCredentials(Request $request) 
+  {
+    $workspace = $this->getWorkspace($request);
+    $user = $this->getUser($request);
+    $extension = Extension::select(array('extensions.*'));
+    $extension->leftJoin('workspaces_users', 'workspaces_users.user_id', '=', 'extensions.user_id');
+    $extension->leftJoin('users', 'users.id', '=', 'workspaces_users.user_id');
+    $extension->where('users.id', $user->id);
+    $extension = $extension->first();
+
+    $sipCredentials = [
+      'username' => $extension['username'],
+      'secret' => $extension['secret'],
+      'host' => $workspace->sipURL(),
+      'port' => '5060'
+    ];
+
+    return $this->response->array($sipCredentials);
+  }
 }

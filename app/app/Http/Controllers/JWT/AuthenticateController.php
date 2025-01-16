@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\User;
 use App\Workspace;
+use App\WorkspaceUser;
 use App\UserDevice;
 use Config;
 use Mail;
@@ -50,6 +51,29 @@ class AuthenticateController extends ApiAuthController
         return $this->response->array($token);
 
     }
+    
+    public function getRequestedWorkspace(Request $request, $currentUser) {
+        $data = $request->all();
+        $headerID = $request->header('X-Workspace-ID');
+        if (!empty($headerID)) {
+            $workspace = Workspace::find($headerID);
+            return $workspace;
+        }
+
+
+        if (!empty($data['workspace_id'])) {
+            $jsonID = $data['workspace_id'];
+            $workspace = Workspace::find($jsonID);
+            return $workspace;
+        }
+
+        $workspace = Workspace::where('creator_id', '=', $currentUser->id)->first();
+        if (!empty($workspace)) {
+            return $workspace;
+        }
+
+        return NULL;
+    }
 
     public function authenticate(Request $request)
     {
@@ -79,6 +103,19 @@ class AuthenticateController extends ApiAuthController
             return $this->errorInternal($request, 'Could not create token');
         }
         $currentUser = Auth::user();
+
+        $workspace = $this->getRequestedWorkspace($request, $currentUser);
+        $workspaceUser = WorkspaceUser::select(array('workspaces_users.*'));
+        $workspaceUser->where('workspaces_users.user_id', $currentUser->id);
+        if (!empty($workspace)) {
+            $workspaceUser->where('id', $workspace->id);
+        }
+        $workspaceUser = $workspaceUser->first();
+
+        if (empty($workspace)) {
+            $workspace = Workspace::find($workspaceUser->workspace_id);
+        }
+
         $now = new \DateTime();
 
         $challenge=  $request->get('challenge');
@@ -120,10 +157,13 @@ class AuthenticateController extends ApiAuthController
             */
         }
         // add subdomain matching
-        $workspace = Workspace::where('creator_id', '=', $currentUser->id)->first();
         $enable2FA = $currentUser->enable_2fa;
         if ( $enable2FA ) {
-            $result = ['enable_2fa' => $enable2FA, 'token' => null, 'workspace' => null];
+            $result = [
+                'enable_2fa' => $enable2FA, 
+                'token' => null, 
+                'workspace' => null
+            ];
             return $this->response->array($result);
         }
 
