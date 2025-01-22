@@ -1142,13 +1142,22 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $extension->leftJoin('users', 'users.id', '=', 'workspaces_users.user_id');
     $extension->where('users.id', $user->id);
     $extension = $extension->first();
+    $sipHost = $workspace->sipURL();
+    $domain = MainHelper::getDeploymentDomain();
+
     $sipRouter = SIPRouter::getMainRouter();
+    $websocketEndpoint = $sipRouter->websocket_gateway;
+    $displayName = sprintf("%s SIP UA", $domain);
+    $sipURI = sprintf("%s@%s", $extension->username, $sipHost);
 
     $sipCredentials = [
       'username' => $extension['username'],
       'secret' => $extension['secret'],
-      'host' => $workspace->sipURL(),
-      'port' => $sipRouter['udp_port']
+      'host' => $sipHost,
+      'port' => $sipRouter['udp_port'],
+      'websocket_endpoint' => $websocketEndpoint,
+      'display_name' => $displayName,
+      'sip_uri' => $sipURI
     ];
 
     return $this->response->array($sipCredentials);
