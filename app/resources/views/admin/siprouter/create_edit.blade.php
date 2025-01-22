@@ -137,6 +137,13 @@
                         <span class="help-block">{{ $errors->first('tls_port', ':message') }}</span>
                     </div>
         </div>
+        <div class="form-group  {{ $errors->has('websocket_gateway') ? 'has-error' : '' }}">
+            {!! Form::label('websocket_gateway', trans("admin/siprouters.websocket_gateway"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('websocket_gateway', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('websocket_gateway', ':message') }}</span>
+            </div>
+        </div>
         <div class="form-group  {{ $errors->has('default') ? 'has-error' : '' }}">
             {!! Form::label('default', trans("admin/siprouters.default"), array('class' => 'control-label')) !!}
             <div class="controls">
