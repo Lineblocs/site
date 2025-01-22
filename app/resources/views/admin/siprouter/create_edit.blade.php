@@ -137,6 +137,35 @@
                         <span class="help-block">{{ $errors->first('tls_port', ':message') }}</span>
                     </div>
         </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('ws_support', trans("admin/siprouters.ws_support"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('ws_support', "true", $router->ws_support) !!}
+                    <span class="help-block">{{ $errors->first('ws_support', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                    {!! Form::label('ws_port', trans("admin/siprouters.ws_port"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::text('ws_port', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('ws_port', ':message') }}</span>
+                    </div>
+        </div>
+
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                {!! Form::label('wss_support', trans("admin/siprouters.wss_support"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::checkbox('wss_support', "true", $router->wss_support) !!}
+                    <span class="help-block">{{ $errors->first('wss_support', ':message') }}</span>
+                </div>
+     </div>
+        <div class="form-group no-padding {{ $errors->has('private_ip_address') ? 'has-error' : '' }}">
+                    {!! Form::label('wss_port', trans("admin/siprouters.wss_port"), array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::text('wss_port', null, array('class' => 'form-control')) !!}
+                        <span class="help-block">{{ $errors->first('wss_port', ':message') }}</span>
+                    </div>
+        </div>
         <div class="form-group  {{ $errors->has('websocket_gateway') ? 'has-error' : '' }}">
             {!! Form::label('websocket_gateway', trans("admin/siprouters.websocket_gateway"), array('class' => 'control-label')) !!}
             <div class="controls">
