@@ -78,11 +78,12 @@ trait UserWorkflow {
         $attrs = $data['roles'];
         $attrs['user_id'] = $reqUser->id;
         $attrs['workspace_id'] = $workspace->id;
-        $attrs['assigned_role_id'] = $data['assigned_role_id'];
 
         if (empty($attrs['assigned_role_id'])) {
             $defaultRole = WorkspaceRole::getDefaultRole();
             $attrs['assigned_role_id'] = $defaultRole->id;
+        } else {
+            $attrs['assigned_role_id'] = $data['assigned_role_id'];
         }
 
         $resource = WorkspaceUser::create($attrs);
@@ -101,7 +102,12 @@ trait UserWorkflow {
             return $this->response->errorForbidden();
         }
 
-        $attrs['assigned_role_id'] = $data['assigned_role_id'];
+        if (empty($attrs['assigned_role_id'])) {
+            $defaultRole = WorkspaceRole::getDefaultRole();
+            $attrs['assigned_role_id'] = $defaultRole->id;
+        } else {
+            $attrs['assigned_role_id'] = $data['assigned_role_id'];
+        }
 
         if (!empty($data['roles'])) {
                 $attrs = $data['roles'];

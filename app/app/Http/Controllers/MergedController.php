@@ -1138,10 +1138,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $workspace = $this->getWorkspace($request);
     $user = $this->getUser($request);
     $extension = Extension::select(array('extensions.*'));
-    $extension->leftJoin('workspaces_users', 'workspaces_users.user_id', '=', 'extensions.user_id');
-    $extension->leftJoin('users', 'users.id', '=', 'workspaces_users.user_id');
-    $extension->where('users.id', $user->id);
+    $extension->leftJoin('workspaces_users', 'workspaces_users.extension_id', '=', 'extensions.id');
+    $extension->where('workspaces_users.user_id', $user->id);
     $extension = $extension->first();
+    if (empty($extension)) {
+       return $this->response->errorInternal();
+    }
+
     $sipHost = $workspace->sipURL();
     $domain = MainHelper::getDeploymentDomain();
 

@@ -60,7 +60,9 @@ class SIPRouterController extends AdminController
             'udp_autoscaling',
             'tcp_support',
             'tcp_autoscaling',
-            'tls_support'
+            'tls_support',
+            'ws_support',
+            'wss_support',
         ];
         foreach ( $data as $key => $value ) {
             if ( in_array( $key, $booleanKeys )) {
