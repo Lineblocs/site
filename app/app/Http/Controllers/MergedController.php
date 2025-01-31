@@ -765,6 +765,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
 
   public function getAllSettings(Request $request) {
+        $baseURL = sprintf("https://%s/assets/img", MainHelper::getDeploymentDomain());
         $apiCreds = ApiCredentialKVStore::getFrontendValuesOnly();
         $customizations = CustomizationsKVStore::getRecord();
         $availableThemes = array(
@@ -778,6 +779,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           )
         );
         $result = [
+          'assets_base_url' => $baseURL,
           'customizations' => $customizations->toArray(),
           'frontend_api_creds' => $apiCreds,
           'available_themes' => $availableThemes
