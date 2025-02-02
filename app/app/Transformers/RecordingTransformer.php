@@ -13,6 +13,7 @@ final class RecordingTransformer extends TransformerAbstract {
         $createdAt = $recording['created_at'];
         $updatedAt = $recording['updated_at'];
 
+        $array['friendly_duration'] = MainHelper::formatDuration($array['duration']);
         $array['friendly_dates'] = [
             'created_at' => MainHelper::createHumanReadableDate($createdAt),
             'updated_at' => MainHelper::createHumanReadableDate($updatedAt),

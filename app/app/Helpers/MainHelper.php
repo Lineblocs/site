@@ -1262,6 +1262,45 @@ final class MainHelper {
       return $readableDate;
     }
 
+  public static function formatDuration($seconds) {
+    if ($seconds === 0) {
+        return '0 seconds';
+    }
+    
+    if ($seconds < 0) {
+        throw new InvalidArgumentException('Input must be a non-negative integer');
+    }
+
+    $timeUnits = [
+        ['unit' => 'year', 'seconds' => 31536000],
+        ['unit' => 'month', 'seconds' => 2592000],
+        ['unit' => 'day', 'seconds' => 86400],
+        ['unit' => 'hour', 'seconds' => 3600],
+        ['unit' => 'minute', 'seconds' => 60],
+        ['unit' => 'second', 'seconds' => 1]
+    ];
+
+    $parts = [];
+    $remainingSeconds = $seconds;
+
+    foreach ($timeUnits as $timeUnit) {
+        $unitSeconds = $timeUnit['seconds'];
+        if ($remainingSeconds >= $unitSeconds) {
+            $count = floor($remainingSeconds / $unitSeconds);
+            $parts[] = $count . ' ' . $timeUnit['unit'] . ($count !== 1 ? 's' : '');
+            $remainingSeconds %= $unitSeconds;
+        }
+    }
+
+    // Handle special cases for better readability
+    if (count($parts) > 1) {
+        $lastPart = array_pop($parts);
+        return implode(', ', $parts) . ' and ' . $lastPart;
+    }
+
+    return $parts[0] ?? '0 seconds';
+  }
+
     public static function numTicketsOpen() {
       $ticketsOpen = SupportTicket::where('status', 'OPEN')->count();
       return $ticketsOpen;

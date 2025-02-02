@@ -78,6 +78,12 @@ use BaconQrCode\Writer as QRWriter;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use App\Transformers\RecordingTransformer;
+use App\Transformers\CallTransformer;
+
 use App\UserCredit;
 use DateTime;
 use DateInterval;
@@ -295,14 +301,33 @@ class MergedController extends ApiAuthController
     }
 
     private function mapFeedEvent($records, $eventType) {
-      $results = [];
-      foreach($records as $record) {
-        $item = array_merge([], $record);
-        $item['event_type'] = $eventType;
-        $results[] = $item;
+      $fractal = new Manager();
+
+      if ($eventType=='recordings') {
+        // Create a new resource collection with your items and transformer
+        $resource = new Collection($records, new RecordingTransformer());
+
+        // Transform the data
+        $transformedData = $fractal->createData($resource)->toArray()['data'];
+
+      } else if ($eventType == 'calls' ) {
+        // Create a new resource collection with your items and transformer
+        $resource = new Collection($records, new CallTransformer());
+
+        // Transform the data
+        $transformedData = $fractal->createData($resource)->toArray()['data'];
+      } else {
+        $transformedData = $records->toArray();
       }
 
-      return $results;
+      $transformedData = array_map(function($item) use($eventType) {
+        $updatedItem = $item;
+        $updatedItem['event_type'] = $eventType;
+
+        return $updatedItem;
+      }, $transformedData);
+
+      return $transformedData;
     }
 
     public function feed(Request $request)
@@ -312,18 +337,17 @@ class MergedController extends ApiAuthController
       $calls = Call::where('workspace_id', $workspace->id)
         ->orderBy('created_at', 'DESC')
         ->limit(5)
-        ->get()
-        ->toArray();
-      $recordings = Recording::where('workspace_id', $workspace->id)
+        ->get();
+      $recordings = Recording::select(array('recordings.*', 'calls.from', 'calls.to'))
+        ->join('calls', 'calls.id', '=', 'recordings.call_id')
+        ->where('recordings.workspace_id', $workspace->id)
         ->orderBy('created_at', 'DESC')
         ->limit(5)
-        ->get()
-        ->toArray();
+        ->get();
       $numbers = DIDNumber::where('workspace_id', $workspace->id)
         ->orderBy('created_at', 'DESC')
         ->limit(5)
-        ->get()
-        ->toArray();
+        ->get();
 
       $allRecords = [];
       $allRecords += $this->mapFeedEvent($numbers, 'did_numbers');
