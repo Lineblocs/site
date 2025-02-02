@@ -338,7 +338,7 @@ class MergedController extends ApiAuthController
         ->orderBy('created_at', 'DESC')
         ->limit(5)
         ->get();
-      $recordings = Recording::select(array('recordings.*', 'calls.from', 'calls.to'))
+      $recordings = Recording::select(array('recordings.*', 'calls.from', 'calls.to', 'calls.duration'))
         ->join('calls', 'calls.id', '=', 'recordings.call_id')
         ->where('recordings.workspace_id', $workspace->id)
         ->orderBy('created_at', 'DESC')
