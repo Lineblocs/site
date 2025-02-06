@@ -57,11 +57,17 @@ class ApiAuthController extends ApiController {
 
           return $workspace;
      }
-     public function getWorkspaceUserWithAllData(Request $request, $soft=FALSE) {
+     public function getWorkspaceUserWithAllData(Request $request, $user=NULL, $soft=FALSE) {
           $id = $request->header('X-Workspace-ID');
           $data = WorkspaceUser::select(array('workspaces_users.*', 'workspaces.*', 'user_email_options.*'));
           $data->join('workspaces', 'workspaces.id', '=', 'workspaces_users.workspace_id');
           $data->join('user_email_options', 'user_email_options.user_id', '=', 'workspaces_users.id');
+          if (!empty($user)) {
+               $data->where('workspaces_users.user_id', '=', $user->id);
+          }
+
+          $data->where('workspaces_users.workspace_id', '=', $id);
+
           $workspace = $data->firstOrFail();
 
           return $workspace;

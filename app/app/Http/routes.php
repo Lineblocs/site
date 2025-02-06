@@ -519,6 +519,7 @@ $api->version('v1', function($api) {
     $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');
     $api->get('getUserInfo', '\App\Http\Controllers\RegisterController@getUserInfo');
     $api->post('updateSelf', '\App\Http\Controllers\RegisterController@updateSelf');
+    $api->post('updateWorkspaceUser', '\App\Http\Controllers\RegisterController@updateWorkspaceUser');
     $api->post('setupWorkspace', '\App\Http\Controllers\RegisterController@setupWorkspace');
     $api->post('updateWorkspace', '\App\Http\Controllers\MergedController@updateWorkspace');
     $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');

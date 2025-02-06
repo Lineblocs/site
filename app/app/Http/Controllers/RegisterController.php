@@ -328,8 +328,13 @@ class RegisterController extends ApiAuthController
     public function getSelf(Request $request)
     {
       $user = $this->getUser($request);
-      return $this->response->array($user->toArray());
+      $workspaceUser = $this->getWorkspaceUserWithAllData($request, $user);
+      $result = $user->toArray();
+      $result['workspace_data'] = $workspaceUser->toArray();
+
+      return $this->response->array($result);
     }
+
     public function updateSelf(Request $request)
     {
       $data = $request->json()->all();
@@ -355,6 +360,21 @@ class RegisterController extends ApiAuthController
       }
       return $this->response->noContent();
     }
+
+    public function updateWorkspaceUser(Request $request) {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $data = $request->json()->all();
+      $keys = ['fcm_token'];
+      $updateData = array_intersect_key($data, array_flip($keys));
+
+      $workspaceUser = WorkspaceUser::where('workspace_id', $workspace->id)
+                  ->where('user_id', $user->id);
+      $workspaceUser->update($updateData);
+
+      return $this->response->noContent();
+    }
+
     public function setupWorkspace(Request $request)
     {
       $data = $request->json()->all();
