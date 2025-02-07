@@ -365,7 +365,7 @@ class RegisterController extends ApiAuthController
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
       $data = $request->json()->all();
-      $keys = ['fcm_token'];
+      $keys = ['fcm_token', 'apn_token'];
       $updateData = array_intersect_key($data, array_flip($keys));
 
       $workspaceUser = WorkspaceUser::where('workspace_id', $workspace->id)
