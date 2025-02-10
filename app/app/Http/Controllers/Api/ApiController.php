@@ -42,7 +42,8 @@ class ApiController extends Controller {
           $workspace = $this->getWorkspace($request);
           $user = $this->getUser($request);
           $info = WorkspaceUser::where('workspace_id', $workspace->id)
-                         ->where('user_id', $user->id);
+                         ->where('user_id', $user->id)
+                         ->first();
           if (!$info) {
                return FALSE;
           }

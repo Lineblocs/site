@@ -27,7 +27,7 @@ trait CallWorkflow {
     public function callData(Request $request, $callId)
     {
         $call = Call::where('api_id', '=', $callId)->firstOrFail();
-        if (!$this->hasPermissions($request, $call, 'manage__calls')) {
+        if (!$this->hasPermissions($request, $call, 'manage_calls')) {
             return $this->response->errorForbidden();
         }
         $info = $call->toArray();
