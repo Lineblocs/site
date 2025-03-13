@@ -321,6 +321,11 @@ class RegisterController extends ApiAuthController
           $subject =MainHelper::createEmailSubject("Verify Your Email");
           $result = EmailHelper::sendEmail($subject, $user->email, 'verify_email', $data);
 
+
+          $mailData = [];
+          $subject = sprintf("Welcome to %s", MainHelper::getSiteName());
+          $result = EmailHelper::sendEmail($subject, $user->email, 'welcome_email', $mailData);
+
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
 
