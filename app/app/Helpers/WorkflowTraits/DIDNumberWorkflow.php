@@ -40,7 +40,7 @@ trait DIDNumberWorkflow {
     }
     public function numberData(Request $request, $numberId)
     {
-        $number = DIDNumber::select(DB::raw("did_numbers.*, flows.id AS flow_id, flows.public_id AS flow_public_id"));
+        $number = DIDNumber::select(DB::raw("did_numbers.api_number, did_numbers.number, did_numbers.did_action, flows.id AS flow_id, flows.public_id AS flow_public_id"));
         $number->leftJoin('flows', 'flows.id', '=', 'did_numbers.flow_id');
         $number = $number->where('did_numbers.public_id', '=', $numberId)->firstOrFail();
         if (!$this->hasPermissions($request, $number, 'manage_flows')) {

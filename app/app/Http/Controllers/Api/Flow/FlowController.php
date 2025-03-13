@@ -81,7 +81,10 @@ class FlowController extends ApiAuthController {
         $all = $request->get("all");
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
-        $flows = Flow::where('user_id', $user->id);
+        $workspace = $this->getWorkspace($request);
+        $flows = Flow::select(array('flows.name','flows.id', 'flows.public_id'));
+        $flows = $flows->where('flows.workspace_id', $workspace->id);
+
         if (!empty($request->get("category"))) {
             $category = $request->get("category");
             $flows->where('category', $category);
