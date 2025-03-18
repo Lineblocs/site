@@ -110,6 +110,7 @@ trait SupportTicketWorkflow {
         $params = [
             'comment' => $data['comment'],
             'ticket_id' => $ticket->id,
+            'user_id' => $user->id,
             'direction' => 'ENDUSER'
         ];
         if (!empty($attachment1)) {
@@ -164,7 +165,10 @@ trait SupportTicketWorkflow {
         }
         $array = $supportTicket->toArray();
         // get any updates
-        $ticketUpdates = SupportTicketUpdate::where('ticket_id', $supportTicket->id)->get();
+        $ticketUpdates = SupportTicketUpdate::select(array('support_tickets_updates.*', 'users.email', 'users.first_name', 'users.last_name'));
+        $ticketUpdates->join('users', 'users.id', '=', 'support_tickets_updates.user_id');
+        $ticketUpdates = $ticketUpdates->where('support_tickets_updates.ticket_id', $supportTicket->id)->get();
+
         $updates = [];
         foreach ( $ticketUpdates as $update ) {
             $item = $update->toArray();

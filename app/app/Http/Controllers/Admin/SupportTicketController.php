@@ -13,6 +13,7 @@ use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\SupportTicketRequest;
 use App\Helpers\MainHelper;
+use Auth;
 use Datatables;
 use DB;
 use Config;
@@ -120,10 +121,12 @@ class SupportTicketController extends AdminController
 
     public function addUpdate(Request $request, SupportTicket $supportticket)
     {
+        $user = Auth::user();
         $data = $request->all();
         SupportTicketUpdate::create([
             'comment' => $data['comment'],
             'ticket_id' => $supportticket->id,
+            'user_id' => $user->id,
             'direction' => 'STAFF'
         ]);
 
@@ -138,6 +141,7 @@ class SupportTicketController extends AdminController
     public function data(Request $request)
     {
         $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.workspace_id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at'));
+        $tickets->orderBy('created_at', 'DESC');
         $workspaceId = $request->get('workspace_id');
         if (!empty($workspaceId)) {
             $tickets->where('workspace_id', $workspaceId);
