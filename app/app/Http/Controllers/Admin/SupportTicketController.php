@@ -140,7 +140,8 @@ class SupportTicketController extends AdminController
      */
     public function data(Request $request)
     {
-        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.workspace_id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at'));
+        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.workspace_id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at', 'support_tickets.category_id', 'support_tickets_categories.name'));
+        $tickets = $tickets->join('support_tickets_categories', 'support_tickets_categories.id', '=', 'support_tickets.category_id');
         $tickets->orderBy('created_at', 'DESC');
         $workspaceId = $request->get('workspace_id');
         if (!empty($workspaceId)) {

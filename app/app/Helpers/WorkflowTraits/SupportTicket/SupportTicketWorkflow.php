@@ -158,8 +158,13 @@ trait SupportTicketWorkflow {
     }
     public function supportTicketData(Request $request, $supportTicketId)
     { 
-        $supportTicket = SupportTicket::select(DB::raw("support_tickets.*"));
+        $supportTicket = SupportTicket::select(array(DB::raw("support_tickets.*"), DB::raw('support_tickets_categories.name AS category_name')));
+        $supportTicket = $supportTicket->leftJoin('support_tickets_categories', 'support_tickets_categories.id', '=', 'support_tickets.category_id');
         $supportTicket = $supportTicket->where('support_tickets.public_id', '=', $supportTicketId)->firstOrFail();
+        if (empty($supportTicket['category_name'])) {
+            $supportTicket['category_name'] = 'Unassigned';
+        }
+
         if (!$this->hasPermissions($request, $supportTicket, 'manage_support_tickets')) {
             return $this->response->errorForbidden();
         }
