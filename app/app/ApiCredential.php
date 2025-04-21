@@ -21,12 +21,6 @@ class ApiCredential extends SettingsRecord {
 
   public static function getParameterIfAvailable($param) {
     try {
-      DB::connection()->getPdo();
-  } catch (\Exception $e) {
-      echo("Could not connect to the database.  Please check your configuration. error:" . $e );
-      return;
-  }
-    try {
       $record = self::getRecord();
       return $record->{$param};
     } catch (Exception $ex) {

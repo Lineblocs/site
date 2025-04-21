@@ -281,7 +281,7 @@
                                 <td>{{$server->name}}</td>
                                 <td>{{$server->ip_address}}</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger del-server" data-id="{{$server->id}}">Delete</button>
+                                    <button type="button" class="btn btn-danger del-server" data-id="{{$server->router_media_id}}">Delete</button>
                                 </td>
                             </tr>
                         @endforeach

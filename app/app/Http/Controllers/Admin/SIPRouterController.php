@@ -124,7 +124,7 @@ class SIPRouterController extends AdminController
         Log::info("digit mapping sql query: " . $digitMappings->toSql());
         $digitMappings = $digitMappings->get();
 
-        $servers = SIPRouterMediaServer::select(array('media_servers.*'));
+        $servers = SIPRouterMediaServer::select(array('media_servers.*', DB::raw('sip_routers_media_servers.id AS router_media_id')));
         $servers->join('sip_routers', 'sip_routers.id', '=', 'sip_routers_media_servers.router_id');
         $servers->join('media_servers', 'media_servers.id', '=', 'sip_routers_media_servers.server_id');
         $servers->where('sip_routers_media_servers.router_id', '=', $router->id);
