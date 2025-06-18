@@ -35,20 +35,19 @@
         "dompdf/dompdf": "v0.8.5",
         "mobiledetect/mobiledetectlib": "^2.8",
         "league/flysystem-aws-s3-v3": "~1.0",
-        "hackzilla/password-generator": "dev-master",
         "messagebird/php-rest-api": "dev-master",
         "fideloper/proxy": "^3.3",
         "sentry/sentry-laravel": "1.8.0",
         "spomky-labs/otphp": "v10.0.x-dev",
-        "bacon/bacon-qr-code": "dev-master",
         "intergo/sms.to-php": "dev-master",
+	"bacon/bacon-qr-code": "^2.0.8",
         "haydenpierce/class-finder": "dev-master",
         "faisalman/simple-excel-php": "dev-master",
         "nyholm/psr7": "1.8.x-dev",
         "php-http/message-factory": "^1.0@dev",
         "box/spout": "^3.3",
         "google/recaptcha": "^1.2",
-        "zendesk/zendesk_api_client_php": "dev-master"
+        "bacon/bacon-qr-code": "2.0.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
