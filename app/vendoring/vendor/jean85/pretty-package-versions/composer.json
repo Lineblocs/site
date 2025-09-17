@@ -3,15 +3,16 @@
     "description": "A library to get pretty versions strings of installed dependencies",
     "type": "library",
     "require": {
-        "php": "^7.1|^8.0",
-        "composer-runtime-api": "^2.0.0"
+        "php": "^7.4|^8.0",
+        "composer-runtime-api": "^2.1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.2",
         "jean85/composer-provided-replaced-stub-package": "^1.0",
-        "phpstan/phpstan": "^1.4",
-        "phpunit/phpunit": "^7.5|^8.5|^9.4",
-        "vimeo/psalm": "^4.3"
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^7.5|^8.5|^9.6",
+        "rector/rector": "^2.0",
+        "vimeo/psalm": "^4.3 || ^5.0"
     },
     "license": "MIT",
     "authors": [

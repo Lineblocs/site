@@ -8,7 +8,7 @@ class NoRandomGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     private $_object;
 
-    public function setup(): void
+    public function setup()
     {
         $this->_object = new NoRandomGenerator();
     }

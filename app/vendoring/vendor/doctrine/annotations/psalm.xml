@@ -15,4 +15,12 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <NoValue>
+            <errorLevel type="suppress">
+                <file name="lib/Doctrine/Common/Annotations/Annotation/Enum.php" />
+                <file name="lib/Doctrine/Common/Annotations/Annotation/Target.php" />
+            </errorLevel>
+        </NoValue>
+    </issueHandlers>
 </psalm>
