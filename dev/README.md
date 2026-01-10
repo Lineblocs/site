@@ -1,5 +1,8 @@
 # Use Docker Compose to develop lineblocs
 
+## Notice
+Please make sure use docker compose with minimal version 2.2
+
 ## Structure of directory
 ```shell
 .
@@ -27,6 +30,7 @@ $ cd dev
 $ cp .env.example .env
 $ docker compose build --no-cache
 $ docker compose --profile enable_mysql --profile enable_proxy up -d
+$ docker compose --profile enable_mysql --profile enable_proxy watch
 ```
  Open web browser 
 `http://127.0.0.1:22023`   -> `site lineblocs`
@@ -57,7 +61,7 @@ $ cd ..
 $ cd dev
 ```
 
-### Make .env file and confige
+### Make .env file and config
 ```shell
 $ cp .env.example .env
 ```
@@ -91,7 +95,9 @@ Create and run container with this command below.
 ```shell
 $ docker compose --profile enable_mysql --profile enable_proxy up -d
 ```
-
+```shell
+$ docker compose --profile enable_mysql --profile enable_proxy watch
+```
 ### Access lineblocs
 Lineblocs-site -> http://127.0.0.1:{MYSQL_PORT_HOST} or http://{DEPLOYMENT_DOMAIN} `--enable_proxy` must use
 Lineblocs-phpmyadmin -> -> http://127.0.0.1:{PHPMYADMIN_PORT_HOST} or http://{DEPLOYMENT_DOMAIN} `--enable_proxy` must use
