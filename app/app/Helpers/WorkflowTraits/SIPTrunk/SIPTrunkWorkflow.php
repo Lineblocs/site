@@ -236,14 +236,10 @@ trait SIPTrunkWorkflow {
         foreach ( $did_numbers as $did_input ) {
             $did_id = $did_input['public_id'];
             $did = DIDNumber::where('public_id', $did_id)->where('workspace_id', $workspace->id)->first();
-            if (!$this->checkIfDIDAvailable( $did ) ) {
-                throw new DIDNumberAllocatedException( $did, 'cant associate DID %s with trunk as it is already reserved. please unlink the DID before trying again..', $did['number'] );
-            }
-            if ( $did->trunk_id != $trunk->id ) {
-                $did->update([
-                    'trunk_id' => $trunk->id
-                ]);
-            }
+            $did->update([
+                'flow_id' => NULL,
+                'trunk_id' => $trunk->id
+            ]);
         }
         foreach ( $did_numbers_db  as $item ) {
             $found = FALSE;
