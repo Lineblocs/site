@@ -248,6 +248,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('rtpproxy/{rtpproxy}/delete', 'Admin\RTPProxyController@delete');
     Route::resource('rtpproxy', 'Admin\RTPProxyController');
 
+    # RTPEngines
+    Route::get('rtpengine/data', 'Admin\RTPEngineController@data');
+    Route::get('rtpengine/{rtpengine}/show', 'Admin\RTPEngineController@show');
+    Route::get('rtpengine/{rtpengine}/edit', 'Admin\RTPEngineController@edit');
+    Route::get('rtpengine/{rtpengine}/delete', 'Admin\RTPEngineController@delete');
+    Route::resource('rtpengine', 'Admin\RTPEngineController');
+
 
     # NumberInventorys
     Route::get('numberinventory/data', 'Admin\NumberInventoryController@data');

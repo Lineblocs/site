@@ -26,6 +26,7 @@ use \App\SIPCountry;
 use \App\SIPRegion;
 use \App\SIPRateCenter;
 use \App\RTPProxy;
+use \App\RTPEngine;
 use \App\SystemStatusCategory;
 use \App\NumberInventory;
 use \App\RouterFlow;
@@ -87,6 +88,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('numberinventory', NumberInventory::class);
        \Route::model('routerflow', RouterFlow::class);
        \Route::model('rtpproxy', RTPProxy::class);
+       \Route::model('rtpengine', RTPEngine::class);
        \Route::model('workspace', Workspace::class);
        \Route::model('workspaceflow', WorkspaceRoutingFlow::class);
        \Route::model('trunk', SIPTrunk::class);

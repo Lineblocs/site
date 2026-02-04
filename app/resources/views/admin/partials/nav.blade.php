@@ -85,9 +85,16 @@
                             </a>
                         </li>
 
+                        
                         <li>
                             <a href="{{url('admin/rtpproxy')}}">
                                 <i class="glyphicon glyphicon-user"></i> RTP proxies
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{url('admin/rtpengine')}}">
+                                <i class="glyphicon glyphicon-user"></i> RTP engines
                             </a>
                         </li>
                         <li>
