@@ -1175,16 +1175,21 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $domain = MainHelper::getDeploymentDomain();
 
     $sipRouter = SIPRouter::getMainRouter();
-    $websocketEndpoint = $sipRouter->websocket_gateway;
     $displayName = sprintf("%s SIP UA", $domain);
     $sipURI = sprintf("%s@%s", $extension->username, $sipHost);
+
+    $wssPort = $sipRouter->wss_port;
+    $wssGateway = sprintf("wss://%s:%s", $sipHost, $wssPort);
 
     $sipCredentials = [
       'username' => $extension['username'],
       'secret' => $extension['secret'],
       'host' => $sipHost,
       'port' => $sipRouter['udp_port'],
-      'websocket_endpoint' => $websocketEndpoint,
+      'websocket_settings' => [
+        'port' => $wssPort,
+        'gateway' => $wssGateway
+      ],
       'display_name' => $displayName,
       'sip_uri' => $sipURI
     ];
