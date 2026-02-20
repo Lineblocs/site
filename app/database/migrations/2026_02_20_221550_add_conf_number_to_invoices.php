@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddInvoicesCompleteDate extends Migration
+class AddConfNumberToInvoices extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,7 @@ class AddInvoicesCompleteDate extends Migration
     public function up()
     {
         Schema::table('users_invoices', function (Blueprint $table) {
-            //
-            // the date when the invoices status is set to 'COMPLETE'
-            $table->dateTime('complete_date')->nullable();
+            $table->string('confirmation_number', 255)->nullable();
         });
     }
 
@@ -27,7 +25,7 @@ class AddInvoicesCompleteDate extends Migration
     public function down()
     {
         Schema::table('users_invoices', function (Blueprint $table) {
-            //
+            $table->dropColumn('confirmation_number');
         });
     }
 }

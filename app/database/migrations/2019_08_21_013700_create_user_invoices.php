@@ -20,7 +20,6 @@ class CreateUserInvoices extends Migration
             $table->float('cents');
             $table->string('source');
             $table->string('status');
-            $table->integer('balance');
         });
     }
 

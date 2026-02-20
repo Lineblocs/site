@@ -144,7 +144,7 @@ class MergedController extends ApiAuthController
     public function getBillingHistory(Request $request)
     {
       $user = $this->getUser($request);
-      $data = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
       return $this->response->array($data);
 
     }
@@ -394,10 +394,9 @@ class MergedController extends ApiAuthController
         $user = $this->getUser($request);
         $cards = UserCard::where('user_id', $user->id)->get()->toArray();
         $config = MainHelper::getPublicConfig();
-        $billingHistory = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+        $billingHistory = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
 
         foreach ($billingHistory as $key => $item) {
-          $item->balance = MainHelper::toDollars($item->balance);
           $item->dollars = MainHelper::toDollars($item->cents);
           $billingHistory[ $key] = $item;
         }
