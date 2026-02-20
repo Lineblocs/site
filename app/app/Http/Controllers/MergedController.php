@@ -841,7 +841,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           ];
         }
         $item = $plan;
-        $item['monthly_charge'] = MainHelper::toDollars($item['monthly_charge_cents']);
+        $item['monthly_charge'] = MainHelper::toDollars($item['monthly_cost_cents']);
         $plan_benefits = [];
         // compare the previous plan with the current one to get the benefits
         $last_cnt = $cnt - 1;
