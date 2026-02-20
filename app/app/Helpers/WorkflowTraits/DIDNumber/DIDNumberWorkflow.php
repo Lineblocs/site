@@ -35,6 +35,24 @@ trait DIDNumberWorkflow {
                 return $this->response->errorForbidden();
             }
         }
+
+        if (!empty($data['flow_id']) && !empty($data['trunk_id'])) {
+            return $this->response->errorBadRequest('Flow and trunk can not be set together');
+        }
+
+        if (isset($data['flow_id'])) {
+            $flow = Flow::findOrFail($data['flow_id']);
+            if (!$this->hasPermissions($request, $number, 'manage_flows')) {
+                return $this->response->errorForbidden();
+            }
+
+            $data['trunk_id'] = NULL;
+        }
+        if (isset($data['trunk_id'])) {
+            $trunk = SIPTrunk::findOrFail($data['trunk_id']);
+            $data['flow_id'] = NULL;
+        }
+
         $number->update($data);
         DIDNumberTag::updateModelTags($tags, $number->id);
     }

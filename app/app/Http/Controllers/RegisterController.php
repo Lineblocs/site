@@ -36,6 +36,7 @@ use App\PlanUsagePeriod;
 use App\SIPPoPRegion;
 use App\SIPRouter;
 use App\UserRegistrationQuestionResponse;
+use App\Subscription;
 use DateTime;
 
 class RegisterController extends ApiAuthController
@@ -80,6 +81,8 @@ class RegisterController extends ApiAuthController
         $trialMode =TRUE; 
 
         $mainRouter = SIPRouter::getMainRouter();
+        $servicePlan = ServicePlan::where('key_name', $plan)->firstOrFail();
+
         $workspace = Workspace::create([
         'creator_id' => $user->id,
         'name' => $unique,
@@ -88,6 +91,28 @@ class RegisterController extends ApiAuthController
         'plan' => $plan,
         'trial_mode' => $trialMode,
         'default_router_id' => $mainRouter->id
+      ]);
+
+
+      $billingCycle = 'MONTHLY';
+      if (isset($data['billing_cycle']) && $data['billing_cycle'] === 'annual') {
+        $billingCycle = 'YEARLY';
+      }
+
+
+      $now = new DateTime();
+      if ($billingCycle === 'YEARLY') {
+        $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
+      } else {
+        $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
+      }
+
+      Subscription::create([
+        'workspace_id' => $workspace->id,
+        'current_plan_id' => $servicePlan->id,
+        'status' => 'ACTIVE',
+        'billing_cycle' => $billingCycle,
+        'current_period_end' => $periodEnd
       ]);
       $period = PlanUsagePeriod::create([
         'workspace_id' => $workspace->id,
