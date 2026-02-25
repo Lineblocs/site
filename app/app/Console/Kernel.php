@@ -9,6 +9,7 @@ use App\Console\Commands\SendBackgroundEmails;
 use App\Console\Commands\RemoveOldLogs;
 use App\Console\Commands\FreeTrialEndingCommand;
 use App\Console\Commands\DeleteUnsetPasswordUsers;
+use App\Console\Commands\RabbitMQBillingConsumer;
 
 class Kernel extends ConsoleKernel
 {
@@ -23,7 +24,8 @@ class Kernel extends ConsoleKernel
         SendBackgroundEmails::class,
         FreeTrialEndingCommand::class,
         RemoveOldLogs::class,
-        DeleteUnsetPasswordUsers::class
+        DeleteUnsetPasswordUsers::class,
+        RabbitMQBillingConsumer::class
     ];
 
     /**

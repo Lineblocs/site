@@ -268,6 +268,22 @@
             </div>
 
             <div class="row form-group">
+                <label for="app_logo">Annual pricing</label>
+                <div class="controls">
+
+                </div>
+                <div class="controls">
+                    @if ( $record->enable_annual_pricing )
+                        <input id="enable_annual_pricing" type="checkbox"  name="enable_annual_pricing" checked/>
+                    @else
+                        <input id="enable_annual_pricing" type="checkbox"  name="enable_annual_pricing"/>
+                    @endif
+                     <label for="enable_annual_pricing">Enable</label>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="mail_provider">Search options</label>
                 <small>Please select any sections you want to add to the portal search results</small>
                 <div class="controls">
