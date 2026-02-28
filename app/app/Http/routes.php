@@ -560,6 +560,8 @@ $api->version('v1', function($api) {
     $api->post('upgradePlan', '\App\Http\Controllers\MergedController@upgradePlan');
     $api->get('plans', '\App\Http\Controllers\MergedController@plans');
     $api->get('billing', '\App\Http\Controllers\MergedController@billing');
+    $api->get('billing/viewEstimateCharges', '\App\Http\Controllers\BillingController@viewEstimateCharges');
+
     $api->post('saveWidget', '\App\Http\Controllers\MergedController@saveWidget');
     $api->post('submitJoinWorkspace', '\App\Http\Controllers\MergedController@submitJoinWorkspace');
     $api->post('acceptWorkspaceInvite', '\App\Http\Controllers\MergedController@acceptWorkspaceInvite');

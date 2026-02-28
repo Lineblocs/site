@@ -96,5 +96,24 @@ class BillingController extends ApiAuthController
         return $this->response->noContent();
     }
 
+    public function viewEstimateCharges(Request $request)
+    {
+      $site = MainHelper::getSiteName();
+      $user = $this->getUser($request);
+      $all = $request->all();
+      
+      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
+      $dateRange = sprintf("%s - %s", $all['startDate'], $all['endDate']);
+      
+      $pdf = PDF::loadView('pdf.estimated_charges', [
+        'rows' => $data, 
+        'dateRange' => $dateRange,
+        'site' => $site,
+      ]);
+      
+      $filename = sprintf("%s_estimate_charges.pdf", $site);
+      return $pdf->download($filename);
+    }
+
 
 }
