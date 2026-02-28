@@ -96,14 +96,24 @@ class BillingController extends ApiAuthController
         return $this->response->noContent();
     }
 
-    public function viewEstimateCharges(Request $request)
+    public function viewEstimatedCharges(Request $request)
     {
       $site = MainHelper::getSiteName();
       $user = $this->getUser($request);
       $all = $request->all();
       
-      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
-      $dateRange = sprintf("%s - %s", $all['startDate'], $all['endDate']);
+      $startDate = $all['startDate'] ?? null;
+      $endDate = $all['endDate'] ?? null;
+      
+      if (!$startDate || !$endDate) {
+        $now = new DateTime();
+        $startDate = $startDate ?: $now->format('Y-m-01');
+        $endDate = $endDate ?: $now->format('Y-m-d');
+      }
+      
+      $data = BillingDataHelper::billingData($user, $startDate, $endDate);
+
+      $dateRange = sprintf("%s - %s", $startDate, $endDate);
       
       $pdf = PDF::loadView('pdf.estimated_charges', [
         'rows' => $data, 
