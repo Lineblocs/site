@@ -53,22 +53,23 @@ class RabbitMQHelper
     }
 
     /**
-     * Dispatches the 'immediate' billing task for new signups or plan upgrades.
-     * Maps the PHP objects to the structure expected by the Go Billing Service.
+     * Dispatches the 'immediate' billing task.
+     * $amount should be the prorated value calculated via MainHelper.
      */
-    public static function dispatchImmediateBilling($workspace, $subscription, $user, $servicePlan, $billingCycle)
+    public static function dispatchImmediateBilling($workspace, $subscription, $user, $servicePlan, $billingCycle, $amount)
     {
         $payload = [
             'run_id'          => 'signup_' . $user->id . '_' . time(),
-            'billing_type'    => ($billingCycle === 'YEARLY' || $billingCycle === 'annual') ? 'ANNUAL' : 'MONTHLY',
+            'billing_type'    => $billingCycle, // Already 'MONTHLY' or 'ANNUAL'
             'workspace_id'    => (int) $workspace->id,
             'subscription_id' => (int) $subscription->id,
             'creator_id'      => (int) $user->id,
             'action'          => 'immediate',
-            'amount'          => (float) $servicePlan->base_costs,
+            'amount'          => (float) $amount, // e.g. 14.52
             'plan_to_bill'    => (int) $servicePlan->id
         ];
 
         return self::publish('billing_tasks', $payload);
     }
+    
 }

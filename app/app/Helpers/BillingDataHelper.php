@@ -132,4 +132,45 @@ final class BillingDataHelper {
     $cents = \bcmul($dollars, 100);
     return  $cents;
   }
+
+  public static function calculateProratedAmount($baseCost, $billingCycle, $returnCents = FALSE)
+  {
+    $now = new \DateTime();
+    
+    if ($billingCycle === 'ANNUAL') {
+        // Calculate days left in the current year
+        $isLeapYear = (int) $now->format('L');
+        if ($isLeapYear) {
+            $daysInYear = 366;
+        } else {
+            $daysInYear = 365;
+        }
+        $dayOfYear = (int) $now->format('z') + 1; // 1-indexed day of year
+        $daysRemaining = $daysInYear - $dayOfYear + 1;
+        
+        // (Yearly Price / Days in Year) * Days left
+        $prorated = ($baseCost / $daysInYear) * $daysRemaining;
+        $result = round($prorated, 2);
+        if ($returnCents) {
+            return self::toCents($result);
+        } else {
+            return $result;
+        }
+    }
+
+    // Default: MONTHLY
+    $daysInMonth = (int) $now->format('t');
+    $dayOfMonth = (int) $now->format('j');
+    $daysRemaining = $daysInMonth - $dayOfMonth + 1;
+
+    // (Monthly Price / Days in Month) * Days left
+    $prorated = ($baseCost / $daysInMonth) * $daysRemaining;
+    $result = round($prorated, 2);
+    
+    if ($returnCents) {
+        return self::toCents($result);
+    } else {
+        return $result;
+    }
+  }
 }

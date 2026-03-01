@@ -15,6 +15,7 @@ use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
 use App\Helpers\EmailHelper;
 use App\Helpers\RabbitMQHelper;
+use App\Helpers\BillingDataHelper;
 use \Config;
 use \Mail;
 use Twilio\Rest\Client;
@@ -44,96 +45,82 @@ use DateTime;
 
 class RegisterController extends ApiAuthController
 {
-public function register(Request $request)
+    public function register(Request $request)
     {
-        // grab credentials from the request
         $data = $request->all();
         $email = $data['email'];
-        $valid = filter_var($email, FILTER_VALIDATE_EMAIL);
-        if (!$valid) {
-            return $this->response->array([
-                'success' => FALSE,
-                'message' => 'Email was invalid..'
-            ]);
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->response->array(['success' => FALSE, 'message' => 'Email was invalid..']);
         }
 
-        $exists = User::where('email', $email)->first();
-        if ($exists) {
-            return $this->response->array([
-                'success' => FALSE,
-                'message' => 'User with this email already exists..'
-            ]);
+        if (User::where('email', $email)->first()) {
+            return $this->response->array(['success' => FALSE, 'message' => 'User already exists..']);
         }
 
         $user = MainHelper::createUser($data);
         try {
-            // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::fromUser($user)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
             return $this->errorInternal($request, 'Could not create token');
         }
 
         $unique = uniqid(TRUE);
-        $plan = 'pay-as-you-go';
-        if (!empty($data['plan'])) {
-            $plan = $data['plan'];
-        }
-        $trialMode = TRUE;
-
+        $planKey = $data['plan'] ?? 'pay-as-you-go';
         $mainRouter = SIPRouter::getMainRouter();
-        $servicePlan = ServicePlan::where('key_name', $plan)->firstOrFail();
+        $servicePlan = ServicePlan::where('key_name', $planKey)->firstOrFail();
 
         $workspace = Workspace::create([
             'creator_id' => $user->id,
             'name' => $unique,
             'api_token' => MainHelper::createAPIToken(),
             'api_secret' => MainHelper::createAPISecret(),
-            'plan' => $plan,
-            'trial_mode' => $trialMode,
+            'plan' => $planKey,
+            'trial_mode' => TRUE,
             'default_router_id' => $mainRouter->id
         ]);
 
-        $billingCycle = 'MONTHLY';
-        if (isset($data['billing_cycle']) && $data['billing_cycle'] === 'annual') {
-            $billingCycle = 'YEARLY';
-        }
-
+        // Standardize billing cycle naming for the Go service
+        $billingCycle = (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') ? 'ANNUAL' : 'MONTHLY';
+        
         $now = new DateTime();
-        if ($billingCycle === 'YEARLY') {
-            $periodEnd = (clone $now)->modify('first day of next year')->setTime(0, 0, 0);
+        if ($billingCycle === 'ANNUAL') {
+            $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
         } else {
-            $periodEnd = (clone $now)->modify('first day of next month')->setTime(0, 0, 0);
+            $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
         }
 
-        // 1. Create the Subscription with the Safety Gate (next_billing_date)
+        // 1. Create Subscription with Safety Gate anchor
         $subscription = Subscription::create([
             'workspace_id' => $workspace->id,
             'current_plan_id' => $servicePlan->id,
             'status' => 'ACTIVE',
             'billing_cycle' => $billingCycle,
             'current_period_end' => $periodEnd,
-            'next_billing_date' => $periodEnd // Ensures Go Distributor doesn't double-bill on the 1st
+            'next_billing_date' => $periodEnd 
         ]);
 
-        // 2. Dispatch the Immediate Billing Event to the Go Service via the new Helper
+        // 2. Calculate Prorated Amount using BillingDataHelper
+        $amountToCharge = BillingDataHelper::calculateProratedAmount($servicePlan->base_costs, $billingCycle);
+
+        // 3. Dispatch Immediate Billing Task
         try {
             RabbitMQHelper::dispatchImmediateBilling(
                 $workspace,
                 $subscription,
                 $user,
                 $servicePlan,
-                $billingCycle
+                $billingCycle,
+                $amountToCharge
             );
-            Log::info("Billing task dispatched for user: " . $user->id);
+            Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
         } catch (\Exception $e) {
-            Log::error("Failed to dispatch billing task during registration: " . $e->getMessage());
-            // We continue registration even if billing queue is down, but log the error
+            Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
         }
 
-        $period = PlanUsagePeriod::create([
+        PlanUsagePeriod::create([
             'workspace_id' => $workspace->id,
             'started_at' => new DateTime()
         ]);
@@ -145,7 +132,8 @@ public function register(Request $request)
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
             'userId' => $user->id,
-            'workspace' => $workspace->toArrayWithRoles($user)
+            'workspace' => $workspace->toArrayWithRoles($user),
+            'prorated_amount' => $amountToCharge
         ]);
     }
 
