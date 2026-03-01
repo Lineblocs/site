@@ -14,6 +14,7 @@ use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
 use App\Helpers\EmailHelper;
+use App\Helpers\RabbitMQHelper;
 use \Config;
 use \Mail;
 use Twilio\Rest\Client;
@@ -37,12 +38,13 @@ use App\SIPPoPRegion;
 use App\SIPRouter;
 use App\UserRegistrationQuestionResponse;
 use App\Subscription;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use DateTime;
 
 class RegisterController extends ApiAuthController
 {
-
-    public function register(Request $request)
+public function register(Request $request)
     {
         // grab credentials from the request
         $data = $request->all();
@@ -50,19 +52,19 @@ class RegisterController extends ApiAuthController
         $valid = filter_var($email, FILTER_VALIDATE_EMAIL);
         if (!$valid) {
             return $this->response->array([
-            'success' => FALSE,
-            'message' => 'Email was invalid..'
-          ]);
-
-
+                'success' => FALSE,
+                'message' => 'Email was invalid..'
+            ]);
         }
+
         $exists = User::where('email', $email)->first();
         if ($exists) {
-          return $this->response->array([
-            'success' => FALSE,
-            'message' => 'User with this email already exists..'
-          ]);
+            return $this->response->array([
+                'success' => FALSE,
+                'message' => 'User with this email already exists..'
+            ]);
         }
+
         $user = MainHelper::createUser($data);
         try {
             // attempt to verify the credentials and create a token for the user
@@ -73,61 +75,80 @@ class RegisterController extends ApiAuthController
             // something went wrong whilst attempting to encode the token
             return $this->errorInternal($request, 'Could not create token');
         }
+
         $unique = uniqid(TRUE);
         $plan = 'pay-as-you-go';
-        if ( !empty($data['plan'] )) {
-          $plan = $data['plan'];
+        if (!empty($data['plan'])) {
+            $plan = $data['plan'];
         }
-        $trialMode =TRUE; 
+        $trialMode = TRUE;
 
         $mainRouter = SIPRouter::getMainRouter();
         $servicePlan = ServicePlan::where('key_name', $plan)->firstOrFail();
 
         $workspace = Workspace::create([
-        'creator_id' => $user->id,
-        'name' => $unique,
-        'api_token' => MainHelper::createAPIToken(),
-        'api_secret' => MainHelper::createAPISecret(),
-        'plan' => $plan,
-        'trial_mode' => $trialMode,
-        'default_router_id' => $mainRouter->id
-      ]);
+            'creator_id' => $user->id,
+            'name' => $unique,
+            'api_token' => MainHelper::createAPIToken(),
+            'api_secret' => MainHelper::createAPISecret(),
+            'plan' => $plan,
+            'trial_mode' => $trialMode,
+            'default_router_id' => $mainRouter->id
+        ]);
 
+        $billingCycle = 'MONTHLY';
+        if (isset($data['billing_cycle']) && $data['billing_cycle'] === 'annual') {
+            $billingCycle = 'YEARLY';
+        }
 
-      $billingCycle = 'MONTHLY';
-      if (isset($data['billing_cycle']) && $data['billing_cycle'] === 'annual') {
-        $billingCycle = 'YEARLY';
-      }
+        $now = new DateTime();
+        if ($billingCycle === 'YEARLY') {
+            $periodEnd = (clone $now)->modify('first day of next year')->setTime(0, 0, 0);
+        } else {
+            $periodEnd = (clone $now)->modify('first day of next month')->setTime(0, 0, 0);
+        }
 
+        // 1. Create the Subscription with the Safety Gate (next_billing_date)
+        $subscription = Subscription::create([
+            'workspace_id' => $workspace->id,
+            'current_plan_id' => $servicePlan->id,
+            'status' => 'ACTIVE',
+            'billing_cycle' => $billingCycle,
+            'current_period_end' => $periodEnd,
+            'next_billing_date' => $periodEnd // Ensures Go Distributor doesn't double-bill on the 1st
+        ]);
 
-      $now = new DateTime();
-      if ($billingCycle === 'YEARLY') {
-        $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
-      } else {
-        $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
-      }
+        // 2. Dispatch the Immediate Billing Event to the Go Service via the new Helper
+        try {
+            RabbitMQHelper::dispatchImmediateBilling(
+                $workspace,
+                $subscription,
+                $user,
+                $servicePlan,
+                $billingCycle
+            );
+            Log::info("Billing task dispatched for user: " . $user->id);
+        } catch (\Exception $e) {
+            Log::error("Failed to dispatch billing task during registration: " . $e->getMessage());
+            // We continue registration even if billing queue is down, but log the error
+        }
 
-      Subscription::create([
-        'workspace_id' => $workspace->id,
-        'current_plan_id' => $servicePlan->id,
-        'status' => 'ACTIVE',
-        'billing_cycle' => $billingCycle,
-        'current_period_end' => $periodEnd
-      ]);
-      $period = PlanUsagePeriod::create([
-        'workspace_id' => $workspace->id,
-        'started_at' => new DateTime()
-      ]);
-      WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
-      WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
+        $period = PlanUsagePeriod::create([
+            'workspace_id' => $workspace->id,
+            'started_at' => new DateTime()
+        ]);
+
+        WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
+        WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
+
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
             'userId' => $user->id,
             'workspace' => $workspace->toArrayWithRoles($user)
         ]);
-
     }
+
     public function registerVerify(Request $request)
     {
       $data = $request->all();
