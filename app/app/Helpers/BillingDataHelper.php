@@ -126,15 +126,25 @@ final class BillingDataHelper {
 
 
   public static function toDollars($cents) {
+    if (!is_numeric($cents)) {
+        return $cents;
+    }
     return number_format(($cents /100), 2, '.', ' ');
   }
   public static function toCents($dollars) {
+    if (!is_numeric($dollars)) {
+        return $dollars;
+    }
     $cents = \bcmul($dollars, 100);
     return  $cents;
   }
 
   public static function calculateProratedAmount($baseCost, $billingCycle, $returnCents = FALSE)
   {
+    if (!is_numeric($baseCost)) {
+        return $baseCost;
+    }
+
     $now = new \DateTime();
     
     if ($billingCycle === 'ANNUAL') {

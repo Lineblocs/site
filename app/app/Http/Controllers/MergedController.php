@@ -842,9 +842,10 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $item = $plan;
         $item['monthly_charge'] = MainHelper::toDollars($item['monthly_cost_cents']);
         $item['annual_charge'] = MainHelper::toDollars($item['annual_cost_cents']);
-        $item['prorated_monthly_charge'] = BillingDataHelper::calculateProratedCharge($item['monthly_charge'], 'MONTHLY');  
+
+        $item['prorated_monthly_charge'] = BillingDataHelper::calculateProratedAmount($item['monthly_charge'], 'MONTHLY');  
         $item['prorated_monthly_charge_cents'] = BillingDataHelper::toCents($item['prorated_monthly_charge']);
-        $item['prorated_annual_charge'] = BillingDataHelper::calculateProratedCharge($item['annual_charge'], 'ANNUAL');  
+        $item['prorated_annual_charge'] = BillingDataHelper::calculateProratedAmount($item['annual_charge'], 'ANNUAL');  
         $item['prorated_annual_charge_cents'] = BillingDataHelper::toCents($item['prorated_annual_charge']);
         $plan_benefits = [];
         // compare the previous plan with the current one to get the benefits

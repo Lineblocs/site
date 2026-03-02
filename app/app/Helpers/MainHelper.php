@@ -404,11 +404,18 @@ final class MainHelper {
         return $user;
     }
   public static function createUser($data, $externalUser=FALSE) {
-      $key = Config::get("stripe.secret_key");
       $customization = CustomizationsKVStore::getRecord();
+      $apiSettings = ApiCredentialKVStore::getRecord();
       $user = MainHelper::createUserWithoutPaymentGateway($data);
       if ( $customization->payment_gateway_enabled && !$externalUser ) {
         if ( $customization->payment_gateway == 'stripe' ) {
+
+          $key = NULL;
+          if ($apiSettings['stripe_mode'] == 'live') {
+            $key = $apiSettings['stripe_private_key'];
+          } else if ($apiSettings['stripe_mode'] == 'test') {
+            $key = $apiSettings['stripe_test_private_key'];
+          }
           \Stripe\Stripe::setApiKey($key);
 
           $container = uniqid(TRUE);
@@ -416,13 +423,6 @@ final class MainHelper {
             "description" => "Customer for " . $data['email']
           ]);
           $verifiedHash = MainHelper::emailVerifyHash($data['email']);
-        
-          $key = Config::get("stripe.secret_key");
-          \Stripe\Stripe::setApiKey($key);
-
-          $customer = \Stripe\Customer::create([
-            "description" => "Customer for " . $data['email']
-          ]);
           $user->update(['stripe_id' => $customer->id]);
         }
       }
