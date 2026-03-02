@@ -144,6 +144,7 @@ final class BillingDataHelper {
     if (!is_numeric($baseCost)) {
         return $baseCost;
     }
+    $baseCost = (float) $baseCost;
 
     $now = new \DateTime();
     
@@ -160,7 +161,7 @@ final class BillingDataHelper {
         
         // (Yearly Price / Days in Year) * Days left
         $prorated = ($baseCost / $daysInYear) * $daysRemaining;
-        $result = round($prorated, 2);
+        $result = (float) round($prorated, 2);
         if ($returnCents) {
             return self::toCents($result);
         } else {
@@ -175,7 +176,7 @@ final class BillingDataHelper {
 
     // (Monthly Price / Days in Month) * Days left
     $prorated = ($baseCost / $daysInMonth) * $daysRemaining;
-    $result = round($prorated, 2);
+    $result = (float) round($prorated, 2);
     
     if ($returnCents) {
         return self::toCents($result);

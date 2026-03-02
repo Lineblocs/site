@@ -46,7 +46,7 @@ class ServicePlan extends Model {
 
   public function getFormattedMonthlyCharge()
   {
-    $cents = $this->base_costs;
+    $cents = $this->monthly_cost_cents;
     return number_format(($cents /100), 2, '.', ' ');
   }
 

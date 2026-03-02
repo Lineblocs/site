@@ -84,12 +84,15 @@ class RegisterController extends ApiAuthController
 
         // Standardize billing cycle naming for the Go service
         $billingCycle = (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') ? 'ANNUAL' : 'MONTHLY';
+        $recurringCost = NULL;
         
         $now = new DateTime();
         if ($billingCycle === 'ANNUAL') {
             $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
+            $recurringCost = $servicePlan->monthly_cost_cents;
         } else {
             $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
+            $recurringCost = $servicePlan->annual_cost_cents;
         }
 
         // 1. Create Subscription with Safety Gate anchor
@@ -103,7 +106,7 @@ class RegisterController extends ApiAuthController
         ]);
 
         // 2. Calculate Prorated Amount using BillingDataHelper
-        $amountToCharge = BillingDataHelper::calculateProratedAmount($servicePlan->base_costs, $billingCycle);
+        $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCost, $billingCycle);
 
         // 3. Dispatch Immediate Billing Task
         try {
