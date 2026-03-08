@@ -1,5 +1,6 @@
 @extends('layouts.setup')
 @section('title') Setup Welcome :: @parent @endsection
+@section('setup_step', 0)
 @section('content')
 <div class="setup-welcome-wrap">
     <div class="setup-welcome-card">
@@ -14,7 +15,9 @@
             <div class="setup-quick-item">1. Storage provider and region</div>
             <div class="setup-quick-item">2. Text-to-speech credentials</div>
             <div class="setup-quick-item">3. Stripe billing configuration</div>
-            <div class="setup-quick-item">4. SMTP and admin access</div>
+            <div class="setup-quick-item">4. SMTP delivery and security</div>
+            <div class="setup-quick-item">5. Administrator account setup</div>
+            <div class="setup-quick-item">6. Workspace branding</div>
         </div>
 
         <div class="setup-actions">
