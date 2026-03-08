@@ -1,5 +1,6 @@
 @extends('layouts.setup')
 @section('title') SMTP Setup :: @parent @endsection
+@section('setup_step', 4)
 @section('content')
 <div class="smtp-wrap">
     <div class="smtp-card">
@@ -18,35 +19,56 @@
         <div class="smtp-grid">
             <div class="smtp-pane">
                 <h4>SMTP Credentials</h4>
-                <form method="POST">
-                    <div class="form-group">
-                        <label>Host</label>
-                        <input id="smtp_host" type="text" class="form-control" name="smtp_host" value="{{ $smtp_host }}" autocomplete="off" />
+                <form method="POST" data-setup-form>
+                    <div class="setup-group">
+                        <h5 class="setup-group-title">Server Connection</h5>
+                        <div class="form-group">
+                            <label>Host</label>
+                            <input id="smtp_host" type="text" class="form-control {{ $errors->has('smtp_host') ? 'is-invalid' : '' }}" name="smtp_host" value="{{ old('smtp_host', $smtp_host) }}" autocomplete="off" required />
+                            @if ($errors->has('smtp_host'))
+                                <div class="invalid-feedback">{{ $errors->first('smtp_host') }}</div>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
+                            <label>User</label>
+                            <input id="smtp_user" type="text" class="form-control {{ $errors->has('smtp_user') ? 'is-invalid' : '' }}" name="smtp_user" value="{{ old('smtp_user', $smtp_user) }}" autocomplete="off" required />
+                            @if ($errors->has('smtp_user'))
+                                <div class="invalid-feedback">{{ $errors->first('smtp_user') }}</div>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input id="smtp_password" type="text" class="form-control {{ $errors->has('smtp_password') ? 'is-invalid' : '' }}" name="smtp_password" value="{{ old('smtp_password', $smtp_password) }}" autocomplete="off" required />
+                            @if ($errors->has('smtp_password'))
+                                <div class="invalid-feedback">{{ $errors->first('smtp_password') }}</div>
+                            @endif
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>User</label>
-                        <input id="smtp_user" type="text" class="form-control" name="smtp_user" value="{{ $smtp_user }}" autocomplete="off" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input id="smtp_password" type="text" class="form-control" name="smtp_password" value="{{ $smtp_password }}" autocomplete="off" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>TLS</label>
-                        <select id="smtp_tls" class="form-control" name="smtp_tls">
-                            <option value="1" {{ (string) $smtp_tls === '1' ? 'selected' : '' }}>On</option>
-                            <option value="0" {{ (string) $smtp_tls === '0' ? 'selected' : '' }}>Off</option>
-                        </select>
-                        <span class="smtp-note">Enable TLS unless your mail provider explicitly requires plain SMTP.</span>
+                    <div class="setup-group">
+                        <h5 class="setup-group-title">Transport Security</h5>
+                        <div class="form-group">
+                            <label class="setup-info-label">
+                                TLS
+                                <button type="button" class="setup-info-tip" data-toggle="tooltip" title="Keep TLS enabled unless your SMTP provider specifically requires plaintext SMTP.">?</button>
+                            </label>
+                            <select id="smtp_tls" class="form-control {{ $errors->has('smtp_tls') ? 'is-invalid' : '' }}" name="smtp_tls">
+                                <option value="1" {{ (string) old('smtp_tls', $smtp_tls) === '1' ? 'selected' : '' }}>On</option>
+                                <option value="0" {{ (string) old('smtp_tls', $smtp_tls) === '0' ? 'selected' : '' }}>Off</option>
+                            </select>
+                            <span class="smtp-note">Enable TLS unless your mail provider explicitly requires plain SMTP.</span>
+                            @if ($errors->has('smtp_tls'))
+                                <div class="invalid-feedback">{{ $errors->first('smtp_tls') }}</div>
+                            @endif
+                        </div>
                     </div>
 
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="smtp-actions">
                         <a href="/setup/payments" class="btn btn-setup-link">Back</a>
-                        <button type="submit" class="btn btn-setup-primary">Save & Continue</button>
+                        <button type="submit" class="btn btn-setup-primary" data-loading-text="Testing mail settings...">Save & Continue</button>
                     </div>
                 </form>
             </div>

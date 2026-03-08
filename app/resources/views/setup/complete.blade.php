@@ -1,5 +1,6 @@
 @extends('layouts.setup')
 @section('title') Setup Complete :: @parent @endsection
+@section('setup_step', 7)
 @section('content')
 <div class="complete-wrap">
     <div class="complete-card">
