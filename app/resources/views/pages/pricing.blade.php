@@ -115,7 +115,7 @@ Pricing plans for all
           <div class="pricing-addons-bar">
             <div class="pricing-addon-card">
               <div>
-                <p class="pricing-addon-title">Add Notion AI</p>
+                <p class="pricing-addon-title">AI features</p>
                 <p class="pricing-addon-subtitle" id="notionAiState">Disabled</p>
               </div>
               <label class="pricing-switch" for="notionAiToggle">
