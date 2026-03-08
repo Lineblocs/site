@@ -11,6 +11,87 @@ Pricing plans for all
 .price-comparison {
   margin-top: 15px;
 }
+
+.pricing-addons-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 8px 0 20px;
+}
+
+.pricing-addon-card {
+  border: 1px solid #e2e7ef;
+  border-radius: 12px;
+  background: #f7f9fc;
+  padding: 14px 18px;
+  min-width: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.pricing-addon-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #4b5566;
+}
+
+.pricing-addon-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #6d7787;
+}
+
+.pricing-switch {
+  position: relative;
+  width: 54px;
+  height: 30px;
+  display: inline-block;
+}
+
+.pricing-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pricing-switch-slider {
+  position: absolute;
+  inset: 0;
+  background: #d9deea;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+
+.pricing-switch-slider::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 180ms ease;
+}
+
+.pricing-switch input:checked + .pricing-switch-slider {
+  background: #FF655D;
+}
+
+.pricing-switch input:checked + .pricing-switch-slider::before {
+  transform: translateX(24px);
+}
+
+@media (max-width: 767px) {
+  .pricing-addons-bar {
+    justify-content: center;
+  }
+}
 </style>
 <div class="pricing">
     <section class="cards-section">
@@ -31,6 +112,18 @@ Pricing plans for all
 
       <section class="cards-section">
         <div class="container">
+          <div class="pricing-addons-bar">
+            <div class="pricing-addon-card">
+              <div>
+                <p class="pricing-addon-title">Add Notion AI</p>
+                <p class="pricing-addon-subtitle" id="notionAiState">Disabled</p>
+              </div>
+              <label class="pricing-switch" for="notionAiToggle">
+                <input type="checkbox" id="notionAiToggle" />
+                <span class="pricing-switch-slider"></span>
+              </label>
+            </div>
+          </div>
 
           <div class="row no-margin">
             @foreach ( $plans as $plan )
@@ -315,6 +408,14 @@ Pricing plans for all
     tr.appendTo( tbody );
   }
   $(document).ready(function () {
+    const notionAiToggle = document.getElementById("notionAiToggle");
+    const notionAiState = document.getElementById("notionAiState");
+    if (notionAiToggle && notionAiState) {
+      notionAiToggle.addEventListener("change", function () {
+        notionAiState.textContent = this.checked ? "Enabled" : "Disabled";
+      });
+    }
+
     var costSavings = {!! json_encode($savings->toArray()) !!}
     $("#savingsCompetitor").change(function() {
       var competitor = $(this).val();
