@@ -1,5 +1,6 @@
 @extends('layouts.setup')
 @section('title') Storage Setup :: @parent @endsection
+@section('setup_step', 1)
 @section('content')
 <style>
     .storage-wrap {
@@ -211,52 +212,75 @@
         <div class="storage-grid">
             <div class="storage-form-pane">
                 <h4>Storage Credentials</h4>
-                <form method="POST">
-                    <div class="form-group">
-                        <label>Storage Provider</label>
-                        <select class="form-control" name="storage_provider">
-                            <option value="aws" {{ $storage_provider == 'aws' ? 'selected' : '' }}>Amazon S3</option>
-                        </select>
+                <form method="POST" data-setup-form>
+                    <div class="setup-group">
+                        <h5 class="setup-group-title">Provider</h5>
+                        <div class="form-group">
+                            <label>Storage Provider</label>
+                            <select class="form-control {{ $errors->has('storage_provider') ? 'is-invalid' : '' }}" name="storage_provider" required>
+                                <option value="aws" {{ old('storage_provider', $storage_provider) == 'aws' ? 'selected' : '' }}>Amazon S3</option>
+                            </select>
+                            @if ($errors->has('storage_provider'))
+                                <div class="invalid-feedback">{{ $errors->first('storage_provider') }}</div>
+                            @endif
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>AWS Access Key ID</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="aws_access_key_id"
-                            value="{{ $aws_access_key_id }}"
-                            autocomplete="off"
-                        />
-                        <span class="field-note">Key should allow read/write access for your storage bucket.</span>
-                    </div>
+                    <div class="setup-group">
+                        <h5 class="setup-group-title">Access Credentials</h5>
+                        <div class="form-group">
+                            <label>AWS Access Key ID</label>
+                            <input
+                                type="text"
+                                class="form-control {{ $errors->has('aws_access_key_id') ? 'is-invalid' : '' }}"
+                                name="aws_access_key_id"
+                                value="{{ old('aws_access_key_id', $aws_access_key_id) }}"
+                                autocomplete="off"
+                                required
+                            />
+                            <span class="field-note">Key should allow read/write access for your storage bucket.</span>
+                            @if ($errors->has('aws_access_key_id'))
+                                <div class="invalid-feedback">{{ $errors->first('aws_access_key_id') }}</div>
+                            @endif
+                        </div>
 
-                    <div class="form-group">
-                        <label>AWS Secret Access Key</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="aws_secret_access_key"
-                            value="{{ $aws_secret_access_key }}"
-                            autocomplete="off"
-                        />
-                    </div>
+                        <div class="form-group">
+                            <label>AWS Secret Access Key</label>
+                            <input
+                                type="text"
+                                class="form-control {{ $errors->has('aws_secret_access_key') ? 'is-invalid' : '' }}"
+                                name="aws_secret_access_key"
+                                value="{{ old('aws_secret_access_key', $aws_secret_access_key) }}"
+                                autocomplete="off"
+                                required
+                            />
+                            @if ($errors->has('aws_secret_access_key'))
+                                <div class="invalid-feedback">{{ $errors->first('aws_secret_access_key') }}</div>
+                            @endif
+                        </div>
 
-                    <div class="form-group">
-                        <label>AWS Region</label>
-                        <select class="form-control" name="aws_region" id="aws_region">
-                            @foreach ($aws_regions as $key => $region)
-                                <option value="{{ $key }}" {{ $key == $selected_region ? 'selected' : '' }}>
-                                    {{ $region }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="form-group">
+                            <label class="setup-info-label">
+                                AWS Region
+                                <button type="button" class="setup-info-tip" data-toggle="tooltip" title="Use the region closest to your telephony servers to reduce media latency.">?</button>
+                            </label>
+                            <select class="form-control {{ $errors->has('aws_region') ? 'is-invalid' : '' }}" name="aws_region" id="aws_region" required>
+                                @foreach ($aws_regions as $key => $region)
+                                    <option value="{{ $key }}" {{ $key == old('aws_region', $selected_region) ? 'selected' : '' }}>
+                                        {{ $region }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('aws_region'))
+                                <div class="invalid-feedback">{{ $errors->first('aws_region') }}</div>
+                            @endif
+                        </div>
                     </div>
 
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="storage-actions">
                         <a href="/setup" class="btn btn-storage-secondary">Back</a>
-                        <button type="submit" class="btn btn-storage-primary">Save & Continue</button>
+                        <button type="submit" class="btn btn-storage-primary" data-loading-text="Validating storage...">Save & Continue</button>
                     </div>
                 </form>
             </div>

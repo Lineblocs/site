@@ -1,5 +1,6 @@
 @extends('layouts.setup')
 @section('title') Admin Setup :: @parent @endsection
+@section('setup_step', 5)
 @section('content')
 <div class="admin-wrap">
     <div class="admin-card">
@@ -18,27 +19,36 @@
         <div class="admin-grid">
             <div class="admin-pane">
                 <h4>Admin Credentials</h4>
-                <form method="POST">
+                <form method="POST" data-setup-form>
                     <div class="form-group">
                         <label>Email</label>
-                        <input id="email" type="email" class="form-control" name="email" value="{{ $email }}" required />
+                        <input id="email" type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" value="{{ old('email', $email) }}" required />
+                        @if ($errors->has('email'))
+                            <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+                        @endif
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input id="admin_password" type="password" class="form-control" name="admin_password" value="" required />
+                        <input id="admin_password" type="password" class="form-control {{ $errors->has('admin_password') ? 'is-invalid' : '' }}" name="admin_password" value="" required />
+                        @if ($errors->has('admin_password'))
+                            <div class="invalid-feedback">{{ $errors->first('admin_password') }}</div>
+                        @endif
                     </div>
 
                     <div class="form-group">
                         <label>Confirm Password</label>
-                        <input id="admin_cpassword" type="password" class="form-control" name="admin_cpassword" value="" required />
+                        <input id="admin_cpassword" type="password" class="form-control {{ $errors->has('admin_cpassword') ? 'is-invalid' : '' }}" name="admin_cpassword" value="" required />
                         <span class="admin-note">Both password fields must match before continuing.</span>
+                        @if ($errors->has('admin_cpassword'))
+                            <div class="invalid-feedback">{{ $errors->first('admin_cpassword') }}</div>
+                        @endif
                     </div>
 
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="admin-actions">
                         <a href="/setup/smtp" class="btn btn-setup-link">Back</a>
-                        <button type="submit" class="btn btn-setup-primary">Save & Continue</button>
+                        <button type="submit" class="btn btn-setup-primary" data-loading-text="Securing admin account...">Save & Continue</button>
                     </div>
                 </form>
             </div>

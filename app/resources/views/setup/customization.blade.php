@@ -1,5 +1,6 @@
 @extends('layouts.setup')
 @section('title') Customization Setup :: @parent @endsection
+@section('setup_step', 6)
 @section('content')
 <div class="customization-wrap">
     <div class="customization-card">
@@ -18,17 +19,20 @@
         <div class="customization-grid">
             <div class="customization-pane">
                 <h4>Branding Details</h4>
-                <form method="POST">
+                <form method="POST" data-setup-form>
                     <div class="form-group">
                         <label>Company Name</label>
-                        <input id="name" type="text" class="form-control" name="name" value="{{ $name }}" required />
+                        <input id="name" type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" name="name" value="{{ old('name', $name) }}" required />
                         <span class="customization-note">You can refine additional branding options later from platform settings.</span>
+                        @if ($errors->has('name'))
+                            <div class="invalid-feedback">{{ $errors->first('name') }}</div>
+                        @endif
                     </div>
 
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="customization-actions">
                         <a href="/setup/admin" class="btn btn-setup-link">Back</a>
-                        <button type="submit" class="btn btn-setup-primary">Save & Continue</button>
+                        <button type="submit" class="btn btn-setup-primary" data-loading-text="Finalizing branding...">Save & Continue</button>
                     </div>
                 </form>
             </div>
