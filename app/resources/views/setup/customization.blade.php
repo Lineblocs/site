@@ -22,7 +22,7 @@
                 <form method="POST" data-setup-form>
                     <div class="form-group">
                         <label>Company Name</label>
-                        <input id="name" type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" name="name" value="{{ old('name', $name) }}" required />
+                        <input id="name" type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" name="name" value="{{ old('name', $name) }}" />
                         <span class="customization-note">You can refine additional branding options later from platform settings.</span>
                         @if ($errors->has('name'))
                             <div class="invalid-feedback">{{ $errors->first('name') }}</div>

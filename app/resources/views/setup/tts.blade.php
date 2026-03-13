@@ -40,7 +40,7 @@
                                 Google Service Account JSON
                                 <button type="button" class="setup-info-tip" data-toggle="tooltip" title="This JSON should include keys like client_email and private_key.">?</button>
                             </label>
-                            <textarea class="form-control tts-json {{ $errors->has('google_service_account_json') ? 'is-invalid' : '' }}" name="google_service_account_json" autocomplete="off" required>{{ old('google_service_account_json', $google_service_account_json) }}</textarea>
+                            <textarea class="form-control tts-json {{ $errors->has('google_service_account_json') ? 'is-invalid' : '' }}" name="google_service_account_json" autocomplete="off">{{ old('google_service_account_json', $google_service_account_json) }}</textarea>
                             <span class="tts-note">Paste the full JSON key content exactly as downloaded from Google Cloud.</span>
                             @if ($errors->has('google_service_account_json'))
                                 <div class="invalid-feedback">{{ $errors->first('google_service_account_json') }}</div>

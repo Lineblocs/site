@@ -41,16 +41,9 @@ class Setup implements Middleware {
         $route = Route::getCurrentRoute();
         $path = $route->getPath();
 
-        if ($path === 'setup/restart') {
-            return $next($request);
-        }
-
         $setupComplete = !empty($creds->setup_complete);
         if ($setupComplete) {
-            if ($path !== 'setup/alreadycomplete') {
-                return $this->response->redirectTo('/setup/alreadycomplete');
-            }
-            return $next($request);
+            abort(404);
         }
 
         if ($path === 'setup/alreadycomplete') {

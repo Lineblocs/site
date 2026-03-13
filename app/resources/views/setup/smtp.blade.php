@@ -24,15 +24,23 @@
                         <h5 class="setup-group-title">Server Connection</h5>
                         <div class="form-group">
                             <label>Host</label>
-                            <input id="smtp_host" type="text" class="form-control {{ $errors->has('smtp_host') ? 'is-invalid' : '' }}" name="smtp_host" value="{{ old('smtp_host', $smtp_host) }}" autocomplete="off" required />
+                            <input id="smtp_host" type="text" class="form-control {{ $errors->has('smtp_host') ? 'is-invalid' : '' }}" name="smtp_host" value="{{ old('smtp_host', $smtp_host) }}" autocomplete="off" />
                             @if ($errors->has('smtp_host'))
                                 <div class="invalid-feedback">{{ $errors->first('smtp_host') }}</div>
                             @endif
                         </div>
 
                         <div class="form-group">
+                            <label>Port</label>
+                            <input id="smtp_port" type="text" class="form-control {{ $errors->has('smtp_port') ? 'is-invalid' : '' }}" name="smtp_port" value="{{ old('smtp_port', $smtp_port) }}" autocomplete="off" />
+                            @if ($errors->has('smtp_port'))
+                                <div class="invalid-feedback">{{ $errors->first('smtp_port') }}</div>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
                             <label>User</label>
-                            <input id="smtp_user" type="text" class="form-control {{ $errors->has('smtp_user') ? 'is-invalid' : '' }}" name="smtp_user" value="{{ old('smtp_user', $smtp_user) }}" autocomplete="off" required />
+                            <input id="smtp_user" type="text" class="form-control {{ $errors->has('smtp_user') ? 'is-invalid' : '' }}" name="smtp_user" value="{{ old('smtp_user', $smtp_user) }}" autocomplete="off" />
                             @if ($errors->has('smtp_user'))
                                 <div class="invalid-feedback">{{ $errors->first('smtp_user') }}</div>
                             @endif
@@ -40,7 +48,7 @@
 
                         <div class="form-group">
                             <label>Password</label>
-                            <input id="smtp_password" type="text" class="form-control {{ $errors->has('smtp_password') ? 'is-invalid' : '' }}" name="smtp_password" value="{{ old('smtp_password', $smtp_password) }}" autocomplete="off" required />
+                            <input id="smtp_password" type="text" class="form-control {{ $errors->has('smtp_password') ? 'is-invalid' : '' }}" name="smtp_password" value="{{ old('smtp_password', $smtp_password) }}" autocomplete="off" />
                             @if ($errors->has('smtp_password'))
                                 <div class="invalid-feedback">{{ $errors->first('smtp_password') }}</div>
                             @endif
