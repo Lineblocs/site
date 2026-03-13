@@ -87,6 +87,15 @@ Pricing plans for all
   transform: translateX(24px);
 }
 
+.per-month {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #2f3f58;
+}
+
 @media (max-width: 767px) {
   .pricing-addons-bar {
     justify-content: center;
@@ -115,8 +124,8 @@ Pricing plans for all
           <div class="pricing-addons-bar">
             <div class="pricing-addon-card">
               <div>
-                <p class="pricing-addon-title">AI features</p>
-                <p class="pricing-addon-subtitle" id="notionAiState">Disabled</p>
+                <p class="pricing-addon-title">Annual pricing</p>
+                <p class="pricing-addon-subtitle" id="notionAiState">Monthly pricing</p>
               </div>
               <label class="pricing-switch" for="notionAiToggle">
                 <input type="checkbox" id="notionAiToggle" />
@@ -138,10 +147,10 @@ Pricing plans for all
 
                         <h2>
                           <div class="pricing-price">
-                            <small>$</small>{{$plan->getFormattedMonthlyCharge()}}
+                            <small>$</small><span class="js-plan-price" data-monthly="{{$plan->getFormattedMonthlyCharge()}}" data-annual="{{$plan->getFormattedAnnualCharge()}}">{{$plan->getFormattedMonthlyCharge()}}</span>
                           </div>
-                          <small class="per-month" style="font-size: 10px;">
-                            Per month/user</small>
+                          <small class="per-month js-plan-period" data-monthly="Billed monthly per user" data-annual="Billed annually per user">
+                            Billed monthly per user</small>
                         </h2>
                       </div>
 
@@ -215,9 +224,9 @@ Pricing plans for all
                 <div class="card-content center">
                   <h2>
                     <div class="pricing-price">
-                      <small>$</small>{{$plan->getPricingDollars()}}<span class="pricing-decimals">.{{$plan->getPricingDecimels()}}</span>
+                      <small>$</small><span class="js-plan-price" data-monthly="{{$plan->getFormattedMonthlyCharge()}}" data-annual="{{$plan->getFormattedAnnualCharge()}}">{{$plan->getFormattedMonthlyCharge()}}</span>
                     </div>
-                    <small class="per-month" style="font-size: 10px;">Per month/user</small>
+                    <small class="per-month js-plan-period" data-monthly="Billed monthly per user" data-annual="Billed annually per user">Billed monthly per user</small>
                   </h2>
                 </div>
 
@@ -410,11 +419,31 @@ Pricing plans for all
   $(document).ready(function () {
     const notionAiToggle = document.getElementById("notionAiToggle");
     const notionAiState = document.getElementById("notionAiState");
+    const pricingAmounts = document.querySelectorAll(".js-plan-price");
+    const pricingPeriods = document.querySelectorAll(".js-plan-period");
+
+    function updatePricingMode(showAnnual) {
+      for (var i = 0; i < pricingAmounts.length; i++) {
+        var amountNode = pricingAmounts[i];
+        amountNode.textContent = showAnnual ? amountNode.getAttribute("data-annual") : amountNode.getAttribute("data-monthly");
+      }
+
+      for (var j = 0; j < pricingPeriods.length; j++) {
+        var periodNode = pricingPeriods[j];
+        periodNode.textContent = showAnnual ? periodNode.getAttribute("data-annual") : periodNode.getAttribute("data-monthly");
+      }
+
+      if (notionAiState) {
+        notionAiState.textContent = showAnnual ? "Annual pricing" : "Monthly pricing";
+      }
+    }
+
     if (notionAiToggle && notionAiState) {
       notionAiToggle.addEventListener("change", function () {
-        notionAiState.textContent = this.checked ? "Enabled" : "Disabled";
+        updatePricingMode(this.checked);
       });
     }
+    updatePricingMode(false);
 
     var costSavings = {!! json_encode($savings->toArray()) !!}
     $("#savingsCompetitor").change(function() {

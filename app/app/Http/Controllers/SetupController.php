@@ -7,6 +7,7 @@ use App\ApiCredentialKVStore;
 use App\User;
 use Validator;
 use Schema;
+use Carbon\Carbon;
 
 function getSavedValue($request, $creds, $key) {
   $submitted = $request->old($key);
@@ -66,6 +67,10 @@ class SetupController extends BaseController {
 
   private function setSetupComplete($isComplete) {
     $this->saveSettingValue('setup_complete', (bool)$isComplete);
+  }
+
+  private function setSetupCompletedAt($timestamp) {
+    $this->saveSettingValue('setup_completed_at', (string)$timestamp);
   }
 
   private function save_settings($params, $data) {
@@ -273,12 +278,12 @@ class SetupController extends BaseController {
         $missingKeys[] = $requiredKey;
       }
     }
-    if (!empty($missingKeys)) {
-      return redirect()->back()
-        ->withInput()
-        ->with('type', 'danger')
-        ->with('message', 'Google key is missing required fields: ' . implode(', ', $missingKeys) . '.');
-    }
+    // if (!empty($missingKeys)) {
+    //   return redirect()->back()
+    //     ->withInput()
+    //     ->with('type', 'danger')
+    //     ->with('message', 'Google key is missing required fields: ' . implode(', ', $missingKeys) . '.');
+    // }
 
     $this->save_settings([
       'google_service_account_json',
@@ -357,6 +362,7 @@ class SetupController extends BaseController {
     $creds = ApiCredentialKVStore::getRecord();
 
     $smtp_host = getSavedValue($request, $creds, 'smtp_host');
+    $smtp_port = getSavedValue($request, $creds, 'smtp_port');
     $smtp_user = getSavedValue($request, $creds, 'smtp_user');
     $smtp_password = getSavedValue($request, $creds, 'smtp_password');
     $smtp_tls = getSavedValue($request, $creds, 'smtp_tls');
@@ -367,6 +373,9 @@ class SetupController extends BaseController {
     if (empty($smtp_user)) {
       $smtp_user = getEnvValue(['MAIL_USERNAME', 'SMTP_USER']);
     }
+    if (empty($smtp_port)) {
+      $smtp_port = getEnvValue(['MAIL_PORT', 'SMTP_PORT'], '587');
+    }
     if (empty($smtp_password)) {
       $smtp_password = getEnvValue(['MAIL_PASSWORD', 'SMTP_PASSWORD']);
     }
@@ -376,6 +385,7 @@ class SetupController extends BaseController {
 
     $params = $this->withStepState([
       'smtp_host' => $smtp_host,
+      'smtp_port' => $smtp_port,
       'smtp_user' => $smtp_user,
       'smtp_password' => $smtp_password,
       'smtp_tls' => $smtp_tls
@@ -387,11 +397,15 @@ class SetupController extends BaseController {
   public function save_smtp(Request $request) {
     $validation = $this->validateStep($request, [
       'smtp_host' => 'required',
+      'smtp_port' => 'required|integer|between:1,65535',
       'smtp_user' => 'required',
       'smtp_password' => 'required',
       'smtp_tls' => 'required|in:0,1',
     ], [
       'smtp_host.required' => 'Enter your SMTP server host, for example smtp.mailgun.org.',
+      'smtp_port.required' => 'Enter your SMTP server port, for example 587.',
+      'smtp_port.integer' => 'SMTP port must be a valid number.',
+      'smtp_port.between' => 'SMTP port must be between 1 and 65535.',
       'smtp_user.required' => 'Enter the SMTP username used for authentication.',
       'smtp_password.required' => 'Enter the SMTP password or app-specific token.',
       'smtp_tls.in' => 'Select whether TLS is enabled for your SMTP transport.',
@@ -402,6 +416,7 @@ class SetupController extends BaseController {
 
     $this->save_settings([
       'smtp_host',
+      'smtp_port',
       'smtp_user',
       'smtp_password',
       'smtp_tls'
@@ -433,23 +448,23 @@ class SetupController extends BaseController {
 
     $validation = $this->validateStep($request, [
       'email' => 'required|email',
-      'admin_password' => 'required|min:10|max:128',
-      'admin_cpassword' => 'required',
+      'admin_password' => [
+        'required',
+        'min:10',
+        'max:128',
+        'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/'
+      ],
+      'admin_cpassword' => 'required|same:admin_password',
     ], [
       'email.required' => 'Enter an admin email that can receive recovery and security notices.',
       'email.email' => 'Enter a valid email address for the admin account.',
       'admin_password.min' => 'Use at least 10 characters for better account security.',
+      'admin_password.regex' => 'Use a strong password with uppercase, lowercase, number, and special character.',
       'admin_cpassword.required' => 'Re-enter the password to confirm it before continuing.',
+      'admin_cpassword.same' => 'Passwords do not match. Re-enter both fields and try again.',
     ]);
     if ($validation) {
       return $validation;
-    }
-
-    if ($data['admin_password'] != $data['admin_cpassword']) {
-      return redirect()->back()
-        ->withInput()
-        ->with('type', 'danger')
-        ->with('message', 'Passwords do not match. Re-enter both fields and try again.');
     }
 
     $admin = $this->ensureAdminUser($data['email'], $data['admin_password']);
@@ -506,6 +521,7 @@ class SetupController extends BaseController {
 
   public function setup_complete(Request $request) {
     $this->setSetupComplete(TRUE);
+    $this->setSetupCompletedAt(Carbon::now()->format('Y-m-d H:i:s'));
     $this->setSetupCurrentStep(7);
     return view('setup.complete', $this->withStepState([], 7));
   }
@@ -516,6 +532,7 @@ class SetupController extends BaseController {
 
   public function setup_restart(Request $request) {
     $this->setSetupComplete(FALSE);
+    $this->setSetupCompletedAt('');
     $this->setSetupCurrentStep(1);
     return redirect('/setup/storage');
   }

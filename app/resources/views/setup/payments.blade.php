@@ -24,7 +24,7 @@
                         <h5 class="setup-group-title">Live Keys</h5>
                         <div class="form-group">
                             <label>Stripe Private Key</label>
-                            <input id="stripe_private_key" type="text" class="form-control {{ $errors->has('stripe_private_key') ? 'is-invalid' : '' }}" name="stripe_private_key" value="{{ old('stripe_private_key', $stripe_private_key) }}" autocomplete="off" required />
+                            <input id="stripe_private_key" type="text" class="form-control {{ $errors->has('stripe_private_key') ? 'is-invalid' : '' }}" name="stripe_private_key" value="{{ old('stripe_private_key', $stripe_private_key) }}" autocomplete="off" />
                             @if ($errors->has('stripe_private_key'))
                                 <div class="invalid-feedback">{{ $errors->first('stripe_private_key') }}</div>
                             @endif
@@ -32,7 +32,7 @@
 
                         <div class="form-group">
                             <label>Stripe Publishable Key</label>
-                            <input id="stripe_pub_key" type="text" class="form-control {{ $errors->has('stripe_pub_key') ? 'is-invalid' : '' }}" name="stripe_pub_key" value="{{ old('stripe_pub_key', $stripe_pub_key) }}" autocomplete="off" required />
+                            <input id="stripe_pub_key" type="text" class="form-control {{ $errors->has('stripe_pub_key') ? 'is-invalid' : '' }}" name="stripe_pub_key" value="{{ old('stripe_pub_key', $stripe_pub_key) }}" autocomplete="off" />
                             @if ($errors->has('stripe_pub_key'))
                                 <div class="invalid-feedback">{{ $errors->first('stripe_pub_key') }}</div>
                             @endif
@@ -43,7 +43,7 @@
                         <h5 class="setup-group-title">Test Keys</h5>
                         <div class="form-group">
                             <label>Stripe Test Private Key</label>
-                            <input id="stripe_test_private_key" type="text" class="form-control {{ $errors->has('stripe_test_private_key') ? 'is-invalid' : '' }}" name="stripe_test_private_key" value="{{ old('stripe_test_private_key', $stripe_test_private_key) }}" autocomplete="off" required />
+                            <input id="stripe_test_private_key" type="text" class="form-control {{ $errors->has('stripe_test_private_key') ? 'is-invalid' : '' }}" name="stripe_test_private_key" value="{{ old('stripe_test_private_key', $stripe_test_private_key) }}" autocomplete="off" />
                             @if ($errors->has('stripe_test_private_key'))
                                 <div class="invalid-feedback">{{ $errors->first('stripe_test_private_key') }}</div>
                             @endif
@@ -51,7 +51,7 @@
 
                         <div class="form-group">
                             <label>Stripe Test Publishable Key</label>
-                            <input id="stripe_test_pub_key" type="text" class="form-control {{ $errors->has('stripe_test_pub_key') ? 'is-invalid' : '' }}" name="stripe_test_pub_key" value="{{ old('stripe_test_pub_key', $stripe_test_pub_key) }}" autocomplete="off" required />
+                            <input id="stripe_test_pub_key" type="text" class="form-control {{ $errors->has('stripe_test_pub_key') ? 'is-invalid' : '' }}" name="stripe_test_pub_key" value="{{ old('stripe_test_pub_key', $stripe_test_pub_key) }}" autocomplete="off" />
                             <span class="payments-note">Use keys from your Stripe dashboard for both live and test environments.</span>
                             @if ($errors->has('stripe_test_pub_key'))
                                 <div class="invalid-feedback">{{ $errors->first('stripe_test_pub_key') }}</div>

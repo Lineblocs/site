@@ -217,7 +217,7 @@
                         <h5 class="setup-group-title">Provider</h5>
                         <div class="form-group">
                             <label>Storage Provider</label>
-                            <select class="form-control {{ $errors->has('storage_provider') ? 'is-invalid' : '' }}" name="storage_provider" required>
+                            <select class="form-control {{ $errors->has('storage_provider') ? 'is-invalid' : '' }}" name="storage_provider">
                                 <option value="aws" {{ old('storage_provider', $storage_provider) == 'aws' ? 'selected' : '' }}>Amazon S3</option>
                             </select>
                             @if ($errors->has('storage_provider'))
@@ -236,7 +236,6 @@
                                 name="aws_access_key_id"
                                 value="{{ old('aws_access_key_id', $aws_access_key_id) }}"
                                 autocomplete="off"
-                                required
                             />
                             <span class="field-note">Key should allow read/write access for your storage bucket.</span>
                             @if ($errors->has('aws_access_key_id'))
@@ -252,7 +251,6 @@
                                 name="aws_secret_access_key"
                                 value="{{ old('aws_secret_access_key', $aws_secret_access_key) }}"
                                 autocomplete="off"
-                                required
                             />
                             @if ($errors->has('aws_secret_access_key'))
                                 <div class="invalid-feedback">{{ $errors->first('aws_secret_access_key') }}</div>
@@ -264,7 +262,7 @@
                                 AWS Region
                                 <button type="button" class="setup-info-tip" data-toggle="tooltip" title="Use the region closest to your telephony servers to reduce media latency.">?</button>
                             </label>
-                            <select class="form-control {{ $errors->has('aws_region') ? 'is-invalid' : '' }}" name="aws_region" id="aws_region" required>
+                            <select class="form-control {{ $errors->has('aws_region') ? 'is-invalid' : '' }}" name="aws_region" id="aws_region">
                                 @foreach ($aws_regions as $key => $region)
                                     <option value="{{ $key }}" {{ $key == old('aws_region', $selected_region) ? 'selected' : '' }}>
                                         {{ $region }}
