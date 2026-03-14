@@ -130,15 +130,21 @@ trait ExtensionWorkflow {
             return $this->response->errorForbidden();
         }
 
+        $username = $extension->username;
         $data = $request->only('username', 'secret', 'caller_id', 'flow_id', 'tags');
 
-        // check if extension with username exists already
-        $conflictingExt = Extension::where('username', $data['username'])
-                                        ->where('workspace_id', $workspace->id)
-                                        ->first();
-                                    
-        if (!empty($conflictingExt)) {
-            return $this->errorInternal($request, 'Extension with username already exists.');
+        if ($username != $data['username']) {
+            $data = $request->only('username', 'secret', 'caller_id', 'flow_id', 'tags');
+
+
+            // check if extension with username exists already
+            $conflictingExt = Extension::where('username', $data['username'])
+                                            ->where('workspace_id', $workspace->id)
+                                            ->first();
+                                        
+            if (!empty($conflictingExt)) {
+                return $this->errorInternal($request, 'Extension with username already exists.');
+            }
         }
 
         $tags = $data['tags'];
