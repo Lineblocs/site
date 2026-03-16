@@ -82,46 +82,7 @@ class RegisterController extends ApiAuthController
             'default_router_id' => $mainRouter->id
         ]);
 
-        // Standardize billing cycle naming for the Go service
-        $billingCycle = (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') ? 'ANNUAL' : 'MONTHLY';
-        $recurringCost = NULL;
-        
-        $now = new DateTime();
-        if ($billingCycle === 'ANNUAL') {
-            $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
-            $recurringCost = $servicePlan->monthly_cost_cents;
-        } else {
-            $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
-            $recurringCost = $servicePlan->annual_cost_cents;
-        }
 
-        // 1. Create Subscription with Safety Gate anchor
-        $subscription = Subscription::create([
-            'workspace_id' => $workspace->id,
-            'current_plan_id' => $servicePlan->id,
-            'status' => 'ACTIVE',
-            'billing_cycle' => $billingCycle,
-            'current_period_end' => $periodEnd,
-            'next_billing_date' => $periodEnd 
-        ]);
-
-        // 2. Calculate Prorated Amount using BillingDataHelper
-        $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCost, $billingCycle);
-
-        // 3. Dispatch Immediate Billing Task
-        try {
-            RabbitMQHelper::dispatchImmediateBilling(
-                $workspace,
-                $subscription,
-                $user,
-                $servicePlan,
-                $billingCycle,
-                $amountToCharge
-            );
-            Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
-        } catch (\Exception $e) {
-            Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
-        }
 
         PlanUsagePeriod::create([
             'workspace_id' => $workspace->id,
@@ -135,8 +96,7 @@ class RegisterController extends ApiAuthController
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
             'userId' => $user->id,
-            'workspace' => $workspace->toArrayWithRoles($user),
-            'prorated_amount' => $amountToCharge
+            'workspace' => $workspace->toArrayWithRoles($user)
         ]);
     }
 
@@ -281,6 +241,53 @@ class RegisterController extends ApiAuthController
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
+
+          // Standardize billing cycle naming for the Go service
+
+          if (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') {
+              $billingCycle = 'ANNUAL';
+          } else {
+              $billingCycle = 'MONTHLY';
+          }
+          $recurringCost = NULL;
+          
+          $now = new DateTime();
+          if ($billingCycle === 'ANNUAL') {
+              $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
+              $recurringCost = $servicePlan->annual_cost_cents;
+          } else {
+              $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
+              $recurringCost = $servicePlan->monthly_cost_cents;
+          }
+
+          // 1. Create Subscription with Safety Gate anchor
+          $subscription = Subscription::create([
+              'workspace_id' => $workspace->id,
+              'current_plan_id' => $servicePlan->id,
+              'status' => 'ACTIVE',
+              'billing_cycle' => $billingCycle,
+              'current_period_end' => $periodEnd,
+              'next_billing_date' => $periodEnd 
+          ]);
+
+          // 2. Calculate Prorated Amount using BillingDataHelper
+          $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCost, $billingCycle);
+
+          // 3. Dispatch Immediate Billing Task
+          try {
+              RabbitMQHelper::dispatchImmediateBilling(
+                  $workspace,
+                  $subscription,
+                  $user,
+                  $servicePlan,
+                  $billingCycle,
+                  $amountToCharge
+              );
+              Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
+          } catch (\Exception $e) {
+              Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
+          }
+
 
           Log::info('added user successfully.');
 

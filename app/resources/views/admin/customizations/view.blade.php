@@ -13,6 +13,12 @@
     </div>
     <div class="col-md-12">
         <form method="POST" action="" enctype="multipart/form-data">
+            <div class="row form-group">
+                <label for="site_name">Site Name</label>
+                <div class="controls">
+                    <input name="site_name" id="site_name" class="form-control" value="{{$record->site_name}}"/>
+                </div>
+            </div>
             <div class="row">
                 <h3>Logos</h3>
                 <hr/>
