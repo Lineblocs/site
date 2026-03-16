@@ -11,6 +11,15 @@ Pricing plans for all
 .price-comparison {
   margin-top: 15px;
 }
+.pricing-price .js-plan-price{
+  font-size: 22px !important;
+}
+.pricing .pricing-price small{
+  font-size: 22px !important;
+}
+.pricing .pricing-price small{
+  font-size: 22px !important;
+}
 
 .pricing-addons-bar {
   display: flex;
@@ -87,6 +96,112 @@ Pricing plans for all
   transform: translateX(24px);
 }
 
+.per-month {
+  display: inline;
+  margin-top: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #2f3f58;
+  line-height: 1;
+}
+
+.pricing-price {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  max-width: 100%;
+  line-height: 1;
+}
+
+.pricing-price small {
+  font-size: 0.7em;
+  line-height: 1.1;
+}
+
+.pricing-price .js-plan-price {
+  font-size: clamp(38px, 3.5vw, 56px);
+  line-height: 1;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.pricing-price .per-month {
+  font-size: clamp(20px, 1.8vw, 28px);
+  white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+  .pricing-price .js-plan-price {
+    font-size: clamp(34px, 3.2vw, 48px);
+  }
+
+  .pricing-price .per-month {
+    font-size: clamp(18px, 1.8vw, 24px);
+  }
+}
+
+.compare-plans {
+  margin-top: 28px;
+  border: 1px solid #e2e7ef;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.compare-plans-header {
+  padding: 18px 20px 8px;
+}
+
+.compare-plans-header h4 {
+  margin: 0;
+}
+
+.compare-plans-wrap {
+  overflow-x: auto;
+}
+
+.compare-plans table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.compare-plans th,
+.compare-plans td {
+  border-top: 1px solid #eef2f7;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #2f3f58;
+  text-align: center;
+}
+
+.compare-plans th:first-child,
+.compare-plans td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #1f2d3d;
+}
+
+.compare-plans .compare-check {
+  color: #0ea5e9;
+  font-weight: 700;
+}
+
+.empty-pricing-state {
+  width: 100%;
+  margin-top: 10px;
+  padding: 20px;
+  text-align: center;
+  border: 1px dashed #d7deea;
+  border-radius: 12px;
+  color: #58667a;
+  background: #fbfcff;
+}
+
 @media (max-width: 767px) {
   .pricing-addons-bar {
     justify-content: center;
@@ -115,8 +230,8 @@ Pricing plans for all
           <div class="pricing-addons-bar">
             <div class="pricing-addon-card">
               <div>
-                <p class="pricing-addon-title">AI features</p>
-                <p class="pricing-addon-subtitle" id="notionAiState">Disabled</p>
+                <p class="pricing-addon-title">Annual pricing</p>
+                <p class="pricing-addon-subtitle" id="notionAiState">Monthly pricing</p>
               </div>
               <label class="pricing-switch" for="notionAiToggle">
                 <input type="checkbox" id="notionAiToggle" />
@@ -126,7 +241,7 @@ Pricing plans for all
           </div>
 
           <div class="row no-margin">
-            @foreach ( $plans as $plan )
+            @forelse ( $plans as $plan )
               @if ( $plan->isPrepaid() )
                   <div class=" col-s12 col-md-3">
                     <div class="card">
@@ -138,10 +253,10 @@ Pricing plans for all
 
                         <h2>
                           <div class="pricing-price">
-                            <small>$</small>{{$plan->getFormattedMonthlyCharge()}}
+                            <small>$</small><span class="js-plan-price" data-monthly="{{$plan->getFormattedMonthlyCharge()}}" data-annual="{{$plan->getFormattedAnnualCharge()}}">{{$plan->getFormattedMonthlyCharge()}}</span>
+                            <small class="per-month js-plan-period" data-monthly="/ month" data-annual="/ year">
+                              / month</small>
                           </div>
-                          <small class="per-month" style="font-size: 10px;">
-                            Per month/user</small>
                         </h2>
                       </div>
 
@@ -178,7 +293,7 @@ Pricing plans for all
                       <div class="card-content center card-button">
                         <div>
                           <div class="col-s12">
-                            <a href="https://app.lineblocs.com/#/register?plan={{$plan->key_name}}"><button>Get
+                            <a class="js-get-started" data-base-url="https://app.lineblocs.com/#/register?plan={{$plan->key_name}}" href="https://app.lineblocs.com/#/register?plan={{$plan->key_name}}&billing=monthly&term=monthly"><button>Get
                                 Started</button></a>
                           </div>
                         </div>
@@ -215,9 +330,9 @@ Pricing plans for all
                 <div class="card-content center">
                   <h2>
                     <div class="pricing-price">
-                      <small>$</small>{{$plan->getPricingDollars()}}<span class="pricing-decimals">.{{$plan->getPricingDecimels()}}</span>
+                      <small>$</small><span class="js-plan-price" data-monthly="{{$plan->getFormattedMonthlyCharge()}}" data-annual="{{$plan->getFormattedAnnualCharge()}}">{{$plan->getFormattedMonthlyCharge()}}</span>
+                      <small class="per-month js-plan-period" data-monthly="/ month" data-annual="/ year">/ month</small>
                     </div>
-                    <small class="per-month" style="font-size: 10px;">Per month/user</small>
                   </h2>
                 </div>
 
@@ -290,7 +405,7 @@ Pricing plans for all
                 <div class="card-content center card-button">
                   <div class="">
                     <div class="col-s12">
-                      <a href="https://app.lineblocs.com/#/register?plan={{$plan->key_name}}"><button>Get
+                      <a class="js-get-started" data-base-url="https://app.lineblocs.com/#/register?plan={{$plan->key_name}}" href="https://app.lineblocs.com/#/register?plan={{$plan->key_name}}&billing=monthly&term=monthly"><button>Get
                           Started</button></a>
                     </div>
                   </div>
@@ -299,8 +414,119 @@ Pricing plans for all
               </div>
 </div>
             @endif
-          @endforeach
-        </div>
+            @empty
+              <div class="empty-pricing-state">
+                No pricing plan avaiallbe at this time.
+              </div>
+            @endforelse
+          </div>
+
+          @if ($plans->count() > 0)
+            <div class="compare-plans">
+              <div class="compare-plans-header">
+                <h4>Compare all plans</h4>
+              </div>
+              <div class="compare-plans-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      @foreach ($plans as $plan)
+                        <th>{{$plan->nice_name}}</th>
+                      @endforeach
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Monthly price</td>
+                      @foreach ($plans as $plan)
+                        <td>${{$plan->getFormattedMonthlyCharge()}} / month</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Annual price</td>
+                      @foreach ($plans as $plan)
+                        <td>${{$plan->getFormattedAnnualCharge()}} / year</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Fax included</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->fax ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>IM support</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->im_integrations ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Productivity tools</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->productivity_integrations ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Voice analytics</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->voice_analytics ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Fraud protection</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->fraud_protection ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>CRM integrations</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->crm_integrations ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Programmable APIs</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->programmable_toolkit ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>SSO support</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->sso ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Phone provisioner</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->provisioner ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Internal VPN support</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->vpn ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Multiple SIP domains</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->multiple_sip_domains ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                    <tr>
+                      <td>Bring your own carrier</td>
+                      @foreach ($plans as $plan)
+                        <td>{!! $plan->bring_carrier ? '<span class="compare-check">&#10003;</span>' : '&mdash;' !!}</td>
+                      @endforeach
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          @endif
+        
 
     </section></div>
 
@@ -410,11 +636,42 @@ Pricing plans for all
   $(document).ready(function () {
     const notionAiToggle = document.getElementById("notionAiToggle");
     const notionAiState = document.getElementById("notionAiState");
+    const pricingAmounts = document.querySelectorAll(".js-plan-price");
+    const pricingPeriods = document.querySelectorAll(".js-plan-period");
+    const getStartedLinks = document.querySelectorAll(".js-get-started");
+
+    function updatePricingMode(showAnnual) {
+      var billingMode = showAnnual ? "annual" : "monthly";
+
+      for (var i = 0; i < pricingAmounts.length; i++) {
+        var amountNode = pricingAmounts[i];
+        amountNode.textContent = showAnnual ? amountNode.getAttribute("data-annual") : amountNode.getAttribute("data-monthly");
+      }
+
+      for (var j = 0; j < pricingPeriods.length; j++) {
+        var periodNode = pricingPeriods[j];
+        periodNode.textContent = showAnnual ? periodNode.getAttribute("data-annual") : periodNode.getAttribute("data-monthly");
+      }
+
+      if (notionAiState) {
+        notionAiState.textContent = showAnnual ? "Annual pricing" : "Monthly pricing";
+      }
+
+      for (var k = 0; k < getStartedLinks.length; k++) {
+        var link = getStartedLinks[k];
+        var baseUrl = link.getAttribute("data-base-url");
+        if (baseUrl) {
+          link.setAttribute("href", baseUrl + "&billing=" + billingMode + "&term=" + billingMode);
+        }
+      }
+    }
+
     if (notionAiToggle && notionAiState) {
       notionAiToggle.addEventListener("change", function () {
-        notionAiState.textContent = this.checked ? "Enabled" : "Disabled";
+        updatePricingMode(this.checked);
       });
     }
+    updatePricingMode(false);
 
     var costSavings = {!! json_encode($savings->toArray()) !!}
     $("#savingsCompetitor").change(function() {

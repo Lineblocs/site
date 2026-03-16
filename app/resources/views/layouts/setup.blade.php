@@ -34,7 +34,7 @@
                 <h2 class="setup-brand-title">Setup</h2>
             </div>
         </div>
-        <span class="setup-pill">Installation Flow</span>
+        <span class="setup-pill">installtion</span>
     </div>
 
     <div class="setup-stepper" role="navigation" aria-label="Setup progress">
@@ -80,12 +80,10 @@
             form.classList.add('setup-form-submitting');
         }
 
-        var forms = document.querySelectorAll('form[data-setup-form]');
+        var forms = document.querySelectorAll('form');
         for (var i = 0; i < forms.length; i++) {
-            forms[i].addEventListener('submit', function (event) {
-                if (this.checkValidity && !this.checkValidity()) {
-                    return;
-                }
+            forms[i].setAttribute('novalidate', 'novalidate');
+            forms[i].addEventListener('submit', function () {
                 showLoadingState(this);
             });
         }

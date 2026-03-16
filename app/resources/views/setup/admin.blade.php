@@ -22,7 +22,7 @@
                 <form method="POST" data-setup-form>
                     <div class="form-group">
                         <label>Email</label>
-                        <input id="email" type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" value="{{ old('email', $email) }}" required />
+                        <input id="email" type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" value="{{ old('email', $email) }}" />
                         @if ($errors->has('email'))
                             <div class="invalid-feedback">{{ $errors->first('email') }}</div>
                         @endif
@@ -30,7 +30,7 @@
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input id="admin_password" type="password" class="form-control {{ $errors->has('admin_password') ? 'is-invalid' : '' }}" name="admin_password" value="" required />
+                        <input id="admin_password" type="password" class="form-control {{ $errors->has('admin_password') ? 'is-invalid' : '' }}" name="admin_password" value="" />
                         @if ($errors->has('admin_password'))
                             <div class="invalid-feedback">{{ $errors->first('admin_password') }}</div>
                         @endif
@@ -38,7 +38,7 @@
 
                     <div class="form-group">
                         <label>Confirm Password</label>
-                        <input id="admin_cpassword" type="password" class="form-control {{ $errors->has('admin_cpassword') ? 'is-invalid' : '' }}" name="admin_cpassword" value="" required />
+                        <input id="admin_cpassword" type="password" class="form-control {{ $errors->has('admin_cpassword') ? 'is-invalid' : '' }}" name="admin_cpassword" value="" />
                         <span class="admin-note">Both password fields must match before continuing.</span>
                         @if ($errors->has('admin_cpassword'))
                             <div class="invalid-feedback">{{ $errors->first('admin_cpassword') }}</div>
