@@ -134,6 +134,13 @@ Pricing plans for all
   white-space: nowrap;
 }
 
+.pricing-includes-plus {
+  margin: 10px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2f3f58;
+}
+
 @media (max-width: 1200px) {
   .pricing-price .js-plan-price {
     font-size: clamp(34px, 3.2vw, 48px);
@@ -227,21 +234,23 @@ Pricing plans for all
 
       <section class="cards-section">
         <div class="container">
-          <div class="pricing-addons-bar">
-            <div class="pricing-addon-card">
-              <div>
-                <p class="pricing-addon-title">Annual pricing</p>
-                <p class="pricing-addon-subtitle" id="notionAiState">Monthly pricing</p>
-              </div>
-              <label class="pricing-switch" for="notionAiToggle">
-                <input type="checkbox" id="notionAiToggle" />
-                <span class="pricing-switch-slider"></span>
-              </label>
-            </div>
-          </div>
+			@if(isset($plans) && $plans->count() > 0)
+			<div class="pricing-addons-bar">
+				<div class="pricing-addon-card">
+				<div>
+					<p class="pricing-addon-title">Annual pricing</p>
+					<p class="pricing-addon-subtitle" id="notionAiState">Monthly pricing</p>
+				</div>
+				<label class="pricing-switch" for="notionAiToggle">
+					<input type="checkbox" id="notionAiToggle" />
+					<span class="pricing-switch-slider"></span>
+				</label>
+				</div>
+			</div>
+			@endif
 
           <div class="row no-margin">
-            @forelse ( $plans as $plan )
+            @forelse ( $plans->values() as $planIndex => $plan )
               @if ( $plan->isPrepaid() )
                   <div class=" col-s12 col-md-3">
                     <div class="card">
@@ -334,6 +343,11 @@ Pricing plans for all
                       <small class="per-month js-plan-period" data-monthly="/ month" data-annual="/ year">/ month</small>
                     </div>
                   </h2>
+                  @if ($plan->isFeatured() && $planIndex > 0)
+                  <p class="pricing-includes-plus">
+                    Everything in {{$plans->values()->get($planIndex - 1)->nice_name}}, plus:
+                  </p>
+                  @endif
                 </div>
 
                 <ul class="collection center">
