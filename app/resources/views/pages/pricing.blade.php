@@ -675,7 +675,7 @@ Pricing plans for all
         var link = getStartedLinks[k];
         var baseUrl = link.getAttribute("data-base-url");
         if (baseUrl) {
-          link.setAttribute("href", baseUrl + "&billing=" + billingMode + "&term=" + billingMode);
+          link.setAttribute("href", baseUrl + "&billingPeriod=" + billingMode);
         }
       }
     }
