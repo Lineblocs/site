@@ -15,6 +15,7 @@ use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
 use App\Helpers\EmailHelper;
 use App\Helpers\RabbitMQHelper;
+use App\Helpers\TokenHelper;
 use App\Helpers\BillingDataHelper;
 use \Config;
 use \Mail;
@@ -39,6 +40,7 @@ use App\SIPPoPRegion;
 use App\SIPRouter;
 use App\UserRegistrationQuestionResponse;
 use App\Subscription;
+use App\OneTimeLoginLink;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use DateTime;
@@ -47,6 +49,7 @@ class RegisterController extends ApiAuthController
 {
     public function register(Request $request)
     {
+		// dd($request->all());
         $data = $request->all();
         $email = $data['email'];
         
@@ -608,6 +611,218 @@ class RegisterController extends ApiAuthController
           'found' => FALSE
         ]);
 
+  }
+
+  private function normalizeOneTimeLoginPayload(Request $request)
+  {
+      $payload = $request->all();
+      if (empty($payload)) {
+          $payload = $request->json()->all();
+      }
+
+      return is_array($payload) ? $payload : [];
+  }
+
+  private function userBelongsToWorkspace($user, $workspace)
+  {
+      if (!$user || !$workspace) {
+          return false;
+      }
+
+      if ((int) $workspace->creator_id === (int) $user->id) {
+          return true;
+      }
+
+      $workspaceUserCount = WorkspaceUser::where('workspace_id', $workspace->id)
+          ->where('user_id', $user->id)
+          ->count();
+
+      return $workspaceUserCount > 0;
+  }
+
+  public function sendOneTimeLoginLink(Request $request)
+  {
+      $data = $this->normalizeOneTimeLoginPayload($request);
+      $userId = array_key_exists('userId', $data) ? (int) $data['userId'] : (array_key_exists('user_id', $data) ? (int) $data['user_id'] : 0);
+      $workspaceId = array_key_exists('workspaceId', $data) ? (int) $data['workspaceId'] : (array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0);
+
+      if ($userId <= 0 || $workspaceId <= 0) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'userId and workspaceId are required.'
+          ]);
+      }
+
+      $user = User::find($userId);
+      $workspace = Workspace::find($workspaceId);
+      if (!$user || !$workspace) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'User or workspace not found.'
+          ]);
+      }
+
+      if (!$this->userBelongsToWorkspace($user, $workspace)) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'User does not belong to this workspace.'
+          ]);
+      }
+
+      $ttlMinutes = array_key_exists('expiry_minutes', $data) ? (int) $data['expiry_minutes'] : (int) env('ONE_TIME_LOGIN_LINK_TTL', 60);
+      if ($ttlMinutes <= 0) {
+          $ttlMinutes = 60;
+      }
+
+      $token = TokenHelper::createToken('one_time_login', [
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'email' => (string) $user->email
+      ], $ttlMinutes);
+
+      if (empty($token)) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'Could not generate one-time token.'
+          ]);
+      }
+
+      $tokenHash = hash('sha256', $token);
+      $now = new DateTime();
+      $expiresAt = (clone $now)->modify(sprintf('+%d minutes', $ttlMinutes));
+
+      OneTimeLoginLink::where('user_id', $user->id)
+          ->where('workspace_id', $workspace->id)
+          ->whereNull('used_at')
+          ->update([
+              'used_at' => $now->format('Y-m-d H:i:s')
+          ]);
+
+      OneTimeLoginLink::create([
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'token_hash' => $tokenHash,
+          'expires_at' => $expiresAt->format('Y-m-d H:i:s')
+      ]);
+
+      $linkExpiresAt = time() + ($ttlMinutes * 60);
+      $linkParams = [
+          'token' => $token,
+          'userId' => $user->id,
+          'workspaceId' => $workspace->id,
+          'expires' => $linkExpiresAt
+      ];
+      $linkParams['sig'] = TokenHelper::signLinkParams($linkParams);
+
+      $loginLink = MainHelper::createUrl('one-time-login') . '?' . http_build_query($linkParams);
+
+      $subject = MainHelper::createEmailSubject('Your One-Time Login Link');
+      $result = EmailHelper::sendEmail($subject, $user->email, 'one_time_login_link', [
+          'user' => $user,
+          'workspace' => $workspace,
+          'login_link' => $loginLink,
+          'expires_minutes' => $ttlMinutes
+      ]);
+
+      return $this->response->array([
+          'success' => $result === TRUE,
+          'email' => $user->email,
+          'workspace_id' => $workspace->id,
+          'expires_minutes' => $ttlMinutes
+      ]);
+  }
+
+  public function consumeOneTimeLoginLink(Request $request)
+  {
+      $token = $request->query('token');
+      $linkUserId = (int) $request->query('userId', 0);
+      $linkWorkspaceId = (int) $request->query('workspaceId', 0);
+      $linkExpires = (int) $request->query('expires', 0);
+      $linkSignature = (string) $request->query('sig', '');
+
+      if (empty($token)) {
+          return response('Invalid or expired one-time login link.', 403);
+      }
+
+      if ($linkExpires <= 0 || $linkExpires < time()) {
+          return response('This one-time login link has expired.', 403);
+      }
+
+      $isValidLinkSignature = TokenHelper::validateLinkSignature([
+          'token' => $token,
+          'userId' => $linkUserId,
+          'workspaceId' => $linkWorkspaceId,
+          'expires' => $linkExpires
+      ], $linkSignature);
+
+      if (!$isValidLinkSignature) {
+          return response('Invalid one-time login link signature.', 403);
+      }
+
+      $payload = TokenHelper::getPayload($token);
+      if (empty($payload)) {
+          return response('Invalid or expired one-time login link.', 403);
+      }
+
+      $userId = array_key_exists('user_id', $payload) ? (int) $payload['user_id'] : 0;
+      $workspaceId = array_key_exists('workspace_id', $payload) ? (int) $payload['workspace_id'] : 0;
+      $email = array_key_exists('email', $payload) ? (string) $payload['email'] : '';
+      if ($userId <= 0 || $workspaceId <= 0 || empty($email)) {
+          return response('Invalid one-time login link.', 403);
+      }
+
+      if ($linkUserId !== $userId || $linkWorkspaceId !== $workspaceId) {
+          return response('Invalid one-time login link.', 403);
+      }
+
+      $isValidToken = TokenHelper::validateToken($token, 'one_time_login', [
+          'user_id' => $userId,
+          'workspace_id' => $workspaceId,
+          'email' => $email
+      ]);
+
+      if (!$isValidToken) {
+          return response('Invalid or expired one-time login link.', 403);
+      }
+
+      $tokenHash = hash('sha256', $token);
+      $record = OneTimeLoginLink::where('token_hash', $tokenHash)->first();
+      if (!$record) {
+          return response('Login link not found.', 403);
+      }
+
+      if (!empty($record->used_at)) {
+          return response('This one-time login link has already been used.', 410);
+      }
+
+      if (strtotime($record->expires_at) <= time()) {
+          return response('This one-time login link has expired.', 403);
+      }
+
+      $user = User::find($record->user_id);
+      $workspace = Workspace::find($record->workspace_id);
+      if (!$this->userBelongsToWorkspace($user, $workspace)) {
+          return response('Invalid one-time login link.', 403);
+      }
+
+      $updated = \DB::table('one_time_login_links')
+          ->where('id', $record->id)
+          ->whereNull('used_at')
+          ->update([
+              'used_at' => date('Y-m-d H:i:s')
+          ]);
+
+      if ((int) $updated !== 1) {
+          return response('This one-time login link has already been used.', 410);
+      }
+
+      $loginToken = JWTAuth::fromUser($user);
+      if (!$loginToken) {
+          return response('Could not create login token.', 500);
+      }
+
+      $redirectUrl = MainHelper::createPortalLink(sprintf('?auth=%s&workspaceId=%d', $loginToken, $workspace->id));
+      return redirect($redirectUrl);
   }
 
   public function isTestNumber($number) {
