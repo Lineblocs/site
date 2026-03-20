@@ -452,7 +452,7 @@ class HomeController extends BaseController {
 
   public function login(Request $request)
   {
-    return redirect(mainhelper::createappurl("/#/login"));
+    return redirect(mainhelper::createAppUrl("/#/login"));
   }
   public function backToBilling(Request $request)
   {
