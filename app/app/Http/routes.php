@@ -94,6 +94,7 @@ Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@ge
 
 Route::get('/email/unsubscribe', 'EmailController@unsubscribe');
 Route::post('/email/unsubscribe', 'EmailController@unsubscribe_update');
+Route::get('/one-time-login', '\App\Http\Controllers\RegisterController@consumeOneTimeLoginLink');
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
@@ -521,6 +522,7 @@ $api->version('v1', function($api) {
     $api->post('provisionCallSystem', '\App\Http\Controllers\RegisterController@provisionCallSystem');
     $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
     $api->post('addCard', '\App\Http\Controllers\RegisterController@addCard');
+    $api->post('sendOneTimeLoginLink', '\App\Http\Controllers\RegisterController@sendOneTimeLoginLink');
     $api->get('self', '\App\Http\Controllers\RegisterController@getSelf');
 
     $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');

@@ -67,7 +67,10 @@ class HomeController extends BaseController {
   }
   public function pricing(Request $request)
   {
-    $plans = ServicePlan::where('include_in_pricing_pages', '1')->get();
+    $plans = ServicePlan::where('include_in_pricing_pages', '1')
+      ->orderBy('rank')
+      ->orderBy('nice_name')
+      ->get();
     $plans = ServicePlan::sortPlansByFeatures($plans);
     $competitors = Competitor::all();
     $savings = CostSaving::select(array('cost_savings.*', DB::raw('competitors.name AS competitor_name')));
@@ -449,7 +452,7 @@ class HomeController extends BaseController {
 
   public function login(Request $request)
   {
-    return redirect(mainhelper::createappurl("/#/login"));
+    return redirect(mainhelper::createAppUrl("/#/login"));
   }
   public function backToBilling(Request $request)
   {

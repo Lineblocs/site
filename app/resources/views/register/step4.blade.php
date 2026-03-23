@@ -75,7 +75,7 @@
                             var key = token.token.auth;
                             var qs = "?auth=" + key + "&workspaceId=" + workspace.id;
 
-                            document.location.href = "https://app.lineblocs.com/#/dashboard-redirect" + qs;
+                            document.location.href = "https://app.lineblocs.com/#/dashboard" + qs;
                         });
                     });
                 } else {
