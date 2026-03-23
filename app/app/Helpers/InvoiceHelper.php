@@ -7,7 +7,7 @@ use \PDF;
 use \DateTime;
 use App\Settings;
 use App\Customizations;
-use App\CustomizationsKVStroe;
+use App\CustomizationsKVStore;
 use App\BillingTax;
 use App\UserInvoiceLineItem;
 use App\Helpers\MainHelper;
