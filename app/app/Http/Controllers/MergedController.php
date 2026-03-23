@@ -1187,6 +1187,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $wssPort = $sipRouter->wss_port;
     $wssGateway = sprintf("wss://%s:%s", $sipHost, $wssPort);
 
+    $tcpPort = $sipRouter->tcp_port;
+
     $sipCredentials = [
       'username' => $extension['username'],
       'secret' => $extension['secret'],
@@ -1197,7 +1199,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         'gateway' => $wssGateway
       ],
       'display_name' => $displayName,
-      'sip_uri' => $sipURI
+      'sip_uri' => $sipURI,
+      'tcp_port' => $tcpPort
     ];
 
     return $this->response->array($sipCredentials);
