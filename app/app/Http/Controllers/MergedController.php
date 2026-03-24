@@ -811,8 +811,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
 
   public function getServicePlans(Request $request) {
-      $plans = ServicePlan::all()->orderBy('rank')
-      ->orderBy('nice_name')->toArray();
+      $plans = ServicePlan::orderBy('rank')
+                          ->orderBy('nice_name')
+                          ->get()
+                          ->toArray();
+
       $features = [
         'fax',
         'im_integrations',
