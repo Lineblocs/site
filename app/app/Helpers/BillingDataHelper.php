@@ -201,7 +201,11 @@ final class BillingDataHelper {
   public static function refundInvoice($invoice)
   {
     $customizations = CustomizationsKVStore::getRecord();
-    $paymentGateway = $customizations->payment_gateway ?? null;
+    if ($customizations) {
+      $paymentGateway = $customizations->payment_gateway;
+    } else {
+      $paymentGateway = null;
+    }
 
     if ($paymentGateway === 'stripe') {
       try {
@@ -218,5 +222,8 @@ final class BillingDataHelper {
     } else {
       throw new \Exception('payment gateway code unimplemented');
     }
+
+    $invoice->status = 'REFUNDED';
+    $invoice->save();
   }
 }
