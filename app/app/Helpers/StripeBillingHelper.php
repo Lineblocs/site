@@ -8,22 +8,32 @@ use Stripe\PaymentIntent;
 use App\User;
 use App\Workspace;
 use App\UserInvoice;
+use App\ApiCredentialKVStore;
 
 class StripeBillingHelper
 {
     private $stripeKey;
     private $retryAttempts;
 
-    public function __construct(string $stripeKey, int $retryAttempts)
+    public function __construct($stripeKey = NULL, $retryAttempts = 0)
     {
+        if (is_null($stripeKey)) {
+            $credentials = ApiCredentialKVStore::getRecord();
+            if ($credentials['stripe_mode'] == 'live') {
+            $stripeKey = $credentials['stripe_private_key'];
+            } else {
+            $stripeKey = $credentials['stripe_test_private_key'];
+            }
+        }
         $this->stripeKey = $stripeKey;
         $this->retryAttempts = $retryAttempts;
+
+        // instatiate Stripe client with the provided API key
+        Stripe::setApiKey($this->stripeKey);
     }
 
     public function chargeCustomer(User $user, Workspace $workspace, UserInvoice $invoice): ?Exception
     {
-        Stripe::setApiKey($this->stripeKey);
-
         // Retrieve the primary payment method ID for the customer
         $userCard = $workspace->userCards()->where('primary', 1)->first();
 
@@ -52,6 +62,12 @@ class StripeBillingHelper
 
         // Create the PaymentIntent
         PaymentIntent::create($params);
+
+        return null;
+    }
+    public function refundInvoice(string $stripePaymentId): ?Exception
+    {
+        \Stripe\Refund::create(['payment_intent' => $stripePaymentId]);
 
         return null;
     }

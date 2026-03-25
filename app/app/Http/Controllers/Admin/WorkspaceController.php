@@ -71,11 +71,12 @@ class WorkspaceController extends AdminController
         $users = $users->where('workspace_id', $workspace->id)->get();
         $creator = $workspace->getCreator();
         $billingHistory = BillingDataHelper::getBillingHistory($creator);
+        $invoices = BillingDataHelper::getWorkspaceInvoices($workspace);
         $billingInfo = BillingDataHelper::getBillingInfo($creator);
         $usageTriggers = UsageTrigger::where("workspace_id", $workspace->id)->get();
         $routingACLs = WorkspaceHelper::getACLs($workspace);
         $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
-        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory'));
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices'));
     }
 
     /**
@@ -129,5 +130,19 @@ class WorkspaceController extends AdminController
                     <a href="{{{ url(\'admin/workspace/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
+    }
+
+
+    public function refund_invoice(Workspace $workspace)
+    {
+        $invoiceId = request()->input('invoice_id');
+        $invoice = UserInvoice::where('id', $invoiceId)->where('workspace_id', $workspace->id)->firstOrFail();
+
+        try {
+            BillingDataHelper::refundInvoice($invoice);
+            return response()->json(['success' => true, 'message' => 'Invoice refunded successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to refund invoice: ' . $e->getMessage()], 400);
+        }
     }
 }

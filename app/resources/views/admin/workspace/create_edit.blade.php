@@ -19,6 +19,9 @@
             @endif
 
 </ul>
+
+<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
 <!-- ./ tabs -->
 @if (isset($workspace))
 {!! Form::model($workspace, array('url' => url('admin/workspace') . '/' . $workspace->id, 'method' => 'put', 'class' => 'bf', 'files'=> true)) !!}
@@ -119,7 +122,7 @@
      </div>
         <div class="row">
             <div class="col-md-12">
-                <h3>Billing History</h3>
+                <h3>Invoices</h3>
             </div>
         </div>
 
@@ -127,18 +130,28 @@
             <div class="col-md-12">
                 <table class="table stripped">
                     <thead>
-                        <th>Source</th>
                         <th>Amount</th>
-                        <th>Balance</th>
+                        <th>Status</th>
                         <th>Date/time</th>
+                        <th>Actions</th>
                     </thead>
                     <tbody>
-                        @foreach ($billingHistory as $record)
+                        @foreach ($invoices as $record)
                             <tr>
-                                <td>{{$record['type']}}</td>
                                 <td>{{$record['dollars']}}</td>
-                                <td>{{$record['balance']}}</td>
+                                @if ($record['status'] == 'COMPLETE')
+                                    <td><i class="fa fa-check" style="color:green"></i> Paid</td>
+                                @elseif ($record['status'] == 'INCOMPLETE')
+                                    <td><i class="fa fa-times" style="color:red"></i> Unpaid</td>
+                                @elseif ($record['status'] == 'REFUNDED')
+                                    <td><i class="fa fa-undo" style="color:orange"></i> Refunded</td>
+                                @endif
                                 <td>{{$record['created_at']}}</td>
+                                <td>
+                                    @if ($record['status'] == 'COMPLETE')
+                                        <button type="button" data-invoice-id="{{$record['id']}}" class="btn btn-sm btn-danger refund-btn">Refund</button>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -241,6 +254,20 @@
             @else
                 var workspaceId = null;
             @endif
+            var csrfToken = $('input[name="_token"]').val();
+            $('.refund-btn').on('click', function() {
+                var invoiceId = $(this).data('invoice-id');
+                console.log('refunding invoice ID: ' + invoiceId);
+                var url = '/admin/workspace/' + workspaceId + '/refund_invoice';
+                $.post(url, {
+                    invoice_id: invoiceId,
+                    _token: csrfToken
+                }).done(function(response) {
+                    console.log('Refund successful:', response);
+                }).fail(function(error) {
+                    console.error('Refund failed:', error);
+                });
+            });
         });
     </script>
 @endsection

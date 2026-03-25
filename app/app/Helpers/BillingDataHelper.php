@@ -7,6 +7,9 @@ use Log;
 use NumberFormatter;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
+use App\Helpers\StripeBillingHelper;
+use App\CustomizationsKVStore;
+use App\ApiCredentialKVStore;
 use App\Settings;
 use App\UserCredit;
 use App\UserDebit;
@@ -34,6 +37,17 @@ final class BillingDataHelper {
       }, $data);
       return $data;
   }
+
+  public static function getWorkspaceInvoices($workspace) {
+      $data = UserInvoice::where('workspace_id', '=', $workspace->id)->get()->toArray();
+      $data = array_map(function($item) {
+        $array = (array) $item;
+        $array['dollars'] = self::toDollars($array['cents']);
+        return $array; 
+      }, $data);
+      return $data;
+  }
+
 
   public static function billingData($user, $startDate=NULL, $endDate=NULL) {
     if (!is_null($startDate)) {
@@ -182,6 +196,27 @@ final class BillingDataHelper {
         return self::toCents($result);
     } else {
         return $result;
+    }
+  }
+  public static function refundInvoice($invoice)
+  {
+    $customizations = CustomizationsKVStore::getRecord();
+    $paymentGateway = $customizations->payment_gateway ?? null;
+
+    if ($paymentGateway === 'stripe') {
+      try {
+        $stripeBillingHelper = new StripeBillingHelper();
+        $stripeBillingHelper->refundInvoice($invoice->payment_gateway_id);
+        return true;
+      } catch (\Exception $e) {
+        Log::error('Stripe refund failed: ' . $e->getMessage());
+        throw $e;
+      }
+    } elseif ($paymentGateway === 'braintree') {
+      // Braintree refund implementation
+      throw new \Exception('API support not implemented.');
+    } else {
+      throw new \Exception('payment gateway code unimplemented');
     }
   }
 }

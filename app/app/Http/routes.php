@@ -127,6 +127,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('workspace/{workspace}/show', 'Admin\WorkspaceController@show');
     Route::get('workspace/{workspace}/edit', 'Admin\WorkspaceController@edit');
     Route::get('workspace/{workspace}/delete', 'Admin\WorkspaceController@delete');
+    Route::post('workspace/{workspace}/refund_invoice', 'Admin\WorkspaceController@refund_invoice');
     Route::resource('workspace', 'Admin\WorkspaceController');
 
     # SIPProviders
