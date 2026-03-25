@@ -7,6 +7,7 @@ use App\WorkspaceUser;
 use App\PortNumber;
 use App\UsageTrigger;
 use App\PlanUsagePeriod;
+use App\UserInvoice;
 use App\Http\Requests\Admin\WorkspaceRequest;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
@@ -137,6 +138,10 @@ class WorkspaceController extends AdminController
     {
         $invoiceId = request()->input('invoice_id');
         $invoice = UserInvoice::where('id', $invoiceId)->where('workspace_id', $workspace->id)->firstOrFail();
+
+        if (empty($invoice->payment_gateway_id)) {
+            return response()->json(['success' => false, 'message' => 'Invoice does not have a payment gateway ID'], 400);
+        }
 
         try {
             BillingDataHelper::refundInvoice($invoice);
