@@ -35,7 +35,7 @@ require("./run_migrations.php");
 
 You can review the code for any possible code smell by running the PHPcs linter.
 
-For more info on how to install PHPcs please refer to [https://github.com/squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
+For more info on how to install PHPcs please refer to [https://github.com/PHPCSStandards/PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer)
 
 To run the linter please use the following command:
 
