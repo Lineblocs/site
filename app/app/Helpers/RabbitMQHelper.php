@@ -71,5 +71,31 @@ class RabbitMQHelper
 
         return self::publish('billing_tasks', $payload);
     }
+
+    public static function dispatchSurveyEmail($email, $surveyTypes = [], $name = '')
+    {
+        if (!is_array($surveyTypes)) {
+            $surveyTypes = [];
+        }
+
+        $payload = [
+            'email' => (string) $email,
+            'name' => (string) $name,
+            'survey_type' => $surveyTypes
+        ];
+
+        return self::publish('call_quality_surveys', $payload);
+    }
+
+    public static function dispatchCallQualitySurveyEmail($email, $workspaceId, $userId, $token, $name = '')
+    {
+        return self::dispatchSurveyEmail($email, [
+            'call_quality' => [
+                'workspace_id' => (int) $workspaceId,
+                'user_id' => (int) $userId,
+                'legacy_token' => (string) $token
+            ]
+        ], $name);
+    }
     
 }
