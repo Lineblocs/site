@@ -367,6 +367,23 @@
                 </div>
             </div>
 
+           <div class="row form-group">
+                <label for="allow_billing_overages">Allow billing overages</label>
+                <div class="controls">
+                    <select name="allow_billing_overages" class="form-control" id="allow_billing_overages">
+                        @if ( $record->allow_billing_overages)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="live_chat_enabled">Live chat enabled</label>
                 <div class="controls">

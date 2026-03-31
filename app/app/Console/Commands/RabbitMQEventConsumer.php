@@ -150,38 +150,57 @@ class RabbitMQEventConsumer extends Command
     public function handleSurvey($msg)
     {
         $data = json_decode($msg->body, true);
-        $surveyData = (array_key_exists('data', $data) && is_array($data['data'])) ? $data['data'] : $data;
-        $email = array_key_exists('email', $surveyData) ? $surveyData['email'] : '';
-        $recipientName = array_key_exists('name', $surveyData) ? $surveyData['name'] : '';
-        $surveyTypes = (array_key_exists('survey_type', $surveyData) && is_array($surveyData['survey_type']))
-            ? $surveyData['survey_type']
-            : [];
 
-        if (empty($surveyTypes)) {
-            $surveyTypes = [
-                'call_quality' => [
-                    'workspace_id' => array_key_exists('workspace_id', $surveyData) ? $surveyData['workspace_id'] : 1,
-                    'user_id' => array_key_exists('user_id', $surveyData) ? $surveyData['user_id'] : 1
-                ]
-            ];
+        // 1. Validate Root 'data' key
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            throw new \Exception("Invalid payload: Missing 'data' attribute.");
         }
+        $surveyData = $data['data'];
+
+        // 2. Validate Header Attributes
+        if (!isset($surveyData['email'])) {
+            throw new \Exception("Invalid payload: Missing 'email' attribute.");
+        }
+        $email = $surveyData['email'];
+
+        if (!isset($surveyData['name'])) {
+            throw new \Exception("Invalid payload: Missing 'name' attribute.");
+        }
+        $recipientName = $surveyData['name'];
+
+        if (!isset($surveyData['survey_type']) || !is_array($surveyData['survey_type'])) {
+            throw new \Exception("Invalid payload: Missing or invalid 'survey_type' attribute.");
+        }
+        $surveyTypes = $surveyData['survey_type'];
 
         $this->info(" [SURVEY] Received survey request for email: " . $email);
 
         $allSucceeded = true;
+
         foreach ($surveyTypes as $surveyType => $typePayload) {
+            // Ensure payload for the specific type is an array
             if (!is_array($typePayload)) {
-                $typePayload = [];
+                throw new \Exception("Invalid payload: survey_type '$surveyType' must have an associated data array.");
             }
 
             if ($surveyType === 'call_quality') {
+                // 3. Validate specific attributes for call_quality (No Defaults)
+                if (!isset($typePayload['workspace_id'])) {
+                    throw new \Exception("Invalid payload: Missing 'workspace_id' for call_quality.");
+                }
+                if (!isset($typePayload['user_id'])) {
+                    throw new \Exception("Invalid payload: Missing 'user_id' for call_quality.");
+                }
+
                 $status = $this->sendCallQualitySurveyEmail($email, $recipientName, $typePayload);
+                
                 if (!$status) {
                     $allSucceeded = false;
                 }
                 continue;
             }
 
+            // Handle unsupported types
             $this->error(" [!] Unsupported survey type: " . $surveyType);
             $allSucceeded = false;
         }
