@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Config;
 use DateTime;
+use DateTimeZone;
 use Mail;
 use App\User;
 use App\Workspace;
@@ -31,8 +32,11 @@ final class WorkspaceInvoiceHelper
 
         self::normalizeWorkspacePlan($workspace);
 
-        $invoice = self::createInvoice($owner, $workspace, $period);
+        $invoiceData = self::createInvoice($owner, $workspace, $period);
+        $invoice = $invoiceData['invoice'];
         $pdf = InvoiceHelper::generatePrettyInvoice($owner, $workspace, $invoice)->output();
+
+        $taskPayload = self::buildInvoiceTaskPayload($owner, $workspace, $period, $invoiceData);
 
         if ($period === 'ANNUAL') {
             $subjectPrefix = 'annual';
@@ -70,7 +74,8 @@ final class WorkspaceInvoiceHelper
             'workspace_id' => $workspace->id,
             'email' => $owner->email,
             'invoice_no' => $invoice->invoice_no,
-            'period' => $period
+            'period' => $period,
+            'queue_task' => $taskPayload
         ];
     }
 
@@ -161,7 +166,7 @@ final class WorkspaceInvoiceHelper
         $invoice->updated_at = $rangeStart;
         $invoice->save();
 
-        self::createLineItems($invoice, $period, [
+        $lineItems = self::createLineItems($invoice, $period, [
             'call_costs' => $callCosts,
             'recording_costs' => $recordingCosts,
             'fax_costs' => $faxCosts,
@@ -169,7 +174,11 @@ final class WorkspaceInvoiceHelper
             'number_costs' => $numberCosts
         ]);
 
-        return $invoice;
+        return [
+            'invoice' => $invoice,
+            'tax' => $tax,
+            'line_items' => $lineItems
+        ];
     }
 
     private static function createLineItems(UserInvoice $invoice, $period, array $items)
@@ -181,44 +190,114 @@ final class WorkspaceInvoiceHelper
             $labelPrefix = '';
         }
 
-        UserInvoiceLineItem::create([
+        $lineItems = [];
+
+        $lineItem = UserInvoiceLineItem::create([
             'invoice_id' => $invoice->id,
             'key_name' => 'call_costs',
             'name' => $labelPrefix . 'Call costs',
             'cents' => $items['call_costs'],
             'is_recurring' => false
         ]);
+        $lineItems[] = self::toQueueLineItem($lineItem);
 
-        UserInvoiceLineItem::create([
+        $lineItem = UserInvoiceLineItem::create([
             'invoice_id' => $invoice->id,
             'key_name' => 'recording_costs',
             'name' => $labelPrefix . 'Recording costs',
             'cents' => $items['recording_costs'],
             'is_recurring' => false
         ]);
+        $lineItems[] = self::toQueueLineItem($lineItem);
 
-        UserInvoiceLineItem::create([
+        $lineItem = UserInvoiceLineItem::create([
             'invoice_id' => $invoice->id,
             'key_name' => 'fax_costs',
             'name' => $labelPrefix . 'Fax costs',
             'cents' => $items['fax_costs'],
             'is_recurring' => false
         ]);
+        $lineItems[] = self::toQueueLineItem($lineItem);
 
-        UserInvoiceLineItem::create([
+        $lineItem = UserInvoiceLineItem::create([
             'invoice_id' => $invoice->id,
             'key_name' => 'membership_costs',
             'name' => $labelPrefix . 'Membership costs',
             'cents' => $items['membership_costs'],
             'is_recurring' => true
         ]);
+        $lineItems[] = self::toQueueLineItem($lineItem);
 
-        UserInvoiceLineItem::create([
+        $lineItem = UserInvoiceLineItem::create([
             'invoice_id' => $invoice->id,
             'key_name' => 'number_costs',
             'name' => $labelPrefix . 'Number costs',
             'cents' => $items['number_costs'],
             'is_recurring' => true
         ]);
+        $lineItems[] = self::toQueueLineItem($lineItem);
+
+        return $lineItems;
+    }
+
+    private static function toQueueLineItem(UserInvoiceLineItem $lineItem)
+    {
+        return [
+            'key_name' => (string) $lineItem->key_name,
+            'name' => (string) $lineItem->name,
+            'cents' => (int) $lineItem->cents,
+            'is_recurring' => (bool) $lineItem->is_recurring
+        ];
+    }
+
+    private static function buildInvoiceTaskPayload(User $owner, Workspace $workspace, $period, array $invoiceData)
+    {
+        $invoice = $invoiceData['invoice'];
+        $tax = $invoiceData['tax'];
+        $lineItems = $invoiceData['line_items'];
+
+        $runPrefix = 'run_mtly';
+        if ($period === 'ANNUAL') {
+            $runPrefix = 'run_annl';
+        }
+        $runId = sprintf('%s_%s_%s', $runPrefix, date('Y_m_d'), uniqid());
+
+        $taxMetadata = [];
+        if ($tax) {
+            $taxMetadata['tax_type'] = (string) $tax->name;
+            $taxMetadata['rate'] = sprintf('%s%%', $tax->tax_percentage);
+            if (!empty($tax->region_id)) {
+                $taxMetadata['region_id'] = (int) $tax->region_id;
+            }
+        }
+
+        $dueDateUtc = null;
+        if (!empty($invoice->due_date)) {
+            if ($invoice->due_date instanceof \DateTimeInterface) {
+                $dueDate = new DateTime($invoice->due_date->format('Y-m-d H:i:s'));
+            } else {
+                $dueDate = new DateTime((string) $invoice->due_date);
+            }
+            $dueDate->setTimezone(new DateTimeZone('UTC'));
+            $dueDateUtc = $dueDate->format('Y-m-d\TH:i:s\Z');
+        }
+
+        return [
+            'run_id' => $runId,
+            'workspace_id' => (int) $workspace->id,
+            'creator_id' => (int) $owner->id,
+            'invoice_no' => (string) $invoice->invoice_no,
+            'due_date' => $dueDateUtc,
+            'cents' => (int) $invoice->cents,
+            'cents_including_taxes' => (int) $invoice->cents_including_taxes,
+            'cents_taxes' => (int) $invoice->cents_taxes,
+            'tax_metadata' => $taxMetadata,
+            'call_costs' => (int) $invoice->call_costs,
+            'recording_costs' => (int) $invoice->recording_costs,
+            'fax_costs' => (int) $invoice->fax_costs,
+            'membership_costs' => (int) $invoice->membership_costs,
+            'number_costs' => (int) $invoice->number_costs,
+            'line_items' => $lineItems
+        ];
     }
 }
