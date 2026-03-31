@@ -9,8 +9,8 @@ use Log;
 
 class RabbitMQHelper
 {
-    const INVOICE_QUEUE_MONTHLY = 'workspace_invoices_monthly';
-    const INVOICE_QUEUE_ANNUAL = 'workspace_invoices_annual';
+    const INVOICE_QUEUE_MONTHLY = 'monthly_invoices';
+    const INVOICE_QUEUE_ANNUAL = 'annual_invoices';
 
     /**
      * Generic method to publish a message to any RabbitMQ queue.

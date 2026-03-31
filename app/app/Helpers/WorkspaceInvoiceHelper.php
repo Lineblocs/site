@@ -15,14 +15,16 @@ use App\CustomizationsKVStore;
 
 final class WorkspaceInvoiceHelper
 {
-    public static function sendInvoiceForWorkspace(Workspace $workspace, $period)
+    public static function sendInvoiceForWorkspace(Workspace $workspace, $period, User $owner = null)
     {
         $period = strtoupper($period);
         if ($period !== 'MONTHLY' && $period !== 'ANNUAL') {
             throw new \Exception('Invalid invoice period. Use MONTHLY or ANNUAL.');
         }
 
-        $owner = User::find($workspace->creator_id);
+        if (!$owner) {
+            $owner = $workspace->creatorUser;
+        }
         if (!$owner || empty($owner->email)) {
             throw new \Exception(sprintf('Owner email missing for workspace #%d.', $workspace->id));
         }
@@ -32,12 +34,20 @@ final class WorkspaceInvoiceHelper
         $invoice = self::createInvoice($owner, $workspace, $period);
         $pdf = InvoiceHelper::generatePrettyInvoice($owner, $workspace, $invoice)->output();
 
-        $subjectPrefix = $period === 'ANNUAL' ? 'annual' : 'monthly';
+        if ($period === 'ANNUAL') {
+            $subjectPrefix = 'annual';
+        } else {
+            $subjectPrefix = 'monthly';
+        }
         $subject = sprintf('%s %s invoice', MainHelper::getSiteName(), $subjectPrefix);
         $mailConfig = Config::get('mail');
         $siteName = MainHelper::getSiteName();
         $customizations = CustomizationsKVStore::getRecord();
-        $filePrefix = $period === 'ANNUAL' ? 'annual' : 'monthly';
+        if ($period === 'ANNUAL') {
+            $filePrefix = 'annual';
+        } else {
+            $filePrefix = 'monthly';
+        }
 
         Mail::send('emails.workspace_invoices', [
             'user' => $owner,
@@ -100,7 +110,11 @@ final class WorkspaceInvoiceHelper
     private static function createInvoice(User $owner, Workspace $workspace, $period)
     {
         $period = strtoupper($period);
-        $multiplier = $period === 'ANNUAL' ? 12 : 1;
+        if ($period === 'ANNUAL') {
+            $multiplier = 12;
+        } else {
+            $multiplier = 1;
+        }
         $now = new DateTime();
 
         if ($period === 'ANNUAL') {
@@ -161,7 +175,11 @@ final class WorkspaceInvoiceHelper
     private static function createLineItems(UserInvoice $invoice, $period, array $items)
     {
         $isAnnual = strtoupper($period) === 'ANNUAL';
-        $labelPrefix = $isAnnual ? 'Annual ' : '';
+        if ($isAnnual) {
+            $labelPrefix = 'Annual ';
+        } else {
+            $labelPrefix = '';
+        }
 
         UserInvoiceLineItem::create([
             'invoice_id' => $invoice->id,
