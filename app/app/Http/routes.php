@@ -90,7 +90,7 @@ Route::get('/status', 'HomeController@status');
 Route::get('/status/{categoryId}', 'HomeController@status_category');
 Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //Route::post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
-Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
+//Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
 
 Route::get('/email/unsubscribe', 'EmailController@unsubscribe');
 Route::post('/email/unsubscribe', 'EmailController@unsubscribe_update');
