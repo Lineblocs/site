@@ -158,6 +158,10 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
 
+		if ( $update_params['allow_billing_overages'] =='yes') {
+			$allow_billing_overages = true;
+		}
+		$update_params['allow_billing_overages'] = $allow_billing_overages;
 
 		$live_chat_enabled = false;
 

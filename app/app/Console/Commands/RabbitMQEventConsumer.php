@@ -6,7 +6,10 @@ use Illuminate\Console\Command;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use App\Helpers\EmailHelper;
 use App\Helpers\TokenHelper;
+use App\Helpers\RabbitMQHelper;
+use App\Helpers\WorkspaceInvoiceHelper;
 use App\User;
+use App\Workspace;
 use Exception;
 
 class RabbitMQEventConsumer extends Command
@@ -42,6 +45,8 @@ class RabbitMQEventConsumer extends Command
         $channel->queue_declare('subscription_updates', false, true, false, false);
         $channel->queue_declare('payment_receipts', false, true, false, false);
         $channel->queue_declare('call_quality_surveys', false, true, false, false);
+        $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, false, true, false, false);
+        $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, false, true, false, false);
 
         $this->info(" [*] Event Consumer Online. Waiting for messages...");
 
@@ -53,6 +58,8 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume('subscription_updates', '', false, false, false, false, [$this, 'handleSubscriptionUpdate']);
         $channel->basic_consume('payment_receipts', '', false, false, false, false, [$this, 'handlePaymentReceipt']);
         $channel->basic_consume('call_quality_surveys', '', false, false, false, false, [$this, 'handleSurvey']);
+        $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, '', false, false, false, false, [$this, 'handleMonthlyInvoiceTask']);
+        $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, '', false, false, false, false, [$this, 'handleAnnualInvoiceTask']);
 
         // 3. Keep the process alive
         while (count($channel->callbacks)) {
@@ -143,38 +150,57 @@ class RabbitMQEventConsumer extends Command
     public function handleSurvey($msg)
     {
         $data = json_decode($msg->body, true);
-        $surveyData = (array_key_exists('data', $data) && is_array($data['data'])) ? $data['data'] : $data;
-        $email = array_key_exists('email', $surveyData) ? $surveyData['email'] : '';
-        $recipientName = array_key_exists('name', $surveyData) ? $surveyData['name'] : '';
-        $surveyTypes = (array_key_exists('survey_type', $surveyData) && is_array($surveyData['survey_type']))
-            ? $surveyData['survey_type']
-            : [];
 
-        if (empty($surveyTypes)) {
-            $surveyTypes = [
-                'call_quality' => [
-                    'workspace_id' => array_key_exists('workspace_id', $surveyData) ? $surveyData['workspace_id'] : 1,
-                    'user_id' => array_key_exists('user_id', $surveyData) ? $surveyData['user_id'] : 1
-                ]
-            ];
+        // 1. Validate Root 'data' key
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            throw new \Exception("Invalid payload: Missing 'data' attribute.");
         }
+        $surveyData = $data['data'];
+
+        // 2. Validate Header Attributes
+        if (!isset($surveyData['email'])) {
+            throw new \Exception("Invalid payload: Missing 'email' attribute.");
+        }
+        $email = $surveyData['email'];
+
+        if (!isset($surveyData['name'])) {
+            throw new \Exception("Invalid payload: Missing 'name' attribute.");
+        }
+        $recipientName = $surveyData['name'];
+
+        if (!isset($surveyData['survey_type']) || !is_array($surveyData['survey_type'])) {
+            throw new \Exception("Invalid payload: Missing or invalid 'survey_type' attribute.");
+        }
+        $surveyTypes = $surveyData['survey_type'];
 
         $this->info(" [SURVEY] Received survey request for email: " . $email);
 
         $allSucceeded = true;
+
         foreach ($surveyTypes as $surveyType => $typePayload) {
+            // Ensure payload for the specific type is an array
             if (!is_array($typePayload)) {
-                $typePayload = [];
+                throw new \Exception("Invalid payload: survey_type '$surveyType' must have an associated data array.");
             }
 
             if ($surveyType === 'call_quality') {
+                // 3. Validate specific attributes for call_quality (No Defaults)
+                if (!isset($typePayload['workspace_id'])) {
+                    throw new \Exception("Invalid payload: Missing 'workspace_id' for call_quality.");
+                }
+                if (!isset($typePayload['user_id'])) {
+                    throw new \Exception("Invalid payload: Missing 'user_id' for call_quality.");
+                }
+
                 $status = $this->sendCallQualitySurveyEmail($email, $recipientName, $typePayload);
+                
                 if (!$status) {
                     $allSucceeded = false;
                 }
                 continue;
             }
 
+            // Handle unsupported types
             $this->error(" [!] Unsupported survey type: " . $surveyType);
             $allSucceeded = false;
         }
@@ -226,5 +252,43 @@ class RabbitMQEventConsumer extends Command
 
         $this->error(" [!] Email helper failed for " . $email);
         return false;
+    }
+
+    public function handleMonthlyInvoiceTask($msg)
+    {
+        $this->handleInvoiceTask($msg, 'MONTHLY');
+    }
+
+    public function handleAnnualInvoiceTask($msg)
+    {
+        $this->handleInvoiceTask($msg, 'ANNUAL');
+    }
+
+    private function handleInvoiceTask($msg, $period)
+    {
+        $data = json_decode($msg->body, true);
+        $workspaceId = array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0;
+        $this->info(sprintf(" [INVOICE] Received %s task for workspace #%d", $period, $workspaceId));
+
+        $workspace = Workspace::find($workspaceId);
+        if (!$workspace) {
+            $this->error(sprintf('Workspace #%d not found. Acknowledging and skipping.', $workspaceId));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        try {
+            $result = WorkspaceInvoiceHelper::sendInvoiceForWorkspace($workspace, $period);
+            $this->info(sprintf(
+                " [v] %s invoice sent to %s for workspace #%d (invoice %s)",
+                $period,
+                $result['email'],
+                $result['workspace_id'],
+                $result['invoice_no']
+            ));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        } catch (Exception $e) {
+            $this->error(sprintf(' [!] %s invoice failed for workspace #%d: %s', $period, $workspaceId, $e->getMessage()));
+        }
     }
 }

@@ -9,6 +9,9 @@ use Log;
 
 class RabbitMQHelper
 {
+    const INVOICE_QUEUE_MONTHLY = 'monthly_invoices';
+    const INVOICE_QUEUE_ANNUAL = 'annual_invoices';
+
     /**
      * Generic method to publish a message to any RabbitMQ queue.
      *
@@ -96,6 +99,42 @@ class RabbitMQHelper
                 'legacy_token' => (string) $token
             ]
         ], $name);
+    }
+
+    public static function dispatchMonthlyInvoiceTask($workspaceIdOrPayload, $triggeredBy = 'manual')
+    {
+        if (is_array($workspaceIdOrPayload)) {
+            $payload = $workspaceIdOrPayload;
+        } else {
+            $workspaceId = (int) $workspaceIdOrPayload;
+            $payload = [
+                'run_id' => 'invoice_monthly_' . $workspaceId . '_' . time(),
+                'workspace_id' => $workspaceId,
+                'period' => 'MONTHLY',
+                'triggered_by' => (string) $triggeredBy,
+                'queued_at' => date('c')
+            ];
+        }
+
+        return self::publish(self::INVOICE_QUEUE_MONTHLY, $payload);
+    }
+
+    public static function dispatchAnnualInvoiceTask($workspaceIdOrPayload, $triggeredBy = 'manual')
+    {
+        if (is_array($workspaceIdOrPayload)) {
+            $payload = $workspaceIdOrPayload;
+        } else {
+            $workspaceId = (int) $workspaceIdOrPayload;
+            $payload = [
+                'run_id' => 'invoice_annual_' . $workspaceId . '_' . time(),
+                'workspace_id' => $workspaceId,
+                'period' => 'ANNUAL',
+                'triggered_by' => (string) $triggeredBy,
+                'queued_at' => date('c')
+            ];
+        }
+
+        return self::publish(self::INVOICE_QUEUE_ANNUAL, $payload);
     }
     
 }
