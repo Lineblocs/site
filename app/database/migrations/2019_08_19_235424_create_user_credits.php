@@ -17,7 +17,7 @@ class CreateUserCredits extends Migration
             $table->timestamps();
             $table->integer('user_id')->nullable()->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->float('cents');
+            $table->integer('cents');
             $table->string('source');
         });
     }
