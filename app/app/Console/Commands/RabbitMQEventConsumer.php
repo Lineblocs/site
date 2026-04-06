@@ -278,7 +278,12 @@ class RabbitMQEventConsumer extends Command
         }
 
         try {
-            $result = WorkspaceInvoiceHelper::sendInvoiceForWorkspace($workspace, $period);
+            $invoiceId = NULL;
+            if ($data['invoice_generated']) {
+                $invoiceId = $data['invoice_id'];
+            }
+
+            $result = WorkspaceInvoiceHelper::sendInvoiceForWorkspace($workspace, $period, NULL, $invoiceId);
             $this->info(sprintf(
                 " [v] %s invoice sent to %s for workspace #%d (invoice %s)",
                 $period,
