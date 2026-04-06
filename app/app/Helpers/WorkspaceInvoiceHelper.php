@@ -16,7 +16,7 @@ use App\CustomizationsKVStore;
 
 final class WorkspaceInvoiceHelper
 {
-    public static function sendInvoiceForWorkspace(Workspace $workspace, $period, User $owner = null)
+    public static function sendInvoiceForWorkspace(Workspace $workspace, $period, User $owner = null, $invoiceId = null)
     {
         $period = strtoupper($period);
         if ($period !== 'MONTHLY' && $period !== 'ANNUAL') {
@@ -32,7 +32,12 @@ final class WorkspaceInvoiceHelper
 
         self::normalizeWorkspacePlan($workspace);
 
-        $invoiceData = self::createInvoice($owner, $workspace, $period);
+        if (empty($invoiceId)) {
+             $invoiceData = self::createInvoice($owner, $workspace, $period);
+        } else {
+             $invoiceData = self::getInvoiceData($owner, $workspace, $invoiceId);
+        }
+
         $invoice = $invoiceData['invoice'];
         $pdf = InvoiceHelper::generatePrettyInvoice($owner, $workspace, $invoice)->output();
 
@@ -297,6 +302,21 @@ final class WorkspaceInvoiceHelper
             'fax_costs' => (int) $invoice->fax_costs,
             'membership_costs' => (int) $invoice->membership_costs,
             'number_costs' => (int) $invoice->number_costs,
+            'line_items' => $lineItems
+        ];
+    }
+
+    private static function getInvoiceData(User $owner, Workspace $workspace, $invoiceId)
+    {
+        $invoice = UserInvoice::findOrFail($payload['invoice_id']);
+        $lineItems = UserInvoiceLineItem::where('invoice_id', $invoice->id)->get()->map(function ($item) {
+            return self::toQueueLineItem($item);
+        })->toArray();
+        $tax = self::resolvePrimaryTax($workspace);
+
+        return [
+            'invoice' => $invoice,
+            'tax' => $tax,
             'line_items' => $lineItems
         ];
     }
