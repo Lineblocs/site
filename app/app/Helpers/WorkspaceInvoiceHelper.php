@@ -9,6 +9,7 @@ use Mail;
 use App\User;
 use App\Workspace;
 use App\ServicePlan;
+use App\Subscription;
 use App\BillingTax;
 use App\UserInvoice;
 use App\UserInvoiceLineItem;
@@ -86,21 +87,13 @@ final class WorkspaceInvoiceHelper
 
     private static function normalizeWorkspacePlan(Workspace $workspace)
     {
-        $plan = ServicePlan::where('key_name', $workspace->plan)->first();
-        if ($plan) {
-            return;
-        }
-
-        $fallbackPlan = ServicePlan::where('pay_as_you_go', '1')->first();
-        if (!$fallbackPlan) {
-            $fallbackPlan = ServicePlan::first();
-        }
-
-        if (!$fallbackPlan) {
-            throw new \Exception('No ServicePlan records available for fallback.');
-        }
-
-        $workspace->plan = $fallbackPlan->key_name;
+        //$plan = ServicePlan::where('key_name', $workspace->plan)->first();
+        //$plan = ServicePlan::where('workspace_id', $workspace->id)->firstOrFail();
+        $plan = Subscription::select(array('service_plans.*'))
+                    ->join('service_plans', 'subscriptions.service_plan_id', '=', 'service_plans.id')
+                    ->where('subscriptions.workspace_id', $workspace->id)
+                    ->firstOrFail();
+        $workspace->plan = $plan->key_name;
     }
 
     private static function resolvePrimaryTax(Workspace $workspace)
