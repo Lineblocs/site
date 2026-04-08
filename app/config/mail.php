@@ -121,5 +121,5 @@ return [
     */
 
     'pretend' => false,
-
+    'logging_enabled' => env('MAIL_LOGGING', false),
 ];

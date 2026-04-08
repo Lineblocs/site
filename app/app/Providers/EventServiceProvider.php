@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -13,9 +14,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        /*
         'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+            'App\Listeners\EventListener'
         ],
+        */
     ];
 
     /**
@@ -28,6 +31,14 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        //
+        $loggingEnabled = config('mail.logging_enabled');
+        if ($loggingEnabled) {
+            // Listen for the mailer sending event in Laravel 5.1
+            $events->listen('mailer.sending', function ($message) {
+                Log::info('--- Email Payload Start ---');
+                Log::info($message->toString());
+                Log::info('--- Email Payload End ---');
+            });
+        }
     }
 }
