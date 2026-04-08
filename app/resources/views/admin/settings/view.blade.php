@@ -287,12 +287,22 @@
                 <label for="smtp_tls">SMTP TLS</label>
                 <div class="controls">
                     <select class="form-control" name="smtp_tls" id="smtp_tls">
-                        @if ( $creds->smtp_tls )
-                            <option value="1" selected>On</option>
-                            <option value="0">Off</option>
+                        @if ( $creds->smtp_tls == "tls")
+                            <option value="disabled">Disabled</option>
+                            <option value="tls" selected>TLS</option>
+                            <option value="ssl">SSL</option>
+                        @elseif ( $creds->smtp_tls == "ssl")
+                            <option value="disabled">Disabled</option>
+                            <option value="tls">TLS</option>
+                            <option value="ssl" selected>SSL</option>
+                        @elseif ( $creds->smtp_tls == "disabled")
+                            <option value="disabled" selected>Disabled</option>
+                            <option value="tls">TLS</option>
+                            <option value="ssl">SSL</option>
                         @else
-                            <option value="1">On</option>
-                            <option value="0" selected>Off</option>
+                            <option value="disabled" selected>Disabled</option>
+                            <option value="tls">TLS</option>
+                            <option value="ssl">SSL</option>
                         @endif
                     </select>
                 </div>
