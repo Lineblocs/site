@@ -92,14 +92,20 @@
                                 <a class="nav-link" href="/resources">Resources</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/register')}}">
-                                    @if (isset($header_cls))
-                                        <button type="button" class="nav__btn">Login</button>
-                                    @else
-                                        <button type="button" class="nav__btn">Try Free</button>
-                                    @endif
-                                </a>
+                                <div class="nav__actions">
+                                    <a class="nav__login-link" href="{{\App\Helpers\MainHelper::createAppUrl('/#/login')}}">Login</a>
+                                </div>
                             </li>
+                            <li class="nav-item">
+                                <div class="nav__actions">
+                                    
+                                    <a href="{{\App\Helpers\MainHelper::createAppUrl('/#/register')}}">
+                                        <button type="button" class="nav__btn">Try Free</button>
+                                    </a>
+                                    
+                                </div>
+                            </li>
+                            
                         </ul>
                         <div class="mob-menu">
                             <div class="row socials mx-auto">
