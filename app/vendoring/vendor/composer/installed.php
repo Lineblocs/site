@@ -3,7 +3,7 @@
         'name' => 'lineblocs/admin-site',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3d05427b02fa51ba837065373f30ab9a3ad765b5',
+        'reference' => '7449d546100782d0a1b73e7e52f92ac3b045b661',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -698,7 +698,7 @@
         'lineblocs/admin-site' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3d05427b02fa51ba837065373f30ab9a3ad765b5',
+            'reference' => '7449d546100782d0a1b73e7e52f92ac3b045b661',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -883,6 +883,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'php-amqplib/php-amqplib' => array(
+            'pretty_version' => '2.x-dev',
+            'version' => '2.9999999.9999999.9999999-dev',
+            'reference' => 'f746eb44df6d8f838173729867dd1d20b0265faa',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-amqplib/php-amqplib',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'php-http/async-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
@@ -984,6 +993,17 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '5b0bf65c4862258e554912de6249a6a48da49052',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'phpmd/phpmd' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
@@ -994,6 +1014,15 @@
                 0 => '9999999-dev',
             ),
             'dev_requirement' => true,
+        ),
+        'phpseclib/phpseclib' => array(
+            'pretty_version' => '3.0.x-dev',
+            'version' => '3.0.9999999.9999999-dev',
+            'reference' => '6233a1e12584754e6b5daa69fe1289b47775c1b9',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpseclib/phpseclib',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'phpspec/php-diff' => array(
             'pretty_version' => 'dev-master',
@@ -1616,6 +1645,12 @@
             'install_path' => __DIR__ . '/../tymon/jwt-auth',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'videlalvaro/php-amqplib' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '2.x-dev',
+            ),
         ),
         'vlucas/phpdotenv' => array(
             'pretty_version' => '1.1.x-dev',
