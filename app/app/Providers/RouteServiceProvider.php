@@ -43,6 +43,7 @@ use \App\CostSaving;
 use \App\NumberService;
 use \App\SupportTicket;
 use \App\SupportTicketCategory;
+use \App\Testimonial;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -101,6 +102,7 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('companyrepresentative',CompanyRepresentative::class);
        \Route::model('routingacl',SIPRoutingACL::class);
        \Route::model('competitor',Competitor::class);
+       \Route::model('testimonial',Testimonial::class);
        \Route::model('costsaving',CostSaving::class);
        \Route::model('numberservice',NumberService::class);
        \Route::model('supportticket',SupportTicket::class);

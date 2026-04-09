@@ -330,6 +330,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('competitor/{competitor}/delete', 'Admin\CompetitorController@delete');
     Route::resource('competitor', 'Admin\CompetitorController');
 
+    # testimonial
+    Route::get('testimonial/data', 'Admin\TestimonialController@data');
+    Route::get('testimonial/{testimonial}/show', 'Admin\TestimonialController@show');
+    Route::get('testimonial/{testimonial}/edit', 'Admin\TestimonialController@edit');
+    Route::get('testimonial/{testimonial}/delete', 'Admin\TestimonialController@delete');
+    Route::resource('testimonial', 'Admin\TestimonialController');
+
 
 
     # SIPRoutingACL

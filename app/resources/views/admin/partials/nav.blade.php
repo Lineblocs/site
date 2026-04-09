@@ -146,11 +146,6 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{url('admin/faqs')}}">
-                                <i class="glyphicon glyphicon-bullhorn"></i> FAQs
-                            </a>
-                        </li>
-                        <li>
                             <a href="{{url('admin/policies')}}">
                                 <i class="glyphicon glyphicon-bullhorn"></i> Service terms & Policies
                             </a>
@@ -171,6 +166,25 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/companyrepresentative')}}">
+                                <i class="glyphicon glyphicon-user"></i> Company Representatives
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-folder-open"></i> Content Management
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/testimonial')}}">
+                                <i class="glyphicon glyphicon-comment"></i> Testimonials
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/faqs')}}">
                                 <i class="glyphicon glyphicon-bullhorn"></i> FAQs
                             </a>
@@ -178,11 +192,6 @@
                         <li>
                             <a href="{{url('admin/resourcesection')}}">
                                 <i class="glyphicon glyphicon-list"></i> Resources
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{url('admin/companyrepresentative')}}">
-                                <i class="glyphicon glyphicon-user"></i> Company Representatives
                             </a>
                         </li>
                     </ul>

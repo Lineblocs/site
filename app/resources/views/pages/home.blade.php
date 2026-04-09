@@ -75,6 +75,83 @@ A customizable VoIP system
 
             </section>
 
+            @if(isset($testimonials) && $testimonials->count())
+            <section class="home-testimonials">
+                <div class="container">
+                    <div class="home-testimonials__header text-center">
+                        <h2>Testimonials</h2>
+                    </div>
+
+                    <div id="homeTestimonialsCarousel" class="carousel slide home-testimonials__carousel" data-ride="carousel" data-interval="6000">
+                        <div class="carousel-inner">
+                            @foreach($testimonials as $index => $testimonial)
+                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                <div class="home-testimonial-card">
+                                    <div class="home-testimonial-card__media">
+                                        @if(!empty($testimonial->photo))
+                                        <img class="home-testimonial-card__image" src="{{ asset('images/testimonials/' . $testimonial->photo) }}" alt="{{ $testimonial->name }}">
+                                        @else
+                                        <div class="home-testimonial-card__placeholder">
+                                            <span>{{ strtoupper(substr($testimonial->name, 0, 1)) }}</span>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="home-testimonial-card__content">
+                                        <div class="home-testimonial-card__quote">
+                                            <span class="home-testimonial-card__quote-sign home-testimonial-card__quote-sign--open">&ldquo;</span>
+                                            {!! $testimonial->testimonial_content !!}
+                                            <span class="home-testimonial-card__quote-sign home-testimonial-card__quote-sign--close">&rdquo;</span>
+                                        </div>
+                                        <div class="home-testimonial-card__author">
+                                            <div>
+                                                <h3>{{ $testimonial->name }}</h3>
+                                                @if(!empty($testimonial->job_title) || !empty($testimonial->company))
+                                                <p>
+                                                    @if(!empty($testimonial->job_title))
+                                                        {{ $testimonial->job_title }}
+                                                    @endif
+                                                    @if(!empty($testimonial->job_title) && !empty($testimonial->company))
+                                                        <span class="home-testimonial-card__separator">at</span>
+                                                    @endif
+                                                    @if(!empty($testimonial->company))
+                                                        {{ $testimonial->company }}
+                                                    @endif
+                                                </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        @if($testimonials->count() > 1)
+                            <ol class="carousel-indicators home-testimonials__indicators">
+                                @foreach($testimonials as $index => $testimonial)
+                                    <li data-target="#homeTestimonialsCarousel" 
+                                        data-slide-to="{{ $index }}"
+                                        @if($index === 0)
+                                            class="active"
+                                        @else
+                                            class=""
+                                        @endif>
+                                    </li>
+                                @endforeach
+                            </ol>
+
+                        <a class="carousel-control-prev home-testimonials__control" href="#homeTestimonialsCarousel" role="button" data-slide="prev" aria-label="Previous testimonial">
+                            <span class="home-testimonials__arrow" aria-hidden="true">&lsaquo;</span>
+                        </a>
+                        <a class="carousel-control-next home-testimonials__control" href="#homeTestimonialsCarousel" role="button" data-slide="next" aria-label="Next testimonial">
+                            <span class="home-testimonials__arrow" aria-hidden="true">&rsaquo;</span>
+                        </a>
+                        @endif
+                    </div>
+                </div>
+            </section>
+            @endif
+
 
             <section class="comparison">
                 <h2 class="text-center">Feature Comparison</h2>

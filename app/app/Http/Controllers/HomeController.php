@@ -17,6 +17,7 @@ use App\ApiCredentialKVStore;
 use App\Competitor;
 use App\CostSaving;
 use App\Call;
+use App\Testimonial;
 use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
@@ -59,11 +60,12 @@ class HomeController extends BaseController {
     );
     $countries = SIPCountry::all();
     $numCalls = Call::count();
+    $testimonials = Testimonial::orderBy('rank')->orderBy('name')->limit(4)->get();
     $callStatistics = DB::select( DB::raw("SELECT SUM(ended_at-started_at) AS total_time FROM calls;") );
     $totalTime = (int) $callStatistics[0]->total_time;
 
     $totalCallMinutes = (int) round( $totalTime/60 );
-    return view('pages.home', compact('content', 'countries', 'numCalls', 'totalCallMinutes'));
+    return view('pages.home', compact('content', 'countries', 'numCalls', 'totalCallMinutes', 'testimonials'));
   }
   public function pricing(Request $request)
   {

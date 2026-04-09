@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDeduplicationKeyToUsersDebits extends Migration
+class AddDeduplicationKeyToBillingTables extends Migration
 {
     /**
      * Run the migrations.
