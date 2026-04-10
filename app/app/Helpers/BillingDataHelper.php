@@ -14,6 +14,7 @@ use App\Settings;
 use App\UserCredit;
 use App\UserDebit;
 use App\UserInvoice;
+use App\WorkspaceUser;
 
 final class BillingDataHelper {
   // update this to support multiple billing gateways in the future
@@ -69,15 +70,28 @@ final class BillingDataHelper {
 
     return $data;
   }
-  public static function getBillingInfo($user, $plan=NULL) {
+  public static function getBillingInfo($user, $plan=NULL, $subscription=NULL, $workspace=NULL) {
       $remainingBalance = 0;
       $chargesThisMonth = 0;
       $accountBalance = 0;
       $estimatedBalance = 0;
+      $membershipFees = 0;
       $amountOwed = 0;
+      $planCost = 0;
       $credits = UserCredit::where('user_id', '=',$user->id)->where('status', 'approved')->get();
       $debits = UserDebit::where('user_id', '=',$user->id)->get();
       $invoices = UserInvoice::where('user_id', '=',$user->id)->get();
+      if (!empty($workspace) && !$plan->pay_as_you_go) {
+          $userCount = WorkspaceUser::where('workspace_id', $workspace->id)
+              ->count();
+          $planCost = $plan->monthly_cost_cents;
+          if ($subscription->period=='ANNUAL') {
+            $planCost = $plan->annual_cost_cents;
+          }
+
+          $membershipFees = $userCount * $planCost;
+      }
+
       $now = new DateTime();
       $monthStart = new DateTime('first day of this month');
       $monthLast = new DateTime('last day of this month');
@@ -99,7 +113,8 @@ final class BillingDataHelper {
             $remainingBalance -= $invoice->cents;
           }
       }
-      $estimatedBalance = $chargesThisMonth + $accountBalance;
+      //$estimatedBalance = $chargesThisMonth + $accountBalance;
+      $estimatedBalance = $chargesThisMonth + $accountBalance + $membershipFees;
       $locale = 'en_US';
       $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
       $month = $monthNext->format('M');
@@ -120,6 +135,8 @@ final class BillingDataHelper {
           'accountBalance' => MainHelper::toDollars($accountBalance),
           'estimatedBalanceCents' => $estimatedBalance,
           'estimatedBalance' => MainHelper::toDollars($estimatedBalance),
+          'membershipFeesCents' => $membershipFees,
+          'membershipFees' => MainHelper::toDollars($membershipFees),
           'nextInvoiceDue' => $nextInvoiceDue,
           'thisInvoiceDue' => $userInvoiceDue,
           'trialMode' => $user->trial_mode,

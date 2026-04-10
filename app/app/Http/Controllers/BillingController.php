@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\UsageTrigger;
+use App\Subscription;
+use App\ServicePlan;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiAuthController;
@@ -43,7 +45,10 @@ class BillingController extends ApiAuthController
     public function getBillingInfo(Request $request)
     {
         $user = $this->getUser($request);
-        $billingInfo = BillingDataHelper::getBillingInfo($user);
+        $workspace = $this->getWorkspace($request);
+        $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+        $plan = ServicePlan::find($subscription->current_plan_id);
+        $billingInfo = BillingDataHelper::getBillingInfo($user, $plan, $subscription, $workspace);
         return $this->response->array([
           'info' => $billingInfo
         ]);

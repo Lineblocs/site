@@ -19,6 +19,7 @@ use App\SIPTrunk;
 use App\SIPRouter;
 use App\BillingCountry;
 use App\BillingRegion;
+use App\Subscription;
 use App\PhoneDefault;
 use App\RegistrationQuestionnaire;
 use App\RegistrationResponse;
@@ -387,7 +388,11 @@ class MergedController extends ApiAuthController
     public function billing(Request $request)
     {
         $user = $this->getUser($request);
-        $billingInfo = BillingDataHelper::getBillingInfo($user);
+        $workspace = $this->getWorkspace($request);
+        $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+        $plan = ServicePlan::find($subscription->current_plan_id);
+        $billingInfo = BillingDataHelper::getBillingInfo($user, $plan, $subscription, $workspace);
+
        $billing = [
           'info' => $billingInfo
         ];
