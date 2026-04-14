@@ -68,6 +68,15 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
+
+        <div class="form-group  {{ $errors->has('minutes_per_month') ? 'has-error' : '' }}">
+            {!! Form::label('minutes_per_month', trans("admin/serviceplans.minutes_per_month"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::text('minutes_per_month', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('name', ':message') }}</span>
+            </div>
+        </div>
+
         @foreach ( $features as $feature )
             <div class="form-group  {{ $errors->has($feature['key']) ? 'has-error' : '' }}">
                 {!! form::label($feature['key'], trans("admin/serviceplans." . $feature['key']), array('class' => 'control-label')) !!}

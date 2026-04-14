@@ -26,5 +26,6 @@ return [
     'include_in_pricing_pages' => 'Include in pricing pages',
     'rank' => 'Rank',
     'call_duration' => 'Call duration',
-    'recording_space' => 'Recording space'
+    'recording_space' => 'Recording space',
+    'minutes_per_month' => 'Call Minutes per month',
 ];

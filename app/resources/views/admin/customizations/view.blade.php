@@ -384,6 +384,24 @@
                 </div>
             </div>
 
+           <div class="row form-group">
+                <label for="billing_flow">Billing flow</label>
+                <div class="controls">
+                    <select name="billing_flow" class="form-control" id="billing_flow">
+                        @if ( $record->billing_flow == 'ANNUAL')
+                            <option value="ANNUAL" selected>Annual</option>
+                            <option value="ANNIVERSARY">Anniversary</option>
+                        @elseif ( $record->billing_flow == 'ANNIVERSARY')
+                            <option value="ANNUAL">Annual</option>
+                            <option value="ANNIVERSARY" selected>Anniversary</option>
+                        @else
+                            <option value="ANNUAL">Annual</option>
+                            <option value="ANNIVERSARY">Anniversary</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="live_chat_enabled">Live chat enabled</label>
                 <div class="controls">

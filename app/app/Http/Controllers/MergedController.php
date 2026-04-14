@@ -1181,8 +1181,12 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $extension->leftJoin('workspaces_users', 'workspaces_users.extension_id', '=', 'extensions.id');
     $extension->where('workspaces_users.user_id', $user->id);
     $extension = $extension->first();
-    if (empty($extension)) {
-       return $this->response->errorInternal();
+    $sipUsername = "unknown";
+    $sipPassword = "";
+    if (!empty($extension)) {
+       //return $this->response->errorInternal();
+       $sipUsername = $extension->username;
+       $sipPassword = $extension->secret;
     }
 
     $sipHost = $workspace->sipURL();
@@ -1190,7 +1194,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
     $sipRouter = SIPRouter::getMainRouter();
     $displayName = sprintf("%s SIP UA", $domain);
-    $sipURI = sprintf("%s@%s", $extension->username, $sipHost);
+    $sipURI = sprintf("%s@%s", $sipUsername, $sipHost);
 
     $wssPort = $sipRouter->wss_port;
     $wssGateway = sprintf("wss://%s:%s", $sipHost, $wssPort);
@@ -1198,8 +1202,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $tcpPort = $sipRouter->tcp_port;
 
     $sipCredentials = [
-      'username' => $extension['username'],
-      'secret' => $extension['secret'],
+      'username' => $sipUsername,
+      'secret' => $sipPassword,
       'host' => $sipHost,
       'port' => $sipRouter['udp_port'],
       'websocket_settings' => [
