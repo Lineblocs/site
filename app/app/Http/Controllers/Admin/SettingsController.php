@@ -93,6 +93,8 @@ class SettingsController extends AdminController {
         'paypal_live_client_secret',
         'paypal_test_client_id',
         'paypal_test_client_secret',
+        'cloudflare_site_key',
+        'cloudflare_secret_key',
         ];
 
         $update = [];

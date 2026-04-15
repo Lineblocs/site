@@ -210,6 +210,23 @@
             </div>
 
             <div class="row form-group">
+                <label for="cloudflare_site_key">Cloudflare site key</label>
+                <div class="controls">
+                    <input id="cloudflare_site_key" type="text" class="form-control" name="cloudflare_site_key" value="{{$creds->cloudflare_site_key}}"/>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="cloudflare_secret_key">Cloudflare secret key</label>
+                <div class="controls">
+                    <input id="cloudflare_secret_key" type="text" class="form-control" name="cloudflare_secret_key" value="{{$creds->cloudflare_secret_key}}"/>
+                </div>
+            </div>
+
+
+
+
+            <div class="row form-group">
                 <h1>Support ticket module APIs</h1>
             </div>
             <hr/>

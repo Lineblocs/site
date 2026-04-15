@@ -41,7 +41,8 @@ class ApiCredential extends SettingsRecord {
 'apple_signin_client_secret',
 'google_analytics_script_tag',
 'matomo_script_tag',
-'stripe_pub_key'
+'stripe_pub_key',
+'cloudflare_site_key',
     );
     if ($creds['stripe_mode'] == 'test') {
       $result['stripe_pub_key'] = $creds['stripe_test_pub_key'];

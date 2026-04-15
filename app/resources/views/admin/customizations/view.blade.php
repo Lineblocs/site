@@ -245,6 +245,26 @@
                 </div>
             </div>
 
+
+            <div class="row form-group">
+                <label for="login_verification">Login verification</label>
+                <div class="controls">
+                    <select name="login_verification" class="form-control" id="login_verification   ">
+                        @if ( $record->login_verification == 'recaptcha')
+                            <option selected value="recaptcha">ReCaptcha</option>
+                            <option value="cf_turnstile">Cloudflare Turnstile</option>
+                        @elseif ( $record->login_verification == 'cf_turnstile')
+                            <option value="recaptcha">ReCaptcha</option>
+                            <option selected value="cf_turnstile">Cloudflare Turnstile</option>
+                        @else
+                            <option value="recaptcha">ReCaptcha</option>
+                            <option value="cf_turnstile">Cloudflare Turnstile</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+
             <div class="row form-group">
                 <label for="mail_provider">SSO options</label>
                 <div class="controls">

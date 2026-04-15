@@ -47,7 +47,8 @@ class ApiCredentialKVStore extends SettingsKVStoreModel {
 'apple_signin_client_secret',
 'google_analytics_script_tag',
 'matomo_script_tag',
-'stripe_pub_key'
+'stripe_pub_key',
+'cloudflare_site_key'
     );
 
     if ($record['stripe_mode'] == 'test') {
