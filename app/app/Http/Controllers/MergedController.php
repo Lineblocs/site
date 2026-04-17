@@ -1217,4 +1217,44 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
     return $this->response->array($sipCredentials);
   }
+
+  public function verifyTurnstile(Request $request) {
+    $data = $request->json()->all();
+    
+    if (!isset($data['token'])) {
+      return $this->response->errorBadRequest('Turnstile token is required');
+    }
+    
+    $token = $data['token'];
+    $apiCreds = ApiCredentialKVStore::getRecord();
+    $secretKey = $apiCreds->cloudflare_secret_key;
+    
+    if (empty($secretKey)) {
+      return $this->response->errorInternal('Turnstile secret key not configured');
+    }
+    
+    try {
+      $response = \Http::post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+        'secret' => $secretKey,
+        'response' => $token
+      ]);
+      
+      $result = $response->json();
+      
+      if ($result['success']) {
+        return $this->response->array([
+          'success' => true,
+          'score' => $result['score'] ?? null
+        ]);
+      } else {
+        return $this->response->array([
+          'success' => false,
+          'error-codes' => $result['error-codes'] ?? []
+        ]);
+      }
+    } catch (\Exception $e) {
+      Log::error('Turnstile verification failed: ' . $e->getMessage());
+      return $this->response->errorInternal('Turnstile verification failed');
+    }
+  }
 }

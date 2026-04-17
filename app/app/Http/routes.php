@@ -595,6 +595,8 @@ $api->version('v1', function($api) {
 
     $api->get('getPOPs', '\App\Http\Controllers\MergedController@getPOPs');
 
+    $api->post('verifyTurnstile', '\App\Http\Controllers\MergedController@validateTurnstile');
+
     $api->post('sendEmail', '\App\Http\Controllers\MiscController@sendEmail');
 
     $api->group([ 'prefix' => 'widgetTemplate', 'namespace' => '\App\Http\Controllers\Api\WidgetTemplate'], function($api) {
