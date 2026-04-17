@@ -3,14 +3,6 @@
 One-Time Login Link
 @endsection
 
-@section('pre_title')
-<tr>
-    <td align="center" bgcolor="#ffffff" style="padding: 14px 10px 8px;">
-        <img src="{{ \Config::get('app.url') . '/email-images/logo.png' }}" alt="Logo" width="150" style="margin:0 auto;display:block;">
-    </td>
-</tr>
-@endsection
-
 @section('content')
 <tr>
     <td valign="top" class="mobilespacer">
@@ -22,7 +14,7 @@ One-Time Login Link
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tbody>
                                 <tr>
-                                    <td style="padding: 0 10px 14px; font-size: 18px; line-height: 28px; color: #1c2434; font-weight: 700;">
+                                    <td style="padding: 18px 10px 14px; font-size: 18px; line-height: 28px; color: #1c2434; font-weight: 700;">
                                         Hello {{ $user->getName() }},
                                     </td>
                                 </tr>
@@ -37,12 +29,6 @@ One-Time Login Link
                                         <a href="{{ $login_link }}" style="display:inline-block;background:#395373;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:4px;">
                                             Login Once
                                         </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 0 10px 20px; font-size: 13px; line-height: 20px; color: #66758a; word-break: break-all;">
-                                        If the button does not work, open this link:<br>
-                                        <a href="{{ $login_link }}">{{ $login_link }}</a>
                                     </td>
                                 </tr>
                                 <tr>

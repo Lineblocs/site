@@ -9,7 +9,7 @@ Contact Details
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
                 <tr>
-                    <td style="padding: 100px; border-radius: 5px; background-color: #f4f7fa;">
+                    <td style="padding: 32px 24px; border-radius: 12px; background-color: #f8fafc;">
                         <p style="font-family: Arial, sans-serif; color: #666666; margin-bottom: 5px;"><strong>First
                                 Name:</strong> {{$first_name}}</p>
                         <p style="font-family: Arial, sans-serif; color: #666666; margin-bottom: 5px;"><strong>Last
