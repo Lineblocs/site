@@ -9,24 +9,17 @@ use Exception;
 use Log;
 use Illuminate\Support\Facades\DB;
 
-class ApiCredential extends Model {
+class ApiCredential extends SettingsRecord {
   protected $dates = ['created_at', 'updated_at'];
   protected $casts = array(
     "setup_complete" => "boolean"
   );
 
   protected $guarded  = array('id');
-  public static function getRecord() {
-    return ApiCredential::all()[0];
-  }
+  protected $table  = 'api_credentials';
+
 
   public static function getParameterIfAvailable($param) {
-    try {
-      DB::connection()->getPdo();
-  } catch (\Exception $e) {
-      echo("Could not connect to the database.  Please check your configuration. error:" . $e );
-      return;
-  }
     try {
       $record = self::getRecord();
       return $record->{$param};
@@ -36,8 +29,9 @@ class ApiCredential extends Model {
     return "";
   }
   public static function getFrontendValuesOnly() {
-    extract( self::getRecord()->toArray() );
-    return compact(
+    $creds = self::getRecord()->toArray();
+    extract( $creds );
+    $result = compact(
 'google_signin_developer_key',
 'google_signin_client_id',
 'google_signin_app_id',
@@ -49,6 +43,11 @@ class ApiCredential extends Model {
 'matomo_script_tag',
 'stripe_pub_key'
     );
+    if ($creds['stripe_mode'] == 'test') {
+      $result['stripe_pub_key'] = $creds['stripe_test_pub_key'];
+    }
+
+    return $result;
   }
 
 }

@@ -69,6 +69,7 @@ class namecheap
       $url .= "&$arg=";
       $url .= urlencode( $value );
     }
+
     $ch = curl_init( $url );
     curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
     $result = curl_exec( $ch );

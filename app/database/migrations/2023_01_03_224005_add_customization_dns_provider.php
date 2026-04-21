@@ -14,7 +14,7 @@ class AddCustomizationDnsProvider extends Migration
     {
         Schema::table('customizations', function (Blueprint $table) {
             //
-            $table->string('dns_provider')->default('self-managed'); // self-managed, namecheap, route53, etc...
+            $table->string('dns_provider', 64)->default('self-managed'); // self-managed, namecheap, route53, etc...
         });
     }
 

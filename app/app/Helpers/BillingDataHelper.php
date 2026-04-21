@@ -3,9 +3,13 @@ namespace App\Helpers;
 use \Config;
 use \DateTime;
 use DB;
+use Log;
 use NumberFormatter;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
+use App\Helpers\StripeBillingHelper;
+use App\CustomizationsKVStore;
+use App\ApiCredentialKVStore;
 use App\Settings;
 use App\UserCredit;
 use App\UserDebit;
@@ -13,16 +17,11 @@ use App\UserInvoice;
 
 final class BillingDataHelper {
   // update this to support multiple billing gateways in the future
-  public static function updateWorkspaceBilling($gateway, $billingData, $user, $workspace)
+  public static function updateWorkspaceBilling($gateway, $cardData, $user, $workspace)
   {
-    $paymentValues = $billingData['payment_values'];
     switch ( $gateway ) {
       case "stripe":
-        $params = [
-          'last_4' => $paymentValues['last_4'],
-          'stripe_token' => $paymentValues['card_token']
-        ];
-        $card = MainHelper::addCard($params, $user, $workspace, TRUE, $gateway);
+        $card = MainHelper::addCard($cardData, $user, $workspace, TRUE, $gateway);
         return TRUE;
       break;
     }
@@ -30,7 +29,7 @@ final class BillingDataHelper {
     return FALSE;
   }
   public static function getBillingHistory($user) {
-      $data = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
       $data = array_map(function($item) {
         $array = (array) $item;
         $array['dollars'] = self::toDollars($array['cents']);
@@ -39,20 +38,31 @@ final class BillingDataHelper {
       return $data;
   }
 
+  public static function getWorkspaceInvoices($workspace) {
+      $data = UserInvoice::where('workspace_id', '=', $workspace->id)->get()->toArray();
+      $data = array_map(function($item) {
+        $array = (array) $item;
+        $array['dollars'] = self::toDollars($array['cents']);
+        return $array; 
+      }, $data);
+      return $data;
+  }
+
+
   public static function billingData($user, $startDate=NULL, $endDate=NULL) {
     if (!is_null($startDate)) {
-      $query = sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
+      Log::info(sprintf('billing data lookup between data ranges %s and %s', $startDate, $endDate));
+      $query = sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
       where U.user_id = "%s"
-      and (U.created_at BETWEEN "%s" AND "%s")
+      and (DATE(U.created_at) BETWEEN \'%s\' AND \'%s\')
       ;', $user->id, $startDate, $endDate);
     } else {
-      $query = sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
+      $query = sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
       where U.user_id = "%s"
       ;', $user->id);
     }
     $data  = DB::select($query);
     foreach ($data as $key => $item) {
-      $item->balance = self::toDollars($item->balance);
       $item->dollars = self::toDollars($item->cents);
       $data[ $key] = $item;
     }
@@ -82,7 +92,7 @@ final class BillingDataHelper {
           $remainingBalance -= $debit->cents;
       }
       foreach ($invoices as $invoice) {
-          if ($invoice->status != 'completed') {
+          if ($invoice->status != 'COMPLETED') {
             $accountBalance += $invoice->cents;
           }
           if ($invoice->source == 'CREDITS') {
@@ -127,11 +137,93 @@ final class BillingDataHelper {
 
 
   }
+
+
   public static function toDollars($cents) {
+    if (!is_numeric($cents)) {
+        return $cents;
+    }
     return number_format(($cents /100), 2, '.', ' ');
   }
   public static function toCents($dollars) {
+    if (!is_numeric($dollars)) {
+        return $dollars;
+    }
     $cents = \bcmul($dollars, 100);
     return  $cents;
+  }
+
+  public static function calculateProratedAmount($baseCost, $billingCycle, $returnCents = FALSE)
+  {
+    if (!is_numeric($baseCost)) {
+        return $baseCost;
+    }
+    $baseCost = (float) $baseCost;
+
+    $now = new \DateTime();
+    
+    if ($billingCycle === 'ANNUAL') {
+        // Calculate days left in the current year
+        $isLeapYear = (int) $now->format('L');
+        if ($isLeapYear) {
+            $daysInYear = 366;
+        } else {
+            $daysInYear = 365;
+        }
+        $dayOfYear = (int) $now->format('z') + 1; // 1-indexed day of year
+        $daysRemaining = $daysInYear - $dayOfYear + 1;
+        
+        // (Yearly Price / Days in Year) * Days left
+        $prorated = ($baseCost / $daysInYear) * $daysRemaining;
+        $result = (float) round($prorated, 2);
+        if ($returnCents) {
+            return self::toCents($result);
+        } else {
+            return $result;
+        }
+    }
+
+    // Default: MONTHLY
+    $daysInMonth = (int) $now->format('t');
+    $dayOfMonth = (int) $now->format('j');
+    $daysRemaining = $daysInMonth - $dayOfMonth + 1;
+
+    // (Monthly Price / Days in Month) * Days left
+    $prorated = ($baseCost / $daysInMonth) * $daysRemaining;
+    $result = (float) round($prorated, 2);
+    
+    if ($returnCents) {
+        return self::toCents($result);
+    } else {
+        return $result;
+    }
+  }
+  public static function refundInvoice($invoice)
+  {
+    $customizations = CustomizationsKVStore::getRecord();
+    if ($customizations) {
+      $paymentGateway = $customizations->payment_gateway;
+    } else {
+      $paymentGateway = null;
+    }
+
+    if ($paymentGateway === 'stripe') {
+      try {
+        $stripeBillingHelper = new StripeBillingHelper();
+        $stripeBillingHelper->refundInvoice($invoice->payment_gateway_id);
+        return true;
+      } catch (\Exception $e) {
+        Log::error('Stripe refund failed: ' . $e->getMessage());
+        throw $e;
+      }
+    } elseif ($paymentGateway === 'braintree') {
+      // Braintree refund implementation
+      throw new \Exception('API support not implemented.');
+    } else {
+      throw new \Exception('payment gateway code unimplemented');
+    }
+
+    $invoice->status = 'REFUNDED';
+    $invoice->save();
   }
 }

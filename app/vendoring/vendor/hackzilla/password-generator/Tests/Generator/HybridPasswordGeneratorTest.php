@@ -50,7 +50,7 @@ class HybridPasswordGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->_object->setSegmentCount($segmentCount);
         $this->_object->setSegmentSeparator($segmentSeparator);
 
-        $this->assertMatchesRegularExpression($regExp, $this->_object->generatePassword());
+        $this->assertRegExp($regExp, $this->_object->generatePassword());
     }
 
     /**

@@ -15,7 +15,7 @@ class AddInvoicesCompleteDate extends Migration
         Schema::table('users_invoices', function (Blueprint $table) {
             //
             // the date when the invoices status is set to 'COMPLETE'
-            $table->dateTime('complete_date')->nulleable();
+            $table->dateTime('complete_date')->nullable();
         });
     }
 

@@ -7,6 +7,7 @@ use App\WorkspaceUser;
 use App\PortNumber;
 use App\UsageTrigger;
 use App\PlanUsagePeriod;
+use App\UserInvoice;
 use App\Http\Requests\Admin\WorkspaceRequest;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
@@ -71,11 +72,12 @@ class WorkspaceController extends AdminController
         $users = $users->where('workspace_id', $workspace->id)->get();
         $creator = $workspace->getCreator();
         $billingHistory = BillingDataHelper::getBillingHistory($creator);
+        $invoices = BillingDataHelper::getWorkspaceInvoices($workspace);
         $billingInfo = BillingDataHelper::getBillingInfo($creator);
         $usageTriggers = UsageTrigger::where("workspace_id", $workspace->id)->get();
         $routingACLs = WorkspaceHelper::getACLs($workspace);
         $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
-        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory'));
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices'));
     }
 
     /**
@@ -125,8 +127,27 @@ class WorkspaceController extends AdminController
         return Datatables::of($workspaces)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
             ->add_column('actions', '<a href="{{{ url(\'admin/workspace/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
+            <a href="{{{ url(\'admin/supportticket/?workspace_id=\' . $id) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-headphones"></span>  {{ trans("admin/modal.support_tickets") }}</a>
                     <a href="{{{ url(\'admin/workspace/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
             ->make();
+    }
+
+
+    public function refund_invoice(Workspace $workspace)
+    {
+        $invoiceId = request()->input('invoice_id');
+        $invoice = UserInvoice::where('id', $invoiceId)->where('workspace_id', $workspace->id)->firstOrFail();
+
+        if (empty($invoice->payment_gateway_id)) {
+            return response()->json(['success' => false, 'message' => 'Invoice does not have a payment gateway ID'], 400);
+        }
+
+        try {
+            BillingDataHelper::refundInvoice($invoice);
+            return response()->json(['success' => true, 'message' => 'Invoice refunded successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to refund invoice: ' . $e->getMessage()], 400);
+        }
     }
 }

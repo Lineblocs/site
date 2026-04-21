@@ -4,60 +4,64 @@ use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Routing\ResponseFactory;
-
-use App\AssignedRoles;
-use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use Route;
 
 class Setup implements Middleware {
 
-    /**
-     * The Guard implementation.
-     *
-     * @var Guard
-     */
     protected $auth;
-
-    /**
-     * The response factory implementation.
-     *
-     * @var ResponseFactory
-     */
     protected $response;
 
-    /**
-     * Create a new filter instance.
-     *
-     * @param  Guard  $auth
-     * @param  ResponseFactory  $response
-     * @return void
-     */
-    public function __construct(Guard $auth,
-                                ResponseFactory $response)
+    public function __construct(Guard $auth, ResponseFactory $response)
     {
         $this->auth = $auth;
         $this->response = $response;
     }
-    /**
-	 * Handle an incoming request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
-	 * @return mixed
-	 */
-	public function handle($request, Closure $next)
-	{
-        $creds = ApiCredential::getRecord();
-        $route =Route::getCurrentRoute();
-        $excluded = [
-            'setup/alreadycomplete',
-            'setup/restart'
-        ];
-        
-        if ($creds->setup_complete && !in_array( $route->getPath(), $excluded )) {
-            return $this->response->redirectTo('/setup/alreadycomplete');
-        }
-        return $next( $request );
-	}
 
+    private function pathForStep($step)
+    {
+        $map = [
+            1 => '/setup/storage',
+            2 => '/setup/tts',
+            3 => '/setup/payments',
+            4 => '/setup/smtp',
+            5 => '/setup/admin',
+            6 => '/setup/customization',
+            7 => '/setup/complete',
+        ];
+        if (isset($map[$step])) {
+            return $map[$step];
+        }
+        return '/setup/storage';
+    }
+
+    public function handle($request, Closure $next)
+    {
+        $creds = ApiCredentialKVStore::getRecord();
+        $route = Route::getCurrentRoute();
+        $path = $route->getPath();
+
+        $setupComplete = !empty($creds->setup_complete);
+        if ($setupComplete) {
+            abort(404);
+        }
+
+        if ($path === 'setup/alreadycomplete') {
+            return $this->response->redirectTo($this->pathForStep((int)$creds->setup_current_step));
+        }
+
+        if ($request->isMethod('get')) {
+            $currentStep = (int)$creds->setup_current_step;
+            if ($currentStep < 1) {
+                $currentStep = 1;
+            }
+            $resumePath = $this->pathForStep($currentStep);
+
+            if ($path === 'setup' || ('/' . $path) !== $resumePath) {
+                return $this->response->redirectTo($resumePath);
+            }
+        }
+
+        return $next($request);
+    }
 }

@@ -5,11 +5,16 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\DIDNumber;
 use App\Extension;
 use App\Workspace;
+use App\SIPPoPRegion;
 use App\Flow;
 use App\FlowTemplate;
 use App\ExtensionCode;
 use App\UserCard;
 use App\Customizations;
+use App\CustomizationsKVStore;
+use App\ApiCredential;
+use App\ApiCredentialKVStore;
+use App\SupportTicket;
 use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
@@ -29,6 +34,7 @@ use App\SIPRateCenter;
 use App\SIPRouter;
 use App\CallRate;
 use App\CallRateDialPrefix;
+use Stripe\StripeClient;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Mail;
 
@@ -164,9 +170,50 @@ final class MainHelper {
     ];
 
     public static function initStripe() {
-        $stripe = \Config::get("stripe");
-        \Stripe\Stripe::setApiKey($stripe['secret_key']);
+        $credentials = ApiCredentialKVStore::getRecord();
+
+        if ($credentials['stripe_mode'] == 'live') {
+          \Stripe\Stripe::setApiKey($credentials['stripe_private_key']);
+        } else if ($credentials['stripe_mode'] == 'test') {
+          \Stripe\Stripe::setApiKey($credentials['stripe_test_private_key']);
+        }
     }
+
+    public static function initStripeClient() {
+        $credentials = ApiCredentialKVStore::getRecord();
+
+        $key = NULL;
+        if ($credentials['stripe_mode'] == 'live') {
+          $key = $credentials['stripe_private_key'];
+        } else if ($credentials['stripe_mode'] == 'test') {
+          $key = $credentials['stripe_test_private_key'];
+        }
+
+        return new StripeClient($key);
+    }
+
+  public static function createStripeCustomer($user, $paymentMethodId) {
+    $stripe = self::initStripeClient();
+
+    $email = $user->email;
+    $subscription = NULL;
+    $site = self::getSiteName();
+    $description = sprintf('%s %s customer for %s', $user->first_name, $user->last_name, $site);
+    // Create a customer with the payment method ID
+    $customer = $stripe->customers->create([
+        'email' => $email, // Customer's email address
+        'description' => $description,
+        'payment_method' => $paymentMethodId,
+        'invoice_settings' => [
+            'default_payment_method' => $paymentMethodId,
+        ],
+        // You can add more details like email, name, etc. as needed
+    ]);
+
+    Log::info(sprintf("created new stripe customer (%s)", $customer->id));
+    return $customer;
+  }
+
   public static function createApiId($prefix="") {
     $uuid4 = Uuid::uuid4(); 
     return sprintf("%s-%s",$prefix, $uuid4->toString());
@@ -210,11 +257,23 @@ final class MainHelper {
   }
   public static function getPayPalContext() {
 
-    $config = Config::get("paypal");
+    $apiCredentials = ApiCredentialKVStore::getRecord();
+    $clientId = NULL;
+    $clientSecret = NULL;
+    $mode = $apiCredentials['paypal_api_mode'];
+    if ($mode) {
+      $clientId = $apiCredentials['paypal_live_client_id'];
+      $clientSecret = $apiCredentials['paypal_live_client_secret'];
+    } else {
+      $clientId = $apiCredentials['paypal_test_client_id'];
+      $clientSecret = $apiCredentials['paypal_test_client_secret'];
+    }
+
+    //$config = Config::get("paypal");
     $apiContext = new ApiContext(
         new OAuthTokenCredential(
-            $config['client_id'],
-            $config['client_secret']
+            $clientId,
+            $clientSecret
         )
     );
     // Comment this line out and uncomment the PP_CONFIG_PATH
@@ -222,7 +281,7 @@ final class MainHelper {
     // based configuration
     $apiContext->setConfig(
         array(
-            'mode' => $config['mode'],
+            'mode' => $mode,
             'log.LogEnabled' => true,
             'log.FileName' => base_path('logs/PayPal.log'),
             'log.LogLevel' => 'DEBUG', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
@@ -269,27 +328,23 @@ final class MainHelper {
       $config = Config::get("siprouter");
       $workspaces = Workspace::all();
       $routers = SIPRouter::all();
-      foreach ($workspaces as $item) {
-        if ( empty( $region ) ) {
-          Log::error('region was empty..');
-          continue;
-        }
-        $router = NULL;
-        foreach ( $routers as $item ) {
-          if ( $router->region == $item->region ) {
-            $router = $item;
-          }
-        }
+      foreach ($workspaces as $workspace) {
+        $router = SIPRouter::select( array('sip_routers.*', 'sip_pop_regions.code') );
+        $router->join('sip_pop_regions', 'sip_pop_regions.id', '=', 'sip_routers.region_id');
+        $router = $router->first();
+        
         if ( empty( $router ) ) {
           Log::error('SIP router not found for workspace region ' . $item->region);
           continue;
         }
+
         $user = User::find($workspace->creator_id);
         //$regions = WorkspaceRegion::where('workspace_id', $item->id)->get()->toArray();
         $regions = [
           [
-            'internal_code' => $item['region'],
-            'router_ip' => $item['public_i[']
+            'internal_code' => $router->code,
+            'router_ip' => $router->ip_address,
+            'default' => $router->default
           ]
           ];
         $data[] = [
@@ -303,9 +358,16 @@ final class MainHelper {
   }
   public static function getPublicConfig()
     {
+        $credentials = ApiCredentialKVStore::getRecord();
         $data = [];
         $data['stripe'] = [];
-        $data['stripe']['key'] = Config::get("stripe.public_key");
+
+        if ($credentials['stripe_mode'] == 'live') {
+          $data['stripe']['key'] = $credentials['stripe_pub_key'];
+        } else if ($credentials['stripe_mode'] == 'test') {
+          $data['stripe']['key'] = $credentials['stripe_test_pub_key'];
+        }
+
         return $data;
     }
 
@@ -342,11 +404,18 @@ final class MainHelper {
         return $user;
     }
   public static function createUser($data, $externalUser=FALSE) {
-      $key = Config::get("stripe.secret_key");
-      $customization = Customizations::getRecord();
+      $customization = CustomizationsKVStore::getRecord();
+      $apiSettings = ApiCredentialKVStore::getRecord();
       $user = MainHelper::createUserWithoutPaymentGateway($data);
       if ( $customization->payment_gateway_enabled && !$externalUser ) {
         if ( $customization->payment_gateway == 'stripe' ) {
+
+          $key = NULL;
+          if ($apiSettings['stripe_mode'] == 'live') {
+            $key = $apiSettings['stripe_private_key'];
+          } else if ($apiSettings['stripe_mode'] == 'test') {
+            $key = $apiSettings['stripe_test_private_key'];
+          }
           \Stripe\Stripe::setApiKey($key);
 
           $container = uniqid(TRUE);
@@ -354,13 +423,6 @@ final class MainHelper {
             "description" => "Customer for " . $data['email']
           ]);
           $verifiedHash = MainHelper::emailVerifyHash($data['email']);
-        
-          $key = Config::get("stripe.secret_key");
-          \Stripe\Stripe::setApiKey($key);
-
-          $customer = \Stripe\Customer::create([
-            "description" => "Customer for " . $data['email']
-          ]);
           $user->update(['stripe_id' => $customer->id]);
         }
       }
@@ -492,8 +554,35 @@ final class MainHelper {
       ->setNumbers()
       ->setSymbols(TRUE)
       ->setLength(24);
-      $password = $generator->generatePasswords(1);
-      return $password[0];
+      $password = $generator->generatePasswords(1)[0];
+
+      $passwordIsComplaint = false;
+      while (!$passwordIsComplaint) {
+        $hasNumber = false;
+        $hasSymbol = false;
+        $hasLetter = false;
+
+        if (preg_match('/\d+/', $password)) {
+            $hasNumber = true;
+        }
+
+        if (preg_match('/[\W_]/', $password)) {
+            $hasSymbol = true;
+        }
+
+        if (preg_match('/[a-zA-Z]/', $password)) {
+          $hasLetter = true;
+        }
+
+        if (!$hasNumber || !$hasSymbol || !$hasLetter) {
+          $password = $generator->generatePasswords(1)[0];
+          continue;
+        }
+
+        $passwordIsComplaint = TRUE;
+      }
+
+      return $password;
   }
   public static function verifyPasswordStrength() {
   }
@@ -752,7 +841,7 @@ final class MainHelper {
 
 
   public static function sendSMS($from='', $to='', $body='') {
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     ClassFinder::disablePSR4Vendors(); // Optional; see performance notes below
     $providers = ClassFinder::getClassesInNamespace('App\Helpers\Sms');
     $smsProvider = NULL;
@@ -832,34 +921,104 @@ final class MainHelper {
     $hash = bin2hex(random_bytes(16));
     return $hash;
   }
+
+  public static function chargeCard($user, $card, $amountInCents)
+  {
+    // TODO pull currency from database
+    $currency = 'usd';
+    $stripe = self::initStripeClient();
+    $paymentMethodId = $card->stripe_payment_method_id;
+    Log::info(sprintf('charging user %s cents', $amountInCents));
+
+    $redirectUrl = self::createAppUrl('/confirm-payment-intent');
+    $site = self::getShortName(TRUE);
+    $descriptor = sprintf("%s credits", $site);
+    $paymentIntent = $stripe->paymentIntents->create([
+      'amount' => $amountInCents,
+      'currency' => $currency,
+      // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+      'automatic_payment_methods' => ['enabled' => true],
+      'customer' => $user->stripe_id,
+      'payment_method' => $paymentMethodId,
+      'return_url' => $redirectUrl,
+      'off_session' => true,
+      'confirm' => true,
+      //'statement_descriptor' => $descriptor
+      'statement_descriptor_suffix' => $site
+    ]);
+  }
+
+  public static function removePaymentMethod($workspace, $card, $paymentGateway='stripe') {
+    if ($paymentGateway == 'stripe' ) {
+      $stripe = self::initStripeClient();
+      $paymentMethodId = $card->stripe_payment_method_id;
+
+      // First, retrieve the payment method
+      $paymentMethod = $stripe->paymentMethods->retrieve($paymentMethodId);
+
+      
+      // Detach it from the customer
+      $paymentMethod->detach();
+      
+      return TRUE;
+    }
+    
+    return FALSE;
+  }
+
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
     if ( $paymentGateway == 'stripe' ) {
-      MainHelper::initStripe();
+      $stripe = self::initStripeClient();
+      $paymentMethodId = $data['payment_method_id'];
+      if (empty($user->stripe_id)) {
+        $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
+        Log::info(sprintf('created stripe customer %s', $customer->id));
+      } else {
+        $customer = $stripe->customers->retrieve($user->stripe_id, []);
+        Log::info(sprintf('found stripe customer for user %s', $customer->id));
+      }
+
+      Log::info(sprintf('created stripe customer %s', $customer->id));
+      $user->update([
+        'stripe_id' => $customer->id
+      ]);
+      /*
       $card = \Stripe\Customer::createSource(
           $user->stripe_id,
           [
-              'source' => $data['stripe_token']
+              'source' => $data['card_token']
           ]
       );
+      */
       //$all = UserCard::where('workspace_id', $workspace->id)->get();
       if ( $isDefault ) {
         // update invoice settings to use this card as the default payment method
-        \Stripe\Customer::update(
-            $user->stripe_id,
-            array(
-                'invoice_settings' => array(
-                  'default_payment_method' => $card->id
-                )
-            )
+
+        $stripe->customers->update(
+          $user->stripe_id,
+          array(
+              'invoice_settings' => array(
+                'default_payment_method' => $paymentMethodId
+              )
+          )
         );
       }
+
+      $paymentMethod = $stripe->paymentMethods->attach(
+        $paymentMethodId,
+        ['customer' => $customer->id]
+      );
+
+      $cardIssuer = $data['issuer'];
+      $last4 =  $data['last_4'];
       $params = [
-          'last_4' => $data['last_4'],
-          'stripe_id' => $card->id,
+          'last_4' => $last4,
+          'stripe_payment_method_id' => $paymentMethodId,
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,
-          'issuer' => $card->brand
+          'issuer' => $cardIssuer,
+          'primary' => $isDefault
       ];
       return UserCard::create($params);
     }
@@ -926,10 +1085,10 @@ final class MainHelper {
       return sprintf("%s.pstn", $trunk_name);
     }
     public static function adminLogo() {
-        $cust = Customizations::getRecord()->toArray();
+        $cust = CustomizationsKVStore::getRecord()->toArray();
         $logo = $cust['admin_portal_logo'];
         if ( !empty( $logo )) {
-          return $logo;
+          return sprintf("/assets/img/%s", $logo);
         }
         // old version
         //$default_logo = '/images/logo-white.png';
@@ -937,10 +1096,10 @@ final class MainHelper {
         return $default_logo;
     }
     public static function appLogo() {
-        $cust = Customizations::getRecord()->toArray();
+        $cust = CustomizationsKVStore::getRecord();
         $logo = $cust['app_logo'];
         if ( !empty( $logo )) {
-          return $logo;
+          return sprintf("/assets/img/%s", $logo);
         }
         // old version
         //$default_logo = '/images/logo-white.png';
@@ -975,13 +1134,43 @@ final class MainHelper {
       $domain = self::getDeploymentDomain();
       return sprintf("%s@%s", $user, $domain);
     }
+
+    // TODO: find a better way to get the IP incase
+    // this is not running behind a apache server
+    public static function getLocalIP() {
+
+      if (array_key_exists('SERVER_ADDR', $_SERVER)) {
+        return $_SERVER['SERVER_ADDR']; 
+      }
+
+      $conn = curl_init();
+      curl_setopt($conn, CURLOPT_URL, 'example.org');
+      curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1);
+      $resp = curl_exec($conn);
+      $defaultIP = curl_getinfo($conn)['local_ip'];
+
+      return $defaultIP;
+    }
+
     public static function getDeploymentDomain() {
       $domain = env('DEPLOYMENT_DOMAIN');
       return $domain;
     }
 
+    public static function getAppDomain() {
+      return sprintf('app.%s', self::getDeploymentDomain());
+    }
+
     public static function getSiteName() {
       return Config::get("app.site_name");
+    }
+
+    public static function getShortName() {
+      $site = self::getSiteName();
+      return strtoupper(preg_replace('/\.[^.]+$/', '', $site));
+    }
+    public static function getCurrency() {
+      return 'USD';
     }
 
     public static function createEmailSubject($subject) {
@@ -1014,11 +1203,11 @@ final class MainHelper {
       return "Credit Card";
     }
     public static function getBlogURL() {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         return $customizations->blog_url;
     }
     public static function sendWhatsAppMessage($to, $body) {
-      $creds = ApiCredential::getRecord();
+      $creds = ApiCredentialKVStore::getRecord();
       $service = "https://graph.facebook.com";
       $path = sprintf( "/v18.0/%s/messages", $creds->whatsapp_phone_number_id);
       $headers = [
@@ -1034,5 +1223,86 @@ final class MainHelper {
         ];
       $result = WebSvcHelper::request( $service, $path, $method, $params, $headers );
       return $result;
+    }
+    public static function getCustomization($field) {
+      $creds = CustomizationsKVStore::getRecord();
+      return $creds[$field];
+    }
+    public static function getCredential($field) {
+      $creds = ApiCredentialKVStore::getRecord();
+      return $creds[$field];
+
+    }
+
+    // ensure input conforms to opensips format. e.g:
+    // {proto}:{ip_addr}:{port}
+    // examples:
+    // udp:127.0.0.1:7722
+    // tcp:127.0.0.1:7722
+    public static function validateRTPProxyAddress($addr)  {
+      $parts = explode(":", $addr);
+      if (count($parts)!=3) {
+        return FALSE;
+      }
+      if ($parts[0] != 'udp' && $parts[0] != 'tcp') {
+        return FALSE;
+      }
+
+      if (!is_numeric($parts[2])) {
+        return FALSE;
+      }
+
+      return TRUE;
+    }
+    public static function createHumanReadableDate($date) {
+      // Format the date into a human-readable string
+      $readableDate = $date->format('l, F j, Y g:i A');
+
+      // Output the formatted date
+      return $readableDate;
+    }
+
+  public static function formatDuration($seconds) {
+    if ($seconds === 0) {
+        return '0 seconds';
+    }
+    
+    if ($seconds < 0) {
+        throw new InvalidArgumentException('Input must be a non-negative integer');
+    }
+
+    $timeUnits = [
+        ['unit' => 'year', 'seconds' => 31536000],
+        ['unit' => 'month', 'seconds' => 2592000],
+        ['unit' => 'day', 'seconds' => 86400],
+        ['unit' => 'hour', 'seconds' => 3600],
+        ['unit' => 'minute', 'seconds' => 60],
+        ['unit' => 'second', 'seconds' => 1]
+    ];
+
+    $parts = [];
+    $remainingSeconds = $seconds;
+
+    foreach ($timeUnits as $timeUnit) {
+        $unitSeconds = $timeUnit['seconds'];
+        if ($remainingSeconds >= $unitSeconds) {
+            $count = floor($remainingSeconds / $unitSeconds);
+            $parts[] = $count . ' ' . $timeUnit['unit'] . ($count !== 1 ? 's' : '');
+            $remainingSeconds %= $unitSeconds;
+        }
+    }
+
+    // Handle special cases for better readability
+    if (count($parts) > 1) {
+        $lastPart = array_pop($parts);
+        return implode(', ', $parts) . ' and ' . $lastPart;
+    }
+
+    return $parts[0] ?? '0 seconds';
+  }
+
+    public static function numTicketsOpen() {
+      $ticketsOpen = SupportTicket::where('status', 'OPEN')->count();
+      return $ticketsOpen;
     }
 }

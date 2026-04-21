@@ -3,6 +3,7 @@
 namespace App\Helpers\Sms;
 
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 
 final class VonageHelper extends Base {
 
@@ -10,7 +11,7 @@ final class VonageHelper extends Base {
         return 'vonage';
     }
     public function sendSMS($from='', $to='', $body='') {
-        $creds = ApiCredential::getRecord();
+        $creds = ApiCredentialKVStore::getRecord();
         $apiKey = $creds->vonage_api_key;
         $apiSecret =$creds->vonage_api_secret;
     }

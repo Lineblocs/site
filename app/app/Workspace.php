@@ -48,6 +48,11 @@ class Workspace extends Model {
   public function getCreator() {
     return User::findOrFail($this->creator_id);
   }
+
+  public function creatorUser() {
+    return $this->belongsTo(User::class, 'creator_id');
+  }
+
   public static function asSelect() {
     $items = Workspace::all();
     $results = [];

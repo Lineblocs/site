@@ -10,8 +10,11 @@ use Aws\Route53\Exception\Route53Exception;
 use App\SIPTrunk;
 use App\SipTrunkTermination;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\DNSRecord;
+use App\User;
 use App\Classes\GoDaddyDDNS;
 use Config;
 use Exception;
@@ -22,16 +25,18 @@ final class DNSHelper {
   public static function refreshIPs() {
 
     $routerDNS = MainHelper::createDNSRecordsForRouters();
-    $domain = env('DEPLOYMENT_DOMAIN');
+    $domain = MainHelper::getDeploymentDomain();
+    $appDomain = MainHelper::getAppDomain();
+
     $sip_trunk_terminations = SIPTrunkTermination::all();
     $nc = array();
-    $api_credentials = ApiCredential::getRecord();
-    $customizations = Customizations::getRecord();
+    $api_credentials = ApiCredentialKVStore::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $dns_provider = $customizations->dns_provider;
     $dns = Config::get("dns");
     $ingress = $dns['ingress'];
     $sandbox = FALSE;
-    $baseEecordHosts = [
+    $baseRecordHosts = [
         '@',
         'app',
         'editor',
@@ -43,17 +48,19 @@ final class DNSHelper {
         'mediafiles',
         'phpmyadmin'
     ];
+
     if ( $dns_provider == 'namecheap' ) {
       //$sandbox = $api_credentials->namecheap_sandbox;
       $sandbox = FAlSE;
       $namecheap = new namecheap([
           'api_user' => $api_credentials->namecheap_api_user,
           'api_key' => $api_credentials->namecheap_api_key,
-          'api_ip' => $api_credentials->namecheap_api_ip
+          //'api_ip' => $api_credentials->namecheap_api_ip
+          'api_ip' => 'detect'
       ], $sandbox);
 
       $baseRecords = [];
-      foreach ( $baseEecordHosts as $host ) {
+      foreach ( $baseRecordHosts as $host ) {
         $baseRecords[] = [
               'host' => $host,
               'type' => 'A',
@@ -71,75 +78,6 @@ final class DNSHelper {
           'ttl' => (string) $record['ttl']
         ];
       }
-      /*
-      $baseRecords[] = [
-        'host' => 's2._domainkey',
-        'type' => 'CNAME',
-        'address' => 's1.domainkey.u15410632.wl133.sendgrid.net',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 's2._domainkey',
-        'type' => 'CNAME',
-        'address' => 's2.domainkey.u15410632.wl133.sendgrid.net',
-        'ttl' => '60'
-      ];
-      //stripe
-      $baseRecords[] = [
-        'host' => '@',
-        'type' => 'TXT',
-        'address' => 'stripe-verification=71dc1f640aaeefb3bc9505f74dda775a9fce272cecfb28be7fed09f378595b24',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 'r2a3yuadpxrvrih6nhw3pmt4yefgdld4._domainkey',
-        'type' => 'CNAME',
-        'address' => 'r2a3yuadpxrvrih6nhw3pmt4yefgdld4.dkim.custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 'skheiidgsmu2s2rwct5icpecr4ifxb6b._domainkey',
-        'type' => 'CNAME',
-        'address' => 'skheiidgsmu2s2rwct5icpecr4ifxb6b.dkim.custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 'mh6ykdbsuevixkfwgpnjhxhtfwpor564._domainkey',
-        'type' => 'CNAME',
-        'address' => 'mh6ykdbsuevixkfwgpnjhxhtfwpor564.dkim.custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => '7zblwjnnhkw6ztakulywtnmptpaj7f3v._domainkey',
-        'type' => 'CNAME',
-        'address' => '7zblwjnnhkw6ztakulywtnmptpaj7f3v.dkim.custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 'ivngsvlfamxt5alua6kjkyldegacxh6b._domainkey',
-        'type' => 'CNAME',
-        'address' => 'ivngsvlfamxt5alua6kjkyldegacxh6b.dkim.custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 'ho7bkxahis6tiaqkpbctxjapeycp4xxz._domainkey',
-        'type' => 'CNAME',
-        'address' => 'ho7bkxahis6tiaqkpbctxjapeycp4xxz.dkim.custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => 'bounce',
-        'type' => 'CNAME',
-        'address' => 'custom-email-domain.stripe.com.',
-        'ttl' => '60'
-      ];
-      $baseRecords[] = [
-        'host' => '@',
-        'type' => 'TXT',
-        'address' => 'google-site-verification=OdyUqonYof7cCbTWAPKJ4Wu-SvYxcfkMq9afhcP7rDs',
-        'ttl' => '60'
-      ];
-      */
 
       foreach ($baseRecords as $cnt =>$info) {
         $number = $cnt + 1;
@@ -156,6 +94,7 @@ final class DNSHelper {
         $user = $info['user'];
         $number = $cnt + $increment;
         //main PoP
+        $router_ip = $info['proxy_ip'];
         $nc['HostName'.$number] = $info['workspace']['name'];
         $nc['RecordType'.$number] = 'A';
         $nc['Address'.$number] = $router_ip;
@@ -163,10 +102,14 @@ final class DNSHelper {
 
         foreach ( $info['regions'] as $code => $region ) {
           // best way to make increment also increase ? look into better solution when possible
-          $increment = $increment + 1;
-          $number = $cnt + $increment;
           //region PoP
-          $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+          $number ++;
+          if ( $region['default'] ) {
+            $value = sprintf("%s", $info['workspace']['name']);
+          } else {
+            $value = sprintf("%s.%s", $info['workspace']['name'], $region['internal_code']);
+          }
+
           $nc['HostName'.$number] = $value;
           $nc['RecordType'.$number] = 'A';
           $nc['Address'.$number] = $region['router_ip'];
@@ -174,28 +117,26 @@ final class DNSHelper {
         }
 
         // add records for web portal
-        $increment = $increment + 1;
-          $number = $cnt + $increment;
+        $number ++;
 
-          $value = sprintf("%s.app", $info['workspace']['name']);
-          $nc['HostName'.$number] = $value;
-          $nc['RecordType'.$number] = 'CNAME';
-          $nc['Address'.$number] = $domain;
-          // incase of A records
-          //$nc['Address'.$number] = $web_portal_ip;
-          $nc['TTL'.$number] = '60';
-      }
-
-      foreach ($sip_trunk_terminations as $cnt => $term_settings) {
-        $host = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr );
-        $number = $cnt + $increment;
-        //main PoP
-        $nc['HostName'.$number] = $host;
-        $nc['RecordType'.$number] = 'A';
-        $nc['Address'.$number] = $router_ip;
+        $value = sprintf("%s.app", $info['workspace']['name']);
+        $nc['HostName'.$number] = $value;
+        $nc['RecordType'.$number] = 'CNAME';
+        $nc['Address'.$number] = $appDomain;
+        // incase of A records
+        //$nc['Address'.$number] = $web_portal_ip;
         $nc['TTL'.$number] = '60';
-      }
 
+        foreach ($sip_trunk_terminations as $cnt => $term_settings) {
+          $host = MainHelper::createSIPTrunkTerminationURI( $term_settings->sip_addr );
+          $number ++;
+          //main PoP
+          $nc['HostName'.$number] = $host;
+          $nc['RecordType'.$number] = 'A';
+          $nc['Address'.$number] = $router_ip;
+          $nc['TTL'.$number] = '60';
+        }
+      }
 
       $result = $namecheap->dnsSetHosts($domain, $nc);
       if (!$result) {
@@ -229,7 +170,7 @@ final class DNSHelper {
 
           $HostedZoneId = $customizations->aws_route53_zone_id;
           $baseRecords = [];
-          foreach ( $baseEecordHosts as $host ) {
+          foreach ( $baseRecordHosts as $host ) {
             $baseRecords[] = [
                 'Action'            => 'CREATE',
                 "ResourceRecordSet" => [
@@ -258,6 +199,8 @@ final class DNSHelper {
           }
 
         foreach ($routerDNS as $cnt => $info) {
+
+          $router_ip = $info['proxy_ip'];
           $baseRecords[] = [
                 'Action'            => 'CREATE',
                 "ResourceRecordSet" => [

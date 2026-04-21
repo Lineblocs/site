@@ -9,9 +9,11 @@ use \App\User;
 use \App\Helpers\SupportHelper;
 use \App\SupportTicket;
 use \App\SupportTicketUpdate;
+use \App\SupportTicketCategory;
 use \App\UserDebit;
 use \App\Flow;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use \App\Transformers\SupportTicketTransformer;
 use App\SupportTicketService\SupportTicketService;
 use \App\Helpers\MainHelper;
@@ -48,7 +50,7 @@ trait SupportTicketWorkflow {
 
     public function saveSupportTicket(Request $request)
     {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $data = $request->only('subject', 'comment', 'priority');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
@@ -62,7 +64,7 @@ trait SupportTicketWorkflow {
             $supportTicketId = SupportHelper::createTicket($subject, $comment, $priority);
         }
         //$priority = $data['priority'];
-        $priorityForUserTickets = 1;
+        $priorityForUserTickets = 'LOW';
         $openingStatus = 'OPEN';
 
 
@@ -79,17 +81,23 @@ trait SupportTicketWorkflow {
         //return $this->errorInternal($request, 'Provision extension error..');
         // send email notification about new support ticket
         $subject = "New support ticket created";
+        $link = MainHelper::createUrl('/admin/supportticket/?id='.$supportTicket->id);
         $data = [
             'user' => $user,
-            'ticket' => $supportTicket
+            'ticket' => $supportTicket,
+            'ticketLink' => $link
         ];
+        $feedbackLink = MainHelper::createUrl('/leave-feedback');
+        if ($customizations->app_feedback_enabled) {
+            $result = EmailHelper::sendEmail($subject, $user->email, 'app_feedback_request', ['user' => $user, 'feedbackLink' => $feedbackLink]);
+        }
         $result = EmailHelper::sendEmail($subject, $user->email, 'support_ticket_created', $data);
         return $this->response->array($supportTicket)->withHeader('X-Supportticket-ID', $supportTicket->public_id);
     }
 
     public function createSupportTicketUpdate(Request $request, $ticketId)
     {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $data = $request->only('comment');
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
@@ -102,6 +110,7 @@ trait SupportTicketWorkflow {
         $params = [
             'comment' => $data['comment'],
             'ticket_id' => $ticket->id,
+            'user_id' => $user->id,
             'direction' => 'ENDUSER'
         ];
         if (!empty($attachment1)) {
@@ -118,7 +127,7 @@ trait SupportTicketWorkflow {
         $subject = "New support ticket updated";
         $data = [
             'user' => $user,
-            'ticket' => $supportTicket,
+            'ticket' => $ticket,
             'update' => $update
         ];
         $result = EmailHelper::sendEmail($subject, $user->email, 'support_ticket_updated', $data);
@@ -128,7 +137,7 @@ trait SupportTicketWorkflow {
 
     public function getSupportTicketUpdates(Request $request, $ticketId)
     {
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $ticketUpdates = SupportTicketUpdate::where('ticket_id', $ticketId)->get();
         return $this->response->array($ticketUpdates->toArray());
     }
@@ -140,7 +149,7 @@ trait SupportTicketWorkflow {
         if (!$this->hasPermissions($request, $supportTicket, 'manage_support_tickets')) {
             return $this->response->errorForbidden();
         }
-        $customizations = Customizations::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $zendeskEnabled = $customizations->zendesk_enabled;
         if ($zendeskEnabled) {
             SupportHelper::updateTicket($supportTicket->zendesk_id, $args);
@@ -149,14 +158,22 @@ trait SupportTicketWorkflow {
     }
     public function supportTicketData(Request $request, $supportTicketId)
     { 
-        $supportTicket = SupportTicket::select(DB::raw("support_tickets.*"));
+        $supportTicket = SupportTicket::select(array(DB::raw("support_tickets.*"), DB::raw('support_tickets_categories.name AS category_name')));
+        $supportTicket = $supportTicket->leftJoin('support_tickets_categories', 'support_tickets_categories.id', '=', 'support_tickets.category_id');
         $supportTicket = $supportTicket->where('support_tickets.public_id', '=', $supportTicketId)->firstOrFail();
+        if (empty($supportTicket['category_name'])) {
+            $supportTicket['category_name'] = 'Unassigned';
+        }
+
         if (!$this->hasPermissions($request, $supportTicket, 'manage_support_tickets')) {
             return $this->response->errorForbidden();
         }
         $array = $supportTicket->toArray();
         // get any updates
-        $ticketUpdates = SupportTicketUpdate::where('ticket_id', $supportTicket->id)->get();
+        $ticketUpdates = SupportTicketUpdate::select(array('support_tickets_updates.*', 'users.email', 'users.first_name', 'users.last_name'));
+        $ticketUpdates->join('users', 'users.id', '=', 'support_tickets_updates.user_id');
+        $ticketUpdates = $ticketUpdates->where('support_tickets_updates.ticket_id', $supportTicket->id)->get();
+
         $updates = [];
         foreach ( $ticketUpdates as $update ) {
             $item = $update->toArray();
@@ -183,8 +200,16 @@ trait SupportTicketWorkflow {
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
         $supportTickets = SupportTicket::where('workspace_id', $workspace->id);
+        $supportTickets->orderBy('created_at', 'DESC');
         MainHelper::addSearch($request, $supportTickets, ['subject']);
         return $this->response->paginator($supportTickets->paginate($paginate), new SupportTicketTransformer);
+    }
+
+   public function listCategories(Request $request)
+    {
+        $workspace = $this->getWorkspace($request);
+        $categories = SupportTicketCategory::all();
+        return $this->response->array( $categories->toArray() );
     }
     public function deleteSupportTicket(Request $request, $supportTicketId)
     {

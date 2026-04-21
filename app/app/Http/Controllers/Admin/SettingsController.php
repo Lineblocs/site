@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\ApiCredential;
+use App\ApiCredentialGroup2;
+use App\ApiCredentialKVStore;
 use Illuminate\Http\Request;
 
 class SettingsController extends AdminController {
@@ -16,11 +18,13 @@ class SettingsController extends AdminController {
 	public function view()
 	{
         $title = "Settings";
-        $creds = ApiCredential::getRecord();
+        $creds = ApiCredentialKVStore::getRecord();
+
         $aws_regions = array( 
             "us-east-1" => "US East (N. Virginia)",
             "us-west-2" => "US West (Oregon)",
             "us-west-1" => "US West (N. California)",
+            "ca-central-1" => "Canada Central",
             "eu-west-1" => "EU (Ireland)",
             "eu-central-1" => "EU (Frankfurt)",
             "ap-southeast-1" => "Asia Pacific (Singapore)",
@@ -37,17 +41,18 @@ class SettingsController extends AdminController {
         } else {
             $selected_region = $creds->aws_region;
         }
-		return view('admin.settings.view',  compact('creds', 'aws_regions', 'selected_region'));
+		return view('admin.settings.view',  compact('creds','aws_regions', 'selected_region'));
 	}
 	public function save(Request $req)
 	{
         $data = $req->all();
         $title = "Settings";
-        $creds = ApiCredential::getRecord();
+        $creds = ApiCredentialKVStore::getRecord();
         $keys = [
         'aws_access_key_id',
         'aws_secret_access_key',
         'aws_region',
+        's3_bucket',
         'google_service_account_json',
         'stripe_pub_key',
         'stripe_private_key',
@@ -80,12 +85,22 @@ class SettingsController extends AdminController {
         'zendesk_subdomain',
         'zendesk_username',
         'zendesk_token',
+        'intercom_workspace_id',
+        'namecheap_api_key',
+        'namecheap_api_user',
+        'paypal_api_mode',
+        'paypal_live_client_id',
+        'paypal_live_client_secret',
+        'paypal_test_client_id',
+        'paypal_test_client_secret',
         ];
+
         $update = [];
         foreach ( $keys as $key ) {
             $update[ $key ] = $data[ $key ];
+            ApiCredentialKVStore::upsert($key, 'string_value', $data[$key]);
         }
-        $creds->update($update);
+
         $session = $req->session();
         $session->flash('type', 'success');
         $session->flash('message', 'Settings saved successfully..');

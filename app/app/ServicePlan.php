@@ -46,7 +46,16 @@ class ServicePlan extends Model {
 
   public function getFormattedMonthlyCharge()
   {
-    $cents = $this->base_costs;
+    $cents = $this->monthly_cost_cents;
+    return number_format(($cents /100), 2, '.', ' ');
+  }
+
+  public function getFormattedAnnualCharge()
+  {
+    $cents = (int)$this->annual_cost_cents;
+    if ($cents <= 0) {
+      $cents = (int)$this->monthly_cost_cents;
+    }
     return number_format(($cents /100), 2, '.', ' ');
   }
 
@@ -60,6 +69,20 @@ class ServicePlan extends Model {
   public function getPricingDecimels()
   {
     $charge = $this->getFormattedMonthlyCharge();
+    $pieces = explode(".", $charge);
+    return $pieces[1];
+  }
+
+  public function getAnnualPricingDollars()
+  {
+    $charge = $this->getFormattedAnnualCharge();
+    $pieces = explode(".", $charge);
+    return $pieces[0];
+  }
+
+  public function getAnnualPricingDecimels()
+  {
+    $charge = $this->getFormattedAnnualCharge();
     $pieces = explode(".", $charge);
     return $pieces[1];
   }

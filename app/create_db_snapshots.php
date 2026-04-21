@@ -48,6 +48,31 @@ if (!function_exists("clean_table_columns")) {
     }
 }
 
+if (!function_exists("confirm_action")) {
+    // Function to prompt user for confirmation
+    function confirm_action() {
+        echo "Are you sure you want to proceed? (yes/no): ";
+        $handle = fopen ("php://stdin","r");
+        $line = fgets($handle);
+        $response = trim($line);
+        fclose($handle);
+        return $response;
+    }
+}
+
+// Example usage
+echo "This will remove all data from the lineblocs and opensips databases. Are you sure you want to proceed ?\n";
+$confirmation = confirm_action();
+
+if ($confirmation != 'yes') {
+    echo "Action canceled.\n";
+    die;
+}
+
+
+// Disable foreign key checks
+DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
 echo "Removing workspaces" .PHP_EOL;
 echo var_dump( DB::table('recordings')->delete() );
 echo var_dump( DB::table('calls')->delete() );
@@ -56,6 +81,7 @@ echo var_dump( DB::table('widget_templates_tags')->delete() );
 echo var_dump( DB::table('workspaces_events_properties')->delete() );
 echo var_dump( DB::table('workspaces_events')->delete() );
 echo var_dump( DB::table('workspaces')->delete() );
+
 
 echo "Removing users" .PHP_EOL;
 echo var_dump( DB::table('users')->delete() );
@@ -106,3 +132,6 @@ echo "creating db snapshot for opensips" .PHP_EOL;
 backup_database($opensips_database);
 
 echo "All tasks complete.".PHP_EOL;
+
+// Enable foreign key checks
+DB::statement('SET FOREIGN_KEY_CHECKS=1;');

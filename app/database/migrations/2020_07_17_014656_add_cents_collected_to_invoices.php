@@ -14,7 +14,7 @@ class AddCentsCollectedToInvoices extends Migration
     {
         Schema::table('users_invoices', function (Blueprint $table) {
             //
-            $table->float('cents_collected')->default(0.0);
+            $table->integer('cents_collected')->default(0);
         });
     }
 

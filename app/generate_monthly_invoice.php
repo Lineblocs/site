@@ -10,7 +10,8 @@ use App\Workspace;
 use App\UserInvoice;
 use App\UserInvoiceLineItem;
 
-$user = User::all()[0];
+$email = env('TEST_USER_EMAIL', 'nhamid@dynamocloud.ca');
+$user = User::where('email', $email)->firstOrFail();
 $workspace = Workspace::where('creator_id', $user->id)->first();
 $month = new DateTime();
 $month->modify('first day of this month');

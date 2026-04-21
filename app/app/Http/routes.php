@@ -43,6 +43,7 @@ Route::get('pricing', 'HomeController@pricing');
 Route::get('rates', 'HomeController@rates1');
 Route::get('rates/{countryId}', 'HomeController@rates');
 Route::get('faqs', 'HomeController@faqs');
+Route::get('leave-feedback', 'HomeController@leaveFeedback');
 Route::get('/pages/privacy-policy', 'PagesController@privacyPolicy');
 // service level agreement
 Route::get('/pages/service-agreement', 'PagesController@serviceAgreement');
@@ -89,15 +90,23 @@ Route::get('/status', 'HomeController@status');
 Route::get('/status/{categoryId}', 'HomeController@status_category');
 Route::get('/status/{categoryId}/{updateId}', 'HomeController@status_update');
 //Route::post('jwt/authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
-Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
+//Route::get('generateMonthlyInvoice', '\App\Http\Controllers\BillingController@generateMonthlyInvoice');
 
 Route::get('/email/unsubscribe', 'EmailController@unsubscribe');
 Route::post('/email/unsubscribe', 'EmailController@unsubscribe_update');
+Route::get('/one-time-login', '\App\Http\Controllers\RegisterController@consumeOneTimeLoginLink');
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('portal/paypal-billing-agreement', 'PaypalAgreementController@show');
+    Route::post('portal/paypal-billing-agreement/create', 'PaypalAgreementController@create');
+    Route::get('portal/paypal-billing-agreement/approve', 'PaypalAgreementController@approve');
+    Route::get('portal/paypal-billing-agreement/cancel', 'PaypalAgreementController@cancel');
+});
 /***************    Admin routes  **********************************/
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 
@@ -125,6 +134,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('workspace/{workspace}/show', 'Admin\WorkspaceController@show');
     Route::get('workspace/{workspace}/edit', 'Admin\WorkspaceController@edit');
     Route::get('workspace/{workspace}/delete', 'Admin\WorkspaceController@delete');
+    Route::post('workspace/{workspace}/refund_invoice', 'Admin\WorkspaceController@refund_invoice');
     Route::resource('workspace', 'Admin\WorkspaceController');
 
     # SIPProviders
@@ -247,21 +257,28 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('rtpproxy/{rtpproxy}/delete', 'Admin\RTPProxyController@delete');
     Route::resource('rtpproxy', 'Admin\RTPProxyController');
 
+    # RTPEngines
+    Route::get('rtpengine/data', 'Admin\RTPEngineController@data');
+    Route::get('rtpengine/{rtpengine}/show', 'Admin\RTPEngineController@show');
+    Route::get('rtpengine/{rtpengine}/edit', 'Admin\RTPEngineController@edit');
+    Route::get('rtpengine/{rtpengine}/delete', 'Admin\RTPEngineController@delete');
+    Route::resource('rtpengine', 'Admin\RTPEngineController');
+
 
     # NumberInventorys
-    Route::get('number/data', 'Admin\NumberInventoryController@data');
-    Route::get('number/{number}/show', 'Admin\NumberInventoryController@show');
-    Route::get('number/{number}/edit', 'Admin\NumberInventoryController@edit');
-    Route::get('number/{number}/delete', 'Admin\NumberInventoryController@delete');
-    Route::get('number/import', 'Admin\NumberInventoryController@import');
-    Route::post('number/import', 'Admin\NumberInventoryController@import_save');
-    Route::resource('number', 'Admin\NumberInventoryController');
+    Route::get('numberinventory/data', 'Admin\NumberInventoryController@data');
+    Route::get('numberinventory/{numberinventory}/show', 'Admin\NumberInventoryController@show');
+    Route::get('numberinventory/{numberinventory}/edit', 'Admin\NumberInventoryController@edit');
+    Route::get('numberinventory/{numberinventory}/delete', 'Admin\NumberInventoryController@delete');
+    Route::get('numberinventory/import', 'Admin\NumberInventoryController@import');
+    Route::post('numberinventory/import', 'Admin\NumberInventoryController@import_save');
+    Route::resource('numberinventory', 'Admin\NumberInventoryController');
 
     # SIPPoPRegions
     Route::get('popregion/data', 'Admin\SIPPoPRegionController@data');
-    Route::get('popregion/{region}/show', 'Admin\SIPPoPRegionController@show');
-    Route::get('popregion/{region}/edit', 'Admin\SIPPoPRegionController@edit');
-    Route::get('popregion/{region}/delete', 'Admin\SIPPoPRegionController@delete');
+    Route::get('popregion/{popregion}/show', 'Admin\SIPPoPRegionController@show');
+    Route::get('popregion/{popregion}/edit', 'Admin\SIPPoPRegionController@edit');
+    Route::get('popregion/{popregion}/delete', 'Admin\SIPPoPRegionController@delete');
     Route::resource('popregion', 'Admin\SIPPoPRegionController');
 
 
@@ -295,6 +312,38 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('serviceplan/{serviceplan}/edit', 'Admin\ServicePlanController@edit');
     Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
     Route::resource('serviceplan', 'Admin\ServicePlanController');
+
+     # costsaving
+    Route::get('costsaving/data', 'Admin\CostSavingController@data');
+    Route::get('costsaving/{costsaving}/show', 'Admin\CostSavingController@show');
+    Route::get('costsaving/{costsaving}/edit', 'Admin\CostSavingController@edit');
+    Route::get('costsaving/{costsaving}/delete', 'Admin\CostSavingController@delete');
+    Route::resource('costsaving', 'Admin\CostSavingController');
+
+     # numberservice
+    Route::get('numberservice/data', 'Admin\NumberServiceController@data');
+    Route::get('numberservice/{numberservice}/show', 'Admin\NumberServiceController@show');
+    Route::get('numberservice/{numberservice}/edit', 'Admin\NumberServiceController@edit');
+    Route::get('numberservice/{numberservice}/delete', 'Admin\NumberServiceController@delete');
+    Route::resource('numberservice', 'Admin\NumberServiceController');
+
+
+
+
+     # competitor
+    Route::get('competitor/data', 'Admin\CompetitorController@data');
+    Route::get('competitor/{competitor}/show', 'Admin\CompetitorController@show');
+    Route::get('competitor/{competitor}/edit', 'Admin\CompetitorController@edit');
+    Route::get('competitor/{competitor}/delete', 'Admin\CompetitorController@delete');
+    Route::resource('competitor', 'Admin\CompetitorController');
+
+    # testimonial
+    Route::get('testimonial/data', 'Admin\TestimonialController@data');
+    Route::get('testimonial/{testimonial}/show', 'Admin\TestimonialController@show');
+    Route::get('testimonial/{testimonial}/edit', 'Admin\TestimonialController@edit');
+    Route::get('testimonial/{testimonial}/delete', 'Admin\TestimonialController@delete');
+    Route::resource('testimonial', 'Admin\TestimonialController');
+
 
 
     # SIPRoutingACL
@@ -333,6 +382,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('errortrace/{errortrace}/edit', 'Admin\ErrorTraceController@edit');
     Route::get('errortrace/{errortrace}/delete', 'Admin\ErrorTraceController@delete');
     Route::resource('errortrace', 'Admin\ErrorTraceController');
+
+     # support tickets
+    Route::get('supportticket/data', 'Admin\SupportTicketController@data');
+    Route::get('supportticket/{supportticket}/show', 'Admin\SupportTicketController@show');
+    Route::get('supportticket/{supportticket}/edit', 'Admin\SupportTicketController@edit');
+    Route::get('supportticket/{supportticket}/delete', 'Admin\SupportTicketController@delete');
+    Route::post('supportticket/{supportticket}/addUpdate', 'Admin\SupportTicketController@addUpdate');
+    Route::resource('supportticket', 'Admin\SupportTicketController');
+
+     # support category
+    Route::get('supportcategory/data', 'Admin\SupportCategoryController@data');
+    Route::get('supportcategory/{supportcategory}/show', 'Admin\SupportCategoryController@show');
+    Route::get('supportcategory/{supportcategory}/edit', 'Admin\SupportCategoryController@edit');
+    Route::get('supportcategory/{supportcategory}/delete', 'Admin\SupportCategoryController@delete');
+    Route::resource('supportcategory', 'Admin\SupportCategoryController');
 
     # system status
     Route::get('routingeditor', 'Admin\RoutingEditorController@view');
@@ -394,6 +458,7 @@ $api->version('v1', function($api) {
           $api->post("/", "BlockedNumberController@post");
           $api->post("/{blockedId}", "BlockedNumberController@put");
           $api->delete("/{blockedId}", "BlockedNumberController@delete");
+          $api->delete("/uploadList", "BlockedNumberController@uploadList");
       });
       $api->group([ 'prefix' => 'recording', 'namespace' => '\Recording'], function($api) {
           $api->get("/list", "RecordingController@list");
@@ -443,6 +508,14 @@ $api->version('v1', function($api) {
     $api->get('getAllSettings', '\App\Http\Controllers\MergedController@getAllSettings');
     $api->get('getRegistrationQuestions', '\App\Http\Controllers\MergedController@getRegistrationQuestions');
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
+    $api->get('getSIPCredentials', '\App\Http\Controllers\MergedController@getSIPCredentials');
+
+
+    $api->group([ 'prefix' => 'paypal'], function($api) {
+      $api->post('createBillingAgreement', '\App\Http\Controllers\MergedController@createBillingAgreement');
+      $api->post('cancelBillingAgreement', '\App\Http\Controllers\MergedController@cancelBillingAgreement');
+      $api->post('executeBillingAgreement', '\App\Http\Controllers\MergedController@executeBillingAgreement');
+    });
 
     $api->group([ 'prefix' => 'jwt'], function($api) {
       $api->post('authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
@@ -464,11 +537,13 @@ $api->version('v1', function($api) {
     $api->post('provisionCallSystem', '\App\Http\Controllers\RegisterController@provisionCallSystem');
     $api->post('thirdPartyLogin', '\App\Http\Controllers\RegisterController@thirdPartyLogin');
     $api->post('addCard', '\App\Http\Controllers\RegisterController@addCard');
+    $api->post('sendOneTimeLoginLink', '\App\Http\Controllers\RegisterController@sendOneTimeLoginLink');
     $api->get('self', '\App\Http\Controllers\RegisterController@getSelf');
 
     $api->get('workspace', '\App\Http\Controllers\MergedController@getWorkspaceAPI');
     $api->get('getUserInfo', '\App\Http\Controllers\RegisterController@getUserInfo');
     $api->post('updateSelf', '\App\Http\Controllers\RegisterController@updateSelf');
+    $api->post('updateWorkspaceUser', '\App\Http\Controllers\RegisterController@updateWorkspaceUser');
     $api->post('setupWorkspace', '\App\Http\Controllers\RegisterController@setupWorkspace');
     $api->post('updateWorkspace', '\App\Http\Controllers\MergedController@updateWorkspace');
     $api->get('fetchWorkspaceInfo', '\App\Http\Controllers\MergedController@fetchWorkspaceInfo');
@@ -498,9 +573,12 @@ $api->version('v1', function($api) {
     $api->get('refreshWorkspaceTokens', '\App\Http\Controllers\MergedController@refreshWorkspaceTokens');
     $api->get('getConfig', '\App\Http\Controllers\ConfigController@getConfig');
     $api->get('dashboard', '\App\Http\Controllers\MergedController@dashboard');
+    $api->get('feed', '\App\Http\Controllers\MergedController@feed');
     $api->post('upgradePlan', '\App\Http\Controllers\MergedController@upgradePlan');
     $api->get('plans', '\App\Http\Controllers\MergedController@plans');
     $api->get('billing', '\App\Http\Controllers\MergedController@billing');
+    $api->get('billing/viewEstimatedCharges', '\App\Http\Controllers\BillingController@viewEstimatedCharges');
+
     $api->post('saveWidget', '\App\Http\Controllers\MergedController@saveWidget');
     $api->post('submitJoinWorkspace', '\App\Http\Controllers\MergedController@submitJoinWorkspace');
     $api->post('acceptWorkspaceInvite', '\App\Http\Controllers\MergedController@acceptWorkspaceInvite');
@@ -556,6 +634,7 @@ $api->version('v1', function($api) {
         $api->get("/{numberId}", "DIDNumberController@numberData");
         $api->post("/", "DIDNumberController@saveNumber");
         $api->put("/{numberId}", "DIDNumberController@updateNumber");
+        $api->post("/{numberId}", "DIDNumberController@updateNumber");
         $api->delete("/{numberId}", "DIDNumberController@deleteNumber");
     });
 
@@ -705,17 +784,19 @@ $api->version('v1', function($api) {
         $api->post("/checkoutWithPayPal", "CreditController@checkoutWithPayPal");
         $api->get("/checkoutWithPayPalDone", "CreditController@checkoutWithPayPalDone")->name('checkout_paypal_done');
         $api->get("/checkoutWithPayPalFail", "CreditController@checkoutWithPayPalFail")->name('checkout_paypal_fail');
+        $api->get("/ipnNotification", "CreditController@ipnNotification")->name('ipn_notification');
     });
 
     $api->group([ 'prefix' => 'card', 'namespace' => '\App\Http\Controllers\Api\Card'], function($api) {
         $api->get("/list", "CardController@listCards");
         $api->post("/", "CardController@addCard");
-        $api->put("/{cardId}/sePprimary", "CardController@setPrimary");
+        $api->put("/{cardId}/setPrimary", "CardController@setPrimary");
         $api->delete("/{cardId}", "CardController@deleteCard");
     });
 
     $api->group([ 'prefix' => 'workspaceUser', 'namespace' => '\App\Http\Controllers\Api\WorkspaceUser'], function($api) {
         $api->get("/list", "WorkspaceUserController@listUsers");
+        $api->get("/getWorkspaceRoles", "WorkspaceUserController@getWorkspaceRoles");
         $api->post("/", "WorkspaceUserController@addUser");
         $api->delete("/{userId}", "WorkspaceUserController@deleteUser");
         $api->post("/{userId}", "WorkspaceUserController@updateUser");
@@ -737,6 +818,7 @@ $api->version('v1', function($api) {
 
     $api->group([ 'prefix' => 'supportTicket', 'namespace' => '\App\Http\Controllers\Api\SupportTicket'], function($api) {
         $api->get("/list", "SupportTicketController@listSupportTickets");
+        $api->get("/categories", "SupportTicketController@listCategories");
         $api->get("/{supportTicketId}", "SupportTicketController@supportTicketData");
         $api->get("/{supportTicketId}/history", "SupportTicketController@supportTicketDataHistory");
         $api->post("/", "SupportTicketController@saveSupportTicket");

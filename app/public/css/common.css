@@ -501,6 +501,23 @@ header .navbar-nav .nav-link{
 	width: 112px;
 	border: none;
 }
+.nav__actions {
+	display: flex;
+	align-items: center;
+}
+.nav__login-link {
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 130%;
+	padding-right: 40px !important;
+	color: #0A1247;
+	text-decoration: none;
+}
+.nav__login-link:hover,
+.nav__login-link:focus {
+	color: #050924;
+	text-decoration: none;
+}
 .nav__btn:hover{
 	background-color: #050924;
 }
@@ -593,6 +610,12 @@ header i.toggle-icon {
 		color: #0A1247;
 		margin-top: 20px;
 
+	}
+	.nav__actions{
+		align-items: flex-start;
+	}
+	.nav__login-link{
+		margin-top: 20px;
 	}
 	.mob-menu .rights p{
 		 font-style: normal;

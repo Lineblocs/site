@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\User;
 use App\SIPProvider;
 use App\CallRate;
+use App\Testimonial;
 
 class DashboardController extends AdminController {
 
@@ -20,6 +21,7 @@ class DashboardController extends AdminController {
         $users = User::count();
         $sipproviders = SIPProvider::count();
         $callrates = CallRate::count();
-		return view('admin.dashboard.index',  compact('title','users', 'sipproviders', 'callrates'));
+        $testimonials = Testimonial::count();
+		return view('admin.dashboard.index',  compact('title','users', 'sipproviders', 'callrates', 'testimonials'));
 	}
 }

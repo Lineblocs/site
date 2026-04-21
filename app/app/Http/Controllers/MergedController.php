@@ -16,6 +16,7 @@ use App\SIPCountry;
 use App\SIPRegion;
 use App\SIPRateCenter;
 use App\SIPTrunk;
+use App\SIPRouter;
 use App\BillingCountry;
 use App\BillingRegion;
 use App\PhoneDefault;
@@ -34,7 +35,9 @@ use App\BYOCarrier;
 use App\BYODIDNumber;
 
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use App\Phone;
 
 use App\PhoneGroup;
@@ -46,6 +49,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Helpers\SIPRouterHelper;
 use App\Helpers\MainHelper;
+use App\Helpers\EmailHelper;
 use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
@@ -74,10 +78,17 @@ use BaconQrCode\Writer as QRWriter;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use App\Transformers\RecordingTransformer;
+use App\Transformers\CallTransformer;
+
 use App\UserCredit;
 use DateTime;
 use DateInterval;
 use DB;
+use Log;
 
 class MergedController extends ApiAuthController
 {
@@ -133,7 +144,7 @@ class MergedController extends ApiAuthController
     public function getBillingHistory(Request $request)
     {
       $user = $this->getUser($request);
-      $data = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
       return $this->response->array($data);
 
     }
@@ -185,10 +196,11 @@ class MergedController extends ApiAuthController
       $json = $request->json()->all();
       $plans = Config::get("service_plans");
       $plan = $json['plan'];
-      $selected = $plans[$plan];
+      //$selected = $plans[$plan];
+      $selected = ServicePlan::where('key_name', $plan)->first();
       $workspace = $this->getWorkspace($request);
       $user = $this->getUser($request);
-      $period = PlanUsagePeriod::where('workspace_id', $workspace->id)->where('active', '1')->firstOrFail();
+      $period = PlanUsagePeriod::where('workspace_id', $workspace->id)->whereNull('ended_at')->first();
       $now = new DateTime();
 
       $period->update([
@@ -287,6 +299,78 @@ class MergedController extends ApiAuthController
         $workspace->toArrayWithRoles($user)
       ]);
     }
+
+    private function mapFeedEvent($records, $eventType) {
+      $fractal = new Manager();
+
+      if ($eventType=='recordings') {
+        // Create a new resource collection with your items and transformer
+        $resource = new Collection($records, new RecordingTransformer());
+
+        // Transform the data
+        $transformedData = $fractal->createData($resource)->toArray()['data'];
+
+      } else if ($eventType == 'calls' ) {
+        // Create a new resource collection with your items and transformer
+        $resource = new Collection($records, new CallTransformer());
+
+        // Transform the data
+        $transformedData = $fractal->createData($resource)->toArray()['data'];
+      } else {
+        $transformedData = $records->toArray();
+      }
+
+      $transformedData = array_map(function($item) use($eventType) {
+        $updatedItem = $item;
+        $updatedItem['event_type'] = $eventType;
+
+        return $updatedItem;
+      }, $transformedData);
+
+      return $transformedData;
+    }
+
+    public function feed(Request $request)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $calls = Call::where('workspace_id', $workspace->id)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
+        ->get();
+      $recordings = Recording::select(array('recordings.*', 'calls.from', 'calls.to', 'calls.duration'))
+        ->join('calls', 'calls.id', '=', 'recordings.call_id')
+        ->where('recordings.workspace_id', $workspace->id)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
+        ->get();
+      $numbers = DIDNumber::where('workspace_id', $workspace->id)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
+        ->get();
+
+      $allRecords = [];
+      $allRecords += $this->mapFeedEvent($numbers, 'did_numbers');
+      $allRecords += $this->mapFeedEvent($recordings, 'recordings');
+      $allRecords += $this->mapFeedEvent($calls, 'calls');
+
+      $feedData = [
+        'items' => []
+      ];
+
+      // Sort array by 'created_at' in descending order
+      usort($allRecords, function ($a, $b) {
+          return $b['created_at'] <=> $a['created_at']; // Descending order
+      });
+  
+      // Return only the first 15 elements
+      //$feedData['items'] = array_slice($allRecords, 0, 15);
+      $feedData['items'] = $allRecords;
+
+      return $this->response->array($feedData);
+    }
+
+
     public function fetchWorkspaceInfo(Request $request)
     {
       $hash = $request->get("hash");
@@ -310,10 +394,9 @@ class MergedController extends ApiAuthController
         $user = $this->getUser($request);
         $cards = UserCard::where('user_id', $user->id)->get()->toArray();
         $config = MainHelper::getPublicConfig();
-        $billingHistory = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+        $billingHistory = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
 
         foreach ($billingHistory as $key => $item) {
-          $item->balance = MainHelper::toDollars($item->balance);
           $item->dollars = MainHelper::toDollars($item->cents);
           $billingHistory[ $key] = $item;
         }
@@ -700,18 +783,14 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   public function getRegistrationQuestions(Request $request) {
     $response = [];
     $questions = RegistrationQuestionnaire::get();
-    /*
-    TODO: implement code for multiple choice responses
-    foreach ( $questions as $item ) {
-      $item['responses'] = RegistrationResponse::where('response_id', $item->id)->get()->toArray();
-      $response[] = $item;
-    }
-    */
-    return $this->response->array($response);
+ 
+    return $this->response->array($questions->toArray());
   }
+
   public function getAllSettings(Request $request) {
-        $apiCreds = APICredential::getFrontendValuesOnly();
-        $customizations = Customizations::getRecord();
+        $baseURL = sprintf("https://%s/assets/img", MainHelper::getDeploymentDomain());
+        $apiCreds = ApiCredentialKVStore::getFrontendValuesOnly();
+        $customizations = CustomizationsKVStore::getRecord();
         $availableThemes = array(
           array(
             'name' => 'default',
@@ -723,6 +802,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           )
         );
         $result = [
+          'assets_base_url' => $baseURL,
           'customizations' => $customizations->toArray(),
           'frontend_api_creds' => $apiCreds,
           'available_themes' => $availableThemes
@@ -731,7 +811,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
 
   public function getServicePlans(Request $request) {
-      $plans = ServicePlan::all()->toArray();
+      $plans = ServicePlan::orderBy('rank')
+                          ->orderBy('nice_name')
+                          ->get()
+                          ->toArray();
+
       $features = [
         'fax',
         'im_integrations',
@@ -760,7 +844,13 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           ];
         }
         $item = $plan;
-        $item['monthly_charge'] = MainHelper::toDollars($item['monthly_charge_cents']);
+        $item['monthly_charge'] = MainHelper::toDollars($item['monthly_cost_cents']);
+        $item['annual_charge'] = MainHelper::toDollars($item['annual_cost_cents']);
+
+        $item['prorated_monthly_charge'] = BillingDataHelper::calculateProratedAmount($item['monthly_charge'], 'MONTHLY');  
+        $item['prorated_monthly_charge_cents'] = BillingDataHelper::toCents($item['prorated_monthly_charge']);
+        $item['prorated_annual_charge'] = BillingDataHelper::calculateProratedAmount($item['annual_charge'], 'ANNUAL');  
+        $item['prorated_annual_charge_cents'] = BillingDataHelper::toCents($item['prorated_annual_charge']);
         $plan_benefits = [];
         // compare the previous plan with the current one to get the benefits
         $last_cnt = $cnt - 1;
@@ -808,34 +898,48 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
 
   public function save2FASettings(Request $request) {
     $user = $this->getUser($request);
+    $type2fa = NULL;
     $data = $request->json()->all();
     $updateParams = [];
 
-    if (!empty($data['enable_2fa'])) {
-      $updateParams['enable_2fa'] = $data['enable_2fa'];
+    if (!isset($data['enable_2fa'])) {
+      return $this->response->errorBadRequest('please send enable_2fa');
     }
-    if (!empty($data['type_of_2fa'])) {
-      $updateParams['type_of_2fa'] = $data['type_of_2fa'];
+
+    $enable2fa = $data['enable_2fa'];
+
+    if ($enable2fa && !array_key_exists('type_of_2fa', $data)) {
+      return $this->response->errorBadRequest('if enabling 2fa setting, please send type_of_2fa');
     }
-    $type2fa = $data['type_of_2fa'];
-    if ( $updateParams['enable_2fa'] ) {
+
+    $updateParams['enable_2fa'] = $enable2fa;
+    Log::info('enable 2fa setting: ' . ((string) $enable2fa));
+
+    if ( $enable2fa ) {
       // ensure that the code is correct
+      $type2fa = $data['type_of_2fa'];
+      $updateparams['type_of_2fa'] = $type2fa;
+
       if ( $type2fa == 'totp') {
         $user->update($updateParams);
         return $this->response->noContent();
-      }
-      if (!empty( $data['confirmation_code'] ) ) {
-        $confirmationCode = $data['confirmation_code'];
-        $otp = TOTP::create($user->secret_code_2fa);
-        if ( $otp->verify($confirmationCode)) {
-          return $this->response->errorBadRequest();
+      } else {
+
+        if (!empty( $data['confirmation_code'] ) ) {
+          $confirmationCode = $data['confirmation_code'];
+          $otp = TOTP::create($user->secret_code_2fa);
+          if ( $otp->verify($confirmationCode)) {
+            return $this->response->errorBadRequest();
+          }
+          $user->update($updateParams);
+          return $this->response->noContent();
         }
-        $user->update($updateParams);
-        return $this->response->noContent();
       }
+
       $user->update($updateParams);
       return $this->response->noContent();
     }
+
     $user->update($updateParams);
     return $this->response->noContent();
   }
@@ -1016,6 +1120,11 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     
       return $this->response->array($results);
   }
+
+  private function needsCustomPaymentForm() {
+    return FALSE;
+  }
+
   public function saveCustomerPaymentDetails(Request $request) 
   {
     $data = $request->json()->all();
@@ -1030,10 +1139,27 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     // set the billing region
     $region = $data['billing_region_id'];
     $gateway = $data['payment_gateway'];
-    $billingData = $data;
-    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $billingData, $user, $workspace);
+    $paymentCard = $data['payment_card'];
+    $paymentValues = $data['payment_values'];
+
+    if (!$this->needsCustomPaymentForm()) {
+      $cardData = [
+        'payment_method_id' => $paymentValues['payment_method_id'],
+        'issuer' => $paymentValues['issuer'],
+        'last_4' => $paymentValues['last_4'],
+      ];
+    } else {
+      // get card data
+      $cardData = [
+        'payment_card_number' => $cardData['payment_card_number'],
+        'expiration_date' => $cardData['expiration_date'],
+        'security_code' => $cardData['security_code'],
+        'cardholder_name' => $cardData['cardholder_name']
+      ];
+    }
+    $result = BillingDataHelper::updateWorkspaceBilling($gateway, $cardData, $user, $workspace);
     if (!$result) {
-      return $this->response->errorBaRrequest();
+      return $this->response->errorBadRequest();
     }
 
     $workspace->update([
@@ -1042,4 +1168,44 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     return $this->response->noContent();
   }
 
+  public function getSIPCredentials(Request $request) 
+  {
+    $workspace = $this->getWorkspace($request);
+    $user = $this->getUser($request);
+    $extension = Extension::select(array('extensions.*'));
+    $extension->leftJoin('workspaces_users', 'workspaces_users.extension_id', '=', 'extensions.id');
+    $extension->where('workspaces_users.user_id', $user->id);
+    $extension = $extension->first();
+    if (empty($extension)) {
+       return $this->response->errorInternal();
+    }
+
+    $sipHost = $workspace->sipURL();
+    $domain = MainHelper::getDeploymentDomain();
+
+    $sipRouter = SIPRouter::getMainRouter();
+    $displayName = sprintf("%s SIP UA", $domain);
+    $sipURI = sprintf("%s@%s", $extension->username, $sipHost);
+
+    $wssPort = $sipRouter->wss_port;
+    $wssGateway = sprintf("wss://%s:%s", $sipHost, $wssPort);
+
+    $tcpPort = $sipRouter->tcp_port;
+
+    $sipCredentials = [
+      'username' => $extension['username'],
+      'secret' => $extension['secret'],
+      'host' => $sipHost,
+      'port' => $sipRouter['udp_port'],
+      'websocket_settings' => [
+        'port' => $wssPort,
+        'gateway' => $wssGateway
+      ],
+      'display_name' => $displayName,
+      'sip_uri' => $sipURI,
+      'tcp_port' => $tcpPort
+    ];
+
+    return $this->response->array($sipCredentials);
+  }
 }
