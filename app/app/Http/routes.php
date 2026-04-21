@@ -328,6 +328,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('competitor/{competitor}/show', 'Admin\CompetitorController@show');
     Route::get('competitor/{competitor}/edit', 'Admin\CompetitorController@edit');
     Route::get('competitor/{competitor}/delete', 'Admin\CompetitorController@delete');
+    Route::post('competitor/{competitor}/categories', 'Admin\CompetitorController@addCategory');
+    Route::delete('competitor/{competitor}/categories/{category}', 'Admin\CompetitorController@deleteCategory');
+    Route::get('competitor/{competitor}/categories', 'Admin\CompetitorController@getCategories');
+    Route::post('competitor/{competitor}/features', 'Admin\CompetitorController@addFeature');
+    Route::delete('competitor/{competitor}/features/{feature}', 'Admin\CompetitorController@deleteFeature');
+    Route::get('competitor/{competitor}/features', 'Admin\CompetitorController@getFeatures');
+    Route::post('competitor/{competitor}/testimonials', 'Admin\CompetitorController@addTestimonial');
+    Route::delete('competitor/{competitor}/testimonials/{testimonial}', 'Admin\CompetitorController@deleteTestimonial');
+    Route::get('competitor/{competitor}/testimonials', 'Admin\CompetitorController@getTestimonials');
     Route::resource('competitor', 'Admin\CompetitorController');
 
     # testimonial
