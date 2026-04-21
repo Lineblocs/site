@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaypalBillingAgreement extends Model
 {
+    protected $table = 'billing_agreements';
+
     protected $fillable = [
         'user_id',
         'workspace_id',
