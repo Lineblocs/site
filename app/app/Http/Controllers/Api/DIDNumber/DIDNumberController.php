@@ -10,6 +10,7 @@ use \App\DIDNumber;
 use \App\DIDNumberTag;
 use \App\UserDebit;
 use \App\Flow;
+use \App\Enums\DIDNumberAvailability;
 use \App\Transformers\DIDNumberTransformer;
 use \App\NumberService\NumberService;
 use \App\Helpers\MainHelper;
@@ -82,9 +83,9 @@ class DIDNumberController extends ApiAuthController {
                 'type' => $type,
                 'did_action' => 'accept-call'
             ];
-             $params['availability'] = 'ready-to-use'; 
+             $params['availability'] = DIDNumberAvailability::READY_TO_USE;
             if ($type=='vanity') {
-             $params['availability'] = 'pending-in-review';
+             $params['availability'] = DIDNumberAvailability::PENDING_IN_REVIEW;
             }
 
             if ($user->trial_mode) {

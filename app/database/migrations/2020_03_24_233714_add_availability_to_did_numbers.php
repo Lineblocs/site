@@ -14,7 +14,7 @@ class AddAvailabilityToDidNumbers extends Migration
     {
         Schema::table('did_numbers', function (Blueprint $table) {
             //
-            $table->string('availability'); // ready-to-use, pending-in-review, review-failed-refunded
+            $table->string('availability'); // READY_TO_USE, PROVISIONING, UNAVAILABLE, PENDING_IN_REVIEW, REVIEW_FAILED_REFUNDED
         });
     }
 
