@@ -333,7 +333,7 @@ class RegisterController extends ApiAuthController
             'cents' => $amountInCents,
             'card_id' => NULL,
             'user_id' => $user->id,
-            'status' => 'approved'
+            'status' => 'APPROVED'
           ];
 
           UserCredit::create($credit, $plan);

@@ -78,7 +78,7 @@ final class BillingDataHelper {
       $membershipFees = 0;
       $amountOwed = 0;
       $planCost = 0;
-      $credits = UserCredit::where('user_id', '=',$user->id)->where('status', 'approved')->get();
+      $credits = UserCredit::where('user_id', '=',$user->id)->where('status', 'APPROVED')->get();
       $debits = UserDebit::where('user_id', '=',$user->id)->get();
       $invoices = UserInvoice::where('user_id', '=',$user->id)->get();
       if (!empty($workspace) && !$plan->pay_as_you_go) {

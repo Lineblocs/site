@@ -51,7 +51,7 @@ class CreditController extends HasStripeController {
           'cents' => $amountInCents,
           'card_id' => $data['card_id'],
           'user_id' => $user->id,
-          'status' => 'approved'
+          'status' => 'APPROVED'
         ];
         UserCredit::create($credit);
       
@@ -229,7 +229,7 @@ class CreditController extends HasStripeController {
           $result = $payment->execute($execution, $apiContext);
           // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
           $creditObj = UserCredit::findOrFail($_REQUEST['creditId']);
-          $creditObj->update([ 'status' => 'approved' ]);
+          $creditObj->update([ 'status' => 'APPROVED' ]);
           $userObj = User::findOrFail($_REQUEST['userId']);
           $userObj->update([
             'linked_paypal' => TRUE
