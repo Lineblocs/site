@@ -874,5 +874,13 @@ $api->version('v1', function($api) {
         */
     });
 
+    $api->group(['prefix' => 'billing'], function ($api) {
+      // Current routes (example of grouping them for cleaner code)
+      $api->get('info', '\App\Http\Controllers\BillingController@getBillingInfo');
+      $api->get('history', '\App\Http\Controllers\BillingController@getBillingHistory');
+      
+      // New Settlement Route
+      $api->post('invoices/{invoiceId}/settle', '\App\Http\Controllers\BillingController@settleInvoice');
+    });
   });
 });

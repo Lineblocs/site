@@ -6,6 +6,7 @@ use App\User;
 use App\UsageTrigger;
 use App\Subscription;
 use App\ServicePlan;
+use App\Helpers\RabbitMQHelper;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiAuthController;
@@ -130,5 +131,23 @@ class BillingController extends ApiAuthController
       return $pdf->download($filename);
     }
 
+    public function settleInvoice(Request $request, $invoiceId)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $data = $request->json()->all();
 
+      $message = [
+        'run_id' => 'settle_invoice_' . $invoiceId . '_' . time(),
+        'action' => 'settle_invoice',
+        'invoice_id' => $invoiceId,
+        'user_id' => $user->id,
+        'workspace_id' => $workspace->id,
+        'payment_details' => $data
+      ];
+
+      RabbitMQHelper::publish('billing_tasks', $message);
+
+      return $this->response->noContent();
+    }
 }
