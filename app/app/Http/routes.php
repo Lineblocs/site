@@ -831,6 +831,8 @@ $api->version('v1', function($api) {
       });
       $api->group([ 'prefix' => 'blockedNumbers'], function($api) {
         $api->get("/list", "BlockedNumbersController@getNumbers");
+        $api->post("/import", "BlockedNumbersController@import");
+        $api->get("/import/template", "BlockedNumbersController@importTemplate");
         $api->post("/", "BlockedNumbersController@postNumber");
         $api->delete("/{id}", "BlockedNumbersController@deleteNumber");
       });
