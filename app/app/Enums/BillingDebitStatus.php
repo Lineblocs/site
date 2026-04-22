@@ -8,11 +8,8 @@ namespace App\Enums;
  */
 abstract class ServiceBillingStatus
 {
-    public const UNBILLED   = 'UNBILLED';
-    public const BILLED     = 'BILLED';
-    public const PROCESSING = 'PROCESSING';
+    public const CREATED   = 'CREATED';
     public const FAILED     = 'FAILED';
-    public const VOID       = 'VOID';
 
     /**
      * Get all defined status values for validation.
@@ -22,11 +19,8 @@ abstract class ServiceBillingStatus
     public static function all(): array
     {
         return [
-            self::UNBILLED,
-            self::BILLED,
-            self::PROCESSING,
+            self::CREATED,
             self::FAILED,
-            self::VOID,
         ];
     }
 }
