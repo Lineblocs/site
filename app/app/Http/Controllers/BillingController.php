@@ -6,6 +6,7 @@ use App\User;
 use App\UsageTrigger;
 use App\Subscription;
 use App\ServicePlan;
+use App\UserCard;
 use App\Helpers\RabbitMQHelper;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -136,14 +137,18 @@ class BillingController extends ApiAuthController
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
       $data = $request->json()->all();
-
+      // TODO: this code should be agnostic to the payment gateway we use but its only
+      // currently built for Stripe. We should refactor this in the future to be more flexible
+      $card = UserCard::where('stripe_payment_method_id', $data['payment_method_id'])->firstOrFail();
       $message = [
         'run_id' => 'settle_invoice_' . $invoiceId . '_' . time(),
         'action' => 'SETTLE_INVOICE',
         'invoice_id' => $invoiceId,
         'user_id' => $user->id,
         'workspace_id' => $workspace->id,
-        'payment_method_id' => $data['payment_method_id'],
+        'payment_method_id' => $card->stripe_payment_method_id,
+        'card_last_4' => $card->last_4,
+        'card_brand' => $card->issuer,
       ];
 
       RabbitMQHelper::publish('billing_tasks', $message);
