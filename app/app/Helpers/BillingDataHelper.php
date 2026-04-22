@@ -8,6 +8,7 @@ use NumberFormatter;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use App\Helpers\StripeBillingHelper;
+
 use App\CustomizationsKVStore;
 use App\ApiCredentialKVStore;
 use App\Settings;
@@ -15,6 +16,8 @@ use App\UserCredit;
 use App\UserDebit;
 use App\UserInvoice;
 use App\WorkspaceUser;
+use App\Enums\PaymentStatus;
+use App\Enums\InvoiceSource;
 
 final class BillingDataHelper {
   // update this to support multiple billing gateways in the future
@@ -106,10 +109,10 @@ final class BillingDataHelper {
           $remainingBalance -= $debit->cents;
       }
       foreach ($invoices as $invoice) {
-          if ($invoice->status != 'COMPLETED') {
+          if ($invoice->status != PaymentStatus::PAID) {
             $accountBalance += $invoice->cents;
           }
-          if ($invoice->source == 'CREDITS') {
+          if ($invoice->source == InvoiceSource::CREDITS) {
             $remainingBalance -= $invoice->cents;
           }
       }
