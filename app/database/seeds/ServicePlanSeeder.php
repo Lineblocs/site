@@ -29,12 +29,13 @@ class ServicePlanSeeder extends Seeder
             'rank' => 0
         ]);
 
-        $base_cost =MainHelper::toCents(24.99);
+        $recurring_cost =MainHelper::toCents(24.99);
         $basic_plan = ServicePlan::create([
             'key_name' => 'basic',
             'nice_name' => 'Basic',
             'description' => 'Basic package with all base level features.',
-            'base_costs' => $base_cost,
+            'monthly_cost_cents' => $recurring_cost,
+            'annual_cost_cents' => $recurring_cost,
             'minutes_per_month' => 200,
             'call_duration' => 'Unlimited',
             'recording_space' => PlanHelper::gb_to_kb( 2 ),
@@ -57,12 +58,13 @@ class ServicePlanSeeder extends Seeder
             'rank' => 1
         ]);
 
-        $base_cost =MainHelper::toCents(49.99);
+        $recurring_cost =MainHelper::toCents(49.99);
         $basic_plan = ServicePlan::create([
             'key_name' => 'company',
             'nice_name' => 'Company',
             'description' => 'Company package with all base level features.',
-            'base_costs' => $base_cost,
+            'monthly_cost_cents' => $recurring_cost,
+            'annual_cost_cents' => $recurring_cost,
             'minutes_per_month' => 200,
             'call_duration' => 'Unlimited',
             'recording_space' => PlanHelper::gb_to_kb( 2 ),

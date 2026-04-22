@@ -14,6 +14,9 @@ use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
 use App\Helpers\EmailHelper;
+use App\Helpers\RabbitMQHelper;
+use App\Helpers\TokenHelper;
+use App\Helpers\BillingDataHelper;
 use \Config;
 use \Mail;
 use Twilio\Rest\Client;
@@ -21,6 +24,7 @@ use Twilio\TwiML\VoiceResponse;
 use App\UserCredit;
 use App\ServicePlan;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use Illuminate\Support\Facades\Password;
 use \Log;
 use App\UserDevice;
@@ -33,68 +37,72 @@ use App\CallSystemTemplate;
 use App\VerifiedCallerId;
 use App\PlanUsagePeriod;
 use App\SIPPoPRegion;
+use App\SIPRouter;
 use App\UserRegistrationQuestionResponse;
+use App\Subscription;
+use App\OneTimeLoginLink;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use DateTime;
 
 class RegisterController extends ApiAuthController
 {
-
     public function register(Request $request)
     {
-        // grab credentials from the request
+		// dd($request->all());
         $data = $request->all();
         $email = $data['email'];
-        $valid = filter_var($email, FILTER_VALIDATE_EMAIL);
-        if (!$valid) {
-            return $this->response->array([
-            'success' => FALSE,
-            'message' => 'Email was invalid..'
-          ]);
-
-
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->response->array(['success' => FALSE, 'message' => 'Email was invalid..']);
         }
-        $exists = User::where('email', $email)->first();
-        if ($exists) {
-          return $this->response->array([
-            'success' => FALSE,
-            'message' => 'User with this email already exists..'
-          ]);
+
+        if (User::where('email', $email)->first()) {
+            return $this->response->array(['success' => FALSE, 'message' => 'User already exists..']);
         }
+
         $user = MainHelper::createUser($data);
         try {
-            // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::fromUser($user)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
             return $this->errorInternal($request, 'Could not create token');
         }
+
         $unique = uniqid(TRUE);
-        $plan = 'pay-as-you-go';
-        if ( !empty($data['plan'] )) {
-          $plan = $data['plan'];
-        }
-        $trialMode =TRUE; 
+        $planKey = $data['plan'] ?? 'pay-as-you-go';
+        $mainRouter = SIPRouter::getMainRouter();
+        $servicePlan = ServicePlan::where('key_name', $planKey)->firstOrFail();
 
         $workspace = Workspace::create([
-        'creator_id' => $user->id,
-        'name' => $unique,
-        'api_token' => MainHelper::createAPIToken(),
-        'api_secret' => MainHelper::createAPISecret(),
-        'plan' => $plan,
-        'trial_mode' => $trialMode
-      ]);
-      WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
-      WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
+            'creator_id' => $user->id,
+            'name' => $unique,
+            'api_token' => MainHelper::createAPIToken(),
+            'api_secret' => MainHelper::createAPISecret(),
+            'plan' => $planKey,
+            'trial_mode' => TRUE,
+            'default_router_id' => $mainRouter->id
+        ]);
+
+
+
+        PlanUsagePeriod::create([
+            'workspace_id' => $workspace->id,
+            'started_at' => new DateTime()
+        ]);
+
+        WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
+        WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
+
         return $this->response->array([
             'success' => TRUE,
             'token' => MainHelper::createJWTPayload($token),
             'userId' => $user->id,
             'workspace' => $workspace->toArrayWithRoles($user)
         ]);
-
     }
+
     public function registerVerify(Request $request)
     {
       $data = $request->all();
@@ -121,7 +129,7 @@ class RegisterController extends ApiAuthController
      $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
       $number = $data['mobile_number'];
       $user = User::findOrFail($data['userId']);
-      $customizations = Customizations::getRecord();
+      $customizations = CustomizationsKVStore::getRecord();
       $reuse = [
           '+17808503688',
           '+15874874526'
@@ -193,23 +201,24 @@ class RegisterController extends ApiAuthController
     }
     public function saveRegistrationQuestionResponses(Request $request)
     {
-        $user = User::findOrFail($data['userId']);
         $data = $request->json()->all();
+        $user = User::findOrFail($data['user_id']);
+
         foreach ($data['responses'] as $response) {
           UserRegistrationQuestionResponse::create([
-            'user_id' => $user,
-            'question' => $response['question'],
+            'user_id' => $user->id,
             'question_id' => $response['question_id'],
             'response' => $response['response'],
           ]);
         }
+
         return $this->response->array(['success' => TRUE]);
     }
     public function userSpinup(Request $request)
     {
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
-        $customizations =Customizations::getRecord();
+        $customizations =CustomizationsKVStore::getRecord();
         $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail()->toArray();
         //$plan = $plans[$data['plan']];
         $region = SIPPoPRegion::findOrFail( $customizations->default_region );
@@ -228,11 +237,62 @@ class RegisterController extends ApiAuthController
           $workspace->update([
             'default_region' => $region->code
           ]);
+
+          Log::info('adding new user to SIP proxy database tables.');
           $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
 
           if (!$result) {
             return $this->errorInternal($request, 'could not create/provision user on PBX server');
           }
+
+          // Standardize billing cycle naming for the Go service
+
+          if (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') {
+              $billingCycle = 'ANNUAL';
+          } else {
+              $billingCycle = 'MONTHLY';
+          }
+          $recurringCost = NULL;
+          
+          $now = new DateTime();
+          if ($billingCycle === 'ANNUAL') {
+              $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
+              $recurringCost = $servicePlan->annual_cost_cents;
+          } else {
+              $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
+              $recurringCost = $servicePlan->monthly_cost_cents;
+          }
+
+          // 1. Create Subscription with Safety Gate anchor
+          $subscription = Subscription::create([
+              'workspace_id' => $workspace->id,
+              'current_plan_id' => $servicePlan->id,
+              'status' => 'ACTIVE',
+              'billing_cycle' => $billingCycle,
+              'current_period_end' => $periodEnd,
+              'next_billing_date' => $periodEnd 
+          ]);
+
+          // 2. Calculate Prorated Amount using BillingDataHelper
+          $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCost, $billingCycle);
+
+          // 3. Dispatch Immediate Billing Task
+          try {
+              RabbitMQHelper::dispatchImmediateBilling(
+                  $workspace,
+                  $subscription,
+                  $user,
+                  $servicePlan,
+                  $billingCycle,
+                  $amountToCharge
+              );
+              Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
+          } catch (\Exception $e) {
+              Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
+          }
+
+
+          Log::info('added user successfully.');
 
 
           // create k8s deployments
@@ -244,20 +304,31 @@ class RegisterController extends ApiAuthController
           );
 
           if ( $customizations->custom_code_containers_enabled  ) {
+            Log::info('deploying new container for custom user functions');
             $result = WebSvcHelper::post($svc, '/createContainer', $params);
             if (!$result) {
               return $this->errorInternal($request, 'Error occured when creating user containers');
             }
+
+            Log::info('deployed container successfully.');
           }
 
 
+          Log::info('updating DNS records.');
           $result = DNSHelper::refreshIPs();
           if (!$result) {
             return $this->errorInternal($request, 'DNS error occured');
           }
 
+          Log::info('updated DNS successfully.');
+
           //add register credit for user
-          $amountInCents = $customizations->register_credits*100;
+          $registerCredits = 0;
+          if (!empty($customizations->register_credits)) {
+            $registerCredits = $customizations->register_credits;
+          }
+
+          $amountInCents = $registerCredits*100;
           $credit = [
             'cents' => $amountInCents,
             'card_id' => NULL,
@@ -292,8 +363,16 @@ class RegisterController extends ApiAuthController
             'user' => $user,
             'link' => $link
           ];
+
+          Log::info('sending new user verification email');
           $subject =MainHelper::createEmailSubject("Verify Your Email");
           $result = EmailHelper::sendEmail($subject, $user->email, 'verify_email', $data);
+
+
+          $mailData = [];
+          $subject = sprintf("Welcome to %s", MainHelper::getSiteName());
+          $result = EmailHelper::sendEmail($subject, $user->email, 'welcome_email', $mailData);
+
           return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
 
@@ -301,8 +380,13 @@ class RegisterController extends ApiAuthController
     public function getSelf(Request $request)
     {
       $user = $this->getUser($request);
-      return $this->response->array($user->toArray());
+      $workspaceUser = $this->getWorkspaceUserWithAllData($request, $user);
+      $result = $user->toArray();
+      $result['workspace_data'] = $workspaceUser->toArray();
+
+      return $this->response->array($result);
     }
+
     public function updateSelf(Request $request)
     {
       $data = $request->json()->all();
@@ -328,6 +412,21 @@ class RegisterController extends ApiAuthController
       }
       return $this->response->noContent();
     }
+
+    public function updateWorkspaceUser(Request $request) {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $data = $request->json()->all();
+      $keys = ['fcm_token', 'apn_token'];
+      $updateData = array_intersect_key($data, array_flip($keys));
+
+      $workspaceUser = WorkspaceUser::where('workspace_id', $workspace->id)
+                  ->where('user_id', $user->id);
+      $workspaceUser->update($updateData);
+
+      return $this->response->noContent();
+    }
+
     public function setupWorkspace(Request $request)
     {
       $data = $request->json()->all();
@@ -519,6 +618,218 @@ class RegisterController extends ApiAuthController
           'found' => FALSE
         ]);
 
+  }
+
+  private function normalizeOneTimeLoginPayload(Request $request)
+  {
+      $payload = $request->all();
+      if (empty($payload)) {
+          $payload = $request->json()->all();
+      }
+
+      return is_array($payload) ? $payload : [];
+  }
+
+  private function userBelongsToWorkspace($user, $workspace)
+  {
+      if (!$user || !$workspace) {
+          return false;
+      }
+
+      if ((int) $workspace->creator_id === (int) $user->id) {
+          return true;
+      }
+
+      $workspaceUserCount = WorkspaceUser::where('workspace_id', $workspace->id)
+          ->where('user_id', $user->id)
+          ->count();
+
+      return $workspaceUserCount > 0;
+  }
+
+  public function sendOneTimeLoginLink(Request $request)
+  {
+      $data = $this->normalizeOneTimeLoginPayload($request);
+      $userId = array_key_exists('userId', $data) ? (int) $data['userId'] : (array_key_exists('user_id', $data) ? (int) $data['user_id'] : 0);
+      $workspaceId = array_key_exists('workspaceId', $data) ? (int) $data['workspaceId'] : (array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0);
+
+      if ($userId <= 0 || $workspaceId <= 0) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'userId and workspaceId are required.'
+          ]);
+      }
+
+      $user = User::find($userId);
+      $workspace = Workspace::find($workspaceId);
+      if (!$user || !$workspace) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'User or workspace not found.'
+          ]);
+      }
+
+      if (!$this->userBelongsToWorkspace($user, $workspace)) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'User does not belong to this workspace.'
+          ]);
+      }
+
+      $ttlMinutes = array_key_exists('expiry_minutes', $data) ? (int) $data['expiry_minutes'] : (int) env('ONE_TIME_LOGIN_LINK_TTL', 60);
+      if ($ttlMinutes <= 0) {
+          $ttlMinutes = 60;
+      }
+
+      $token = TokenHelper::createToken('one_time_login', [
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'email' => (string) $user->email
+      ], $ttlMinutes);
+
+      if (empty($token)) {
+          return $this->response->array([
+              'success' => false,
+              'message' => 'Could not generate one-time token.'
+          ]);
+      }
+
+      $tokenHash = hash('sha256', $token);
+      $now = new DateTime();
+      $expiresAt = (clone $now)->modify(sprintf('+%d minutes', $ttlMinutes));
+
+      OneTimeLoginLink::where('user_id', $user->id)
+          ->where('workspace_id', $workspace->id)
+          ->whereNull('used_at')
+          ->update([
+              'used_at' => $now->format('Y-m-d H:i:s')
+          ]);
+
+      OneTimeLoginLink::create([
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'token_hash' => $tokenHash,
+          'expires_at' => $expiresAt->format('Y-m-d H:i:s')
+      ]);
+
+      $linkExpiresAt = time() + ($ttlMinutes * 60);
+      $linkParams = [
+          'token' => $token,
+          'userId' => $user->id,
+          'workspaceId' => $workspace->id,
+          'expires' => $linkExpiresAt
+      ];
+      $linkParams['sig'] = TokenHelper::signLinkParams($linkParams);
+
+      $loginLink = MainHelper::createUrl('one-time-login') . '?' . http_build_query($linkParams);
+
+      $subject = MainHelper::createEmailSubject('Your One-Time Login Link');
+      $result = EmailHelper::sendEmail($subject, $user->email, 'one_time_login_link', [
+          'user' => $user,
+          'workspace' => $workspace,
+          'login_link' => $loginLink,
+          'expires_minutes' => $ttlMinutes
+      ]);
+
+      return $this->response->array([
+          'success' => $result === TRUE,
+          'email' => $user->email,
+          'workspace_id' => $workspace->id,
+          'expires_minutes' => $ttlMinutes
+      ]);
+  }
+
+  public function consumeOneTimeLoginLink(Request $request)
+  {
+      $token = $request->query('token');
+      $linkUserId = (int) $request->query('userId', 0);
+      $linkWorkspaceId = (int) $request->query('workspaceId', 0);
+      $linkExpires = (int) $request->query('expires', 0);
+      $linkSignature = (string) $request->query('sig', '');
+
+      if (empty($token)) {
+          return response('Invalid or expired one-time login link.', 403);
+      }
+
+      if ($linkExpires <= 0 || $linkExpires < time()) {
+          return response('This one-time login link has expired.', 403);
+      }
+
+      $isValidLinkSignature = TokenHelper::validateLinkSignature([
+          'token' => $token,
+          'userId' => $linkUserId,
+          'workspaceId' => $linkWorkspaceId,
+          'expires' => $linkExpires
+      ], $linkSignature);
+
+      if (!$isValidLinkSignature) {
+          return response('Invalid one-time login link signature.', 403);
+      }
+
+      $payload = TokenHelper::getPayload($token);
+      if (empty($payload)) {
+          return response('Invalid or expired one-time login link.', 403);
+      }
+
+      $userId = array_key_exists('user_id', $payload) ? (int) $payload['user_id'] : 0;
+      $workspaceId = array_key_exists('workspace_id', $payload) ? (int) $payload['workspace_id'] : 0;
+      $email = array_key_exists('email', $payload) ? (string) $payload['email'] : '';
+      if ($userId <= 0 || $workspaceId <= 0 || empty($email)) {
+          return response('Invalid one-time login link.', 403);
+      }
+
+      if ($linkUserId !== $userId || $linkWorkspaceId !== $workspaceId) {
+          return response('Invalid one-time login link.', 403);
+      }
+
+      $isValidToken = TokenHelper::validateToken($token, 'one_time_login', [
+          'user_id' => $userId,
+          'workspace_id' => $workspaceId,
+          'email' => $email
+      ]);
+
+      if (!$isValidToken) {
+          return response('Invalid or expired one-time login link.', 403);
+      }
+
+      $tokenHash = hash('sha256', $token);
+      $record = OneTimeLoginLink::where('token_hash', $tokenHash)->first();
+      if (!$record) {
+          return response('Login link not found.', 403);
+      }
+
+      if (!empty($record->used_at)) {
+          return response('This one-time login link has already been used.', 410);
+      }
+
+      if (strtotime($record->expires_at) <= time()) {
+          return response('This one-time login link has expired.', 403);
+      }
+
+      $user = User::find($record->user_id);
+      $workspace = Workspace::find($record->workspace_id);
+      if (!$this->userBelongsToWorkspace($user, $workspace)) {
+          return response('Invalid one-time login link.', 403);
+      }
+
+      $updated = \DB::table('one_time_login_links')
+          ->where('id', $record->id)
+          ->whereNull('used_at')
+          ->update([
+              'used_at' => date('Y-m-d H:i:s')
+          ]);
+
+      if ((int) $updated !== 1) {
+          return response('This one-time login link has already been used.', 410);
+      }
+
+      $loginToken = JWTAuth::fromUser($user);
+      if (!$loginToken) {
+          return response('Could not create login token.', 500);
+      }
+
+      $redirectUrl = MainHelper::createPortalLink(sprintf('?auth=%s&workspaceId=%d', $loginToken, $workspace->id));
+      return redirect($redirectUrl);
   }
 
   public function isTestNumber($number) {

@@ -4,13 +4,14 @@ use \Config;
 use \DateTime;
 use App\Settings;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use Exception;
 use Log;
 
 final class SMSHelper {
   public static function sendSMS($from='', $to='', $body='') {
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $ignoredClasses = ['App\Helpers\Sms\Base'];
     ClassFinder::disablePSR4Vendors(); // Optional; see performance notes below
     $providers = array_filter( ClassFinder::getClassesInNamespace('App\Helpers\Sms'), function($provider) use ($ignoredClasses) {

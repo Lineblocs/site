@@ -7,7 +7,9 @@ use App\Workspace;
 use App\WorkspaceUser;
 use App\PlanUsagePeriod;
 use App\Customizations;
+use App\CustomizationsGroup2;
 use App\ApiCredential;
+use App\ApiCredentialGroup2;
 use App\ServicePlan;
 class UserTableSeeder extends Seeder {
 
@@ -64,7 +66,9 @@ WorkspaceUser::createSuperAdmin($workspace, $admin);
         PlanUsagePeriod::create(['workspace_id' => $workspace->id, 'started_at' => new \DateTime(), 'active' => TRUE]);
     SIPRouterHelper::addUserToProxy($user->toArray(), $workspace->toArray());
     Customizations::create();
+    CustomizationsGroup2::create();
     ApiCredential::create();
+    ApiCredentialGroup2::create();
 	}
 
 }

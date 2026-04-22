@@ -71,6 +71,10 @@ class RTPProxyController extends AdminController
     {
 
         $rtpproxy = new RTPProxy ($request->all());
+        if (!MainHelper::validateRTPProxyAddress($rtpproxy->rtpproxy_sock)) {
+            return abort(500, 'RTP proxy socket address is invalid');
+        }
+
         $rtpproxy->save();
         SIPRouterHelper::addRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
@@ -97,7 +101,13 @@ class RTPProxyController extends AdminController
      */
     public function update(RTPProxyRequest $request, RTPProxy $rtpproxy)
     {
-        $rtpproxy->update($request->all());
+        $data = $request->all();
+
+        if (!MainHelper::validateRTPProxyAddress($data['rtpproxy_sock'])) {
+            return abort(500, 'RTP proxy socket address is invalid');
+        }
+
+        $rtpproxy->update($data);
         SIPRouterHelper::updateRTPProxy($rtpproxy->id,$rtpproxy->rtpproxy_sock);
         //header("X-Goto-URL: /admin/rtpproxy/" . $rtpproxy->id . "/edit");
     }
@@ -134,7 +144,7 @@ class RTPProxyController extends AdminController
      */
     public function data()
     {
-        $rtpproxys = RTPProxy::select(array('rtpproxy_sockets.id', 'rtpproxy_sockets.rtpproxy_sock','rtpproxy_sockets.cpu_pct', 'rtpproxy_sockets.mem_pct', 'rtpproxy_sockets.created_at'));
+        $rtpproxys = RTPProxy::select(array('rtpproxy_sockets.id', 'rtpproxy_sockets.rtpproxy_sock', 'rtpproxy_sockets.ip_address', 'rtpproxy_sockets.cpu_pct', 'rtpproxy_sockets.mem_pct', 'rtpproxy_sockets.created_at'));
 
         return Datatables::of($rtpproxys)
             //->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')

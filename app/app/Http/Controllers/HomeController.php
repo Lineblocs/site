@@ -11,7 +11,13 @@ use App\SystemStatusUpdate;
 use App\User;
 use App\ServicePlan;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
+use App\Competitor;
+use App\CostSaving;
+use App\Call;
+use App\Testimonial;
 use App\Helpers\EmailHelper;
 use App\Faq;
 use App\CompanyRepresentative;
@@ -53,14 +59,30 @@ class HomeController extends BaseController {
         ]
     );
     $countries = SIPCountry::all();
-    return view('pages.home', compact('content', 'countries'));
+    $numCalls = Call::count();
+    $testimonials = Testimonial::orderBy('rank')->orderBy('name')->limit(4)->get();
+    $callStatistics = DB::select( DB::raw("SELECT SUM(ended_at-started_at) AS total_time FROM calls;") );
+    $totalTime = (int) $callStatistics[0]->total_time;
+
+    $totalCallMinutes = (int) round( $totalTime/60 );
+    return view('pages.home', compact('content', 'countries', 'numCalls', 'totalCallMinutes', 'testimonials'));
   }
   public function pricing(Request $request)
   {
-    $plans = ServicePlan::where('include_in_pricing_pages', '1')->get();
+    $plans = ServicePlan::where('include_in_pricing_pages', '1')
+      ->orderBy('rank')
+      ->orderBy('nice_name')
+      ->get();
     $plans = ServicePlan::sortPlansByFeatures($plans);
+    $competitors = Competitor::all();
+    $savings = CostSaving::select(array('cost_savings.*', DB::raw('competitors.name AS competitor_name')));
+    $savings = $savings->join('competitors', 'competitors.id', '=', 'cost_savings.competitor_id');
+    $savings = $savings->get();
+
     return view('pages.pricing', [
-      'plans' => $plans
+      'plans' => $plans,
+      'savings' => $savings,
+      'competitors' => $competitors
     ]);
   }
 
@@ -176,8 +198,8 @@ class HomeController extends BaseController {
   public function contact(Request $request)
   {
     $request->session()->forget('status');
-    $creds = ApiCredential::getRecord();
-    $customizations = Customizations::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $vars = [
       'customizations' => $customizations,
       'creds' => $creds
@@ -187,8 +209,8 @@ class HomeController extends BaseController {
   public function contactSubmit(Request $request)
   {
     $data = $request->all();
-    $creds = ApiCredential::getRecord();
-    $customizations = Customizations::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
     $vars = [
         'customizations' => $customizations
     ];
@@ -237,8 +259,8 @@ class HomeController extends BaseController {
   public function requestQuote(Request $request)
   {
     $request->session()->forget('status');
-    $customizations = Customizations::getRecord();
-    $creds = ApiCredential::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $teamSize = array(
       'small' => '1-50 employees',
       'medium' => '51-500 employees',
@@ -256,8 +278,8 @@ class HomeController extends BaseController {
   public function requestQuoteSubmit(Request $request)
   {
     $data = $request->all();
-    $customizations = Customizations::getRecord();
-    $creds = ApiCredential::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
 
     $teamSize = array(
       'small' => '1-50 employees',
@@ -326,8 +348,8 @@ class HomeController extends BaseController {
   public function bugReport(Request $request)
   {
     $request->session()->forget('status');
-    $customizations = Customizations::getRecord();
-    $creds = ApiCredential::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $bugTypes = array(
       'general' => 'Page not working',
     );
@@ -342,8 +364,8 @@ class HomeController extends BaseController {
   public function bugReportSubmit(Request $request)
   {
     $data = $request->all();
-    $customizations = Customizations::getRecord();
-    $creds = ApiCredential::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
 
     $bugTypes = array(
       'general' => 'Page not working',
@@ -403,6 +425,16 @@ class HomeController extends BaseController {
     $request->session()->flash('status', 'Thanks you, your request has been submitted successfully. Someone will be in touch in 24-48 hours');
     return view('pages.request_quote', $vars);
   }
+
+  public function leaveFeedback(Request $request)
+  {
+    $data = $request->all();
+    $customizations = CustomizationsKVStore::getRecord();
+    $vars = [
+      'customizations' => $customizations
+    ];
+    return view('pages.leave_feedback', $vars);
+  }
   public function alternative(Request $request)
   {
     $vars = [];
@@ -422,7 +454,7 @@ class HomeController extends BaseController {
 
   public function login(Request $request)
   {
-    return redirect(mainhelper::createappurl("/#/login"));
+    return redirect(mainhelper::createAppUrl("/#/login"));
   }
   public function backToBilling(Request $request)
   {

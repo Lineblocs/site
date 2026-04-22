@@ -251,6 +251,7 @@ $rates = [];
     public function edit_ip(SIPProvider $provider, SIPProviderWhitelistIp $ip)
     {
         $params = array(
+            'ip' => $ip,
             'provider' => $provider,
             'ranges' => self::$ipRanges
         );

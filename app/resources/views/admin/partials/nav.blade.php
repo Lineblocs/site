@@ -85,9 +85,16 @@
                             </a>
                         </li>
 
+                        
                         <li>
                             <a href="{{url('admin/rtpproxy')}}">
                                 <i class="glyphicon glyphicon-user"></i> RTP proxies
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{url('admin/rtpengine')}}">
+                                <i class="glyphicon glyphicon-user"></i> RTP engines
                             </a>
                         </li>
                         <li>
@@ -105,7 +112,7 @@
                     </a>
                     <ul class="nav collapse">
                         <li>
-                            <a href="{{url('admin/number')}}">
+                            <a href="{{url('admin/numberinventory')}}">
                                 <i class="glyphicon glyphicon-user"></i> Number Inventory
                             </a>
                         </li>
@@ -139,13 +146,42 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{url('admin/faqs')}}">
-                                <i class="glyphicon glyphicon-bullhorn"></i> FAQs
+                            <a href="{{url('admin/policies')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Service terms & Policies
                             </a>
                         </li>
                         <li>
-                            <a href="{{url('admin/policies')}}">
-                                <i class="glyphicon glyphicon-bullhorn"></i> Service terms & Policies
+                            <a href="{{url('admin/competitor')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Competitors
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/numberservice')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Number Services
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/costsaving')}}">
+                                <i class="glyphicon glyphicon-bullhorn"></i> Cost Savings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/companyrepresentative')}}">
+                                <i class="glyphicon glyphicon-user"></i> Company Representatives
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-folder-open"></i> Content Management
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav collapse">
+                        <li>
+                            <a href="{{url('admin/testimonial')}}">
+                                <i class="glyphicon glyphicon-comment"></i> Testimonials
                             </a>
                         </li>
                         <li>
@@ -158,9 +194,29 @@
                                 <i class="glyphicon glyphicon-list"></i> Resources
                             </a>
                         </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="glyphicon glyphicon-bullhorn"></i> 
+                        
+                        Support
+                        @if (\App\Helpers\MainHelper::numTicketsOpen()>0)
+                            <small>({{\App\Helpers\MainHelper::numTicketsOpen()}} open)</small>
+                        @endif
+
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav collapse">
                         <li>
-                            <a href="{{url('admin/companyrepresentative')}}">
-                                <i class="glyphicon glyphicon-user"></i> Company Representatives
+                            <a href="{{url('admin/supportticket')}}">
+                                <i class="glyphicon glyphicon-list"></i> Tickets
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('admin/supportcategory')}}">
+                                <i class="glyphicon glyphicon-list"></i> Categories
                             </a>
                         </li>
                     </ul>

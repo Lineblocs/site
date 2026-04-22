@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\User;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
 use App\SIPPoPRegion;
 use App\RegistrationQuestionnaire;
@@ -60,7 +61,7 @@ class CustomizationsController extends AdminController {
 
 	public function view()
 	{
-		$record = Customizations::getRecord();
+		$record = CustomizationsKVStore::getRecord();
 		$maintenanceDays = [
 			'monday',
 			'tuesday',
@@ -76,7 +77,11 @@ class CustomizationsController extends AdminController {
 		$currencies = MainHelper::$currencies;
 		$regions = SIPPoPRegion::all();
 		$questionnaire = RegistrationQuestionnaire::all();
-		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions, 'currencies' => $currencies, 'questionnaire' => $questionnaire]);
+		$feedbackPlatforms = [
+			'TrustPilot',
+			'G2 Crowd',
+		];
+		return view('admin.customizations.view',  ['record' => $record, 'maintenanceDays' => $maintenanceDays, 'maintenanceTimes' => $maintenanceTimes, 'regions' => $regions, 'currencies' => $currencies, 'questionnaire' => $questionnaire, 'feedbackPlatforms' => $feedbackPlatforms]);
 	}
 
 	private function storeUploadedFile( $file, $file_name ) {
@@ -105,7 +110,6 @@ class CustomizationsController extends AdminController {
 	}
 	public function save(Request $request)
 	{
-		$record = Customizations::getRecord();
 		$update_params = $request->all();
 		if ($request->hasFile('app_logo')) {
 			$app_logo = $this->processUploadedFile($request, $record, 'app_logo');
@@ -154,6 +158,20 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['payment_gateway_enabled'] = $payments_enabled;
 
+		if ( $update_params['allow_billing_overages'] =='yes') {
+			$allow_billing_overages = true;
+		}
+		$update_params['allow_billing_overages'] = $allow_billing_overages;
+
+		$live_chat_enabled = false;
+
+		if ( $update_params['live_chat_enabled'] =='yes') {
+			$live_chat_enabled = true;
+		}
+		$update_params['live_chat_enabled'] = $live_chat_enabled;
+
+
+
 		$billing_retry_enabled = false;
 
 		if ( $update_params['billing_retry_enabled'] =='yes') {
@@ -197,7 +215,11 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['registration_questionnaire_enabled'] = $registration_questionnaire_enabled;
 
-
+		$customer_satisfaction_survey_enabled = false;
+		if ( $update_params['customer_satisfaction_survey_enabled'] =='yes') {
+			$customer_satisfaction_survey_enabled = true;
+		}
+		$update_params['customer_satisfaction_survey_enabled'] = $customer_satisfaction_survey_enabled;
 
 		$enable_google_signin = false;
 
@@ -217,6 +239,15 @@ class CustomizationsController extends AdminController {
 			$enable_apple_signin = true;
 		}
 		$update_params['enable_apple_signin'] = $enable_apple_signin;
+
+		$show_savings_content = false;
+
+		if ( !empty( $update_params['show_savings_content'] ) ) {
+			$show_savings_content = true;
+		}
+		$update_params['show_savings_content'] = $show_savings_content;
+
+
 
 		$search_include_portal_views = false;
 		$search_include_blog_views = false;
@@ -258,10 +289,15 @@ class CustomizationsController extends AdminController {
 
 		$automatic_security_updates = false;
 
-		if ( !empty( $update_params['automatic_security_updates'] ) ) {
-			$automatic_security_updates = true;
+		$allow_app_feedback = false;
+
+		if ( !empty( $update_params['allow_app_feedback'] ) ) {
+			$allow_app_feedback = true;
 		}
-		$update_params['automatic_security_updates'] = $automatic_security_updates;
+		$update_params['allow_app_feedback'] = $allow_app_feedback;
+
+
+
 
 		$recaptcha_enabled = false;
 
@@ -286,7 +322,14 @@ class CustomizationsController extends AdminController {
 		unset( $update_params['questionnaire'] );
 		$this->updateQuestionnaire($questionnaire);
 
-		$record->update( $update_params );
+		foreach ($update_params as $key => $value) {
+			if (is_string($value)) {
+				CustomizationsKVStore::upsert($key, 'string_value', $value);
+			} else if (is_bool($value)) {
+				CustomizationsKVStore::upsert($key, 'boolean_value', $value);
+			}
+		}
+
 		$session = $request->session();
 		$session->flash('type', 'success');
 		$session->flash('message', 'Settings updated...');

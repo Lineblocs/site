@@ -527,7 +527,7 @@ abstract class AbstractPHPParser
         $this->cache->store(
             $this->compilationUnit->getId(),
             $this->compilationUnit,
-            $hash
+            $hash ?: null
         );
 
         $this->tearDownEnvironment();
@@ -1292,10 +1292,11 @@ abstract class AbstractPHPParser
             );
         }
 
+        $docComment = $this->docComment;
         $callable = $this->parseFunctionDeclaration();
         $this->compilationUnit->addChild($callable);
 
-        $callable->setComment($this->docComment);
+        $callable->setComment($docComment);
         $callable->setTokens($this->tokenStack->pop());
         $this->prepareCallable($callable);
 
@@ -2107,7 +2108,8 @@ abstract class AbstractPHPParser
      */
     private function parseIncrementExpression(array &$expressions)
     {
-        if ($this->isReadWriteVariable(end($expressions))) {
+        $expression = end($expressions);
+        if ($expression && $this->isReadWriteVariable($expression)) {
             return $this->parsePostIncrementExpression(array_pop($expressions));
         }
         return $this->parsePreIncrementExpression();
@@ -2172,7 +2174,8 @@ abstract class AbstractPHPParser
      */
     private function parseDecrementExpression(array &$expressions)
     {
-        if ($this->isReadWriteVariable(end($expressions))) {
+        $expression = end($expressions);
+        if ($expression && $this->isReadWriteVariable($expression)) {
             return $this->parsePostDecrementExpression(array_pop($expressions));
         }
         return $this->parsePreDecrementExpression();
@@ -2472,6 +2475,11 @@ abstract class AbstractPHPParser
      *
      * //  -----------------------
      * if (isset($foo, $bar, $baz)) {
+     * //  -----------------------
+     * }
+     *
+     * //  -----------------------
+     * if (isset($foo['bar'], BAR['baz']['foo'])) {
      * //  -----------------------
      * }
      * </code>
@@ -3326,7 +3334,7 @@ abstract class AbstractPHPParser
                     $expressions[] = $expr;
                     break;
                 case Tokens::T_YIELD:
-                    $expressions[] = $this->parseYield();
+                    $expressions[] = $this->parseYield(false);
                     break;
                 default:
                     $expressions[] = $this->parseOptionalExpressionForVersion();
@@ -4339,7 +4347,7 @@ abstract class AbstractPHPParser
      *
      * @param T $expr
      *
-     * @return ASTMemberPrimaryPrefix|T
+     * @return ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix|T
      */
     protected function parseParenthesisExpressionOrPrimaryPrefixForVersion(ASTExpression $expr)
     {
@@ -4478,7 +4486,7 @@ abstract class AbstractPHPParser
      *
      * @param T $node The previously parsed node.
      *
-     * @return ASTFunctionPostfix|T The original input node or this node wrapped with a function postfix instance.
+     * @return ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix|T The original input node or this node wrapped with a function postfix instance.
      *
      * @since 1.0.0
      */
@@ -4505,7 +4513,7 @@ abstract class AbstractPHPParser
      *
      * @throws ParserException
      *
-     * @return ASTFunctionPostfix
+     * @return ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix
      *
      * @since 0.9.6
      */
@@ -4557,7 +4565,7 @@ abstract class AbstractPHPParser
      *
      * @throws ParserException
      *
-     * @return ASTMemberPrimaryPrefix|T
+     * @return ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix|T
      *
      * @since 0.9.6
      */
@@ -4590,7 +4598,7 @@ abstract class AbstractPHPParser
      *
      * @throws ParserException
      *
-     * @return ASTMemberPrimaryPrefix
+     * @return ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix
      *
      * @since 0.9.6
      */
@@ -4691,7 +4699,7 @@ abstract class AbstractPHPParser
      *
      * @throws ParserException
      *
-     * @return ASTMemberPrimaryPrefix
+     * @return ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix
      *
      * @since 0.9.6
      */
@@ -4844,7 +4852,7 @@ abstract class AbstractPHPParser
      *
      * @param ASTNode $node Node that represents the image of the method postfix node.
      *
-     * @return ASTMethodPostfix
+     * @return ASTMethodPostfix|ASTFunctionPostfix|ASTIndexExpression|ASTMemberPrimaryPrefix
      *
      * @since 1.0.0
      */
@@ -5342,6 +5350,10 @@ abstract class AbstractPHPParser
 
             $this->consumeComments();
 
+            while ($this->tokenizer->peek() === Tokens::T_SQUARED_BRACKET_OPEN) {
+                $this->parseListExpression();
+            }
+
             if ($this->tokenizer->peek() === Tokens::T_COMMA) {
                 $this->consumeToken(Tokens::T_COMMA);
                 $this->consumeComments();
@@ -5383,7 +5395,7 @@ abstract class AbstractPHPParser
      * @throws ParserException
      * @throws UnexpectedTokenException
      *
-     * @return ASTExpression
+     * @return ASTCompoundVariable|ASTVariableVariable|ASTVariable
      *
      * @since 0.9.6
      */
@@ -5437,7 +5449,7 @@ abstract class AbstractPHPParser
      * @throws ParserException
      * @throws UnexpectedTokenException
      *
-     * @return ASTExpression
+     * @return ASTCompoundVariable|ASTVariableVariable
      *
      * @since 0.9.6
      */
@@ -6705,7 +6717,7 @@ abstract class AbstractPHPParser
 
                 return $class;
             case Tokens::T_YIELD:
-                return $this->parseYield();
+                return $this->parseYield(true);
         }
 
         $this->tokenStack->push();
@@ -7122,6 +7134,9 @@ abstract class AbstractPHPParser
     protected function parseUseDeclarationForVersion(array $fragments)
     {
         $image = $this->parseNamespaceImage($fragments);
+        if ($image === false) {
+            return;
+        }
 
         // Add mapping between image and qualified name to symbol table
         $this->useSymbolTable->add($image, join('', $fragments));
@@ -7130,7 +7145,7 @@ abstract class AbstractPHPParser
     /**
      * @param array<string> $fragments
      *
-     * @return string
+     * @return string|false
      */
     protected function parseNamespaceImage(array $fragments)
     {
@@ -7185,12 +7200,23 @@ abstract class AbstractPHPParser
             $this->consumeToken(Tokens::T_COMMA);
         } while ($tokenType !== Tokenizer::T_EOF);
 
-
         $definition = $this->setNodePositionsAndReturn($definition);
 
         $this->consumeToken(Tokens::T_SEMICOLON);
 
         return $definition;
+    }
+
+    /**
+     * Constant cannot be typed before PHP 8.3.
+     *
+     * @return ASTConstantDeclarator
+     *
+     * @since  1.16.0
+     */
+    protected function parseTypedConstantDeclarator()
+    {
+        throw $this->getUnexpectedNextTokenException();
     }
 
     /**
@@ -7234,9 +7260,15 @@ abstract class AbstractPHPParser
         $this->consumeComments();
         $this->tokenStack->push();
 
+        $nextToken = $this->tokenizer->peekNext();
+
+        if ($this->isConstantName($nextToken)) {
+            return $this->parseTypedConstantDeclarator();
+        }
+
         $tokenType = $this->tokenizer->peek();
 
-        if (false === $this->isConstantName($tokenType)) {
+        if (!$this->isConstantName($tokenType)) {
             throw $this->getUnexpectedNextTokenException();
         }
 
@@ -7784,7 +7816,7 @@ abstract class AbstractPHPParser
      */
     private function parseReturnAnnotation($comment)
     {
-        if (0 === preg_match(self::REGEXP_RETURN_TYPE, $comment, $match)) {
+        if (!preg_match(self::REGEXP_RETURN_TYPE, $comment, $match)) {
             return null;
         }
 
@@ -7890,9 +7922,12 @@ abstract class AbstractPHPParser
     /**
      * This method parses a yield-statement node.
      *
+     * @param bool $standalone Either yield is the statement (true), or nested in
+     *                         an expression (false).
+     *
      * @return ASTYieldStatement
      */
-    private function parseYield()
+    private function parseYield($standalone)
     {
         $this->tokenStack->push();
 
@@ -7914,11 +7949,9 @@ abstract class AbstractPHPParser
 
         $this->consumeComments();
 
-        if (Tokens::T_PARENTHESIS_CLOSE === $this->tokenizer->peek()) {
-            return $this->setNodePositionsAndReturn($yield);
+        if ($standalone) {
+            $this->parseStatementTermination();
         }
-
-        $this->parseStatementTermination();
 
         return $this->setNodePositionsAndReturn($yield);
     }
@@ -8215,8 +8248,8 @@ abstract class AbstractPHPParser
                 return bindec(substr($numberRepresentation, 2));
 
             default:
-                if (substr($numberRepresentation, 0, 1) === '0') {
-                    return octdec(preg_replace('/^0+(oO)?/', '', $numberRepresentation));
+                if (preg_match('/^0+[oO]?(\d+)$/', $numberRepresentation, $match)) {
+                    return octdec($match[1]);
                 }
 
                 return $numberRepresentation;

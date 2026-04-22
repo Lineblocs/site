@@ -13,6 +13,12 @@
     </div>
     <div class="col-md-12">
         <form method="POST" action="" enctype="multipart/form-data">
+            <div class="row form-group">
+                <label for="site_name">Site Name</label>
+                <div class="controls">
+                    <input name="site_name" id="site_name" class="form-control" value="{{$record->site_name}}"/>
+                </div>
+            </div>
             <div class="row">
                 <h3>Logos</h3>
                 <hr/>
@@ -191,6 +197,18 @@
                 <button id="addRegQuestionBtn" type="button" class="btn btn-info">Add Question</button>
             </div>
 
+
+            <div class="row">
+                <h3>Survey links</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <label for="customer_satisfaction_survey_url">Customer satisfaction survey</label>
+                <div class="controls">
+                    <input type="text" name="customer_satisfaction_survey_url" class="form-control" id="customer_satisfaction_survey_url" value="{{$record->customer_satisfaction_survey_url }}" />
+                </div>
+            </div>
+
             <div class="row">
                 <h3>Preferences</h3>
                 <hr/>
@@ -256,6 +274,22 @@
             </div>
 
             <div class="row form-group">
+                <label for="app_logo">Annual pricing</label>
+                <div class="controls">
+
+                </div>
+                <div class="controls">
+                    @if ( $record->enable_annual_pricing )
+                        <input id="enable_annual_pricing" type="checkbox"  name="enable_annual_pricing" checked/>
+                    @else
+                        <input id="enable_annual_pricing" type="checkbox"  name="enable_annual_pricing"/>
+                    @endif
+                     <label for="enable_annual_pricing">Enable</label>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="mail_provider">Search options</label>
                 <small>Please select any sections you want to add to the portal search results</small>
                 <div class="controls">
@@ -284,6 +318,21 @@
                 </div>
             </div>
 
+            <div class="row">
+                <h4>Content to display</h4>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <div class="controls">
+                    @if ( $record->show_savings_content )
+                        <input id="show_savings_content" type="checkbox"  name="show_savings_content" checked/>
+                    @else
+                        <input id="show_savings_content" type="checkbox"  name="show_savings_content"/>
+                    @endif
+                    <label>Price Savings</label>
+                </div>
+            </div>
+
             <div class="row form-group">
                 <label for="payments_enabled">Payments enabled</label>
                 <div class="controls">
@@ -300,11 +349,16 @@
                     </select>
                 </div>
             </div>
-            <div class="row form-group">
+
+           <div class="row form-group">
                 <label for="payment_gateway">Payment gateway</label>
                 <div class="controls">
                     <select name="payment_gateway" class="form-control" id="payment_gateway">
                         @if ( $record->payment_gateway == 'stripe')
+                            <option value="" selected>Select payment gateway</option>
+                            <option value="stripe" selected>Stripe</option>
+                        @else
+                            <option value="">Select payment gateway</option>
                             <option value="stripe" selected>Stripe</option>
                         @endif
                         <!--<option>Wide</option>-->
@@ -312,6 +366,58 @@
                     </select>
                 </div>
             </div>
+
+           <div class="row form-group">
+                <label for="allow_billing_overages">Allow billing overages</label>
+                <div class="controls">
+                    <select name="allow_billing_overages" class="form-control" id="allow_billing_overages">
+                        @if ( $record->allow_billing_overages)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="live_chat_enabled">Live chat enabled</label>
+                <div class="controls">
+                    <select name="live_chat_enabled" class="form-control" id="live_chat_enabled">
+                        @if ( $record->live_chat_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="live_chat_provider">Live chat provider</label>
+                <div class="controls">
+                    <select name="live_chat_provider" class="form-control" id="live_chat_provider">
+                        @if ( $record->live_chat_provider == 'intercom')
+                            <option value="">Select provider</option>
+                            <option value="intercom" selected>Intercom</option>
+                        @else
+                            <option value="" selected>Select provider</option>
+                            <option value="intercom">Intercom</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
 
             <div class="row form-group">
                 <label for="default_currency">Default billing currency</label>
@@ -405,6 +511,23 @@
                 <div class="controls">
                     <select name="registration_questionnaire_enabled" class="form-control" id="registration_questionnaire_enabled">
                         @if ( $record->registration_questionnaire_enabled)
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        @else
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        @endif
+                        <!--<option>Wide</option>-->
+                        <!--<option>Compact</option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="customer_satisfaction_survey_enabled">Customer satisfaction survey enabled</label>
+                <div class="controls">
+                    <select name="customer_satisfaction_survey_enabled" class="form-control" id="customer_satisfaction_survey_enabled">
+                        @if ( $record->customer_satisfaction_survey_enabled)
                             <option value="yes" selected>Yes</option>
                             <option value="no">No</option>
                         @else
@@ -612,6 +735,93 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row">
+                <h3>App feedback settings</h3>
+                <hr/>
+            </div>
+            <div class="row form-group">
+                <div class="controls">
+                    @if ( $record->allow_app_feedback )
+                        <input id="allow_app_feedback" type="checkbox"  name="allow_app_feedback" checked/>
+                    @else
+                        <input id="allow_app_feedback" type="checkbox"  name="allow_app_feedback"/>
+                    @endif
+                    <label>Allow app feedback</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="feedback_platform">Feedback platform</label>
+                <div class="controls">
+                    <select name="feedback_platform" class="form-control" id="feedback_platform">
+                        @foreach ($feedbackPlatforms as $platform)
+                            @if ($platform == $record->feedback_platform)
+                                <option value="{{$platform}}" selected>{{$platform}}</option>
+                            @else
+                                <option value="{{$platform}}">{{$platform}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="trustpilot_url">TrustPilot link</label>
+                <div class="controls">
+                    <input type="text" name="trustpilot_url" class="form-control" id="trustpilot_url" value="{{$record->trustpilot_url}}" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="g2_url">G2 Crowd link</label>
+                <div class="controls">
+                    <input type="text" name="g2_url" class="form-control" id="g2_url" value="{{$record->g2_url}}" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <h3>Billing settings</h3>
+                <hr/>
+            </div>
+
+
+            <div class="row form-group">
+                <label for="billing_frequency">Billing frequency</label>
+                <br/>
+                <small>note: this setting will be used to calculate total billing cost per call (outgoing or incoming). 
+                Also, calls billed by the minute will be rounded up to the next minute. For example if you made a call for 3 minutes and 45 seconds it will automatically round up to 4 minutes total. 
+                If you would like more precise billing it is suggested to bill calls by the second. </small>
+                <div class="controls">
+                    <select name="billing_frequency" class="form-control" id="billing_frequency">
+                        @if ( $record->billing_frequency == 'PER_MINUTE')
+                            <option value="PER_MINUTE" selected>Total minutes</option>
+                            <option value="PER_SECOND">Total seconds</option>
+                        @elseif ( $record->billing_frequency == 'PER_SECOND')
+                            <option value="PER_MINUTE">Total minutes</option>
+                            <option value="PER_SECOND" selected>Total seconds</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="maintenance_window_time">Maintenance window time</label>
+                <div class="controls">
+                    <select name="maintenance_window_time" class="form-control" id="maintenance_window_time">
+                        @foreach ($maintenanceTimes as $time)
+                            @if ($time == $record->maintenance_window_time)
+                                <option value="{{$time}}" selected>{{$time}}</option>
+                            @else
+                                <option value="{{$time}}">{{$time}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
 
             <div class="row">
                 <h3>Maintenance and upgrade settings</h3>

@@ -6,6 +6,7 @@ use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
+use \App\WorkspaceRole;
 use \App\Flow;
 use \App\FlowTemplate;
 use \App\UserEmailOption;
@@ -78,6 +79,13 @@ trait UserWorkflow {
         $attrs['user_id'] = $reqUser->id;
         $attrs['workspace_id'] = $workspace->id;
 
+        if (empty($attrs['assigned_role_id'])) {
+            $defaultRole = WorkspaceRole::getDefaultRole();
+            $attrs['assigned_role_id'] = $defaultRole->id;
+        } else {
+            $attrs['assigned_role_id'] = $data['assigned_role_id'];
+        }
+
         $resource = WorkspaceUser::create($attrs);
         UserEmailOption::create([
             'user_id' =>$resource->id,
@@ -93,6 +101,14 @@ trait UserWorkflow {
         if (!$this->hasPermissions($request, $workspaceUser, 'manage_users')) {
             return $this->response->errorForbidden();
         }
+
+        if (empty($attrs['assigned_role_id'])) {
+            $defaultRole = WorkspaceRole::getDefaultRole();
+            $attrs['assigned_role_id'] = $defaultRole->id;
+        } else {
+            $attrs['assigned_role_id'] = $data['assigned_role_id'];
+        }
+
         if (!empty($data['roles'])) {
                 $attrs = $data['roles'];
                 $workspaceUser->update($attrs);

@@ -7,12 +7,13 @@ use App\PhotoAlbum;
 use DB;
 use Illuminate\Http\Request;
 use Michelf\Markdown;
-use Symfony\Component\Yaml\Yaml;
 
 use App\ResourceArticle;
 use App\ResourceSection;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use View;
 use Config;
 class ResourcesController extends BaseController {
@@ -26,7 +27,7 @@ class ResourcesController extends BaseController {
 
   public function createACOptions() {
     $file = base_path("yaml/resources.yaml");
-    $data = Yaml::parse(file_get_contents($file));
+    $data = yaml_parse(file_get_contents($file));
     $options = [];
     $links = [];
     $url = Config::get("app.url");
@@ -72,7 +73,7 @@ class ResourcesController extends BaseController {
     $search = $request->get("search");
     $file = base_path("yaml/resources.yaml");
     $resourceSections = ResourceSection::all();
-    $dataBefore = Yaml::parse(file_get_contents($file));
+    $dataBefore = yaml_parse(file_get_contents($file));
     $articles = $this->getResourceArticles();
     $searched = FALSE;
     $results = [];
@@ -144,7 +145,7 @@ class ResourcesController extends BaseController {
   public function section(Request $request, $section)
   {
     $file = base_path("yaml/resources.yaml");
-    $data = Yaml::parse(file_get_contents($file));
+    $data = yaml_parse(file_get_contents($file));
     $info = $this->getSection($section);
     $sectionName = $info['name'];
     $results = $info['results'];
@@ -189,8 +190,8 @@ class ResourcesController extends BaseController {
     $title = $article['name'];
     $tags = $article['seo_tags'];
     $description = $article['description'];
-    $customizations = Customizations::getRecord();
-    $creds = ApiCredential::getRecord();
+    $customizations = CustomizationsKVStore::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     View::share('title', $title);
     View::share('tags', $tags);
     View::share('description', $description);

@@ -59,15 +59,21 @@ class BillingController extends ApiAuthController
     }
     public function downloadBillingHistory(Request $request)
     {
+      $site = MainHelper::getSiteName();
       $user = JWTAuth::parseToken('bearer', 'authorization', 'auth')->authenticate();
       $all = $request->all();
-      $start = DateTime::createFromFormat("Y-m-d H:i:s", $all['startDate']);
-      $end = DateTime::createFromFormat("Y-m-d H:i:s",$all['endDate']);
+      $start = DateTime::createFromFormat("Y-m-d", $all['startDate']);
+      $end = DateTime::createFromFormat("Y-m-d",$all['endDate']);
 
-      $data = MainHelper::billingData($user, $all['startDate'], $all['endDate']);
+      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
       $dateRange = sprintf("%s - %s", $start->format("Y-m-d"), $end->format("Y-m-d"));
-      $pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
-      return $pdf->download('invoice.pdf');
+      $pdf = PDF::loadView('pdf.invoice', [
+        'rows' => $data, 
+        'dateRange' => $dateRange,
+        'site' => $site,
+      ]);
+      $filename = sprintf("%s_billing_history.pdf", $site);
+      return $pdf->download($filename);
 
     }
 
@@ -88,6 +94,35 @@ class BillingController extends ApiAuthController
         $update = $request->only(['auto_recharge', 'auto_recharge_top_up', 'invoices_by_email', 'billing_package']);
         $user->update( $update );
         return $this->response->noContent();
+    }
+
+    public function viewEstimatedCharges(Request $request)
+    {
+      $site = MainHelper::getSiteName();
+      $user = $this->getUser($request);
+      $all = $request->all();
+      
+      $startDate = $all['startDate'] ?? null;
+      $endDate = $all['endDate'] ?? null;
+      
+      if (!$startDate || !$endDate) {
+        $now = new DateTime();
+        $startDate = $startDate ?: $now->format('Y-m-01');
+        $endDate = $endDate ?: $now->format('Y-m-d');
+      }
+      
+      $data = BillingDataHelper::billingData($user, $startDate, $endDate);
+
+      $dateRange = sprintf("%s - %s", $startDate, $endDate);
+      
+      $pdf = PDF::loadView('pdf.estimated_charges', [
+        'rows' => $data, 
+        'dateRange' => $dateRange,
+        'site' => $site,
+      ]);
+      
+      $filename = sprintf("%s_estimate_charges.pdf", $site);
+      return $pdf->download($filename);
     }
 
 

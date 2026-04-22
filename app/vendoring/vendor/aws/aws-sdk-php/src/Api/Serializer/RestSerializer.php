@@ -8,8 +8,8 @@ use Aws\Api\Shape;
 use Aws\Api\StructureShape;
 use Aws\Api\TimestampShape;
 use Aws\CommandInterface;
-use Aws\EndpointV2\EndpointProviderV2;
 use Aws\EndpointV2\EndpointV2SerializerTrait;
+use Aws\EndpointV2\Ruleset\RulesetEndpoint;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -42,15 +42,13 @@ abstract class RestSerializer
 
     /**
      * @param CommandInterface $command Command to serialize into a request.
-     * @param $endpointProvider Provider used for dynamic endpoint resolution.
      * @param $clientArgs Client arguments used for dynamic endpoint resolution.
      *
      * @return RequestInterface
      */
     public function __invoke(
         CommandInterface $command,
-        $endpointProvider = null,
-        $clientArgs = null
+        $endpoint = null
     )
     {
         $operation = $this->api->getOperation($command->getName());
@@ -58,17 +56,10 @@ abstract class RestSerializer
         $opts = $this->serialize($operation, $commandArgs);
         $headers = isset($opts['headers']) ? $opts['headers'] : [];
 
-        if ($endpointProvider instanceof EndpointProviderV2) {
-            $this->setRequestOptions(
-                $endpointProvider,
-                $command,
-                $operation,
-                $commandArgs,
-                $clientArgs,
-                $headers
-            );
-            $this->endpoint = new Uri($this->endpoint);
+        if ($endpoint instanceof RulesetEndpoint) {
+            $this->setEndpointV2RequestOptions($endpoint, $headers);
         }
+
         $uri = $this->buildEndpoint($operation, $commandArgs, $opts);
 
         return new Request(
@@ -205,6 +196,8 @@ abstract class RestSerializer
 
     private function buildEndpoint(Operation $operation, array $args, array $opts)
     {
+        $isModifiedModel = $this->api->isModifiedModel();
+        $serviceName = $this->api->getServiceName();
         // Create an associative array of variable definitions used in expansions
         $varDefinitions = $this->getVarDefinitions($operation, $args);
 
@@ -233,26 +226,38 @@ abstract class RestSerializer
 
         $path = $this->endpoint->getPath();
 
-        //Accounts for trailing '/' in path when custom endpoint
-        //is provided to endpointProviderV2
-        if ($this->api->isModifiedModel()
-            && $this->api->getServiceName() === 's3'
-        ) {
+        if ($isModifiedModel && $serviceName === 's3') {
             if (substr($path, -1) === '/' && $relative[0] === '/') {
                 $path = rtrim($path, '/');
             }
             $relative = $path . $relative;
+
+            if (strpos($relative, '../') !== false
+                || substr($relative, -2) === '..'
+            ) {
+                if ($relative[0] !== '/') {
+                    $relative = '/' . $relative;
+                }
+
+                return new Uri($this->endpoint->withPath('') . $relative);
+            }
         }
+
+        if ((!empty($relative) && $relative !== '/')
+            && !$isModifiedModel
+            && $serviceName !== 's3'
+        ) {
+            $this->normalizePath($path);
+        }
+
         // If endpoint has path, remove leading '/' to preserve URI resolution.
         if ($path && $relative[0] === '/') {
             $relative = substr($relative, 1);
         }
 
-        //Append path to endpoint when leading '//...' present
-        // as uri cannot be properly resolved
-        if ($this->api->isModifiedModel()
-            && strpos($relative, '//') === 0
-        ) {
+        //Append path to endpoint when leading '//...'
+        // present as uri cannot be properly resolved
+        if ($isModifiedModel && strpos($relative, '//') === 0) {
             return new Uri($this->endpoint . $relative);
         }
 
@@ -303,5 +308,20 @@ abstract class RestSerializer
             }
         }
         return $varDefinitions;
+    }
+
+    /**
+     * Appends trailing slash to non-empty paths with at least one segment
+     * to ensure proper URI resolution
+     *
+     * @param string $path
+     *
+     * @return void
+     */
+    private function normalizePath(string $path): void
+    {
+        if (!empty($path) && $path !== '/' && substr($path, -1) !== '/') {
+            $this->endpoint = $this->endpoint->withPath($path . '/');
+        }
     }
 }

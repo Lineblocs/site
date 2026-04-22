@@ -24,6 +24,7 @@
         <thead>
         <tr>
             <th>{!! trans("admin/rtpproxies.rtpproxy_sock") !!}</th>
+            <th>{!! trans("admin/rtpproxies.ip_address") !!}</th>
             <th>{!! trans("admin/rtpproxies.cpu_pct") !!}</th>
             <th>{!! trans("admin/rtpproxies.mem_pct") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>

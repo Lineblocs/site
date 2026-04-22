@@ -30,11 +30,11 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
-        <div class="form-group  {{ $errors->has('monthly_charge_cents') ? 'has-error' : '' }}">
-            {!! Form::label('base_costs', trans("admin/serviceplans.monthly_charge_cents"), array('class' => 'control-label')) !!}
+        <div class="form-group  {{ $errors->has('monthly_cost_cents') ? 'has-error' : '' }}">
+            {!! Form::label('monthly_cost_cents', trans("admin/serviceplans.monthly_cost_cents"), array('class' => 'control-label')) !!}
             <div class="controls">
-                {!! Form::text('base_costs', null, array('class' => 'form-control')) !!}
-                <span class="help-block">{{ $errors->first('name', ':message') }}</span>
+                {!! Form::text('monthly_cost_cents', null, array('class' => 'form-control')) !!}
+                <span class="help-block">{{ $errors->first('monthly_cost_cents', ':message') }}</span>
             </div>
         </div>
         <div class="form-group  {{ $errors->has('annual_cost_cents') ? 'has-error' : '' }}">

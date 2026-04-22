@@ -44,7 +44,6 @@
 
 namespace PDepend\Source\AST;
 
-use BadMethodCallException;
 use OutOfBoundsException;
 use PDepend\Source\ASTVisitor\ASTVisitor;
 
@@ -101,8 +100,10 @@ abstract class AbstractASTNode implements ASTNode
     public function accept(ASTVisitor $visitor, $data = null)
     {
         $methodName = 'visit' . substr(get_class($this), 22);
+        $callable = array($visitor, $methodName);
+        assert(is_callable($callable));
 
-        return call_user_func(array($visitor, $methodName), $this, $data);
+        return call_user_func($callable, $this, $data);
     }
 
     /**
@@ -432,7 +433,7 @@ abstract class AbstractASTNode implements ASTNode
      * Returns the parent node of this node or <b>null</b> when this node is
      * the root of a node tree.
      *
-     * @return ASTNode
+     * @return ?ASTNode
      */
     public function getParent()
     {
@@ -475,7 +476,7 @@ abstract class AbstractASTNode implements ASTNode
      * Returns a doc comment for this node or <b>null</b> when no comment was
      * found.
      *
-     * @return string
+     * @return ?string
      */
     public function getComment()
     {

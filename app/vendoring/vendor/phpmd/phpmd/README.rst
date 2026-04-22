@@ -59,12 +59,12 @@ While the ``rulesets.xml`` ruleset file could look like this:
 
   <?xml version="1.0"?>
   <ruleset name="My first PHPMD rule set"
-           xmlns="http://pmd.sf.net/ruleset/1.0.0"
+           xmlns="https://phpmd.org/xml/ruleset/1.0.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0
-                         http://pmd.sf.net/ruleset_xml_schema.xsd"
+           xsi:schemaLocation="https://phpmd.org/xml/ruleset/1.0.0
+                         http://phpmd.org/xml/ruleset_xml_schema_1.0.0.xsd"
            xsi:noNamespaceSchemaLocation="
-                         http://pmd.sf.net/ruleset_xml_schema.xsd">
+                         http://phpmd.org/xml/ruleset_xml_schema_1.0.0.xsd">
     <description>
       My custom rule set that checks my code...
     </description>
@@ -169,7 +169,17 @@ Command line options
 
   An example command line: ::
 
-    phpmd PHP/Depend/DbusUI xml codesize --reportfile phpmd.xml --suffixes php,phtml
+    phpmd PHP/Depend/DbusUI xml codesize --reportfile "phpmd.xml" --suffixes "php,phtml"
+
+  Options can be before or after arguments. They can be separated from their value either with a space or an equal (``=``) sign.
+  Thus, the following syntax is equivalent to the previous one: ::
+
+    phpmd --reportfile="phpmd.xml" --suffixes="php,phtml" PHP/Depend/DbusUI xml codesize
+
+  Strings starting with ``-`` will be recognized as option names. If you have arguments starting with ``-``, set options
+  first, then use ``--`` to mark the explicit start or the arguments list: ::
+
+    phpmd --reportfile "phpmd.xml" --suffixes "php,phtml" -- -foo/Folder xml codesize
 
 Using multiple rule sets
 ````````````````````````

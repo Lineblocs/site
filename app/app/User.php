@@ -16,6 +16,7 @@ use App\UserInvoice;
 use App\Recording;
 use App\Workspace;
 use App\WorkspaceUser;
+use App\Subscription;
 use Log;
 use DateTime;
 use DateInterval;
@@ -43,7 +44,8 @@ class User extends Model implements AuthenticatableContract,
       "admin" => "boolean",
       "free_trial_started" => "date",
       "enable_2fa" => "boolean",
-      "confirmed" => "boolean"
+      "confirmed" => "boolean",
+      "auto_save_flows" => "boolean"
     );
     public function getSIPURL() {
       //return sprintf("%s:%s", $this->ip_address, $this->sip_port);
@@ -58,7 +60,7 @@ class User extends Model implements AuthenticatableContract,
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
-      $balance = BillingDataHelper::getBillingInfo();
+      $balance = BillingDataHelper::getBillingInfo($this);
       if ($balance['remainingBalance']<=$cost && $workspace->plan == 'pay-as-you-go') {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }
@@ -115,7 +117,12 @@ class User extends Model implements AuthenticatableContract,
         }
 
         Log::info(sprintf("looking up service plan key_name = %s", $work->plan));
-        $plan = ServicePlan::where('key_name', $work->plan)->firstOrFail()->toArray();
+        $plan = Subscription::select(array('subscriptions.*', 'service_plans.*'))
+                ->join('service_plans', 'service_plans.id', '=', 'subscriptions.current_plan_id')
+                ->where('workspace_id', $work->id)
+                ->firstOrFail()
+                ->toArray();
+        //$plan = ServicePlan::where('key_name', $work->plan)->firstOrFail()->toArray();
         return $plan;
       } else {
         return [

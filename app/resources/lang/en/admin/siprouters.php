@@ -28,5 +28,11 @@ return [
     'tcp_autoscaling' => 'TCP Autoscaling',
     'tls_support' => 'TLS Support',
     'tls_port' => 'TLS Port',
+    'websocket_gateway' => 'Websocket Gateway',
+    'ws_support' => 'WS Support',
+    'ws_port' => 'WS Port',
+    'wss_support' => 'WSS Support',
+    'wss_port' => 'WSS Port',
+    'tls_port' => 'TLS Port',
     'default' => 'Default'
 ];

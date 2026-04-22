@@ -13,7 +13,6 @@ class BalanceResource extends Model {
     $record = parent::create( $attrs );
     $billing = BillingDataHelper::getBillingInfo($user, $plan);
     $update = [];
-    $update['balance'] = $billing['accountBalance'];
     $record->update($update);
     return $record;
 

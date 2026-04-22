@@ -4,7 +4,9 @@ use \Config;
 use \DateTime;
 use App\Settings;
 use App\Customizations;
+use App\CustomizationsKVStore;
 use App\ApiCredential;
+use App\ApiCredentialKVStore;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use Zendesk\API\HttpClient as ZendeskAPI;
 use Exception;
@@ -12,7 +14,7 @@ use Log;
 
 final class SupportHelper {
   public static function getClient() {
-    $creds = ApiCredential::getRecord();
+    $creds = ApiCredentialKVStore::getRecord();
     $subdomain = $creds->zendesk_subdomain;
     $username  = $creds->zendesk_username;
     $token  = $creds->zendesk_token;
@@ -23,7 +25,7 @@ final class SupportHelper {
   }
 
   public static function createTicket($subject, $comment, $priority, $args=array()) {
-    $customizations = Customizations::getRecord();
+    $customizations = CustomizationskVStore::getRecord();
     $zendeskEnabled = $customizations->zendesk_enabled;
 
     if (!$zendeskEnabled) {

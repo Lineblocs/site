@@ -10,6 +10,7 @@ use \App\DIDNumber;
 use \App\SIPProvider;
 use \App\SIPProviderHost;
 use \App\SIPProviderRate;
+use \App\SIPPoPRegion;
 use \App\DNSRecord;
 use \App\ServicePlan;
 use \App\Workspace;
@@ -25,6 +26,7 @@ use \App\SIPCountry;
 use \App\SIPRegion;
 use \App\SIPRateCenter;
 use \App\RTPProxy;
+use \App\RTPEngine;
 use \App\SystemStatusCategory;
 use \App\NumberInventory;
 use \App\RouterFlow;
@@ -36,6 +38,12 @@ use \App\ResourceSection;
 use \App\ResourceArticle;
 use \App\CompanyRepresentative;
 use \App\SIPRoutingACL;
+use \App\Competitor;
+use \App\CostSaving;
+use \App\NumberService;
+use \App\SupportTicket;
+use \App\SupportTicketCategory;
+use \App\Testimonial;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -74,12 +82,14 @@ class RouteServiceProvider extends ServiceProvider
        \Route::model('rate', CallRate::class);
        \Route::model('country', SIPCountry::class);
        \Route::model('region', SIPRegion::class);
+       \Route::model('popregion', SIPPoPRegion::class);
        \Route::model('center', SIPRateCenter::class);
        \Route::model('systemstatus', SystemStatusCategory::class);
        \Route::model('errortrace', ErrorUserTrace::class);
-       \Route::model('number', NumberInventory::class);
+       \Route::model('numberinventory', NumberInventory::class);
        \Route::model('routerflow', RouterFlow::class);
        \Route::model('rtpproxy', RTPProxy::class);
+       \Route::model('rtpengine', RTPEngine::class);
        \Route::model('workspace', Workspace::class);
        \Route::model('workspaceflow', WorkspaceRoutingFlow::class);
        \Route::model('trunk', SIPTrunk::class);
@@ -91,6 +101,12 @@ class RouteServiceProvider extends ServiceProvider
 
        \Route::model('companyrepresentative',CompanyRepresentative::class);
        \Route::model('routingacl',SIPRoutingACL::class);
+       \Route::model('competitor',Competitor::class);
+       \Route::model('testimonial',Testimonial::class);
+       \Route::model('costsaving',CostSaving::class);
+       \Route::model('numberservice',NumberService::class);
+       \Route::model('supportticket',SupportTicket::class);
+       \Route::model('supportcategory',SupportTicketCategory::class);
     }
 
     /**

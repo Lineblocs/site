@@ -41,6 +41,15 @@ trait ExtensionWorkflow {
           return $this->errorPerformingAction();
 
         }
+        // check if extension with username exists already
+        $conflictingExt = Extension::where('username', $data['username'])
+                                        ->where('workspace_id', $workspace->id)
+                                        ->first();
+                                    
+        if (!empty($conflictingExt)) {
+            return $this->errorInternal($request, 'Extension with username already exists.');
+        }
+
         if (empty($data['flow_id'])) {
             $flow = Flow::create([
               'name' => 'Flow for ext ' . $data['username'],
@@ -121,7 +130,23 @@ trait ExtensionWorkflow {
             return $this->response->errorForbidden();
         }
 
+        $username = $extension->username;
         $data = $request->only('username', 'secret', 'caller_id', 'flow_id', 'tags');
+
+        if ($username != $data['username']) {
+            $data = $request->only('username', 'secret', 'caller_id', 'flow_id', 'tags');
+
+
+            // check if extension with username exists already
+            $conflictingExt = Extension::where('username', $data['username'])
+                                            ->where('workspace_id', $workspace->id)
+                                            ->first();
+                                        
+            if (!empty($conflictingExt)) {
+                return $this->errorInternal($request, 'Extension with username already exists.');
+            }
+        }
+
         $tags = $data['tags'];
         unset($data['tags']);
         $extension->update( $data );

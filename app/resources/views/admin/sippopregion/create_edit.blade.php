@@ -7,8 +7,8 @@
             trans("admin/modal.general") }}</a></li>
 </ul>
 <!-- ./ tabs -->
-@if (isset($region))
-{!! Form::model($region, array('url' => url('admin/popregion') . '/' . $region->id, 'method' => 'put', 'class' => 'bf',
+@if (isset($popregion))
+{!! Form::model($popregion, array('url' => url('admin/popregion') . '/' . $popregion->id, 'method' => 'put', 'class' => 'bf',
 'files'=> true)) !!}
 @else
 {!! Form::open(array('url' => url('admin/popregion'), 'method' => 'post', 'class' => 'bf', 'files'=> true)) !!}
@@ -35,9 +35,9 @@
             {!! Form::label('active', trans("admin/admin.active"), array('class' => 'control-label')) !!}
             <div class="controls">
                 {!! Form::label('active', trans("admin/admin.yes"), array('class' => 'control-label')) !!}
-                {!! Form::radio('active', '1', @isset($region)? $region->active : 'false') !!}
+                {!! Form::radio('active', '1', @isset($popregion)? $popregion->active : 'false') !!}
                 {!! Form::label('active', trans("admin/admin.no"), array('class' => 'control-label')) !!}
-                {!! Form::radio('active', '0', @isset($region)? $region->active : 'true') !!}
+                {!! Form::radio('active', '0', @isset($popregion)? $popregion->active : 'true') !!}
                 <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
             </div>
         </div>
@@ -45,7 +45,7 @@
             <input type="hidden" id="_token" value="{{csrf_token()}}"/>
             <button type="submit" class="btn btn-sm btn-success">
                 <span class="glyphicon glyphicon-ok-circle"></span>
-                @if (isset($region))
+                @if (isset($popregion))
                 {{ trans("admin/modal.edit") }}
                 @else
                 {{trans("admin/modal.create") }}
@@ -59,7 +59,7 @@
         $(function () {
             $("#roles").select2()
         });
-        @if (isset($region))
+        @if (isset($popregion))
         var token = $("#_token").val();
         @endif
 

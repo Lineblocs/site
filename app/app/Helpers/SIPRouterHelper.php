@@ -167,6 +167,24 @@ final class SIPRouterHelper {
     self::reloadRTPProxies();
   }
 
+  public static function addRTPEngine($lineblocsId, $socketAddr) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('INSERT INTO `rtpengine` (`socket`, `lineblocs_id`) VALUES (?, ?)', [$socketAddr, $lineblocsId]);
+    self::reloadRTPProxies();
+  }
+
+  public static function updateRTPEngine($lineblocsId, $socketAddr) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->insert('UPDATE `rtpengine`  SET socket = ? WHERE `lineblocs_id` = ?', [$socketAddr, $lineblocsId]);
+    self::reloadRTPProxies();
+  }
+
+  public static function removeRTPEngine($lineblocsId) {
+    $conn = DB::connection('mysql-opensips');
+    $conn->delete('DELETE FROM `rtpengine` WHERE `lineblocs_id` = ?', [$lineblocsId]);
+    self::reloadRTPProxies();
+  }
+
   public static function removeDomain($user, $domain) {
     $conn = DB::connection('mysql-opensips');
     $conn->delete('DELETE FROM `domain` WHERE `domain` = ?', [$domain]);

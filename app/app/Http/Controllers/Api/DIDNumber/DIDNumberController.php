@@ -105,7 +105,8 @@ class DIDNumberController extends ApiAuthController {
               'flow_json' => null,
               'started' => false,
               'workspace_id' => $workspace->id,
-              'user_id' => $user->id
+              'user_id' => $user->id,
+              'creation_intent' => 'CREATED_WITH_DID_PURCHASE'
             ]);
             $number->update([
               'flow_id' => $flow->id

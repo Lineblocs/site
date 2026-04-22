@@ -14,9 +14,9 @@ class AddCentsIncludingTaxes extends Migration
     {
         Schema::table('users_invoices', function (Blueprint $table) {
             //
-            $table->float('cents_including_taxes');
+            $table->integer('cents_including_taxes');
             $table->json('tax_metadata');
-            $table->float('cents_taxes');
+            $table->integer('cents_taxes');
         });
     }
 

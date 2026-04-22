@@ -11,6 +11,7 @@ use \Illuminate\Http\Request;
 use \App\User;
 use \App\UserCard;
 use \App\Transformers\UserCardTransformer;
+use Log;
 
 
 
@@ -47,16 +48,26 @@ class CardController extends HasStripeController {
         $cards = UserCard::where('user_id', $user->id)->get();
         return $this->response->collection($cards, new UserCardTransformer);
     }
+
+    private function removePaymentMethod($paymentMethodId) {
+        // First, retrieve the payment method
+        $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+        
+        // Detach it from the customer
+        $paymentMethod->detach();
+        
+        return TRUE;
+    }
     public function deleteCard(Request $request, $cardId)
     {
-        $card = UserCard::firstOrFail($cardId);
-        if (!$this->hasPermissions($request, $card, 'manage_billing')) {
+        $card = UserCard::findOrFail($cardId);
+        $workspace = $this->getWorkspace($request);
+        $user = $this->getUser($request);
+        //if (!$this->hasPermissions($request, $card, 'manage_billing')) {
+        if (TRUE) {
+            Log::info(sprintf("removing card: %s", $card->id));
             try {
-                \Stripe\Customer::deleteSource(
-                $user->stripe_id,
-                $card->stripe_id
-                );
-
+                MainHelper::removePaymentMethod($workspace, $card);
             } catch (Exception $ex) {
                 Log::error("error while processing new user card: " . $ex->getMessage());
                 return $this->errorInternal($request, 'Error deleting card..');

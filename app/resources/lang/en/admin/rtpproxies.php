@@ -9,5 +9,7 @@ return [
     'cpu_pct' =>   'CPU used',
     'mem_pct' =>   'MEM used',
     'priority' =>   'Priority',
-    'router' =>   'Router'
+    'router' =>   'Router',
+    'ip_address' =>   'Public IP Address',
+    'on_same_network_as_router' => 'On same network as router'
 ];

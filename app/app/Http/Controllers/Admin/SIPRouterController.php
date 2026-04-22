@@ -47,19 +47,22 @@ class SIPRouterController extends AdminController
     public function create()
     {
         $ranges = MainHelper::$ipRanges;
-        $regions = SIPPoPregion::createSelectOptions();
+        $regions = SIPPoPregion::createSelectOptions(TRUE);
         return view('admin.siprouter.create_edit', compact('ranges', 'regions'));
     }
 
     public function processRequest( $request ) {
         $data = $request->all();
         $result = [];
+        $result['region_id'] = $data['region_id'];
         $booleanKeys = [
             'udp_support',
             'udp_autoscaling',
             'tcp_support',
             'tcp_autoscaling',
-            'tls_support'
+            'tls_support',
+            'ws_support',
+            'wss_support',
         ];
         foreach ( $data as $key => $value ) {
             if ( in_array( $key, $booleanKeys )) {
@@ -102,7 +105,7 @@ class SIPRouterController extends AdminController
     public function edit(SIPRouter $router)
     {
         $ranges = MainHelper::$ipRanges;
-        $regions = SIPPoPregion::createSelectOptions();
+        $regions = SIPPoPregion::createSelectOptions(TRUE);
         $digitMappings = SIPRouterDigitMapping::select(array(
             'sip_routers_digit_mappings.*',
             DB::raw( 'route1.name AS route1_name' ),
@@ -121,7 +124,7 @@ class SIPRouterController extends AdminController
         Log::info("digit mapping sql query: " . $digitMappings->toSql());
         $digitMappings = $digitMappings->get();
 
-        $servers = SIPRouterMediaServer::select(array('media_servers.*'));
+        $servers = SIPRouterMediaServer::select(array('media_servers.*', DB::raw('sip_routers_media_servers.id AS router_media_id')));
         $servers->join('sip_routers', 'sip_routers.id', '=', 'sip_routers_media_servers.router_id');
         $servers->join('media_servers', 'media_servers.id', '=', 'sip_routers_media_servers.server_id');
         $servers->where('sip_routers_media_servers.router_id', '=', $router->id);
