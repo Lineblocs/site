@@ -139,7 +139,7 @@ class BillingController extends ApiAuthController
 
       $message = [
         'run_id' => 'settle_invoice_' . $invoiceId . '_' . time(),
-        'action' => 'settle_invoice',
+        'action' => 'SETTLE_INVOICE',
         'invoice_id' => $invoiceId,
         'user_id' => $user->id,
         'workspace_id' => $workspace->id,
