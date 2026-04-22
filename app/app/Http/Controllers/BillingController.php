@@ -143,7 +143,7 @@ class BillingController extends ApiAuthController
         'invoice_id' => $invoiceId,
         'user_id' => $user->id,
         'workspace_id' => $workspace->id,
-        'payment_details' => $data
+        'payment_method_id' => $data['payment_method_id'],
       ];
 
       RabbitMQHelper::publish('billing_tasks', $message);
