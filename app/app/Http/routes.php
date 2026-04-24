@@ -304,6 +304,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('serviceplan/{serviceplan}/show', 'Admin\ServicePlanController@show');
     Route::get('serviceplan/{serviceplan}/edit', 'Admin\ServicePlanController@edit');
     Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
+    Route::post('serviceplan/{serviceplan}/migrate', 'Admin\ServicePlanController@migrate');
     Route::resource('serviceplan', 'Admin\ServicePlanController');
 
      # costsaving

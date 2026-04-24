@@ -133,12 +133,10 @@
                 ;
             });
 
-            /*
             $('.close_popup').click(function () {
                 parent.$.colorbox.close();
             });
 
-            */
             $('.back_btn').click(function () {
                 document.location.href = back;
             });

@@ -5,6 +5,9 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
+   <li><a href="#tab-migrate" data-toggle="tab"> {{
+            trans("admin/serviceplans.migrate_users") }}</a></li>
+
 </ul>
 <!-- ./ tabs -->
 @if (isset($serviceplan))
@@ -14,6 +17,7 @@
 @endif
         <!-- Tabs Content -->
 <div class="tab-content">
+
     <!-- General tab -->
     <div class="tab-pane active" id="tab-general">
         <div class="form-group  {{ $errors->has('key_name') ? 'has-error' : '' }}">
@@ -99,6 +103,31 @@
             @endif
         </button>
         </div>
+
+
+    </div>
+    <div class="tab-pane" id="tab-migrate">
+        @if (isset($serviceplan))
+            {!! Form::open(array('url' => url('admin/serviceplan/' . $serviceplan->id . '/migrate'), 'method' => 'post', 'class' => 'bf')) !!}
+            <div class="alert alert-warning" style="margin-top: 20px; margin-bottom: 20px;">
+                <p>{{ trans("admin/serviceplans.migrate_warning") }}</p>
+            </div>
+            <div class="form-group">
+                {!! Form::label('migrate_plan', trans("admin/serviceplans.select_plan"), array('class' => 'control-label')) !!}
+                <div class="controls">
+                    {!! Form::select('migrate_plan', $migratePlans, null, ['class' => 'form-control', 'placeholder' => trans("admin/serviceplans.select_plan")]) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="action" value="migrate" class="btn btn-sm btn-danger">
+                    <span class="glyphicon glyphicon-transfer"></span>
+                    {{ trans("admin/serviceplans.migrate_users") }}
+                </button>
+            </div>
+            {!! Form::close() !!}
+        @else
+            <p>{{ trans("admin/serviceplans.save_first_to_migrate") }}</p>
+        @endif
     </div>
     {!! Form::close() !!}
     @endsection @section('scripts')
