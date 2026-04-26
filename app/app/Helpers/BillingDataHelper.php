@@ -98,7 +98,7 @@ final class BillingDataHelper {
             $query->where('status', 'ACTIVE')
               ->orWhere(function ($subQuery) use ($cycleStart, $cycleEnd) {
                 $subQuery->where('status', 'TERMINATED')
-                    ->whereBetween('account_activated_at', [$cycleStart, $cycleEnd]);
+                  ->whereBetween('activated_account_at', [$cycleStart, $cycleEnd]);
               });
           })
           ->count();
