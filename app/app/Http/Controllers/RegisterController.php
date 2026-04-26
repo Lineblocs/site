@@ -92,7 +92,10 @@ class RegisterController extends ApiAuthController
             'started_at' => new DateTime()
         ]);
 
-        WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
+        WorkspaceUser::createSuperAdmin($workspace, $user, [
+            'activated_account_at' => new DateTime(),
+            'accepted' => TRUE
+        ]);
         WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
 
         return $this->response->array([

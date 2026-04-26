@@ -648,7 +648,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       ]);
       $workspaceUser->update([
         'accepted' => TRUE,
-        'hash_expired' => TRUE
+        'hash_expired' => TRUE,
+        'activated_account_at' => $now
       ]);
       $invite->update([
         'valid' => FALSE

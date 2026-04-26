@@ -161,7 +161,10 @@ trait UserWorkflow {
         if (!$this->hasPermissions($request, $user, 'manage_users')) {
             return $this->response->errorForbidden();
         }
-        $user->update(['status' => WorkspaceUserStatus::TERMINATED]);
+        $user->update([
+            'status' => WorkspaceUserStatus::TERMINATED,
+            'terminated_at' => new DateTime()
+        ]);
         return $this->response->noContent();
     }
 
