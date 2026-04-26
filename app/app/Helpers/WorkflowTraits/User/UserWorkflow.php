@@ -163,7 +163,7 @@ trait UserWorkflow {
         }
         $user->update([
             'status' => WorkspaceUserStatus::TERMINATED,
-            'terminated_at' => new DateTime()
+            'terminated_account_at' => new DateTime()
         ]);
         return $this->response->noContent();
     }
