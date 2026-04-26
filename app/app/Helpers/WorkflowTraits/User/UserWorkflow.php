@@ -16,6 +16,7 @@ use \App\Helpers\MainHelper;
 use \App\Helpers\WorkspaceHelper;
 use \App\Helpers\EmailHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
+use \App\Enum\WorkspaceUserStatus;
 use App\WorkspaceUser;
 use App\WorkspaceInvite;
 use DB;
@@ -78,6 +79,7 @@ trait UserWorkflow {
         $attrs = $data['roles'];
         $attrs['user_id'] = $reqUser->id;
         $attrs['workspace_id'] = $workspace->id;
+        $attrs['status'] = WorkspaceUserStatus::INVITED;
 
         if (empty($attrs['assigned_role_id'])) {
             $defaultRole = WorkspaceRole::getDefaultRole();
@@ -149,6 +151,17 @@ trait UserWorkflow {
             return $this->response->errorForbidden();
         }
         $user->delete();
+        return $this->response->noContent();
+    }
+
+    public function terminateUser(Request $request, $userId)
+    {
+        $data = $request->json()->all();
+        $user = WorkspaceUser::where('public_id', '=', $userId)->firstOrFail();
+        if (!$this->hasPermissions($request, $user, 'manage_users')) {
+            return $this->response->errorForbidden();
+        }
+        $user->update(['status' => WorkspaceUserStatus::TERMINATED]);
         return $this->response->noContent();
     }
 

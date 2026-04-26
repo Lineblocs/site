@@ -803,7 +803,8 @@ $api->version('v1', function($api) {
         $api->get("/list", "WorkspaceUserController@listUsers");
         $api->get("/getWorkspaceRoles", "WorkspaceUserController@getWorkspaceRoles");
         $api->post("/", "WorkspaceUserController@addUser");
-        $api->delete("/{userId}", "WorkspaceUserController@deleteUser");
+        //$api->delete("/{userId}", "WorkspaceUserController@deleteUser");
+        $api->post("/{userId}/terminate", "WorkspaceUserController@terminateUser");
         $api->post("/{userId}", "WorkspaceUserController@updateUser");
         $api->put("/{userId}", "WorkspaceUserController@updateUser");
         $api->get("/{userId}", "WorkspaceUserController@userData");
