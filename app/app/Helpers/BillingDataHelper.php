@@ -85,8 +85,23 @@ final class BillingDataHelper {
       $debits = UserDebit::where('user_id', '=',$user->id)->get();
       $invoices = UserInvoice::where('user_id', '=',$user->id)->get();
       if (!empty($workspace) && !$plan->pay_as_you_go) {
-          $userCount = WorkspaceUser::where('workspace_id', $workspace->id)
-              ->count();
+        if ($subscription->billing_cycle == 'ANNUAL') {
+          $cycleStart = (new DateTime('first day of January this year'))->format('Y-m-d 00:00:00');
+          $cycleEnd = (new DateTime('last day of December this year'))->format('Y-m-d 23:59:59');
+        } else {
+          $cycleStart = (new DateTime('first day of this month'))->format('Y-m-d 00:00:00');
+          $cycleEnd = (new DateTime('last day of this month'))->format('Y-m-d 23:59:59');
+        }
+
+        $userCount = WorkspaceUser::where('workspace_id', $workspace->id)
+          ->where(function ($query) use ($cycleStart, $cycleEnd) {
+            $query->where('status', 'ACTIVE')
+              ->orWhere(function ($subQuery) use ($cycleStart, $cycleEnd) {
+                $subQuery->where('status', 'TERMINATED')
+                    ->whereBetween('account_activated_at', [$cycleStart, $cycleEnd]);
+              });
+          })
+          ->count();
           $planCost = $plan->monthly_cost_cents;
           if ($subscription->period=='ANNUAL') {
             $planCost = $plan->annual_cost_cents;
