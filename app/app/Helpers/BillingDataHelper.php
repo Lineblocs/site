@@ -168,6 +168,10 @@ final class BillingDataHelper {
           'limits' => WorkspaceHelper::getLimits($user)
 
       ];
+      if (!is_null($plan)) {
+        $info['plan'] = $plan->toArray();
+      }
+
       return $info;
 
 
