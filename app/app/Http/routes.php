@@ -100,6 +100,13 @@ Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('portal/paypal-billing-agreement', 'PaypalAgreementController@show');
+    Route::post('portal/paypal-billing-agreement/create', 'PaypalAgreementController@create');
+    Route::get('portal/paypal-billing-agreement/approve', 'PaypalAgreementController@approve');
+    Route::get('portal/paypal-billing-agreement/cancel', 'PaypalAgreementController@cancel');
+});
 /***************    Admin routes  **********************************/
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
 
