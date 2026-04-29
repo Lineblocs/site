@@ -277,17 +277,54 @@ class RabbitMQEventConsumer extends Command
         }
 
         if (!isset($data['event_type']) || $data['event_type'] !== 'call_activity') {
-            $this->logConsumerError(' [CALL_ACTIVITY] Unsupported event_type: ' . (isset($data['event_type']) ? $data['event_type'] : 'missing'), [
+            if (isset($data['event_type'])) {
+                $eventType = $data['event_type'];
+            } else {
+                $eventType = 'missing';
+            }
+
+            $this->logConsumerError(' [CALL_ACTIVITY] Unsupported event_type: ' . $eventType, [
                 'payload' => $data
             ]);
             $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
             return;
         }
 
-        $runId = isset($data['run_id']) ? (string) $data['run_id'] : '';
-        $workspaceId = isset($data['workspace_id']) ? (string) $data['workspace_id'] : '';
-        $userId = isset($data['user_id']) ? (int) $data['user_id'] : 0;
-        $description = isset($data['description']) ? (string) $data['description'] : '';
+        if (isset($data['run_id'])) {
+            $runId = (string) $data['run_id'];
+        } else {
+            $runId = '';
+        }
+
+        if (isset($data['workspace_id'])) {
+            $workspaceId = (string) $data['workspace_id'];
+        } else {
+            $workspaceId = '';
+        }
+
+        if (isset($data['user_id'])) {
+            $userId = (int) $data['user_id'];
+        } else {
+            $userId = 0;
+        }
+
+        if (isset($data['description'])) {
+            $description = (string) $data['description'];
+        } else {
+            $description = '';
+        }
+
+        if (isset($data['from'])) {
+            $from = $data['from'];
+        } else {
+            $from = '';
+        }
+
+        if (isset($data['to'])) {
+            $to = $data['to'];
+        } else {
+            $to = '';
+        }
 
         $this->logConsumerInfo(sprintf(
             ' [CALL_ACTIVITY] Received run_id=%s workspace_id=%s user_id=%d',
@@ -330,8 +367,8 @@ class RabbitMQEventConsumer extends Command
             'user' => $user,
             'run_id' => $runId,
             'workspace_id' => $workspaceId,
-            'from' => isset($data['from']) ? $data['from'] : '',
-            'to' => isset($data['to']) ? $data['to'] : '',
+            'from' => $from,
+            'to' => $to,
             'description' => $description
         ]);
 
