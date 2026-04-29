@@ -11,9 +11,12 @@ use App\Helpers\WorkspaceInvoiceHelper;
 use App\User;
 use App\Workspace;
 use Exception;
+use Log;
 
 class RabbitMQEventConsumer extends Command
 {
+    const CALL_ACTIVITY_QUEUE = 'call_activity';
+
     protected $signature = 'rabbitmq:consume-events';
     protected $description = 'Unified consumer for RabbitMQ events using class-based handlers';
 
@@ -45,6 +48,7 @@ class RabbitMQEventConsumer extends Command
         $channel->queue_declare('subscription_updates', false, true, false, false);
         $channel->queue_declare('payment_receipts', false, true, false, false);
         $channel->queue_declare('call_quality_surveys', false, true, false, false);
+        $channel->queue_declare(self::CALL_ACTIVITY_QUEUE, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, false, true, false, false);
 
@@ -58,6 +62,7 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume('subscription_updates', '', false, false, false, false, [$this, 'handleSubscriptionUpdate']);
         $channel->basic_consume('payment_receipts', '', false, false, false, false, [$this, 'handlePaymentReceipt']);
         $channel->basic_consume('call_quality_surveys', '', false, false, false, false, [$this, 'handleSurvey']);
+        $channel->basic_consume(self::CALL_ACTIVITY_QUEUE, '', false, false, false, false, [$this, 'handleCallActivity']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, '', false, false, false, false, [$this, 'handleMonthlyInvoiceTask']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, '', false, false, false, false, [$this, 'handleAnnualInvoiceTask']);
 
@@ -149,67 +154,72 @@ class RabbitMQEventConsumer extends Command
 
     public function handleSurvey($msg)
     {
-        $data = json_decode($msg->body, true);
+        try {
+            $data = json_decode($msg->body, true);
 
-        // 1. Validate Root 'data' key
-        if (!isset($data['data']) || !is_array($data['data'])) {
-            throw new \Exception("Invalid payload: Missing 'data' attribute.");
-        }
-        $surveyData = $data['data'];
+            // 1. Validate Root 'data' key
+            if (!isset($data['data']) || !is_array($data['data'])) {
+                throw new \Exception("Invalid payload: Missing 'data' attribute.");
+            }
+            $surveyData = $data['data'];
 
-        // 2. Validate Header Attributes
-        if (!isset($surveyData['email'])) {
-            throw new \Exception("Invalid payload: Missing 'email' attribute.");
-        }
-        $email = $surveyData['email'];
+            // 2. Validate Header Attributes
+            if (!isset($surveyData['email'])) {
+                throw new \Exception("Invalid payload: Missing 'email' attribute.");
+            }
+            $email = $surveyData['email'];
 
-        if (!isset($surveyData['name'])) {
-            throw new \Exception("Invalid payload: Missing 'name' attribute.");
-        }
-        $recipientName = $surveyData['name'];
+            if (!isset($surveyData['name'])) {
+                throw new \Exception("Invalid payload: Missing 'name' attribute.");
+            }
+            $recipientName = $surveyData['name'];
 
-        if (!isset($surveyData['survey_type']) || !is_array($surveyData['survey_type'])) {
-            throw new \Exception("Invalid payload: Missing or invalid 'survey_type' attribute.");
-        }
-        $surveyTypes = $surveyData['survey_type'];
+            if (!isset($surveyData['survey_type']) || !is_array($surveyData['survey_type'])) {
+                throw new \Exception("Invalid payload: Missing or invalid 'survey_type' attribute.");
+            }
+            $surveyTypes = $surveyData['survey_type'];
 
-        $this->info(" [SURVEY] Received survey request for email: " . $email);
+            $this->info(" [SURVEY] Received survey request for email: " . $email);
 
-        $allSucceeded = true;
+            $allSucceeded = true;
 
-        foreach ($surveyTypes as $surveyType => $typePayload) {
-            // Ensure payload for the specific type is an array
-            if (!is_array($typePayload)) {
-                throw new \Exception("Invalid payload: survey_type '$surveyType' must have an associated data array.");
+            foreach ($surveyTypes as $surveyType => $typePayload) {
+                // Ensure payload for the specific type is an array
+                if (!is_array($typePayload)) {
+                    throw new \Exception("Invalid payload: survey_type '$surveyType' must have an associated data array.");
+                }
+
+                if ($surveyType === 'call_quality') {
+                    // 3. Validate specific attributes for call_quality (No Defaults)
+                    if (!isset($typePayload['workspace_id'])) {
+                        throw new \Exception("Invalid payload: Missing 'workspace_id' for call_quality.");
+                    }
+                    if (!isset($typePayload['user_id'])) {
+                        throw new \Exception("Invalid payload: Missing 'user_id' for call_quality.");
+                    }
+
+                    $status = $this->sendCallQualitySurveyEmail($email, $recipientName, $typePayload);
+                    
+                    if (!$status) {
+                        $allSucceeded = false;
+                    }
+                    continue;
+                }
+
+                // Handle unsupported types
+                $this->error(" [!] Unsupported survey type: " . $surveyType);
+                $allSucceeded = false;
             }
 
-            if ($surveyType === 'call_quality') {
-                // 3. Validate specific attributes for call_quality (No Defaults)
-                if (!isset($typePayload['workspace_id'])) {
-                    throw new \Exception("Invalid payload: Missing 'workspace_id' for call_quality.");
-                }
-                if (!isset($typePayload['user_id'])) {
-                    throw new \Exception("Invalid payload: Missing 'user_id' for call_quality.");
-                }
-
-                $status = $this->sendCallQualitySurveyEmail($email, $recipientName, $typePayload);
-                
-                if (!$status) {
-                    $allSucceeded = false;
-                }
-                continue;
+            if ($allSucceeded) {
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                $this->info(" [v] Survey message acknowledged.");
+            } else {
+                $this->error(" [!] Survey processing failed for one or more survey types.");
             }
-
-            // Handle unsupported types
-            $this->error(" [!] Unsupported survey type: " . $surveyType);
-            $allSucceeded = false;
-        }
-
-        if ($allSucceeded) {
+        } catch (Exception $e) {
+            $this->error(" [SURVEY] " . $e->getMessage());
             $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-            $this->info(" [v] Survey message acknowledged.");
-        } else {
-            $this->error(" [!] Survey processing failed for one or more survey types.");
         }
     }
 
@@ -252,6 +262,165 @@ class RabbitMQEventConsumer extends Command
 
         $this->error(" [!] Email helper failed for " . $email);
         return false;
+    }
+
+    public function handleCallActivity($msg)
+    {
+        $data = json_decode($msg->body, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+            $this->logConsumerError(' [CALL_ACTIVITY] Malformed JSON: ' . json_last_error_msg(), [
+                'body' => $msg->body
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        if (!isset($data['event_type']) || $data['event_type'] !== 'call_activity') {
+            if (isset($data['event_type'])) {
+                $eventType = $data['event_type'];
+            } else {
+                $eventType = 'missing';
+            }
+
+            $this->logConsumerError(' [CALL_ACTIVITY] Unsupported event_type: ' . $eventType, [
+                'payload' => $data
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        if (isset($data['run_id'])) {
+            $runId = (string) $data['run_id'];
+        } else {
+            $runId = '';
+        }
+
+        if (isset($data['workspace_id'])) {
+            $workspaceId = (string) $data['workspace_id'];
+        } else {
+            $workspaceId = '';
+        }
+
+        if (isset($data['user_id'])) {
+            $userId = (int) $data['user_id'];
+        } else {
+            $userId = 0;
+        }
+
+        if (isset($data['description'])) {
+            $description = (string) $data['description'];
+        } else {
+            $description = '';
+        }
+
+        if (isset($data['from'])) {
+            $from = $data['from'];
+        } else {
+            $from = '';
+        }
+
+        if (isset($data['to'])) {
+            $to = $data['to'];
+        } else {
+            $to = '';
+        }
+
+        $this->logConsumerInfo(sprintf(
+            ' [CALL_ACTIVITY] Received run_id=%s workspace_id=%s user_id=%d',
+            $runId,
+            $workspaceId,
+            $userId
+        ));
+
+        if (!$this->isCallActivityError($data)) {
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            $this->logConsumerInfo(' [v] Call activity processed without alert.', [
+                'run_id' => $runId,
+                'workspace_id' => $workspaceId,
+                'user_id' => $userId
+            ]);
+            return;
+        }
+
+        if ($userId <= 0) {
+            $this->logConsumerError(' [CALL_ACTIVITY] Error event missing user_id. Acknowledging without email.', [
+                'run_id' => $runId,
+                'workspace_id' => $workspaceId,
+                'payload' => $data
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $user = User::find($userId);
+        if (!$user) {
+            $this->logConsumerError(sprintf(' [CALL_ACTIVITY] User #%d not found. Acknowledging without email.', $userId), [
+                'run_id' => $runId,
+                'workspace_id' => $workspaceId
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $result = EmailHelper::sendEmail('Call Activity Error Alert', $user->email, 'call_activity_alert', [
+            'user' => $user,
+            'run_id' => $runId,
+            'workspace_id' => $workspaceId,
+            'from' => $from,
+            'to' => $to,
+            'description' => $description
+        ]);
+
+        if ($result === TRUE) {
+            $this->logConsumerInfo(sprintf(' [v] Call activity error email sent to %s for run_id=%s', $user->email, $runId), [
+                'workspace_id' => $workspaceId,
+                'user_id' => $userId,
+                'description' => $description
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $this->logConsumerError(sprintf(' [!] Call activity alert email failed for %s: %s', $user->email, $result), [
+            'run_id' => $runId,
+            'workspace_id' => $workspaceId,
+            'user_id' => $userId
+        ]);
+    }
+
+    private function isCallActivityError($data)
+    {
+        $description = strtolower(isset($data['description']) ? (string) $data['description'] : '');
+
+        $errorKeywords = [
+            'error',
+            'failed',
+            'failure',
+            'rejected',
+            'unregistered caller id',
+            'voipms'
+        ];
+
+        foreach ($errorKeywords as $keyword) {
+            if (strpos($description, $keyword) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function logConsumerInfo($message, array $context = [])
+    {
+        $this->info($message);
+        Log::info($message, $context);
+    }
+
+    private function logConsumerError($message, array $context = [])
+    {
+        $this->error($message);
+        Log::error($message, $context);
     }
 
     public function handleMonthlyInvoiceTask($msg)
