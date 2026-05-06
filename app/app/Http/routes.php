@@ -512,6 +512,7 @@ $api->version('v1', function($api) {
     $api->get('getRegistrationQuestions', '\App\Http\Controllers\MergedController@getRegistrationQuestions');
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
     $api->get('getSIPCredentials', '\App\Http\Controllers\MergedController@getSIPCredentials');
+    $api->get('emailSIPCredentials', '\App\Http\Controllers\MergedController@emailSIPCredentials');
 
 
     $api->group([ 'prefix' => 'paypal'], function($api) {
