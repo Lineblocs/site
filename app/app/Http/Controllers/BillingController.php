@@ -218,4 +218,21 @@ class BillingController extends ApiAuthController
 
       return $this->response->array(['invoices' => $invoices]);
     }
+
+    public function downloadInvoice(Request $request, $invoiceId)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      
+      $invoice = UserInvoice::where('id', $invoiceId)
+                            ->where('workspace_id', $workspace->id)
+                            ->firstOrFail();
+      
+      $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $invoice);
+      $filename = sprintf("invoice_%s.pdf", $invoice->id);
+      
+      return $pdf->download($filename);
+    }
+
+
 }

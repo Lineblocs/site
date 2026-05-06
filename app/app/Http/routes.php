@@ -883,6 +883,7 @@ $api->version('v1', function($api) {
       
       // New Settlement Route
       $api->post('invoices/{invoiceId}/settle', '\App\Http\Controllers\BillingController@settleInvoice');
+      $api->get('invoices/{invoiceId}/download', '\App\Http\Controllers\BillingController@downloadInvoice');
       $api->post('invoices/settle', '\App\Http\Controllers\BillingController@settleInvoices');
       $api->get('invoices', '\App\Http\Controllers\BillingController@getInvoices');
     });

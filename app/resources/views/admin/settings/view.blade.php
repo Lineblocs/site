@@ -55,6 +55,17 @@
             </div>
 
             <div class="row form-group">
+                <h1>Text-to-speech and AI APIs</h1>
+            </div>
+            <hr/>
+
+            <div class="row form-group">
+                <label for="anthropic_api_key">Anthropic API key</label>
+                <div class="controls">
+                    <input id="anthropic_api_key" type="text" class="form-control" name="anthropic_api_key" value="{{$creds->anthropic_api_key}}"/>
+                </div>
+            </div>
+            <div class="row form-group">
                 <label for="google_service_account_json">Google service account JSON</label>
                 <small>note: GCP is currently used for all text to speech processing.</small>
                 <div class="controls">
