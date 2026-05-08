@@ -1229,7 +1229,10 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->errorBadRequest('to_email is required');
     }
 
-    $extension = Extension::findOrFail($extensionId);
+    $extension = Extension::where('id', $extensionId)
+                          ->where('workspace_id', $workspace->id)
+                          ->firstOrFail();
+
     $sipUsername = "unknown";
     $sipPassword = "";
     if (!empty($extension)) {

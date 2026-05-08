@@ -32,8 +32,9 @@ final class BillingDataHelper {
 
     return FALSE;
   }
-  public static function getBillingHistory($user) {
-      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+  public static function getBillingHistory($workspace) {
+      //$data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+      $data = DB::select(sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc where workspace_id = "%s";', $workspace->id));
       $data = array_map(function($item) {
         $array = (array) $item;
         $array['dollars'] = self::toDollars($array['cents']);
@@ -73,6 +74,30 @@ final class BillingDataHelper {
 
     return $data;
   }
+
+  public static function billingInvoices($user, $startDate=NULL, $endDate=NULL) {
+    if (!is_null($startDate)) {
+      Log::info(sprintf('billing data lookup between data ranges %s and %s', $startDate, $endDate));
+      $query = sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices
+      where user_id = "%s"
+      and (DATE(created_at) BETWEEN \'%s\' AND \'%s\')
+      order by created_at desc
+      ;', $user->id, $startDate, $endDate);
+    } else {
+      $query = sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices
+      where user_id = "%s"
+      order by created_at desc
+      ;', $user->id);
+    }
+    $data  = DB::select($query);
+    foreach ($data as $key => $item) {
+      $item->dollars = self::toDollars($item->cents);
+      $data[ $key] = $item;
+    }
+
+    return $data;
+  }
+
   public static function getBillingInfo($user, $plan=NULL, $subscription=NULL, $workspace=NULL) {
       $remainingBalance = 0;
       $chargesThisMonth = 0;

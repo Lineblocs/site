@@ -73,8 +73,9 @@ class UserController extends AdminController
      * @param $user
      * @return Response
      */
-    public function edit(User $user)
+    public function edit(Request $request, User $user)
     {
+        $workspace = $this->getWorkspace($request);
         $numbers = DIDNumber::where('user_id', $user->id)->get();
         $workspaces = Workspace::select(DB::raw("workspaces.name, users.email AS creator_email"));
         $workspaces->leftJoin('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id');
@@ -93,7 +94,7 @@ class UserController extends AdminController
          $dids = $dids->get();
 
 
-         $billingHistory = BillingDataHelper::getBillingHistory($user);
+         $billingHistory = BillingDataHelper::getBillingHistory($workspace);
          $billingInfo = BillingDataHelper::getBillingInfo($user);
          $countries = MainHelper::getCountries();
          $cannedEmails = AdminUIHelper::getCannedEmails();

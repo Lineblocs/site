@@ -61,7 +61,7 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $all = $request->all();
-      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
+      $data = BillingDataHelper::billingInvoices($user, $all['startDate'], $all['endDate']);
       return $this->response->array($data);
 
     }
