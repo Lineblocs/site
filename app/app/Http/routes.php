@@ -720,6 +720,14 @@ $api->version('v1', function($api) {
         $api->post("/{callId}", "CallController@updateCall");
         $api->put("/{callId}", "CallController@updateCall");
     });
+    $api->group([ 'prefix' => 'calls', 'namespace' => '\App\Http\Controllers\Api\Call'], function($api) {
+        $api->get("/", "CallController@listCalls");
+        $api->get("/list", "CallController@listCalls");
+        $api->get("/graph", "CallController@graphData");
+        $api->get("/{callId}", "CallController@callData");
+        $api->post("/{callId}", "CallController@updateCall");
+        $api->put("/{callId}", "CallController@updateCall");
+    });
       $api->group([ 'prefix' => 'log', 'namespace' => '\App\Http\Controllers\Api\Log'], function($api) {
         $api->get("/list", "LogController@listLogs");
         $api->get("/{logId}", "LogController@logData");
