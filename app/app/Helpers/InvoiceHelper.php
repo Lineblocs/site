@@ -98,11 +98,12 @@ final class InvoiceHelper {
       $invoiceAmtInclTaxes = $invoice->cents_including_taxes;
       $invoiceNum = $invoice->invoice_no;
       $dueDate = $invoice->due_date;
+      //$dueDate = new DateTime();
 
       $statementDate = new DateTime();
       $paidInvoice = FALSE;
       $paymentRecvdDate = "N/A";
-      if ( $invoice->status == 'COMPLETE' ) {
+      if ( $invoice->status == 'PAID' ) {
         $paidInvoice=TRUE;
         $paymentRecvdDate = $invoice->complete_date->format('d M Y');
       }
