@@ -98,7 +98,6 @@ final class InvoiceHelper {
       $invoiceAmtInclTaxes = $invoice->cents_including_taxes;
       $invoiceNum = $invoice->invoice_no;
       $dueDate = $invoice->due_date;
-      //$dueDate = new DateTime();
 
       $statementDate = new DateTime();
       $paidInvoice = FALSE;
