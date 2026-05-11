@@ -469,6 +469,7 @@ $api->version('v1', function($api) {
           $api->post("/", "RecordingController@post");
           $api->post("/{recordingId}", "RecordingController@put");
           $api->delete("/{recordingId}", "RecordingController@delete");
+          $api->get("/downloadRecordings", "RecordingController@downloadRecordings");
       });
       $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {
           $api->get("/reports", "CallController@getReports");

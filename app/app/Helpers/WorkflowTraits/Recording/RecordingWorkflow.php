@@ -103,4 +103,52 @@ trait RecordingWorkflow {
         return $this->response->noContent();
     }
 
+    public function downloadRecordings(Request $request)  {
+        $user = $this->getUser($request);
+        $ids = $request->get('recording_ids');
+        if (empty($ids)) {
+            return $this->response->errorBadRequest("recording_ids is required");
+        }
+
+        $idsArray = explode(',', $ids);
+        $recordings = Recording::whereIn('id', $idsArray)->where('user_id', $user->id)->get();
+
+        if ($recordings->isEmpty()) {
+            return $this->response->errorNotFound();
+        }
+
+        $zip = new \ZipArchive();
+        $zipFileName = 'recordings_' . time() . '.zip';
+        $zipPath = public_path('/recordings/' . $zipFileName);
+
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
+            $hasFiles = false;
+            foreach ($recordings as $recording) {
+                if (!empty($recording->s3_url)) {
+                    $fileContents = @file_get_contents($recording->s3_url);
+                    if ($fileContents !== false) {
+                        $fileName = !empty($recording->name) ? $recording->name : basename(parse_url($recording->s3_url, PHP_URL_PATH));
+                        if (empty($fileName)) {
+                            $fileName = 'recording_' . $recording->id . '.wav';
+                        }
+                        $zip->addFromString($fileName, $fileContents);
+                        $hasFiles = true;
+                    }
+                }
+            }
+            $zip->close();
+
+            if (!$hasFiles) {
+                if (file_exists($zipPath)) {
+                    unlink($zipPath);
+                }
+                return $this->response->errorNotFound("No recording files found.");
+            }
+        } else {
+            return $this->response->errorInternal("Could not create zip file.");
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
+    }
+
 }
