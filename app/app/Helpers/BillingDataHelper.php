@@ -32,8 +32,9 @@ final class BillingDataHelper {
 
     return FALSE;
   }
-  public static function getBillingHistory($user) {
-      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+  public static function getBillingHistory($workspace) {
+      //$data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+      $data = DB::select(sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc where workspace_id = "%s";', $workspace->id));
       $data = array_map(function($item) {
         $array = (array) $item;
         $array['dollars'] = self::toDollars($array['cents']);
@@ -73,6 +74,30 @@ final class BillingDataHelper {
 
     return $data;
   }
+
+  public static function billingInvoices($user, $startDate=NULL, $endDate=NULL) {
+    if (!is_null($startDate)) {
+      Log::info(sprintf('billing data lookup between data ranges %s and %s', $startDate, $endDate));
+      $query = sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices
+      where user_id = "%s"
+      and (DATE(created_at) BETWEEN \'%s\' AND \'%s\')
+      order by created_at desc
+      ;', $user->id, $startDate, $endDate);
+    } else {
+      $query = sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices
+      where user_id = "%s"
+      order by created_at desc
+      ;', $user->id);
+    }
+    $data  = DB::select($query);
+    foreach ($data as $key => $item) {
+      $item->dollars = self::toDollars($item->cents);
+      $data[ $key] = $item;
+    }
+
+    return $data;
+  }
+
   public static function getBillingInfo($user, $plan=NULL, $subscription=NULL, $workspace=NULL) {
       $remainingBalance = 0;
       $chargesThisMonth = 0;
@@ -85,8 +110,23 @@ final class BillingDataHelper {
       $debits = UserDebit::where('user_id', '=',$user->id)->get();
       $invoices = UserInvoice::where('user_id', '=',$user->id)->get();
       if (!empty($workspace) && !$plan->pay_as_you_go) {
-          $userCount = WorkspaceUser::where('workspace_id', $workspace->id)
-              ->count();
+        if ($subscription->billing_cycle == 'ANNUAL') {
+          $cycleStart = (new DateTime('first day of January this year'))->format('Y-m-d 00:00:00');
+          $cycleEnd = (new DateTime('last day of December this year'))->format('Y-m-d 23:59:59');
+        } else {
+          $cycleStart = (new DateTime('first day of this month'))->format('Y-m-d 00:00:00');
+          $cycleEnd = (new DateTime('last day of this month'))->format('Y-m-d 23:59:59');
+        }
+
+        $userCount = WorkspaceUser::where('workspace_id', $workspace->id)
+          ->where(function ($query) use ($cycleStart, $cycleEnd) {
+            $query->where('status', 'ACTIVE')
+              ->orWhere(function ($subQuery) use ($cycleStart, $cycleEnd) {
+                $subQuery->where('status', 'TERMINATED')
+                  ->whereBetween('activated_account_at', [$cycleStart, $cycleEnd]);
+              });
+          })
+          ->count();
           $planCost = $plan->monthly_cost_cents;
           if ($subscription->period=='ANNUAL') {
             $planCost = $plan->annual_cost_cents;
@@ -153,6 +193,10 @@ final class BillingDataHelper {
           'limits' => WorkspaceHelper::getLimits($user)
 
       ];
+      if (!is_null($plan)) {
+        $info['plan'] = $plan->toArray();
+      }
+
       return $info;
 
 

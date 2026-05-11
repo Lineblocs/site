@@ -92,7 +92,10 @@ class RegisterController extends ApiAuthController
             'started_at' => new DateTime()
         ]);
 
-        WorkspaceUser::createSuperAdmin($workspace, $user, ['accepted' => TRUE]);
+        WorkspaceUser::createSuperAdmin($workspace, $user, [
+            'activated_account_at' => new DateTime(),
+            'accepted' => TRUE
+        ]);
         WorkspaceEvent::addEvent($workspace, 'WORKSPACE_CREATED');
 
         return $this->response->array([
@@ -219,7 +222,7 @@ class RegisterController extends ApiAuthController
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
         $customizations =CustomizationsKVStore::getRecord();
-        $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail()->toArray();
+        $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail();
         //$plan = $plans[$data['plan']];
         $region = SIPPoPRegion::findOrFail( $customizations->default_region );
         $info = MainHelper::getHostIPForUser($region->code, $user);
@@ -257,16 +260,16 @@ class RegisterController extends ApiAuthController
           $now = new DateTime();
           if ($billingCycle === 'ANNUAL') {
               $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
-              $recurringCost = $servicePlan->annual_cost_cents;
+              $recurringCost = $plan->annual_cost_cents;
           } else {
               $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
-              $recurringCost = $servicePlan->monthly_cost_cents;
+              $recurringCost = $plan->monthly_cost_cents;
           }
 
           // 1. Create Subscription with Safety Gate anchor
           $subscription = Subscription::create([
               'workspace_id' => $workspace->id,
-              'current_plan_id' => $servicePlan->id,
+              'current_plan_id' => $plan->id,
               'status' => 'ACTIVE',
               'billing_cycle' => $billingCycle,
               'current_period_end' => $periodEnd,
@@ -282,7 +285,7 @@ class RegisterController extends ApiAuthController
                   $workspace,
                   $subscription,
                   $user,
-                  $servicePlan,
+                  $plan,
                   $billingCycle,
                   $amountToCharge
               );

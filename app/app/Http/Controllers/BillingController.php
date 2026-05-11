@@ -7,6 +7,7 @@ use App\UsageTrigger;
 use App\Subscription;
 use App\ServicePlan;
 use App\UserCard;
+use App\UserInvoice;
 use App\Helpers\RabbitMQHelper;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -60,7 +61,7 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $all = $request->all();
-      $data = BillingDataHelper::billingData($user, $all['startDate'], $all['endDate']);
+      $data = BillingDataHelper::billingInvoices($user, $all['startDate'], $all['endDate']);
       return $this->response->array($data);
 
     }
@@ -137,22 +138,101 @@ class BillingController extends ApiAuthController
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
       $data = $request->json()->all();
+      $invoices = $data['invoices'];
       // TODO: this code should be agnostic to the payment gateway we use but its only
       // currently built for Stripe. We should refactor this in the future to be more flexible
       $card = UserCard::where('stripe_payment_method_id', $data['payment_method_id'])->firstOrFail();
-      $message = [
-        'run_id' => 'settle_invoice_' . $invoiceId . '_' . time(),
-        'action' => 'SETTLE_INVOICE',
-        'invoice_id' => $invoiceId,
-        'user_id' => $user->id,
-        'workspace_id' => $workspace->id,
-        'payment_method_id' => $card->stripe_payment_method_id,
-        'card_last_4' => $card->last_4,
-        'card_brand' => $card->issuer,
-      ];
 
-      RabbitMQHelper::publish('billing_tasks', $message);
+      foreach ($invoices as $invoiceId) {
+        $message = [
+          'run_id' => 'settle_invoice_' . $invoiceId . '_' . time(),
+          'action' => 'SETTLE_INVOICE',
+          'invoice_id' => $invoiceId,
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'payment_method_id' => $card->stripe_payment_method_id,
+          'card_last_4' => $card->last_4,
+          'card_brand' => $card->issuer,
+        ];
+
+        RabbitMQHelper::publish('billing_tasks', $message);
+      }
 
       return $this->response->noContent();
     }
+
+    public function settleInvoices(Request $request)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $data = $request->json()->all();
+      $invoices = $data['invoices'];
+      // TODO: this code should be agnostic to the payment gateway we use but its only
+      // currently built for Stripe. We should refactor this in the future to be more flexible
+      $card = UserCard::where('id', $data['card_id'])
+                      ->where('workspace_id', $workspace->id)
+                      ->firstOrFail();
+      $invoicesData = [];
+      foreach ($invoices as $invoiceId) {
+        $invoicesData[] = UserInvoice::where('id', $invoiceId)
+          ->where('workspace_id', $workspace->id)
+          ->firstOrFail();
+      }
+
+      foreach ($invoicesData as $invoice) {
+        $message = [
+          'run_id' => 'settle_invoice_' . $invoice['id'] . '_' . time(),
+          'action' => 'SETTLE_INVOICE',
+          'invoice_id' => $invoice['id'],
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'payment_method_id' => $card->stripe_payment_method_id,
+          'card_last_4' => $card->last_4,
+          'card_brand' => $card->issuer,
+        ];
+
+        RabbitMQHelper::publish('billing_tasks', $message);
+      }
+
+      return $this->response->noContent();
+    }
+
+
+    public function getInvoices(Request $request)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      $status = $request->query('status');
+
+      $query = UserInvoice::where('workspace_id', $workspace->id);
+
+      if ($status) {
+        $query->where('status', $status);
+      }
+
+      $invoices = $query->get()->map(function($item) {
+        $item['amount_in_dollars'] = MainHelper::toDollars($item['cents']);
+        $item['friendly_created_at'] = \Carbon\Carbon::parse($item['created_at'])->format('M d, Y');
+        return $item;
+      });
+
+      return $this->response->array(['invoices' => $invoices]);
+    }
+
+    public function downloadInvoice(Request $request, $invoiceId)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      
+      $invoice = UserInvoice::where('id', $invoiceId)
+                            ->where('workspace_id', $workspace->id)
+                            ->firstOrFail();
+      
+      $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $invoice);
+      $filename = sprintf("invoice_%s.pdf", $invoice->id);
+      
+      return $pdf->download($filename);
+    }
+
+
 }

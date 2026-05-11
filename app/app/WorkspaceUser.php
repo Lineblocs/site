@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use \App\UserEmailOption;
 
 class WorkspaceUser extends PublicResource {
-  protected $dates = ['created_at', 'updated_at', 'joined_at'];
+  use SoftDeletes;
+  protected $dates = ['created_at', 'updated_at', 'joined_at', 'activated_account_at', 'terminated_account_at'];
   public static $publicPrefix = "wu";
   protected $guarded  = array('id');
   protected $table = "workspaces_users";

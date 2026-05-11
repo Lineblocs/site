@@ -304,6 +304,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('serviceplan/{serviceplan}/show', 'Admin\ServicePlanController@show');
     Route::get('serviceplan/{serviceplan}/edit', 'Admin\ServicePlanController@edit');
     Route::get('serviceplan/{serviceplan}/delete', 'Admin\ServicePlanController@delete');
+    Route::post('serviceplan/{serviceplan}/migrate', 'Admin\ServicePlanController@migrate');
     Route::resource('serviceplan', 'Admin\ServicePlanController');
 
      # costsaving
@@ -468,6 +469,7 @@ $api->version('v1', function($api) {
           $api->post("/", "RecordingController@post");
           $api->post("/{recordingId}", "RecordingController@put");
           $api->delete("/{recordingId}", "RecordingController@delete");
+          $api->get("/downloadRecordings", "RecordingController@downloadRecordings");
       });
       $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {
           $api->get("/reports", "CallController@getReports");
@@ -511,6 +513,7 @@ $api->version('v1', function($api) {
     $api->get('getRegistrationQuestions', '\App\Http\Controllers\MergedController@getRegistrationQuestions');
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
     $api->get('getSIPCredentials', '\App\Http\Controllers\MergedController@getSIPCredentials');
+    $api->post('emailSIPCredentials', '\App\Http\Controllers\MergedController@emailSIPCredentials');
 
 
     $api->group([ 'prefix' => 'paypal'], function($api) {
@@ -810,7 +813,8 @@ $api->version('v1', function($api) {
         $api->get("/list", "WorkspaceUserController@listUsers");
         $api->get("/getWorkspaceRoles", "WorkspaceUserController@getWorkspaceRoles");
         $api->post("/", "WorkspaceUserController@addUser");
-        $api->delete("/{userId}", "WorkspaceUserController@deleteUser");
+        //$api->delete("/{userId}", "WorkspaceUserController@deleteUser");
+        $api->post("/{userId}/terminate", "WorkspaceUserController@terminateUser");
         $api->post("/{userId}", "WorkspaceUserController@updateUser");
         $api->put("/{userId}", "WorkspaceUserController@updateUser");
         $api->get("/{userId}", "WorkspaceUserController@userData");
@@ -891,6 +895,9 @@ $api->version('v1', function($api) {
       
       // New Settlement Route
       $api->post('invoices/{invoiceId}/settle', '\App\Http\Controllers\BillingController@settleInvoice');
+      $api->get('invoices/{invoiceId}/download', '\App\Http\Controllers\BillingController@downloadInvoice');
+      $api->post('invoices/settle', '\App\Http\Controllers\BillingController@settleInvoices');
+      $api->get('invoices', '\App\Http\Controllers\BillingController@getInvoices');
     });
   });
 });

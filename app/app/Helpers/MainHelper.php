@@ -969,60 +969,55 @@ final class MainHelper {
   public static function addCard($data, $user, $workspace, $isDefault=FALSE, $paymentGateway='stripe')
   {
     if ( $paymentGateway == 'stripe' ) {
-      $stripe = self::initStripeClient();
-      $paymentMethodId = $data['payment_method_id'];
-      if (empty($user->stripe_id)) {
-        $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
-        Log::info(sprintf('created stripe customer %s', $customer->id));
-      } else {
-        $customer = $stripe->customers->retrieve($user->stripe_id, []);
-        Log::info(sprintf('found stripe customer for user %s', $customer->id));
-      }
+        $stripe = self::initStripeClient();
+        $paymentMethodId = $data['payment_method_id'];
 
-      Log::info(sprintf('created stripe customer %s', $customer->id));
-      $user->update([
-        'stripe_id' => $customer->id
-      ]);
-      /*
-      $card = \Stripe\Customer::createSource(
-          $user->stripe_id,
-          [
-              'source' => $data['card_token']
-          ]
-      );
-      */
-      //$all = UserCard::where('workspace_id', $workspace->id)->get();
-      if ( $isDefault ) {
-        // update invoice settings to use this card as the default payment method
+        if (empty($user->stripe_id)) {
+            $customer = MainHelper::createStripeCustomer($user, $paymentMethodId);
+            Log::info(sprintf('created stripe customer %s', $customer->id));
+        } else {
+            $customer = $stripe->customers->retrieve($user->stripe_id, []);
+            Log::info(sprintf('found stripe customer for user %s', $customer->id));
+        }
 
-        $stripe->customers->update(
-          $user->stripe_id,
-          array(
-              'invoice_settings' => array(
-                'default_payment_method' => $paymentMethodId
-              )
-          )
+        $user->update([
+            'stripe_id' => $customer->id
+        ]);
+
+        // FIX: Attach the payment method to the customer first
+        // This must happen before you can set it as a default_payment_method
+        $paymentMethod = $stripe->paymentMethods->attach(
+            $paymentMethodId,
+            ['customer' => $customer->id]
         );
-      }
 
-      $paymentMethod = $stripe->paymentMethods->attach(
-        $paymentMethodId,
-        ['customer' => $customer->id]
-      );
+        if ( $isDefault ) {
+            // Now that the PM is attached, updating invoice_settings will succeed
+            $stripe->customers->update(
+                $customer->id,
+                [
+                    'invoice_settings' => [
+                        'default_payment_method' => $paymentMethodId
+                    ]
+                ]
+            );
+        }
 
-      $cardIssuer = $data['issuer'];
-      $last4 =  $data['last_4'];
-      $params = [
-          'last_4' => $last4,
-          'stripe_payment_method_id' => $paymentMethodId,
-          'user_id' => $user->id,
-          'workspace_id' => $workspace->id,
-          'issuer' => $cardIssuer,
-          'primary' => $isDefault
-      ];
-      return UserCard::create($params);
+        $cardIssuer = $data['issuer'];
+        $last4 = $data['last_4'];
+        $params = [
+            'last_4' => $last4,
+            'stripe_payment_method_id' => $paymentMethodId,
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
+            'issuer' => $cardIssuer,
+            'primary' => $isDefault
+        ];
+        
+        return UserCard::create($params);
     }
   }
+
   public static function makeCardPrimary($card, $user, $workspace)
   {
         $all = UserCard::where('workspace_id', $workspace->id)->update(['primary' => FALSE]);
@@ -1187,9 +1182,9 @@ final class MainHelper {
     }
 
     public static function getMonthlyInvoice($user, $monthDatetime) {
-      $data  = DB::select(sprintf('select * from (select balance, status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select balance, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U 
-      where U.user_id = "%s"
-      and (DATE(U.created_at) = "%s")
+      $data  = DB::select(sprintf('select balance, status, cents, created_at, \'invoice\' as type, user_id, due_date, complete_date from users_invoices 
+      where user_id = "%s"
+      and (DATE(created_at) = "%s")
       ;', $user->id, $monthDatetime->format("Y-m-d")));
         foreach ($data as $key => $item) {
           $item->balance = MainHelper::toDollars($item->balance);

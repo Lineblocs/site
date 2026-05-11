@@ -71,7 +71,7 @@ class WorkspaceController extends AdminController
         $users->join('users', 'users.id', '=', 'workspaces_users.user_id');
         $users = $users->where('workspace_id', $workspace->id)->get();
         $creator = $workspace->getCreator();
-        $billingHistory = BillingDataHelper::getBillingHistory($creator);
+        $billingHistory = BillingDataHelper::getBillingHistory($workspace);
         $invoices = BillingDataHelper::getWorkspaceInvoices($workspace);
         $billingInfo = BillingDataHelper::getBillingInfo($creator);
         $usageTriggers = UsageTrigger::where("workspace_id", $workspace->id)->get();

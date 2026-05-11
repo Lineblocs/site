@@ -19,7 +19,7 @@ class RabbitMQHelper
      * @param array $payload Data to be JSON encoded
      * @return void
      */
-    private static function publish(string $queue, array $payload)
+    public static function publish(string $queue, array $payload)
     {
         try {
             $connection = new AMQPStreamConnection(

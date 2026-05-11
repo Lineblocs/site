@@ -28,4 +28,7 @@ return [
     'call_duration' => 'Call duration',
     'recording_space' => 'Recording space',
     'minutes_per_month' => 'Call Minutes per month',
+    'migrate_users' => 'Migrate users',
+    'migrate_warning' => 'Warning: You cannot reverse this change. Users will be moved over to the new plan in the next billing cycle.',
+    'select_plan' => 'Select plan'
 ];

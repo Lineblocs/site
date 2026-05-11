@@ -247,7 +247,7 @@ class MergedController extends ApiAuthController
       $workspace = $this->getWorkspace($request);
       //$plans = \Config::get("service_plans");
       //$plan = $plans[ $workspace->plan ];
-      $plan = ServicePlan::where('key_name', $workspace->plan)->firstOrFail()->toArray();
+      $plan = ServicePlan::where('key_name', $workspace->plan)->firstOrFail();
       while ($currentDay != $dayCount) {
         $labels[] = $cloned1->format("M-d");
         $cloned2 = clone $cloned1;
@@ -648,7 +648,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       ]);
       $workspaceUser->update([
         'accepted' => TRUE,
-        'hash_expired' => TRUE
+        'hash_expired' => TRUE,
+        'activated_account_at' => $now
       ]);
       $invite->update([
         'valid' => FALSE
@@ -1216,6 +1217,53 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     ];
 
     return $this->response->array($sipCredentials);
+  }
+
+  public function emailSIPCredentials(Request $request) {
+    $workspace = $this->getWorkspace($request);
+    $user = $this->getUser($request);
+    $data = $request->json()->all();
+    $extensionId = $data['extension_id'];
+
+    if (empty($data['to_email'])) {
+      return $this->response->errorBadRequest('to_email is required');
+    }
+
+    $extension = Extension::where('id', $extensionId)
+                          ->where('workspace_id', $workspace->id)
+                          ->firstOrFail();
+
+    $sipUsername = "unknown";
+    $sipPassword = "";
+    if (!empty($extension)) {
+       $sipUsername = $extension->username;
+       $sipPassword = $extension->secret;
+    }
+
+    $sipHost = $workspace->sipURL();
+    $sipRouter = SIPRouter::getMainRouter();
+
+    $sipCredentials = [
+      'username' => $sipUsername,
+      'password' => $sipPassword,
+      'host' => $sipHost,
+      'port' => $sipRouter['udp_port'],
+      'tcp_port' => $sipRouter['tcp_port'],
+      'websocket_settings' => [
+        'port' => $sipRouter['wss_port'] ?? 7443,
+        'gateway' => 'wss://' . $sipHost . ':' . ($sipRouter['wss_port'] ?? 7443)
+      ]
+    ];
+
+
+    \App\Helpers\EmailHelper::sendEmail(
+      'Your SIP Credentials',
+      $data['to_email'],
+      'emails.sip_credentials',
+      $sipCredentials
+    );
+
+    return $this->response->noContent();
   }
 
   public function verifyTurnstile(Request $request) {

@@ -6,6 +6,8 @@ use App\ServicePlan;
 use App\ServicePlanDialPrefix;
 use App\Workspace;
 use App\PortNumber;
+use App\Subscription;
+use App\WorkspaceUser;
 use App\Http\Requests\Admin\ServicePlanRequest;
 use App\Helpers\MainHelper;
 use Datatables;
@@ -82,7 +84,81 @@ class ServicePlanController extends AdminController
         $features = $this->getFeatureOptions();
         $callDurations = $this->getCallDurations();
         $recordingSpace = $this->getRecordingSpaceOptions();
-        return view('admin.serviceplan.create_edit', compact('serviceplan', 'features', 'callDurations', 'recordingSpace'));
+        $migratePlans = [];
+        $allPlans = ServicePlan::where('id', '!=', $serviceplan->id)->get()->toArray();
+        foreach ($allPlans as $key => $plan) {
+            $migratePlans[$plan['nice_name']] = $plan['nice_name'] . ' (' . $plan['key_name'] . ')';
+        }
+        return view('admin.serviceplan.create_edit', compact('serviceplan', 'features', 'callDurations', 'recordingSpace', 'migratePlans'));
+    }
+    /**
+     * Migrate all users on this service plan to a target service plan.
+     *
+     * @param Request $request
+     * @param ServicePlan $serviceplan
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function migrate(Request $request, ServicePlan $serviceplan)
+    {
+        try {
+            $targetPlanNiceName = $request->input('migrate_plan');
+            
+            if (!$targetPlanNiceName) {
+                return redirect()->back()->withErrors(['migrate_plan' => 'Please select a target plan for migration.']);
+            }
+
+            $targetPlan = ServicePlan::where('nice_name', $targetPlanNiceName)->first();
+
+            if (!$targetPlan) {
+                return redirect()->back()->withErrors(['migrate_plan' => 'Target service plan not found.']);
+            }
+
+            if ($targetPlan->id === $serviceplan->id) {
+                return redirect()->back()->withErrors(['migrate_plan' => 'Cannot migrate to the exact same plan.']);
+            }
+
+            DB::beginTransaction();
+            $subscriptionsToMigrate = Subscription::where('current_plan_id', $serviceplan->id)->get();
+            $subscriptionsToMigrate = Subscription::join('workspaces', 'subscriptions.workspace_id', '=', 'workspaces.id')
+                ->join('users', 'workspaces.creator_id', '=', 'users.id')
+                ->where('subscriptions.current_plan_id', $serviceplan->id)
+                ->select('subscriptions.*', 'users.email as user_email')
+                ->get();
+
+            foreach ($subscriptionsToMigrate as $subscription) {
+                $workspaceUsers = WorkspaceUser::join('users', 'workspace_users.user_id', '=', 'users.id')
+                                    ->where('workspace_users.workspace_id', $subscription->workspace_id)
+                                    ->select('workspace_users.*', 'users.email')
+                                    ->get();
+                                // 
+                foreach ($workspaceUsers as $workspaceUser) {
+                    $user = User::find($workspaceUser->user_id);
+                    if ($user && $user->email) {
+                        $mailData = [
+                            'currentPlan' => $serviceplan,
+                            'newPlan' => $targetPlan,
+                        ];
+
+                        Mail::send('emails.service_plan_being_migrated', $mailData, function($message) use ($user) {
+                            $message->to($user->email)
+                                    ->subject('Important: Service Plan Update');
+                        });
+                    }
+                }
+            }
+            Subscription::where('current_plan_id', $serviceplan->id)->update([
+                'scheduled_plan_id' => $targetPlan->id,
+                'scheduled_effective_date' => \Carbon\Carbon::now()
+            ]);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Users successfully scheduled for migration.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Service Plan Migration Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'A system error occurred during migration. Please try again.']);
+        }
     }
     private function createFeatureOption($key) {
         return [
@@ -150,7 +226,15 @@ $this->createFeatureOption('allows_monthly'),
 
     public function delete(ServicePlan $serviceplan)
     {
-        return view('admin.serviceplan.delete', compact('serviceplan'));
+        $subscriptions = Subscription::where('current_plan_id', $serviceplan->id)->count();
+        
+        $canDelete = true;
+        if ($subscriptions > 0) {
+            $canDelete = false;
+            $message = 'This plan cannot be deleted until all users migrate to another plan.';
+            return view('admin.serviceplan.delete', compact('serviceplan', 'canDelete', 'message'));
+        }
+        return view('admin.serviceplan.delete', compact('serviceplan', 'canDelete'));
     }
 
     /**

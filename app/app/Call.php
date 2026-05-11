@@ -37,7 +37,11 @@ class Call extends ApiResource {
         $live = time() - $this->created_at->getTimestamp();
         $array['duration_live'] = $live;
         $array['duration_live_human'] = MainHelper::secondsToHumanReadable($array['duration_live']);
+<<<<<<< new-dev
         if (!empty($array['status']) && strtolower($array['status']) == 'ended' && $this->ended_at != null) {
+=======
+        if (!empty($array['status']) && $array['status'] == 'ENDED' && $this->ended_at != null) {
+>>>>>>> master
           $array['duration_ended'] = $this->getDuration();
           $array['duration_ended_human'] = MainHelper::secondsToHumanReadable($array['duration_ended']);
         }
