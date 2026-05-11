@@ -7,9 +7,11 @@ use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
 use \App\Call;
+use \App\Helpers\MainHelper;
 use \App\Transformers\CallTransformer;
 use DateTime;
 use DateInterval;
+use DB;
 
 
 trait CallWorkflow {
@@ -33,7 +35,7 @@ trait CallWorkflow {
         return $this->response->array($info);
     }
 
-        public function listCalls(Request $request)
+    public function listCalls(Request $request)
     {
         DB::connection()->enableQueryLog();
         $extension = $request->get("extension");
