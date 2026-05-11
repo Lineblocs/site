@@ -11,6 +11,8 @@ class RabbitMQHelper
 {
     const INVOICE_QUEUE_MONTHLY = 'monthly_invoices';
     const INVOICE_QUEUE_ANNUAL = 'annual_invoices';
+    const SUBSCRIPTION_UPDATES_QUEUE = 'subscription_updates';
+    const SUBSCRIPTION_UPGRADE_SCHEDULED = 'subscription.plan_upgrade_scheduled';
 
     /**
      * Generic method to publish a message to any RabbitMQ queue.
@@ -73,6 +75,79 @@ class RabbitMQHelper
         ];
 
         return self::publish('billing_tasks', $payload);
+    }
+
+    public static function dispatchPlanUpgradeScheduled($workspace, $subscription, $user)
+    {
+        $effectiveDate = $subscription->scheduled_effective_date;
+        $currentPeriodEnd = $subscription->current_period_end;
+        $nextBillingDate = $subscription->next_billing_date;
+
+        $formattedCurrentPeriodEnd = null;
+        if ($currentPeriodEnd) {
+            $formattedCurrentPeriodEnd = date('c', strtotime($currentPeriodEnd));
+        }
+
+        $formattedNextBillingDate = null;
+        if ($nextBillingDate) {
+            $formattedNextBillingDate = date('c', strtotime($nextBillingDate));
+        }
+
+        $formattedEffectiveDate = null;
+        if ($effectiveDate) {
+            $formattedEffectiveDate = date('c', strtotime($effectiveDate));
+        }
+
+        $payload = [
+            'event_type' => self::SUBSCRIPTION_UPGRADE_SCHEDULED,
+            'version' => '1.0',
+            'event_id' => 'plan_upgrade_' . $subscription->id . '_' . time(),
+            'occurred_at' => date('c'),
+            'subscription_id' => (int) $subscription->id,
+            'workspace_id' => (int) $workspace->id,
+            'actor_user_id' => (int) $user->id,
+            'current_plan_id' => (int) $subscription->current_plan_id,
+            'scheduled_plan_id' => (int) $subscription->scheduled_plan_id,
+            'billing_cycle' => (string) $subscription->billing_cycle,
+            'current_period_end' => $formattedCurrentPeriodEnd,
+            'next_billing_date' => $formattedNextBillingDate,
+            'scheduled_effective_date' => $formattedEffectiveDate
+        ];
+
+        self::assertPlanUpgradeScheduledPayload($payload);
+
+        return self::publish(self::SUBSCRIPTION_UPDATES_QUEUE, $payload);
+    }
+
+    private static function assertPlanUpgradeScheduledPayload(array $payload)
+    {
+        $required = [
+            'event_type',
+            'version',
+            'event_id',
+            'occurred_at',
+            'subscription_id',
+            'workspace_id',
+            'actor_user_id',
+            'current_plan_id',
+            'scheduled_plan_id',
+            'billing_cycle',
+            'scheduled_effective_date'
+        ];
+
+        foreach ($required as $field) {
+            if (!array_key_exists($field, $payload) || $payload[$field] === null || $payload[$field] === '') {
+                throw new Exception("Invalid subscription upgrade payload: missing {$field}");
+            }
+        }
+
+        if ($payload['event_type'] !== self::SUBSCRIPTION_UPGRADE_SCHEDULED) {
+            throw new Exception('Invalid subscription upgrade payload: unexpected event_type');
+        }
+
+        if (!in_array($payload['billing_cycle'], ['MONTHLY', 'ANNUAL'])) {
+            throw new Exception('Invalid subscription upgrade payload: unexpected billing_cycle');
+        }
     }
 
     public static function dispatchSurveyEmail($email, $surveyTypes = [], $name = '')
