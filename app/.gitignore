@@ -3,6 +3,7 @@
 /public/storage
 /public/recordings
 /public/documents
+/public/recordings
 /public/files
 /public/fs
 /storage/*.key
