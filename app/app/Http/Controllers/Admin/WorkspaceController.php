@@ -136,6 +136,11 @@ class WorkspaceController extends AdminController
 
     public function refund_invoice(Workspace $workspace)
     {
+        $adminUser = \Auth::user();
+        if (!$adminUser || !$adminUser->admin) {
+            return response()->json(['success' => false, 'message' => 'Cannot perform action..'], 403);
+        }
+
         $invoiceId = request()->input('invoice_id');
         $invoice = UserInvoice::where('id', $invoiceId)->where('workspace_id', $workspace->id)->firstOrFail();
 

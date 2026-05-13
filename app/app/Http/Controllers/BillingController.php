@@ -86,11 +86,19 @@ class BillingController extends ApiAuthController
     }
 
     public function generateMonthlyInvoice(Request $request) {
-      $user = User::all()[0];
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
       $all = $request->all();
       $month = new DateTime();
       $month->modify('first day of this month');
-      $invoice = MainHelper::getMonthlyInvoice($user, $month);
+      $invoice = UserInvoice::where('user_id', $user->id)
+        ->where('workspace_id', $workspace->id)
+        ->whereDate('created_at', $month->format("Y-m-d"))
+        ->orderBy('created_at', 'desc')
+        ->firstOrFail();
       $pdf = InvoiceHelper::generatePrettyInvoice($user, $workspace, $invoice);
       //$pdf = PDF::loadView('pdf.invoice', ['rows' => $data, 'dateRange' => $dateRange]);
       return $pdf->download('monthly_invoice.pdf');
@@ -137,17 +145,31 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
       $data = $request->json()->all();
-      $invoices = $data['invoices'];
+      $invoices = [];
+      if (!empty($data['invoices'])) {
+        $invoices = $data['invoices'];
+      }
+      if (empty($invoices)) {
+        $invoices = [$invoiceId];
+      }
       // TODO: this code should be agnostic to the payment gateway we use but its only
       // currently built for Stripe. We should refactor this in the future to be more flexible
-      $card = UserCard::where('stripe_payment_method_id', $data['payment_method_id'])->firstOrFail();
+      $card = UserCard::where('stripe_payment_method_id', $data['payment_method_id'])
+                      ->where('workspace_id', $workspace->id)
+                      ->firstOrFail();
 
       foreach ($invoices as $invoiceId) {
+        $invoice = UserInvoice::where('id', $invoiceId)
+          ->where('workspace_id', $workspace->id)
+          ->firstOrFail();
         $message = [
-          'run_id' => 'settle_invoice_' . $invoiceId . '_' . time(),
+          'run_id' => 'settle_invoice_' . $invoice->id . '_' . time(),
           'action' => 'SETTLE_INVOICE',
-          'invoice_id' => $invoiceId,
+          'invoice_id' => $invoice->id,
           'user_id' => $user->id,
           'workspace_id' => $workspace->id,
           'payment_method_id' => $card->stripe_payment_method_id,
@@ -165,6 +187,9 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
       $data = $request->json()->all();
       $invoices = $data['invoices'];
       // TODO: this code should be agnostic to the payment gateway we use but its only
@@ -202,12 +227,15 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
       $status = $request->query('status');
 
       $query = UserInvoice::where('workspace_id', $workspace->id);
 
       if ($status) {
-        $query->where('status', $status);
+        $query->where('status', strtoupper($status));
       }
 
       $invoices = $query->get()->map(function($item) {
@@ -223,6 +251,9 @@ class BillingController extends ApiAuthController
     {
       $user = $this->getUser($request);
       $workspace = $this->getWorkspace($request);
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
       
       $invoice = UserInvoice::where('id', $invoiceId)
                             ->where('workspace_id', $workspace->id)

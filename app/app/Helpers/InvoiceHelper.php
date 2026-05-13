@@ -10,6 +10,7 @@ use App\Customizations;
 use App\CustomizationsKVStore;
 use App\BillingTax;
 use App\UserInvoiceLineItem;
+use App\Enums\PaymentStatus;
 use App\Helpers\MainHelper;
 use App\Helpers\WebSvcHelper;
 final class InvoiceHelper {
@@ -55,11 +56,16 @@ final class InvoiceHelper {
   {
       $site = MainHelper::getSiteName();  
       $invoiceDate = $invoice->created_at;
-      //$billingRegionid = $workspace->billing_region_id;
-      $billingRegionid = 2;
-      $tax = BillingTax::where('region_id', $billingRegionid)
-                        ->where('primary_tax', '1')
-                        ->first();
+      $billingRegionid = $workspace->billing_region_id;
+      $tax = null;
+      if (!empty($billingRegionid)) {
+        $tax = BillingTax::where('region_id', $billingRegionid)
+                          ->where('primary_tax', '1')
+                          ->first();
+      }
+      if (!$tax) {
+        $tax = BillingTax::where('primary_tax', '1')->first();
+      }
 
       $lineItems = self::createLineItemsFromInvoicRecords(
           UserInvoiceLineItem::where('invoice_id', $invoice->id)->get(),
@@ -102,7 +108,7 @@ final class InvoiceHelper {
       $statementDate = new DateTime();
       $paidInvoice = FALSE;
       $paymentRecvdDate = "N/A";
-      if ( $invoice->status == 'PAID' ) {
+      if ( $invoice->status == PaymentStatus::PAID ) {
         $paidInvoice=TRUE;
         $paymentRecvdDate = $invoice->complete_date->format('d M Y');
       }
