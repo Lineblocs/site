@@ -115,11 +115,6 @@ final class EmailHelper {
                 ->setTo([$to])
                 ->setBody($htmlBody, 'text/html');
 
-            // 7. Log the Payload
-            Log::info("--- Direct Swift Payload Start ---");
-            Log::info($message->toString());
-            Log::info("--- Direct Swift Payload End ---");
-
             // 8. Send
             $result = $mailer->send($message);
 
@@ -190,11 +185,6 @@ final class EmailHelper {
                     $message->to($to);
                     $message->subject($subject);
                     $message->from(Config::get('mail.from.address'), Config::get('mail.from.name'));
-
-                    // --- NEW: Dump Email Payload to Log ---
-                    Log::info("--- Raw Email Payload Start ---");
-                    Log::info($message->toString());
-                    Log::info("--- Raw Email Payload End ---");
                 });
 
                 Log::info("EmailHelper: Dispatch successful.");
