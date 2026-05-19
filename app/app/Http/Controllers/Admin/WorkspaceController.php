@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers\Admin;
+<?php
+
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
 use App\User;
@@ -54,7 +56,7 @@ class WorkspaceController extends AdminController
     public function store(WorkspaceRequest $request)
     {
 
-        $workspace = new Workspace ($request->all());
+        $workspace = new Workspace($request->all());
         $workspace->save();
         header("X-Goto-URL: /admin/workspace/" . $workspace->id . "/edit");
     }
@@ -122,7 +124,7 @@ class WorkspaceController extends AdminController
      */
     public function data()
     {
-        $workspaces = DB::table('workspaces')->select(array('workspaces.id', 'workspaces.name','workspaces.active', 'workspaces.created_at'));
+        $workspaces = DB::table('workspaces')->select(array('workspaces.id', 'workspaces.name', 'workspaces.active', 'workspaces.created_at'));
 
         return Datatables::of($workspaces)
             ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
@@ -136,6 +138,7 @@ class WorkspaceController extends AdminController
 
     public function refund_invoice(Workspace $workspace)
     {
+
         $invoiceId = request()->input('invoice_id');
         $invoice = UserInvoice::where('id', $invoiceId)->where('workspace_id', $workspace->id)->firstOrFail();
 

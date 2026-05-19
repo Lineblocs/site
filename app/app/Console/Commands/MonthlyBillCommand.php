@@ -10,6 +10,8 @@ use App\Recording;
 use App\Fax;
 use App\PlaonUsagePeriod;
 use App\Helpers\BillingDatahelper;
+use App\Enums\PaymentStatus;
+use App\Enums\InvoiceSource;
 use DateTime;
 use Config;
 
@@ -42,7 +44,7 @@ class MonthlyBillCommand extends Command
     private function markDebitsAsCompleted($monthStart, $monthLast, $debits) {
       foreach ($debits as $debit) {
             if ($debit->created_at >= $monthStart && $debit->created_at <= $monthLast) {
-              $debit->update(['status' => 'completed']);
+              $debit->update(['status' => PaymentStatus::PAID]);
             }
       }
     }
@@ -150,8 +152,11 @@ class MonthlyBillCommand extends Command
           $costs += $monthlyNumberRentals;
           $invoice = UserInvoice::create([
             'cents' => $costs,
-            'status' => 'incomplete',
-            'user_id' => $user->id
+            'status' => PaymentStatus::PENDING,
+            'source' => InvoiceSource::SUBSCRIPTION,
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
+            'deduplication_key' => 'invoice:monthlybill:' . $workspace->id . ':' . $monthStart->format('Y-m-d')
           ]);
 
           //try to pay the invoice in full
@@ -161,8 +166,8 @@ class MonthlyBillCommand extends Command
           if ($balance['remainingBalanceCents']>=$costs) {
             echo "charging credits " . PHP_EOL;
             $invoice->update([
-              'status' => 'completed',
-              'source' => 'CREDITS'
+              'status' => PaymentStatus::PAID,
+              'source' => InvoiceSource::CREDITS
             ]);
             $this->markDebitsAsCompleted($monthStart, $monthLast, $debits);
             continue;
@@ -178,7 +183,7 @@ class MonthlyBillCommand extends Command
               echo var_dump($charge); 
               $source = sprintf("%s ending in %s", $charge->source->brand, $charge->source->last4);
              $invoice->update([
-              'status' => 'completed',
+              'status' => PaymentStatus::PAID,
               'source' => $source
             ]);
             $this->markDebitsAsCompleted($monthStart, $monthLast, $debits);

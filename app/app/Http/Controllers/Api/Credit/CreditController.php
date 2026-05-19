@@ -8,12 +8,15 @@ use \Dingo\Api\Routing\Helpers;
 use \Illuminate\Http\Request;
 use \App\User;
 use \App\UserCard;
+use \App\ApiCredentialKVStore;
 use \App\Call;
 use \App\Transformers\CallTransformer;
 use \App\Helpers\MainHelper;
+use \App\Helpers\WorkspaceHelper;
 use \App\UserCredit;
 use \App\Helpers\SIPRouterHelper;
 use \App\Helpers\StripeBillingHelper;
+use \App\Enums\PaymentStatus;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
@@ -38,8 +41,26 @@ class CreditController extends HasStripeController {
     {
         $data = $request->all();
         $amountInCents = MainHelper::toCents($data['amount']);
-        $card = UserCard::find($data['card_id']);
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+          return $this->response->errorForbidden();
+        }
+        $card = UserCard::where('id', $data['card_id'])
+                        ->where('workspace_id', $workspace->id)
+                        ->firstOrFail();
+        $deduplicationKey = null;
+        if (!empty($data['deduplication_key'])) {
+          $deduplicationKey = $data['deduplication_key'];
+        }
+        if (!empty($deduplicationKey)) {
+          $existingCredit = UserCredit::where('workspace_id', $workspace->id)
+                                      ->where('deduplication_key', $deduplicationKey)
+                                      ->first();
+          if ($existingCredit) {
+            return $this->response->noContent();
+          }
+        }
         try {
           MainHelper::chargeCard($user, $card, $amountInCents);
         } catch (Exception $ex) {
@@ -51,7 +72,9 @@ class CreditController extends HasStripeController {
           'cents' => $amountInCents,
           'card_id' => $data['card_id'],
           'user_id' => $user->id,
-          'status' => 'APPROVED'
+          'workspace_id' => $workspace->id,
+          'status' => PaymentStatus::APPROVED,
+          'deduplication_key' => $deduplicationKey
         ];
         UserCredit::create($credit);
       
@@ -77,6 +100,10 @@ class CreditController extends HasStripeController {
     public function checkoutWithPayPal(Request $request)
     {
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+          return $this->response->errorForbidden();
+        }
         $site = MainHelper::getSiteName();
         $currency = MainHelper::getCurrency();
         \Log::info("using paypal user is: " .$user->id);
@@ -125,26 +152,38 @@ class CreditController extends HasStripeController {
         // payment - what is the payment for and who
         // is fulfilling it. 
         $transaction = new Transaction();
+        $paypalInvoiceNumber = uniqid();
         $transaction->setAmount($amount)
             ->setItemList($itemList)
             ->setDescription("Credits purchase for " . $site)
-            ->setInvoiceNumber(uniqid());
+            ->setInvoiceNumber($paypalInvoiceNumber);
 
         // ### Redirect urls
         // Set the urls that the buyer must be redirected to after 
         // payment approval/ cancellation.
 
         $amountInCents = MainHelper::toCents($credits);
+        $deduplicationKey = null;
+        if (!empty($data['deduplication_key'])) {
+          $deduplicationKey = $data['deduplication_key'];
+        }
+        if (empty($deduplicationKey)) {
+          $deduplicationKey = 'credit:paypal:' . $workspace->id . ':' . $paypalInvoiceNumber;
+        }
         $credit = [
           'cents' => $amountInCents,
           'card_id' => NULL,
           'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
           'source' => 'PAYPAL',
-          'status' => 'pending'
+          'status' => PaymentStatus::PENDING,
+          'deduplication_key' => $deduplicationKey
         ];
         $creditObj = UserCredit::create($credit);
-        $params = '?creditId='.$creditObj->id;
-        $params .= '?userId='.$user->id;
+        $params = '?' . http_build_query([
+          'creditId' => $creditObj->id,
+          'userId' => $user->id
+        ]);
         $success = app('Dingo\Api\Routing\UrlGenerator')->version('v1')->route('checkout_paypal_done').$params;
         $fail  = app('Dingo\Api\Routing\UrlGenerator')->version('v1')->route('checkout_paypal_fail').$params;
         $redirectUrls = new RedirectUrls();
@@ -162,7 +201,7 @@ class CreditController extends HasStripeController {
 
 
         // For Sample Purposes Only.
-        $request = clone $payment;
+        $paypalRequest = clone $payment;
         $apiContext = MainHelper::getPayPalContext();
         // ### Create Payment
         // Create a payment by calling the 'create' method
@@ -228,8 +267,10 @@ class CreditController extends HasStripeController {
           // (See bootstrap.php for more on `ApiContext`)
           $result = $payment->execute($execution, $apiContext);
           // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
-          $creditObj = UserCredit::findOrFail($_REQUEST['creditId']);
-          $creditObj->update([ 'status' => 'APPROVED' ]);
+          $creditObj = UserCredit::where('id', $_REQUEST['creditId'])
+                                ->where('user_id', $_REQUEST['userId'])
+                                ->firstOrFail();
+          $creditObj->update([ 'status' => PaymentStatus::APPROVED ]);
           $userObj = User::findOrFail($_REQUEST['userId']);
           $userObj->update([
             'linked_paypal' => TRUE
@@ -264,6 +305,7 @@ class CreditController extends HasStripeController {
     }
     // Read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
     $req = 'cmd=_notify-validate';
+    $get_magic_quotes_exists = false;
     if (function_exists('get_magic_quotes_gpc')) {
         $get_magic_quotes_exists = true;
     }
@@ -277,7 +319,22 @@ class CreditController extends HasStripeController {
     }
 
     // Step 2: Post IPN data back to PayPal to validate
-    $ch = curl_init('https://ipnpb.paypal.com/cgi-bin/webscr');
+    $apiCredentials = ApiCredentialKVStore::getRecord();
+    $paypalMode = 'live';
+    if ($apiCredentials && empty($apiCredentials['paypal_api_mode'])) {
+      $paypalMode = 'sandbox';
+    }
+    if ($apiCredentials && $apiCredentials['paypal_api_mode'] === 'sandbox') {
+      $paypalMode = 'sandbox';
+    }
+    if ($apiCredentials && $apiCredentials['paypal_api_mode'] === 'test') {
+      $paypalMode = 'sandbox';
+    }
+    $paypalIpnUrl = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+    if ($paypalMode === 'sandbox') {
+      $paypalIpnUrl = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+    }
+    $ch = curl_init($paypalIpnUrl);
     curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
@@ -302,15 +359,27 @@ class CreditController extends HasStripeController {
     // Check if IPN response is valid
     if (strcmp($res, 'VERIFIED') == 0) {
         // IPN is verified, process the transaction
-        $payment_status = $_POST['payment_status'];
-        $txn_type = $_POST['txn_type'];
+        $payment_status = '';
+        if (!empty($myPost['payment_status'])) {
+          $payment_status = $myPost['payment_status'];
+        }
+        $txn_type = '';
+        if (!empty($myPost['txn_type'])) {
+          $txn_type = $myPost['txn_type'];
+        }
 
         // Check if it's a cancellation notification
-        if ($payment_status === 'Canceled_Reversal' && $txn_type === 'mp_cancel') {
+        if ($payment_status === 'Canceled_Reversal' || $txn_type === 'mp_cancel' || $txn_type === 'subscr_cancel') {
             // Handle the cancellation here, such as updating your database or sending notifications
             // For example:
-            $payer_email = $_POST['payer_email'];
-            $subscription_id = $_POST['subscr_id'];
+            $payer_email = '';
+            if (!empty($myPost['payer_email'])) {
+              $payer_email = $myPost['payer_email'];
+            }
+            $subscription_id = '';
+            if (!empty($myPost['subscr_id'])) {
+              $subscription_id = $myPost['subscr_id'];
+            }
             $user = User::where('email', $payer_email)->first();
             if (!$user) {
               Log::error(sprintf("couldnt find payer %s when processing paypal IPN", $payer_email));
@@ -322,6 +391,7 @@ class CreditController extends HasStripeController {
             $data = [
                 'user' => $user,
             ];
+            $subject = MainHelper::createEmailSubject('Billing agreement cancelled');
             $result = EmailHelper::sendEmail($subject, $user->email, 'billing_agreement_cancelled', $data);
 
 

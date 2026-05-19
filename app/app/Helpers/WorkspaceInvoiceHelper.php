@@ -11,9 +11,13 @@ use App\Workspace;
 use App\ServicePlan;
 use App\Subscription;
 use App\BillingTax;
+use App\UserDebit;
 use App\UserInvoice;
 use App\UserInvoiceLineItem;
+use App\WorkspaceUser;
 use App\CustomizationsKVStore;
+use App\Enums\InvoiceSource;
+use App\Enums\PaymentStatus;
 
 final class WorkspaceInvoiceHelper
 {
@@ -34,9 +38,9 @@ final class WorkspaceInvoiceHelper
         self::normalizeWorkspacePlan($workspace);
 
         if (empty($invoiceId)) {
-             $invoiceData = self::createInvoice($owner, $workspace, $period);
+            $invoiceData = self::createInvoice($owner, $workspace, $period);
         } else {
-             $invoiceData = self::getInvoiceData($owner, $workspace, $invoiceId);
+            $invoiceData = self::getInvoiceData($owner, $workspace, $invoiceId);
         }
 
         $invoice = $invoiceData['invoice'];
@@ -90,9 +94,9 @@ final class WorkspaceInvoiceHelper
         //$plan = ServicePlan::where('key_name', $workspace->plan)->first();
         //$plan = ServicePlan::where('workspace_id', $workspace->id)->firstOrFail();
         $plan = Subscription::select(array('service_plans.*'))
-                    ->join('service_plans', 'subscriptions.service_plan_id', '=', 'service_plans.id')
-                    ->where('subscriptions.workspace_id', $workspace->id)
-                    ->firstOrFail();
+            ->join('service_plans', 'subscriptions.current_plan_id', '=', 'service_plans.id')
+            ->where('subscriptions.workspace_id', $workspace->id)
+            ->firstOrFail();
         $workspace->plan = $plan->key_name;
     }
 
@@ -107,19 +111,16 @@ final class WorkspaceInvoiceHelper
             }
         }
 
-        return BillingTax::where('name', 'GST')->first();
+        $tax = BillingTax::where('primary_tax', '1')->first();
+        if ($tax) {
+            return $tax;
+        }
+
+        return BillingTax::first();
     }
 
-    private static function createInvoice(User $owner, Workspace $workspace, $period)
+    private static function getInvoiceRange($period)
     {
-        $period = strtoupper($period);
-        if ($period === 'ANNUAL') {
-            $multiplier = 12;
-        } else {
-            $multiplier = 1;
-        }
-        $now = new DateTime();
-
         if ($period === 'ANNUAL') {
             $rangeStart = (new DateTime())->modify('first day of january this year')->setTime(0, 0, 0);
             $dueDate = (new DateTime())->modify('last day of december this year')->setTime(23, 59, 59);
@@ -130,29 +131,128 @@ final class WorkspaceInvoiceHelper
             $invoicePrefix = 'M';
         }
 
-        $callCosts = (100 * 20) * $multiplier;
-        $recordingCosts = (100 * 20) * $multiplier;
-        $membershipCosts = (100 * 20) * $multiplier;
-        $faxCosts = (100 * 20) * $multiplier;
-        $numberCosts = (100 * 20) * $multiplier;
+        return [
+            'start' => $rangeStart,
+            'end' => $dueDate,
+            'prefix' => $invoicePrefix
+        ];
+    }
+
+    private static function sumDebitsForSources(Workspace $workspace, DateTime $rangeStart, DateTime $rangeEnd, array $sources)
+    {
+        return (int) UserDebit::where('workspace_id', $workspace->id)
+            ->whereIn('source', $sources)
+            ->whereBetween('created_at', [$rangeStart->format('Y-m-d H:i:s'), $rangeEnd->format('Y-m-d H:i:s')])
+            ->sum('cents');
+    }
+
+    private static function calculateMembershipCosts(Workspace $workspace, $period, DateTime $rangeStart, DateTime $rangeEnd)
+    {
+        $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+        if (!$subscription) {
+            return 0;
+        }
+
+        $plan = ServicePlan::find($subscription->current_plan_id);
+        if (!$plan) {
+            return 0;
+        }
+
+        if ($plan->pay_as_you_go) {
+            return 0;
+        }
+
+        $userCount = WorkspaceUser::where('workspace_id', $workspace->id)
+            ->where(function ($query) use ($rangeStart, $rangeEnd) {
+                $query->where('status', 'ACTIVE')
+                    ->orWhere(function ($subQuery) use ($rangeStart, $rangeEnd) {
+                        $subQuery->where('status', 'TERMINATED')
+                            ->whereBetween('activated_account_at', [
+                                $rangeStart->format('Y-m-d H:i:s'),
+                                $rangeEnd->format('Y-m-d H:i:s')
+                            ]);
+                    });
+            })
+            ->count();
+
+        $planCost = (int) $plan->monthly_cost_cents;
+        if ($period === 'ANNUAL') {
+            $planCost = (int) $plan->annual_cost_cents;
+            if ($planCost <= 0) {
+                $planCost = (int) $plan->monthly_cost_cents * 12;
+            }
+        }
+
+        return $userCount * $planCost;
+    }
+
+    private static function aggregateInvoiceCosts(Workspace $workspace, $period, DateTime $rangeStart, DateTime $rangeEnd)
+    {
+        $callCosts = self::sumDebitsForSources($workspace, $rangeStart, $rangeEnd, ['CALL']);
+        $recordingCosts = self::sumDebitsForSources($workspace, $rangeStart, $rangeEnd, ['RECORDING', 'API usage - RECORDING']);
+        $faxCosts = self::sumDebitsForSources($workspace, $rangeStart, $rangeEnd, ['FAX', 'API usage - FAX']);
+        $numberCosts = self::sumDebitsForSources($workspace, $rangeStart, $rangeEnd, ['NUMBER_RENTAL', 'DID_RENTAL']);
+        $membershipCosts = self::calculateMembershipCosts($workspace, $period, $rangeStart, $rangeEnd);
+
+        return [
+            'call_costs' => $callCosts,
+            'recording_costs' => $recordingCosts,
+            'fax_costs' => $faxCosts,
+            'membership_costs' => $membershipCosts,
+            'number_costs' => $numberCosts
+        ];
+    }
+
+    private static function createInvoice(User $owner, Workspace $workspace, $period)
+    {
+        $period = strtoupper($period);
+        $now = new DateTime();
+        $range = self::getInvoiceRange($period);
+        $rangeStart = $range['start'];
+        $dueDate = $range['end'];
+        $invoicePrefix = $range['prefix'];
+
+        $costs = self::aggregateInvoiceCosts($workspace, $period, $rangeStart, $dueDate);
+        $callCosts = $costs['call_costs'];
+        $recordingCosts = $costs['recording_costs'];
+        $membershipCosts = $costs['membership_costs'];
+        $faxCosts = $costs['fax_costs'];
+        $numberCosts = $costs['number_costs'];
         $invoiceSubtotal = $callCosts + $recordingCosts + $membershipCosts + $faxCosts + $numberCosts;
 
         $tax = self::resolvePrimaryTax($workspace);
         $taxAmount = InvoiceHelper::calculateTax($invoiceSubtotal, $tax);
         $invoiceTotal = $invoiceSubtotal + $taxAmount;
         $invoiceNo = sprintf('%s-%d-%s', $invoicePrefix, $workspace->id, $now->format('YmdHis'));
+        $deduplicationKey = sprintf('%s:%d:%s', $period, $workspace->id, $rangeStart->format('Y-m-d'));
+
+        $existingInvoice = UserInvoice::where('deduplication_key', $deduplicationKey)
+            ->where('workspace_id', $workspace->id)
+            ->first();
+        if ($existingInvoice) {
+            $lineItems = UserInvoiceLineItem::where('invoice_id', $existingInvoice->id)->get()->map(function ($item) {
+                return self::toQueueLineItem($item);
+            })->toArray();
+
+            return [
+                'invoice' => $existingInvoice,
+                'tax' => $tax,
+                'line_items' => $lineItems
+            ];
+        }
 
         $invoice = UserInvoice::create([
             'invoice_no' => $invoiceNo,
             'due_date' => $dueDate,
-            'status' => 'INCOMPLETE',
-            'source' => 'MANUAL',
+            'status' => PaymentStatus::PENDING,
+            'source' => InvoiceSource::SUBSCRIPTION,
             'cents' => $invoiceSubtotal,
             'cents_including_taxes' => $invoiceTotal,
             'cents_taxes' => $taxAmount,
             'tax_metadata' => [],
             'user_id' => $owner->id,
             'workspace_id' => $workspace->id,
+            'deduplication_key' => $deduplicationKey,
             'call_costs' => $callCosts,
             'recording_costs' => $recordingCosts,
             'fax_costs' => $faxCosts,
@@ -301,7 +401,9 @@ final class WorkspaceInvoiceHelper
 
     private static function getInvoiceData(User $owner, Workspace $workspace, $invoiceId)
     {
-        $invoice = UserInvoice::findOrFail($payload['invoice_id']);
+        $invoice = UserInvoice::where('id', $invoiceId)
+            ->where('workspace_id', $workspace->id)
+            ->firstOrFail();
         $lineItems = UserInvoiceLineItem::where('invoice_id', $invoice->id)->get()->map(function ($item) {
             return self::toQueueLineItem($item);
         })->toArray();
