@@ -38,9 +38,9 @@ final class WorkspaceInvoiceHelper
         self::normalizeWorkspacePlan($workspace);
 
         if (empty($invoiceId)) {
-             $invoiceData = self::createInvoice($owner, $workspace, $period);
+            $invoiceData = self::createInvoice($owner, $workspace, $period);
         } else {
-             $invoiceData = self::getInvoiceData($owner, $workspace, $invoiceId);
+            $invoiceData = self::getInvoiceData($owner, $workspace, $invoiceId);
         }
 
         $invoice = $invoiceData['invoice'];
@@ -94,9 +94,9 @@ final class WorkspaceInvoiceHelper
         //$plan = ServicePlan::where('key_name', $workspace->plan)->first();
         //$plan = ServicePlan::where('workspace_id', $workspace->id)->firstOrFail();
         $plan = Subscription::select(array('service_plans.*'))
-                    ->join('service_plans', 'subscriptions.current_plan_id', '=', 'service_plans.id')
-                    ->where('subscriptions.workspace_id', $workspace->id)
-                    ->firstOrFail();
+            ->join('service_plans', 'subscriptions.current_plan_id', '=', 'service_plans.id')
+            ->where('subscriptions.workspace_id', $workspace->id)
+            ->firstOrFail();
         $workspace->plan = $plan->key_name;
     }
 
@@ -403,7 +403,6 @@ final class WorkspaceInvoiceHelper
     {
         $invoice = UserInvoice::where('id', $invoiceId)
             ->where('workspace_id', $workspace->id)
-            ->where('user_id', $owner->id)
             ->firstOrFail();
         $lineItems = UserInvoiceLineItem::where('invoice_id', $invoice->id)->get()->map(function ($item) {
             return self::toQueueLineItem($item);
