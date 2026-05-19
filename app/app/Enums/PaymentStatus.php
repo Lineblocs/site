@@ -8,6 +8,7 @@ namespace App\Enums;
 abstract class PaymentStatus
 {
     public const PENDING = 'PENDING';
+    public const APPROVED = 'APPROVED';
     public const PAID = 'PAID';
     public const FAILED = 'FAILED';
     public const CANCELLED = 'CANCELLED';
@@ -20,6 +21,7 @@ abstract class PaymentStatus
     {
         return [
             self::PENDING,
+            self::APPROVED,
             self::PAID,
             self::FAILED,
             self::CANCELLED,

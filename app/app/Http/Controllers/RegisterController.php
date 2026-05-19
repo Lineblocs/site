@@ -41,6 +41,7 @@ use App\SIPRouter;
 use App\UserRegistrationQuestionResponse;
 use App\Subscription;
 use App\OneTimeLoginLink;
+use App\Enums\PaymentStatus;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use DateTime;
@@ -336,7 +337,9 @@ class RegisterController extends ApiAuthController
             'cents' => $amountInCents,
             'card_id' => NULL,
             'user_id' => $user->id,
-            'status' => 'APPROVED'
+            'workspace_id' => $workspace->id,
+            'status' => PaymentStatus::APPROVED,
+            'deduplication_key' => 'credit:register:' . $workspace->id
           ];
 
           UserCredit::create($credit, $plan);
