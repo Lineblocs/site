@@ -1,7 +1,7 @@
 /node_modules
 /public/hot
 /public/storage
-/public/recordings
+/public/recordings/*
 /public/documents
 /public/files
 /public/fs

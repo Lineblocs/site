@@ -476,7 +476,7 @@ $api->version('v1', function($api) {
           $api->post("/", "RecordingController@post");
           $api->post("/{recordingId}", "RecordingController@put");
           $api->delete("/{recordingId}", "RecordingController@delete");
-          $api->get("/downloadRecordings", "RecordingController@downloadRecordings");
+          $api->post("/downloadRecordings", "RecordingController@downloadRecordings");
       });
       $api->group([ 'prefix' => 'call', 'namespace' => '\Call'], function($api) {
           $api->get("/reports", "CallController@getReports");
@@ -748,6 +748,7 @@ $api->version('v1', function($api) {
         $api->delete("/{recordingId}", "RecordingController@deleteRecording");
         $api->post("/{recordingId}/tag", "RecordingController@addRecordingTag");
         $api->delete("/{recordingId}/tag/{tagName}", "RecordingController@removeRecordingTag");
+        $api->post("/downloadRecordings", "RecordingController@downloadRecordings");
     });
 
     $api->group([ 'prefix' => 'phone', 'namespace' => '\App\Http\Controllers\Api\Phone'], function($api) {

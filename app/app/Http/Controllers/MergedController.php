@@ -192,42 +192,101 @@ class MergedController extends ApiAuthController
       $plans = Config::get("service_plans");
       return $this->response->array($plans);
     }
+
     public function upgradePlan(Request $request)
     {
-      $json = $request->json()->all();
-      $plans = Config::get("service_plans");
-      $plan = $json['plan'];
-      //$selected = $plans[$plan];
-      $selected = ServicePlan::where('key_name', $plan)->first();
-      $workspace = $this->getWorkspace($request);
-      $user = $this->getUser($request);
-      $period = PlanUsagePeriod::where('workspace_id', $workspace->id)->whereNull('ended_at')->first();
-      $now = new DateTime();
+        $json = $request->json()->all();
+        $planKey = $json['plan'];
+        
+        $workspace = $this->getWorkspace($request);
+        $user = $this->getUser($request);
+        $now = new \DateTime();
 
-      $period->update([
-        'ended_at' => $now
-      ]);
-      $period = PlanUsagePeriod::create([
-        'workspace_id' => $workspace->id,
-        'started_at' => $now,
-        'plan' => $plan
-      ]);
-      $workspace->update([
-        'plan' => $selected['key_name']
-      ]);
-    $props = array(
-      "billing_status" => "pending_processing",
-      "new_plan" => $plan
-    );
-    WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
-    // send an email including new plan details
-      $data = [
-        'user' => $user,
-        'plan' => $plan
-      ];
-      $subject =MainHelper::createEmailSubject(sprintf("Upgraded plan to %s", $plan));
-      $result = EmailHelper::sendEmail($subject, $user->email, 'plan_upgraded', $data);
-      return $this->response->noContent();
+        // 1. Get the current subscription and the target plan
+        $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+        $newPlan = ServicePlan::where('key_name', $planKey)->first();
+        $oldPlan = ServicePlan::find($subscription->current_plan_id);
+
+        if (!$subscription || !$newPlan) {
+            return $this->response->errorBadRequest("Invalid subscription or plan.");
+        }
+
+        // 2. Calculate Proration
+        // We determine the daily rate difference and multiply by days remaining
+        $periodEnd = new \DateTime($subscription->current_period_end);
+        $remainingDays = $now->diff($periodEnd)->days;
+        
+        // Determine the total days in this cycle to get an accurate daily ratio
+        $start_date = $subscription->last_billed_at;
+        if (!$start_date) {
+            $start_date = $subscription->created_at;
+        }
+        $lastBilled = new \DateTime($start_date);
+        $totalCycleDays = $lastBilled->diff($periodEnd)->days;
+        if ($totalCycleDays == 0) {
+            $totalCycleDays = 30; // Default to 30 if zero
+        }
+
+        if ($subscription->billing_cycle === 'ANNUAL') {
+            $oldPrice = $oldPlan->annual_cost_cents;
+            $newPrice = $newPlan->annual_cost_cents;
+        } else {
+            $oldPrice = $oldPlan->monthly_cost_cents;
+            $newPrice = $newPlan->monthly_cost_cents;
+        }
+
+        $priceDiff = $newPrice - $oldPrice;
+        
+        $prorationCents = 0;
+        if ($priceDiff > 0) {
+            $prorationCents = ($priceDiff * $remainingDays) / $totalCycleDays;
+            
+            // 3. Create the pending line item (orphan item with invoice_id = NULL)
+            UserInvoiceLineItem::create([
+                'created_at' => $now,
+                'updated_at' => $now,
+                'is_recurring' => 0,
+                'name' => "Upgrade Adjustment: {$oldPlan->name} to {$newPlan->name}",
+                'cents' => (int) $prorationCents,
+                'invoice_id' => null,
+                'key_name' => 'plan_upgrade_proration'
+            ]);
+        }
+
+        // 4. Update Subscription and Workspace
+        $subscription->update([
+            'current_plan_id' => $newPlan->id,
+            'updated_at' => $now
+        ]);
+
+        $workspace->update([
+            'plan' => $newPlan->key_name
+        ]);
+
+        // Update Plan Usage Periods
+        PlanUsagePeriod::where('workspace_id', $workspace->id)
+            ->whereNull('ended_at')
+            ->update(['ended_at' => $now]);
+
+        PlanUsagePeriod::create([
+            'workspace_id' => $workspace->id,
+            'started_at' => $now,
+            'plan' => $planKey
+        ]);
+
+        // Analytics and Communication
+        $props = [
+            "billing_status" => "immediate_upgrade_pending_reconciliation",
+            "new_plan" => $planKey,
+            "proration_applied" => $prorationCents
+        ];
+        WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
+
+        $data = ['user' => $user, 'plan' => $planKey];
+        $subject = MainHelper::createEmailSubject(sprintf("Upgraded plan to %s", $planKey));
+        EmailHelper::sendEmail($subject, $user->email, 'plan_upgraded', $data);
+
+        return $this->response->noContent();
     }
 
     public function dashboard(Request $request)

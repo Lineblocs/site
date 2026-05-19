@@ -105,13 +105,16 @@ trait RecordingWorkflow {
 
     public function downloadRecordings(Request $request)  {
         $user = $this->getUser($request);
-        $ids = $request->get('recording_ids');
-        if (empty($ids)) {
+        $workspace = $this->getWorkspace($request);
+        $data = $request->json()->all();
+        $idsArray = explode(",", $data['recording_ids']);
+        if (empty($idsArray)) {
             return $this->response->errorBadRequest("recording_ids is required");
         }
 
-        $idsArray = explode(',', $ids);
-        $recordings = Recording::whereIn('id', $idsArray)->where('user_id', $user->id)->get();
+        $recordings = Recording::whereIn('id', $idsArray)
+                            ->where('workspace_id', $workspace->id)
+                            ->get();
 
         if ($recordings->isEmpty()) {
             return $this->response->errorNotFound();
@@ -148,7 +151,13 @@ trait RecordingWorkflow {
             return $this->response->errorInternal("Could not create zip file.");
         }
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        $fileContents = file_get_contents($zipPath);
+        unlink($zipPath);
+
+        return response($fileContents, 200)
+            ->header('Content-Type', 'application/zip')
+            ->header('Content-Disposition', 'attachment; filename="recordings.zip"')
+            ->header('Content-Length', strlen($fileContents));
     }
 
 }
