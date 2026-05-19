@@ -14,8 +14,17 @@ class StripeBillingHelper
 {
     private $stripeKey;
     private $retryAttempts;
+    private $paymentIntentCreator;
+    private $refundCreator;
+    private $apiKeySetter;
 
-    public function __construct($stripeKey = NULL, $retryAttempts = 0)
+    public function __construct(
+        $stripeKey = NULL,
+        $retryAttempts = 0,
+        $paymentIntentCreator = NULL,
+        $refundCreator = NULL,
+        $apiKeySetter = NULL
+    )
     {
         if (is_null($stripeKey)) {
             $credentials = ApiCredentialKVStore::getRecord();
@@ -27,9 +36,18 @@ class StripeBillingHelper
         }
         $this->stripeKey = $stripeKey;
         $this->retryAttempts = $retryAttempts;
+        $this->paymentIntentCreator = $paymentIntentCreator ?: function ($params) {
+            return PaymentIntent::create($params);
+        };
+        $this->refundCreator = $refundCreator ?: function ($params) {
+            return \Stripe\Refund::create($params);
+        };
+        $this->apiKeySetter = $apiKeySetter ?: function ($stripeKey) {
+            Stripe::setApiKey($stripeKey);
+        };
 
         // instatiate Stripe client with the provided API key
-        Stripe::setApiKey($this->stripeKey);
+        call_user_func($this->apiKeySetter, $this->stripeKey);
     }
 
     public function chargeCustomer(User $user, Workspace $workspace, UserInvoice $invoice): ?Exception
@@ -61,13 +79,13 @@ class StripeBillingHelper
         ];
 
         // Create the PaymentIntent
-        PaymentIntent::create($params);
+        call_user_func($this->paymentIntentCreator, $params);
 
         return null;
     }
     public function refundInvoice(string $stripePaymentId): ?Exception
     {
-        \Stripe\Refund::create(['payment_intent' => $stripePaymentId]);
+        call_user_func($this->refundCreator, ['payment_intent' => $stripePaymentId]);
 
         return null;
     }
