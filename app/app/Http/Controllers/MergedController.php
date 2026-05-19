@@ -1315,7 +1315,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     \App\Helpers\EmailHelper::sendEmail(
       'Your SIP Credentials',
       $data['to_email'],
-      'emails.sip_credentials',
+      'sip_credentials',
       $sipCredentials
     );
 
