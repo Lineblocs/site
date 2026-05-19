@@ -9,6 +9,7 @@ use App\UserCard;
 use App\UsageTrigger;
 use App\DIDNumber;
 use App\ServicePlan;
+use App\UserInvoiceLineItem;
 use App\CallSystemTemplate;
 use App\Workspace;
 use App\WorkspaceEvent;
@@ -257,10 +258,6 @@ class MergedController extends ApiAuthController
         $subscription->update([
             'current_plan_id' => $newPlan->id,
             'updated_at' => $now
-        ]);
-
-        $workspace->update([
-            'plan' => $newPlan->key_name
         ]);
 
         // Update Plan Usage Periods

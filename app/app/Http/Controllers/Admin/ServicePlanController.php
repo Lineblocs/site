@@ -14,6 +14,7 @@ use Datatables;
 use DB;
 use Config;
 use Mail;
+use Log;
 use Illuminate\Http\Request;
 
 class ServicePlanController extends AdminController
@@ -55,6 +56,7 @@ class ServicePlanController extends AdminController
     public function store(ServicePlanRequest $request)
     {
         $data = $request->all();
+        unset($data['migrate_plan']);
         $serviceplan = new ServicePlan ($data);
         $serviceplan->save();
         $this->ensurePlansDontContainConflictingValues($serviceplan);
@@ -213,6 +215,9 @@ $this->createFeatureOption('allows_monthly'),
     public function update(ServicePlanRequest $request, ServicePlan $serviceplan)
     {
         $data = $request->all();
+        Log::info('ServicePlan update data: ', $data);
+        unset($data['migrate_plan']);
+
         $serviceplan->update($data);
         $this->ensurePlansDontContainConflictingValues($serviceplan);
     }
