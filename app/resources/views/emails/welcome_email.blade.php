@@ -30,7 +30,7 @@
                                                     <td class="pad" style="width: 100%; padding-right: 0px; padding-left: 0px;">
                                                         <div align="center" class="alignment" style="line-height: 10px;">
                                                             <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank">
-                                                                <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" style="display: block; height: auto; border: 0; max-width: 238px; width: 100%;" width="238" />
+                                                                <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" style="display: block; height: auto; border: 0; max-width: 180px; width: 180px; margin: 0 auto;" width="180" />
                                                             </a>
                                                         </div>
                                                     </td>

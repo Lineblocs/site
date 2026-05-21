@@ -4,7 +4,7 @@
       <tr>
         <td align="center">
           <a href="{{ \App\Helpers\MainHelper::createUrl() }}" target="_blank">
-            <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" alt="{{ $site_name }}" width="180" />
+            <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" alt="{{ $site_name }}" width="180" style="display:block; margin:0 auto;" />
           </a>
         </td>
       </tr>
