@@ -21,6 +21,7 @@
         <tr>
             <th>{!! trans("admin/workspaces.name") !!}</th>
             <th>{!! trans("admin/workspaces.active") !!}</th>
+            <th>Grace Period</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>
             <th>{!! trans("admin/admin.action") !!}</th>
         </tr>

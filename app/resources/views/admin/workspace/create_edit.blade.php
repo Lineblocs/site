@@ -49,6 +49,24 @@
                 <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
             </div>
         </div>
+        @if (isset($workspace))
+        <div class="form-group">
+            {!! Form::label('workspace_status', 'Status', array('class' => 'control-label')) !!}
+            <div class="controls">
+                @if (!empty($activeSuspension))
+                    <span class="label label-danger" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Suspended</span>
+                    <span class="help-block">
+                        Reason: {{ $activeSuspension->reason }}.
+                        Suspended at: {{ $activeSuspension->suspended_at }}.
+                    </span>
+                @elseif (!empty($workspace->active))
+                    <span class="label label-success" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Active</span>
+                @else
+                    <span class="label label-default" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Inactive</span>
+                @endif
+            </div>
+        </div>
+        @endif
         <div class="form-group">
             <button type="submit" class="btn btn-sm btn-success">
                 <span class="glyphicon glyphicon-ok-circle"></span>
@@ -61,7 +79,7 @@
         <div class="form-group {{ $errors->has('grace_period_extension') ? 'has-error' : '' }}">
             {!! Form::label('grace_period_extension', 'Extend Grace Period (Days)', array('class' => 'control-label')) !!}
             <div class="controls">
-                {!! Form::number('grace_period_extension', $gracePeriodExtension, array('class' => 'form-control', 'min' => '0', 'placeholder' => 'Defaults to global system setting (7 days) if left blank.')) !!}
+                {!! Form::number('grace_period_extension', old('grace_period_extension', $gracePeriodExtension), array('class' => 'form-control', 'min' => '0', 'placeholder' => 'Defaults to global system setting (7 days) if left blank.')) !!}
                 <span class="help-block">Defaults to global system setting (7 days) if left blank.</span>
                 <span class="help-block">{{ $errors->first('grace_period_extension', ':message') }}</span>
             </div>
