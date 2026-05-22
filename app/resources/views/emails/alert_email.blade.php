@@ -268,12 +268,12 @@
                                                                                                     style="">
                                                                                                     <a href="{{\App\Helpers\MainHelper::createUrl()}}"
                                                                                                         target="_blank">
-                                                                                                        <img src="images/logo.png"
+                                                                                                        <img src="{{\Config::get("app.url").'/email-images/'}}logo.png"
                                                                                                             alt=""
                                                                                                             title=""
                                                                                                             width="160"
                                                                                                             height=""
-                                                                                                            style="display:block;"
+                                                                                                            style="display:block; margin:0 auto;"
                                                                                                             border="0" />
                                                                                                     </a>
                                                                                                 </td>
