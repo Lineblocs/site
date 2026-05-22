@@ -159,6 +159,10 @@
     text-align: center;
   }
 
+  .email-logo-cell img {
+    margin: 0 auto;
+  }
+
   .email-divider {
     border-top: 2px solid #ebfcfc;
     font-size: 0;
