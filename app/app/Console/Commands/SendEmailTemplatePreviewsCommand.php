@@ -41,17 +41,17 @@ class SendEmailTemplatePreviewsCommand extends Command
 
         foreach ($templates as $index => $template) {
             try {
-                view('emails.'.$template, $data)->render();
+                view('emails.' . $template, $data)->render();
 
                 if (!$dryRun) {
-                    Mail::send('emails.'.$template, $data, function ($message) use ($email, $template, $index) {
+                    Mail::send('emails.' . $template, $data, function ($message) use ($email, $template, $index) {
                         $message->to($email);
                         $message->subject(sprintf('[Template Preview %02d] %s', $index + 1, $template));
                     });
                     $sent++;
                 }
 
-                $this->info(($dryRun ? 'OK ' : 'SENT ').$template);
+                $this->info(($dryRun ? 'OK ' : 'SENT ') . $template);
             } catch (\Exception $e) {
                 $this->error(sprintf('FAILED %s: %s', $template, $e->getMessage()));
                 return 1;
@@ -118,7 +118,7 @@ class SendEmailTemplatePreviewsCommand extends Command
         $siteName = Config::get('app.site_name') ?: 'Lineblocs';
         $customizations = new EmailTemplatePreviewObject([
             'contact_address' => "123 Preview Street\nDemo City",
-            'domain' => 'localhost:8000',
+            'domain' => Config::get('app.deployment_domain'),
         ]);
 
         $user = new EmailTemplatePreviewObject();
@@ -227,13 +227,13 @@ class EmailTemplatePreviewObject implements \ArrayAccess
             return ['remainingBalance' => '$42.00'];
         }
 
-        return array_key_exists($name, $this->values) ? $this->values[$name] : 'Preview '.$name;
+        return array_key_exists($name, $this->values) ? $this->values[$name] : 'Preview ' . $name;
     }
 
     public function __call($name, $arguments)
     {
         if ($name === 'getName') {
-            return trim($this->first_name.' '.$this->last_name);
+            return trim($this->first_name . ' ' . $this->last_name);
         }
 
         if ($name === 'getBillingInfo') {
@@ -248,7 +248,7 @@ class EmailTemplatePreviewObject implements \ArrayAccess
             return 'Mozilla/5.0 (Preview Device)';
         }
 
-        return 'Preview '.$name;
+        return 'Preview ' . $name;
     }
 
     public function offsetExists($offset)
