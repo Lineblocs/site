@@ -15,7 +15,8 @@ class Workspace extends Model {
   protected $guarded  = array('id');
   protected $table = "workspaces";
   protected $casts = array(
-    "byo_enabled" => "boolean"
+    "byo_enabled" => "boolean",
+    "grace_period_extension" => "integer"
     );
   public function toArray() {
         $array = parent::toArray();
