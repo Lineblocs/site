@@ -1300,4 +1300,29 @@ final class MainHelper {
       $ticketsOpen = SupportTicket::where('status', 'OPEN')->count();
       return $ticketsOpen;
     }
+
+    public static function isWorkspaceSuspended($workspaceId) {
+      $gracePeriod = 7 * 24 * 3600; // 7 days in seconds
+      
+      $suspensions = \App\WorkspaceSuspension::where('workspace_id', $workspaceId)->get();
+      
+      $now = new \DateTime();
+      
+      foreach ($suspensions as $suspension) {
+        $suspendedAt = $suspension->suspended_at;
+        $gracePeriodExtension = $suspension->grace_period_extension ?? 0;
+        
+        $totalGracePeriod = $gracePeriod + ($gracePeriodExtension * 3600);
+        
+        $suspensionDeadline = (new \DateTime($suspendedAt->format('Y-m-d H:i:s')))->modify("+{$totalGracePeriod} seconds");
+        
+        if ($now > $suspensionDeadline) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+
+
 }
