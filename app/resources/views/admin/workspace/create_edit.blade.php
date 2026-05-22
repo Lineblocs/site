@@ -6,6 +6,9 @@
     <li class="active">
         <a href="#tab-general" data-toggle="tab">{{ trans("admin/modal.general") }}</a>
     </li>
+    <li>
+        <a href="#tab-grace-periods" data-toggle="tab">Grace Periods</a>
+    </li>
     @if (!empty($workspace))
     <li>
         <a href="#tab-users" data-toggle="tab">{{ trans("admin/modal.users") }}</a>
@@ -44,6 +47,23 @@
                 {!! Form::label('active', trans("admin/admin.no"), array('class' => 'control-label')) !!}
                 {!! Form::radio('active', '0', @isset($workspace)? $workspace->active : 'true') !!}
                 <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm btn-success">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                {{ isset($workspace) ? trans("admin/modal.edit") : trans("admin/modal.create") }}
+            </button>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="tab-grace-periods">
+        <div class="form-group {{ $errors->has('grace_period_extension') ? 'has-error' : '' }}">
+            {!! Form::label('grace_period_extension', 'Extend Grace Period (Days)', array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::number('grace_period_extension', $gracePeriodExtension, array('class' => 'form-control', 'min' => '0', 'placeholder' => 'Defaults to global system setting (7 days) if left blank.')) !!}
+                <span class="help-block">Defaults to global system setting (7 days) if left blank.</span>
+                <span class="help-block">{{ $errors->first('grace_period_extension', ':message') }}</span>
             </div>
         </div>
         <div class="form-group">

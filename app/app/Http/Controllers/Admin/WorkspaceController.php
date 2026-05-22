@@ -14,6 +14,7 @@ use App\Http\Requests\Admin\WorkspaceRequest;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use App\Helpers\BillingDataHelper;
+use App\Helpers\WorkspaceSuspensionHelper;
 use Datatables;
 use DB;
 use Config;
@@ -45,7 +46,8 @@ class WorkspaceController extends AdminController
      */
     public function create()
     {
-        return view('admin.workspace.create_edit');
+        $gracePeriodExtension = null;
+        return view('admin.workspace.create_edit', compact('gracePeriodExtension'));
     }
 
     /**
@@ -56,8 +58,9 @@ class WorkspaceController extends AdminController
     public function store(WorkspaceRequest $request)
     {
 
-        $workspace = new Workspace($request->all());
+        $workspace = new Workspace($request->except('grace_period_extension'));
         $workspace->save();
+        WorkspaceSuspensionHelper::saveGracePeriodExtension($workspace, $request->input('grace_period_extension'));
         header("X-Goto-URL: /admin/workspace/" . $workspace->id . "/edit");
     }
 
@@ -79,7 +82,8 @@ class WorkspaceController extends AdminController
         $usageTriggers = UsageTrigger::where("workspace_id", $workspace->id)->get();
         $routingACLs = WorkspaceHelper::getACLs($workspace);
         $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
-        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices'));
+        $gracePeriodExtension = WorkspaceSuspensionHelper::getGracePeriodExtension($workspace->id);
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices', 'gracePeriodExtension'));
     }
 
     /**
@@ -90,7 +94,8 @@ class WorkspaceController extends AdminController
      */
     public function update(WorkspaceRequest $request, Workspace $workspace)
     {
-        $workspace->update($request->all());
+        $workspace->update($request->except('grace_period_extension'));
+        WorkspaceSuspensionHelper::saveGracePeriodExtension($workspace, $request->input('grace_period_extension'));
         header("X-Goto-URL: /admin/workspace/" . $workspace->id . "/edit");
     }
 
