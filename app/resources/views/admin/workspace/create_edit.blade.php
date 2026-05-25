@@ -6,9 +6,6 @@
     <li class="active">
         <a href="#tab-general" data-toggle="tab">{{ trans("admin/modal.general") }}</a>
     </li>
-    <li>
-        <a href="#tab-grace-periods" data-toggle="tab">Grace Periods</a>
-    </li>
     @if (!empty($workspace))
     <li>
         <a href="#tab-users" data-toggle="tab">{{ trans("admin/modal.users") }}</a>
@@ -75,23 +72,6 @@
         </div>
     </div>
 
-    <div class="tab-pane" id="tab-grace-periods">
-        <div class="form-group {{ $errors->has('grace_period_extension') ? 'has-error' : '' }}">
-            {!! Form::label('grace_period_extension', 'Extend Grace Period (Days)', array('class' => 'control-label')) !!}
-            <div class="controls">
-                {!! Form::number('grace_period_extension', old('grace_period_extension', $gracePeriodExtension), array('class' => 'form-control', 'min' => '0', 'placeholder' => 'Defaults to global system setting (7 days) if left blank.')) !!}
-                <span class="help-block">Defaults to global system setting (7 days) if left blank.</span>
-                <span class="help-block">{{ $errors->first('grace_period_extension', ':message') }}</span>
-            </div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-sm btn-success">
-                <span class="glyphicon glyphicon-ok-circle"></span>
-                {{ isset($workspace) ? trans("admin/modal.edit") : trans("admin/modal.create") }}
-            </button>
-        </div>
-    </div>
-
     @if (isset($workspace))
     <div class="tab-pane" id="tab-users">
         <div class="row">
@@ -117,6 +97,26 @@
     </div>
 
     <div class="tab-pane" id="tab-billing">
+        <?php
+            $gracePeriodOptions = array('' => 'Default system setting (7 days)');
+            for ($days = 7; $days <= 84; $days += 7) {
+                $gracePeriodOptions[$days] = $days . ' days';
+            }
+        ?>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-12">
+                <div class="form-group {{ $errors->has('grace_period_extension') ? 'has-error' : '' }}">
+                    {!! Form::label('grace_period_extension', 'Grace Period', array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::select('grace_period_extension', $gracePeriodOptions, old('grace_period_extension', $gracePeriodExtension), array('class' => 'form-control')) !!}
+                        <span class="help-block">Select a grace period in 7 day gaps.</span>
+                        <span class="help-block">{{ $errors->first('grace_period_extension', ':message') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <h3>Billing Overview</h3>
@@ -160,6 +160,13 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm btn-success">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                {{ trans("admin/modal.edit") }}
+            </button>
         </div>
     </div>
 
