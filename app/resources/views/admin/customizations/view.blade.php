@@ -499,7 +499,15 @@
            <div class="row form-group">
                 <label for="grace_period_billing_days">Grace period for overdue invoices (in days)</label>
                 <div class="controls">
-                    <input name="grace_period_billing_days" class="form-control" value="{{$record->grace_period_billing_days}}" />
+                    <select name="grace_period_billing_days" class="form-control" id="grace_period_billing_days">
+                        @for ($i = 1; $i <= 7; $i++)
+                            @if ($i * 7 == $record->grace_period_billing_days)
+                                <option value="{{$i * 7}}" selected>{{$i * 7}} days</option>
+                            @else
+                                <option value="{{$i * 7}}">{{$i * 7}} days</option>
+                            @endif
+                        @endfor
+                    </select>
                 </div>
             </div>
 
