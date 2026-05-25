@@ -146,7 +146,10 @@ case 'create_trunks':
       ));
       $data = $acls->get()->toArray(); 
       foreach ( $data as $cnt => $row ) {
-        $acl = WorkspaceRoutingACL::where('routing_acl_id',$row['routing_acl_id'])->first();
+        $data[$cnt]['enabled'] = $row['preset_acl_enabled'];
+        $acl = WorkspaceRoutingACL::where('routing_acl_id', $row['routing_acl_id'])
+          ->where('workspace_id', $workspace->id)
+          ->first();
         if ( $acl ) {
           $data[$cnt]['workspace_acl_id'] = $acl->id;
           $data[$cnt]['enabled'] = $acl->enabled;

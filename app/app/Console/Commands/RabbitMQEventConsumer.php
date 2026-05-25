@@ -51,6 +51,13 @@ class RabbitMQEventConsumer extends Command
         $channel->queue_declare(self::CALL_ACTIVITY_QUEUE, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, false, true, false, false);
+        $channel->exchange_declare(RabbitMQHelper::BILLING_EVENTS_EXCHANGE, 'topic', false, true, false);
+        $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, false, true, false, false);
+        $channel->queue_bind(
+            RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE,
+            RabbitMQHelper::BILLING_EVENTS_EXCHANGE,
+            RabbitMQHelper::WORKSPACE_SUSPENDED_ROUTING_KEY
+        );
 
         $this->info(" [*] Event Consumer Online. Waiting for messages...");
 
@@ -65,6 +72,7 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume(self::CALL_ACTIVITY_QUEUE, '', false, false, false, false, [$this, 'handleCallActivity']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, '', false, false, false, false, [$this, 'handleMonthlyInvoiceTask']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, '', false, false, false, false, [$this, 'handleAnnualInvoiceTask']);
+        $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
 
         // 3. Keep the process alive
         while (count($channel->callbacks)) {
@@ -387,6 +395,117 @@ class RabbitMQEventConsumer extends Command
             'workspace_id' => $workspaceId,
             'user_id' => $userId
         ]);
+    }
+
+    public function handleWorkspaceSuspended($msg)
+    {
+        $payload = json_decode($msg->body, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($payload)) {
+            $this->logConsumerError(' [WORKSPACE_SUSPENDED] Malformed JSON: ' . json_last_error_msg(), [
+                'body' => $msg->body
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        if (!isset($payload['event']) || $payload['event'] !== 'workspace.suspended') {
+            $event = isset($payload['event']) ? $payload['event'] : 'missing';
+            $this->logConsumerError(' [WORKSPACE_SUSPENDED] Unsupported event: ' . $event, [
+                'payload' => $payload
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $data = isset($payload['data']) && is_array($payload['data']) ? $payload['data'] : array();
+        $workspaceId = isset($data['workspace_id']) ? (int) $data['workspace_id'] : 0;
+        if ($workspaceId <= 0) {
+            $this->logConsumerError(' [WORKSPACE_SUSPENDED] Missing workspace_id.', [
+                'payload' => $payload
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $workspace = Workspace::find($workspaceId);
+        if (!$workspace) {
+            $this->logConsumerError(sprintf(' [WORKSPACE_SUSPENDED] Workspace #%d not found.', $workspaceId));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $owner = $workspace->creatorUser()->first();
+        $ownerEmail = !empty($data['owner_email']) ? $data['owner_email'] : ($owner ? $owner->email : null);
+        $adminEmail = $this->resolveSystemAdminEmail();
+
+        $emailData = array(
+            'workspace' => $workspace,
+            'owner' => $owner,
+            'event' => $payload,
+            'event_data' => $data,
+            'workspace_id' => $workspaceId,
+            'suspended_at' => isset($data['suspended_at']) ? $data['suspended_at'] : '',
+            'reason' => isset($data['reason']) ? $data['reason'] : 'payment_past_due',
+            'grace_period_extension_days' => array_key_exists('grace_period_extension_days', $data) ? $data['grace_period_extension_days'] : null
+        );
+
+        $ownerResult = TRUE;
+        if (!empty($ownerEmail)) {
+            $ownerResult = EmailHelper::sendEmail(
+                'Account Suspended: Billing Action Required',
+                $ownerEmail,
+                'workspace_account_suspended',
+                $emailData
+            );
+        } else {
+            $this->logConsumerError(sprintf(' [WORKSPACE_SUSPENDED] Owner email missing for workspace #%d.', $workspaceId));
+            $ownerResult = FALSE;
+        }
+
+        $adminResult = TRUE;
+        if (!empty($adminEmail)) {
+            $adminResult = EmailHelper::sendEmail(
+                sprintf('Workspace #%d Suspended', $workspaceId),
+                $adminEmail,
+                'workspace_suspended_admin',
+                $emailData
+            );
+        } else {
+            $this->logConsumerError(' [WORKSPACE_SUSPENDED] System admin email could not be resolved.');
+            $adminResult = FALSE;
+        }
+
+        if ($ownerResult === TRUE && $adminResult === TRUE) {
+            $this->logConsumerInfo(sprintf(' [v] Workspace suspension emails sent for workspace #%d.', $workspaceId), [
+                'workspace_id' => $workspaceId,
+                'owner_email' => $ownerEmail,
+                'admin_email' => $adminEmail
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $this->logConsumerError(sprintf(' [!] Workspace suspension email failed for workspace #%d.', $workspaceId), [
+            'workspace_id' => $workspaceId,
+            'owner_result' => $ownerResult,
+            'admin_result' => $adminResult
+        ]);
+    }
+
+    private function resolveSystemAdminEmail()
+    {
+        $admin = User::where('admin', '1')->first();
+        if ($admin && !empty($admin->email)) {
+            return $admin->email;
+        }
+
+        $customizations = \App\Customizations::getRecord();
+        if ($customizations && !empty($customizations->contact_email)) {
+            return $customizations->contact_email;
+        }
+
+        return env('ADMIN_EMAIL', env('MAIL_FROM_ADDRESS'));
     }
 
     private function isCallActivityError($data)
