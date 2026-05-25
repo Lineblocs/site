@@ -35,11 +35,19 @@
 
   a {
     color: #3f51b5;
+    word-break: break-word;
   }
 
   p {
     margin: 0 0 16px 0;
     line-height: 1.65;
+  }
+
+  p,
+  div,
+  td {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .ReadMsgBody,
@@ -192,6 +200,28 @@
   }
 
   @media only screen and (max-width: 640px) {
+    table[width="680"],
+    table[width="640"],
+    table[width="600"],
+    table[width="560"],
+    table[width="520"],
+    table[style*="width: 680px"],
+    table[style*="width:680px"],
+    table[style*="width: 600px"],
+    table[style*="width:600px"] {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    td[style*="padding: 0 30px"],
+    td[style*="padding-left: 30px"],
+    td[style*="padding-right: 30px"],
+    td[style*="padding:22px 30px"],
+    td[style*="padding: 22px 30px"] {
+      padding-left: 18px !important;
+      padding-right: 18px !important;
+    }
+
     .email-card-inner {
       padding: 0 0 20px !important;
     }
@@ -207,6 +237,32 @@
     .email-header-title {
       font-size: 20px !important;
       line-height: 28px !important;
+    }
+
+    h1 {
+      font-size: 26px !important;
+      line-height: 1.25 !important;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-size: 22px !important;
+      line-height: 1.25 !important;
+    }
+
+    img {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    td[bgcolor="#3f51b5"],
+    td[style*="background-color: #3f51b5"],
+    td[style*="background-color:#3f51b5"] {
+      width: auto !important;
+      height: auto !important;
+      padding: 12px 18px !important;
     }
 
     .stack,
