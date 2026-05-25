@@ -276,15 +276,28 @@
                                               <tr>
                                                 <td valign="middle" align="center" class="emailHeaderLogo"
                                                   style="padding: 0 20px; text-align: center;">
-                                                  <!-- <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank">
-                                                    <img src="https://lineblocs.com/assets/img/eHfktslfassPW7lQXz5WNkB46wnD94.png"
-                                                      alt="" title="" width="160" height="" style="display:block; margin:0 auto;"
-                                                      border="0" /> -->
-                                                  <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank">
-                                                    <img src="{{\Config::get("app.url").'/email-images/'}}logo.png"
-                                                      alt="" title="" width="160" height="" style="display:block;"
-                                                      border="0" />
-                                                  </a>
+                                                  <table align="center" width="160" border="0" cellspacing="0"
+                                                    cellpadding="0" style="width:160px; margin:0 auto;">
+                                                    <tr>
+                                                      <td align="center" valign="middle" style="text-align:center;">
+                                                        <a href="{{\App\Helpers\MainHelper::createUrl()}}"
+                                                          target="_blank" style="display:block; text-align:center;">
+                                                          <!-- <img
+                                                            src="https://lineblocs.com/assets/img/eHfktslfassPW7lQXz5WNkB46wnD94.png"
+                                                            alt="{{$site_name}}" title="{{$site_name}}" width="160"
+                                                            height="" align="center"
+                                                            style="display:block; width:160px; max-width:160px; height:auto; margin:0 auto; border:0; outline:none; text-decoration:none;"
+                                                            border="0" /> -->
+                                                          <img
+                                                            src="{{\Config::get("app.url").'/email-images/'}}logo.png"
+                                                            alt="{{$site_name}}" title="{{$site_name}}" width="160"
+                                                            height="" align="center"
+                                                            style="display:block; width:160px; max-width:160px; height:auto; margin:0 auto; border:0; outline:none; text-decoration:none;"
+                                                            border="0" />
+                                                        </a>
+                                                      </td>
+                                                    </tr>
+                                                  </table>
                                                 </td>
                                               </tr>
                                             </table>
