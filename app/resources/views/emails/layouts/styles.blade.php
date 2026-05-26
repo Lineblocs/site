@@ -240,7 +240,7 @@
     }
 
     h1 {
-      font-size: 26px !important;
+      font-size: 22px !important;
       line-height: 1.25 !important;
     }
 
@@ -248,8 +248,62 @@
     h3,
     h4,
     h5 {
-      font-size: 22px !important;
-      line-height: 1.25 !important;
+      font-size: 19px !important;
+      line-height: 26px !important;
+      margin-top: 0 !important;
+      margin-bottom: 12px !important;
+    }
+
+    p,
+    li,
+    span {
+      font-size: 14px !important;
+      line-height: 22px !important;
+    }
+
+    td[style*="font-size:28px"],
+    td[style*="font-size: 28px"],
+    td[style*="font-size:26px"],
+    td[style*="font-size: 26px"],
+    td[style*="font-size:24px"],
+    td[style*="font-size: 24px"],
+    td[style*="font-size:20px"],
+    td[style*="font-size: 20px"],
+    p[style*="font-size:24px"],
+    p[style*="font-size: 24px"],
+    h5[style*="font-size:28px"],
+    h5[style*="font-size: 28px"],
+    h5[style*="font-size:26px"],
+    h5[style*="font-size: 26px"],
+    h2[style*="font-size:24px"],
+    h2[style*="font-size: 24px"],
+    h2[style*="font-size:30px"],
+    h2[style*="font-size: 30px"] {
+      font-size: 18px !important;
+      line-height: 25px !important;
+    }
+
+    td[style*="font-size:18px"],
+    td[style*="font-size: 18px"],
+    td[style*="font-size:17px"],
+    td[style*="font-size: 17px"],
+    td[style*="font-size:16px"],
+    td[style*="font-size: 16px"],
+    div[style*="font-size:16px"],
+    div[style*="font-size: 16px"],
+    p[style*="font-size:16px"],
+    p[style*="font-size: 16px"] {
+      font-size: 14px !important;
+      line-height: 22px !important;
+    }
+
+    td[style*="line-height:30px"],
+    td[style*="line-height: 30px"],
+    td[style*="line-height:28px"],
+    td[style*="line-height: 28px"],
+    div[style*="line-height:150%"],
+    div[style*="line-height: 150%"] {
+      line-height: 22px !important;
     }
 
     img {
