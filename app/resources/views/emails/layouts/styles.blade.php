@@ -35,11 +35,19 @@
 
   a {
     color: #3f51b5;
+    word-break: break-word;
   }
 
   p {
     margin: 0 0 16px 0;
     line-height: 1.65;
+  }
+
+  p,
+  div,
+  td {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .ReadMsgBody,
@@ -192,6 +200,28 @@
   }
 
   @media only screen and (max-width: 640px) {
+    table[width="680"],
+    table[width="640"],
+    table[width="600"],
+    table[width="560"],
+    table[width="520"],
+    table[style*="width: 680px"],
+    table[style*="width:680px"],
+    table[style*="width: 600px"],
+    table[style*="width:600px"] {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    td[style*="padding: 0 30px"],
+    td[style*="padding-left: 30px"],
+    td[style*="padding-right: 30px"],
+    td[style*="padding:22px 30px"],
+    td[style*="padding: 22px 30px"] {
+      padding-left: 18px !important;
+      padding-right: 18px !important;
+    }
+
     .email-card-inner {
       padding: 0 0 20px !important;
     }
@@ -207,6 +237,86 @@
     .email-header-title {
       font-size: 20px !important;
       line-height: 28px !important;
+    }
+
+    h1 {
+      font-size: 22px !important;
+      line-height: 1.25 !important;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-size: 19px !important;
+      line-height: 26px !important;
+      margin-top: 0 !important;
+      margin-bottom: 12px !important;
+    }
+
+    p,
+    li,
+    span {
+      font-size: 14px !important;
+      line-height: 22px !important;
+    }
+
+    td[style*="font-size:28px"],
+    td[style*="font-size: 28px"],
+    td[style*="font-size:26px"],
+    td[style*="font-size: 26px"],
+    td[style*="font-size:24px"],
+    td[style*="font-size: 24px"],
+    td[style*="font-size:20px"],
+    td[style*="font-size: 20px"],
+    p[style*="font-size:24px"],
+    p[style*="font-size: 24px"],
+    h5[style*="font-size:28px"],
+    h5[style*="font-size: 28px"],
+    h5[style*="font-size:26px"],
+    h5[style*="font-size: 26px"],
+    h2[style*="font-size:24px"],
+    h2[style*="font-size: 24px"],
+    h2[style*="font-size:30px"],
+    h2[style*="font-size: 30px"] {
+      font-size: 18px !important;
+      line-height: 25px !important;
+    }
+
+    td[style*="font-size:18px"],
+    td[style*="font-size: 18px"],
+    td[style*="font-size:17px"],
+    td[style*="font-size: 17px"],
+    td[style*="font-size:16px"],
+    td[style*="font-size: 16px"],
+    div[style*="font-size:16px"],
+    div[style*="font-size: 16px"],
+    p[style*="font-size:16px"],
+    p[style*="font-size: 16px"] {
+      font-size: 14px !important;
+      line-height: 22px !important;
+    }
+
+    td[style*="line-height:30px"],
+    td[style*="line-height: 30px"],
+    td[style*="line-height:28px"],
+    td[style*="line-height: 28px"],
+    div[style*="line-height:150%"],
+    div[style*="line-height: 150%"] {
+      line-height: 22px !important;
+    }
+
+    img {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    td[bgcolor="#3f51b5"],
+    td[style*="background-color: #3f51b5"],
+    td[style*="background-color:#3f51b5"] {
+      width: auto !important;
+      height: auto !important;
+      padding: 12px 18px !important;
     }
 
     .stack,
