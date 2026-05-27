@@ -10,6 +10,8 @@
   <!--
 		<![endif]-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700" rel="stylesheet">
   <title>Your Title Here</title>
   <style type="text/css">
@@ -19,6 +21,8 @@
       width: 100% !important;
       min-width: 100% !important;
       background-color: #f5f8fa;
+      color-scheme: light;
+      supported-color-schemes: light;
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
     }
@@ -104,6 +108,11 @@
     }
 
     @media screen and (max-width:600px) {
+      body,
+      .MainContainer {
+        background-color: #f5f8fa !important;
+      }
+
       body {
         width: 100% !important;
         min-width: 100% !important;
@@ -131,7 +140,8 @@
         margin-right: auto !important;
       }
 
-      table[class="MainContainer"] {
+      table[class="MainContainer"],
+      .MainContainer {
         width: 100% !important;
         max-width: 100% !important;
         height: auto !important;
@@ -139,7 +149,8 @@
         margin-right: auto !important;
       }
 
-      table[class="SubContainer"] {
+      table[class="SubContainer"],
+      .SubContainer {
         width: 100% !important;
         max-width: 100% !important;
         height: auto !important;
@@ -147,17 +158,23 @@
         margin-right: auto !important;
       }
 
-      table[class="email-content-table"] {
+      table[class="email-content-table"],
+      .email-content-table {
         width: 100% !important;
         max-width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
       }
 
-      td[class="email-content-cell"] {
+      td[class="email-content-cell"],
+      .email-content-cell {
         padding-left: 0 !important;
         padding-right: 0 !important;
-        text-align: center !important;
+        text-align: left !important;
+      }
+
+      .email-content-table td {
+        text-align: left !important;
       }
 
       table[class="hide"],
@@ -170,14 +187,16 @@
         display: none !important;
       }
 
-      td[class="mobilespacer"] {
+      td[class="mobilespacer"],
+      .mobilespacer {
         padding-left: 0 !important;
         padding-right: 0 !important;
       }
 
-      td[class="mobilespacer2"] {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
+      td[class="mobilespacer2"],
+      .mobilespacer2 {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
       }
 
       td[style*="padding: 0 30px"],
@@ -203,24 +222,29 @@
         height: auto !important;
       }
 
-      td[class="vspacer10"] {
+      td[class="vspacer10"],
+      .vspacer10 {
         height: 10px !important;
       }
 
-      td[class="vspacer15"] {
-        height: 15px !important;
+      td[class="vspacer15"],
+      .vspacer15 {
+        height: 8px !important;
       }
 
-      td[class="vspacer20"] {
-        height: 20px !important;
+      td[class="vspacer20"],
+      .vspacer20 {
+        height: 12px !important;
       }
 
-      td[class="vspacer30"] {
-        height: 30px !important;
+      td[class="vspacer30"],
+      .vspacer30 {
+        height: 14px !important;
       }
 
-      td[class="vspacer40"] {
-        height: 40px !important;
+      td[class="vspacer40"],
+      .vspacer40 {
+        height: 24px !important;
       }
 
       table[class="wrap"] {
@@ -274,13 +298,14 @@
         float: left !important;
       }
 
-      td[class="title"] {
+      td[class="title"],
+      .title {
         font-size: 18px !important;
-        line-height: 25px !important;
+        line-height: 24px !important;
         height: auto !important;
         text-align: center !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
       }
 
       h1,
@@ -307,7 +332,8 @@
 
       p,
       li,
-      span {
+      span,
+      .email-content-table td {
         font-size: 14px !important;
         line-height: 22px !important;
       }
@@ -340,6 +366,8 @@
       td[style*="font-size: 17px"],
       td[style*="font-size:16px"],
       td[style*="font-size: 16px"],
+      td[style*="font-size:14px"],
+      td[style*="font-size: 14px"],
       div[style*="font-size:16px"],
       div[style*="font-size: 16px"],
       p[style*="font-size:16px"],
@@ -410,11 +438,11 @@
       }
 
       td[class="emailHeaderAction"] {
-        padding-top: 15px !important;
+        padding-top: 10px !important;
       }
 
       td[class="feedback-card"] {
-        padding: 22px 18px !important;
+        padding: 18px 14px !important;
       }
 
       table[class="feedback-button-wrap"] {
@@ -459,8 +487,8 @@
       td[style*="padding: 20px 22px"],
       td[style*="padding:0 22px"],
       td[style*="padding: 0 22px"] {
-        padding-left: 18px !important;
-        padding-right: 18px !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
       }
     }
   </style>
@@ -524,18 +552,18 @@
                                                       <td align="center" valign="middle" style="text-align:center;">
                                                         <a href="{{\App\Helpers\MainHelper::createUrl()}}"
                                                           target="_blank" style="display:block; text-align:center;">
-                                                          <!-- <img
+                                                          <img
                                                             src="https://lineblocs.com/assets/img/eHfktslfassPW7lQXz5WNkB46wnD94.png"
                                                             alt="{{$site_name}}" title="{{$site_name}}" width="160"
                                                             height="" align="center"
                                                             style="display:block; width:160px; max-width:160px; height:auto; margin:0 auto; border:0; outline:none; text-decoration:none;"
-                                                            border="0" /> -->
-                                                          <img
+                                                            border="0" />
+                                                          <!-- <img
                                                             src="{{\Config::get("app.url").'/email-images/'}}logo.png"
                                                             alt="{{$site_name}}" title="{{$site_name}}" width="160"
                                                             height="" align="center"
                                                             style="display:block; width:160px; max-width:160px; height:auto; margin:0 auto; border:0; outline:none; text-decoration:none;"
-                                                            border="0" />
+                                                            border="0" /> -->
                                                         </a>
                                                       </td>
                                                     </tr>

@@ -183,6 +183,10 @@
     padding-right: 0;
   }
 
+  .shell-pad {
+    padding: 40px 12px 24px;
+  }
+
   .email-body-wrap {
     padding: 24px 32px 0;
   }
@@ -200,6 +204,20 @@
   }
 
   @media only screen and (max-width: 640px) {
+    .shell-pad {
+      padding: 16px 8px 12px !important;
+    }
+
+    .email-logo-cell {
+      padding: 18px 12px 0 !important;
+    }
+
+    .email-top-space,
+    .email-bottom-space {
+      height: 16px !important;
+      line-height: 16px !important;
+    }
+
     table[width="680"],
     table[width="640"],
     table[width="600"],
@@ -223,20 +241,70 @@
     }
 
     .email-card-inner {
-      padding: 0 0 20px !important;
+      padding: 0 0 14px !important;
     }
 
     .email-header-band {
-      padding: 20px 24px !important;
+      padding: 16px 16px !important;
     }
 
     .email-body-wrap {
-      padding: 20px 20px 0 !important;
+      padding: 16px 14px 0 !important;
+    }
+
+    .email-body-wrap .hide,
+    .email-body-wrap td[class="hide"],
+    .email-body-wrap tr[class="hide"] {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    .email-body-wrap .mobilespacer,
+    .email-body-wrap .mobilespacer2,
+    .email-body-wrap td[class="mobilespacer"],
+    .email-body-wrap td[class="mobilespacer2"] {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .email-body-wrap .vspacer10,
+    .email-body-wrap .vspacer15,
+    .email-body-wrap .vspacer20,
+    .email-body-wrap .vspacer30,
+    .email-body-wrap td[height="15"],
+    .email-body-wrap td[height="20"],
+    .email-body-wrap td[height="25"],
+    .email-body-wrap td[height="30"] {
+      height: 10px !important;
+      line-height: 10px !important;
+    }
+
+    .email-body-wrap td[style*="text-align: center"],
+    .email-body-wrap td[style*="text-align:center"] {
+      text-align: left !important;
+    }
+
+    .email-body-wrap td[style*="font-size:14px"],
+    .email-body-wrap td[style*="font-size: 14px"] {
+      font-size: 14px !important;
+      line-height: 22px !important;
     }
 
     .email-header-title {
-      font-size: 20px !important;
-      line-height: 28px !important;
+      font-size: 18px !important;
+      line-height: 24px !important;
+    }
+
+    .email-header-subtitle {
+      font-size: 13px !important;
+      line-height: 20px !important;
+      padding-top: 8px !important;
+    }
+
+    .email-footer {
+      padding: 8px 12px 6px !important;
     }
 
     h1 {
