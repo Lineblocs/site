@@ -6,7 +6,7 @@ if (empty($customizations)) {
     $customizations = \App\CustomizationsKVStore::getRecord();
 }
 ?>
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 
 @section('title')
 Your free trial just ended
