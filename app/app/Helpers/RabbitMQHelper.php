@@ -12,7 +12,8 @@ class RabbitMQHelper
     const INVOICE_QUEUE_MONTHLY = 'monthly_invoices';
     const INVOICE_QUEUE_ANNUAL = 'annual_invoices';
     const BILLING_EVENTS_EXCHANGE = 'billing.events';
-    const WORKSPACE_SUSPENDED_QUEUE = 'workspace_account_suspended';
+    const WORKSPACE_SUSPENDED_QUEUE = 'workspace_suspended';
+    const WORKSPACE_SUSPENDED_LEGACY_QUEUE = 'workspace_account_suspended';
     const WORKSPACE_SUSPENDED_ROUTING_KEY = 'workspace.account.suspended';
 
     /**
@@ -98,19 +99,16 @@ class RabbitMQHelper
         }
 
         $suspendedAt = $suspension && $suspension->suspended_at
-            ? $suspension->suspended_at->format('Y-m-d H:i:s')
-            : date('Y-m-d H:i:s');
+            ? $suspension->suspended_at->format('c')
+            : date('c');
 
         $payload = [
-            'event' => 'workspace.suspended',
-            'timestamp' => gmdate('c'),
-            'data' => [
-                'workspace_id' => (int) $workspace->id,
-                'owner_email' => $owner ? $owner->email : null,
-                'suspended_at' => $suspendedAt,
-                'grace_period_extension_days' => $suspension ? $suspension->grace_period_extension : null,
-                'reason' => $suspension ? $suspension->reason : 'payment_past_due'
-            ]
+            'id' => $suspension ? (int) $suspension->id : null,
+            'workspace_id' => (int) $workspace->id,
+            'suspended_at' => $suspendedAt,
+            'grace_period_extension' => $suspension ? $suspension->grace_period_extension : null,
+            'reason' => $suspension ? $suspension->reason : 'payment_past_due',
+            'status' => true
         ];
 
         return self::publishToExchange(
