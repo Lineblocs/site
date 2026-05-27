@@ -1,4 +1,4 @@
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 
 @section('preheader')
 Your support ticket has a new update.

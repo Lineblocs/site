@@ -1,4 +1,4 @@
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 
 @section('preheader')
 Your saved card is expiring soon.
