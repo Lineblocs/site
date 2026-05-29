@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Customizations;
+use App\Enums\WorkspaceSuspensionStatus;
 use App\Workspace;
 use App\WorkspaceSuspension;
 use DateTime;
@@ -27,10 +28,17 @@ final class WorkspaceSuspensionHelper
             return null;
         }
 
-        $query = WorkspaceSuspension::where('workspace_id', $workspaceId)
-            ->where('status', true);
+        $suspensions = WorkspaceSuspension::where('workspace_id', $workspaceId)
+            ->orderBy('suspended_at', 'desc')
+            ->get();
 
-        return $query->orderBy('suspended_at', 'desc')->first();
+        foreach ($suspensions as $suspension) {
+            if (WorkspaceSuspensionStatus::isActive($suspension->status)) {
+                return $suspension;
+            }
+        }
+
+        return null;
     }
 
     public static function getGracePeriodExtension($workspaceId)
@@ -73,19 +81,30 @@ final class WorkspaceSuspensionHelper
             $workspace->save();
         }
 
+        if ($extension !== null && !$workspace->active) {
+            $workspace->active = true;
+            $workspace->save();
+        }
+
         if (!Schema::hasTable('workspace_suspensions')) {
             return $workspace;
         }
 
-        $suspension = self::getActiveSuspension($workspace->id);
-        if (!$suspension) {
+        $suspensions = WorkspaceSuspension::where('workspace_id', $workspace->id)->get();
+
+        if ($suspensions->isEmpty()) {
             return $workspace;
         }
 
-        $suspension->grace_period_extension = $extension;
-        $suspension->save();
+        foreach ($suspensions as $suspension) {
+            $suspension->grace_period_extension = $extension;
+            if ($extension !== null) {
+                $suspension->status = WorkspaceSuspensionStatus::NOT_SUSPENDED;
+            }
+            $suspension->save();
+        }
 
-        return $suspension;
+        return $suspensions->first();
     }
 
     public static function suspendWorkspace(Workspace $workspace, $invoice = null, $daysPastDue = null, $threshold = null)
@@ -101,7 +120,7 @@ final class WorkspaceSuspensionHelper
             $suspension->workspace_id = $workspace->id;
             $suspension->suspended_at = new DateTime();
             $suspension->reason = 'payment_past_due';
-            $suspension->status = true;
+            $suspension->status = WorkspaceSuspensionStatus::REAL_SUSPENSION;
             $isNewSuspension = true;
         }
 
@@ -111,7 +130,7 @@ final class WorkspaceSuspensionHelper
         if (!$suspension->reason) {
             $suspension->reason = 'payment_past_due';
         }
-        $suspension->status = true;
+        $suspension->status = WorkspaceSuspensionStatus::REAL_SUSPENSION;
 
         $suspension->save();
 
