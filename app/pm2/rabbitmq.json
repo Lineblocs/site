@@ -1,0 +1,16 @@
+{
+    "apps": [{
+        "name": "lineblocs-rabbitmq-web-consumer",
+        "script": "artisan",
+        "args": ["rabbitmq:consume-events"],
+        "instances": "1",
+        "autorestart": true,
+        "max_restarts": 5,
+        "interpreter" : "php7.4",
+        "watch": false,
+        "error_file": "./storage/logs/rabbitmq-cons-error.log",
+        "out_file": "./storage/logs/rabbitmq-cons-out.log",
+        "log_date_format": "YYYY-MM-DD HH:mm:ss",
+        "time": true
+    }]
+}
