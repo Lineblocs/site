@@ -19,6 +19,9 @@ if ($paidInvoice) {
   $paymentStatus = 'Paid';
 }
 $logo = \App\Helpers\MainHelper::appLogo();
+if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
+  $logo = public_path(ltrim($logo, '/'));
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,13 +58,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
     }
 
     .muted {
-      color: {
-          {
-          $brandMuted
-        }
-      }
-
-      ;
+      color: <?php echo $brandMuted; ?>;
     }
 
     .right {
@@ -74,14 +71,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
 
     .brand-rule {
       height: 4px;
-
-      background: {
-          {
-          $brandBlue
-        }
-      }
-
-      ;
+      background: <?php echo $brandBlue; ?>;
       font-size: 1px;
       line-height: 1px;
     }
@@ -109,28 +99,14 @@ $logo = \App\Helpers\MainHelper::appLogo();
       font-size: 30px;
       line-height: 36px;
       font-weight: 700;
-
-      color: {
-          {
-          $brandPrimary
-        }
-      }
-
-      ;
+      color: <?php echo $brandPrimary; ?>;
       letter-spacing: 0;
     }
 
     .statement-label {
       margin-top: 4px;
       font-size: 12px;
-
-      color: {
-          {
-          $brandMuted
-        }
-      }
-
-      ;
+      color: <?php echo $brandMuted; ?>;
       text-transform: uppercase;
     }
 
@@ -139,14 +115,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
       padding: 6px 12px;
       border-radius: 16px;
       background: #fff7ed;
-
-      color: {
-          {
-          $statusColor
-        }
-      }
-
-      ;
+      color: <?php echo $statusColor; ?>;
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
@@ -168,51 +137,18 @@ $logo = \App\Helpers\MainHelper::appLogo();
     .summary td {
       width: 33.333%;
       padding: 16px 18px;
-
-      border-top: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
-
-      border-bottom: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
-
-      background: {
-          {
-          $brandBg
-        }
-      }
-
-      ;
+      border-top: 1px solid <?php echo $brandBorder; ?>;
+      border-bottom: 1px solid <?php echo $brandBorder; ?>;
+      background: <?php echo $brandBg; ?>;
       vertical-align: top;
     }
 
     .summary td:first-child {
-      border-left: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border-left: 1px solid <?php echo $brandBorder; ?>;
     }
 
     .summary td:last-child {
-      border-right: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border-right: 1px solid <?php echo $brandBorder; ?>;
     }
 
     .summary .label {
@@ -220,14 +156,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
       margin-bottom: 6px;
       font-size: 10px;
       line-height: 14px;
-
-      color: {
-          {
-          $brandMuted
-        }
-      }
-
-      ;
+      color: <?php echo $brandMuted; ?>;
       text-transform: uppercase;
       letter-spacing: .6px;
     }
@@ -237,26 +166,12 @@ $logo = \App\Helpers\MainHelper::appLogo();
       font-size: 18px;
       line-height: 24px;
       font-weight: 700;
-
-      color: {
-          {
-          $brandPrimary
-        }
-      }
-
-      ;
+      color: <?php echo $brandPrimary; ?>;
     }
 
     .summary .value.total {
       font-size: 22px;
-
-      color: {
-          {
-          $brandBlue
-        }
-      }
-
-      ;
+      color: <?php echo $brandBlue; ?>;
     }
 
     .two-col {
@@ -270,13 +185,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
     }
 
     .panel {
-      border: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border: 1px solid <?php echo $brandBorder; ?>;
       background: #ffffff;
       padding: 16px 18px;
     }
@@ -285,14 +194,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
       margin-bottom: 10px;
       font-size: 12px;
       line-height: 16px;
-
-      color: {
-          {
-          $brandPrimary
-        }
-      }
-
-      ;
+      color: <?php echo $brandPrimary; ?>;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .5px;
@@ -310,35 +212,14 @@ $logo = \App\Helpers\MainHelper::appLogo();
 
     .meta-table .key {
       width: 42%;
-
-      color: {
-          {
-          $brandMuted
-        }
-      }
-
-      ;
+      color: <?php echo $brandMuted; ?>;
     }
 
     .section-title {
       margin: 24px 0 10px;
       padding-bottom: 8px;
-
-      border-bottom: 2px solid {
-          {
-          $brandBlue
-        }
-      }
-
-      ;
-
-      color: {
-          {
-          $brandPrimary
-        }
-      }
-
-      ;
+      border-bottom: 2px solid <?php echo $brandBlue; ?>;
+      color: <?php echo $brandPrimary; ?>;
       font-size: 16px;
       line-height: 22px;
       font-weight: 700;
@@ -348,26 +229,12 @@ $logo = \App\Helpers\MainHelper::appLogo();
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 16px;
-
-      border: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border: 1px solid <?php echo $brandBorder; ?>;
     }
 
     .data-table th {
       padding: 11px 12px;
-
-      background: {
-          {
-          $brandSlate
-        }
-      }
-
-      ;
+      background: <?php echo $brandSlate; ?>;
       color: #ffffff;
       font-size: 11px;
       line-height: 15px;
@@ -379,14 +246,7 @@ $logo = \App\Helpers\MainHelper::appLogo();
 
     .data-table td {
       padding: 12px;
-
-      border-bottom: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border-bottom: 1px solid <?php echo $brandBorder; ?>;
       font-size: 12px;
       line-height: 18px;
       vertical-align: top;
@@ -398,82 +258,52 @@ $logo = \App\Helpers\MainHelper::appLogo();
 
     .data-table .subtotal td,
     .data-table .total-row td {
-      background: {
-          {
-          $brandBg
-        }
-      }
-
-      ;
+      background: <?php echo $brandBg; ?>;
       font-weight: 700;
+      color: <?php echo $brandPrimary; ?>;
+    }
 
-      color: {
-          {
-          $brandPrimary
-        }
-      }
+    .payment-summary {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2px;
+    }
 
-      ;
+    .payment-summary td {
+      vertical-align: top;
+    }
+
+    .payment-note-cell {
+      width: 50%;
+      padding-right: 22px;
+    }
+
+    .payment-totals-cell {
+      width: 50%;
     }
 
     .totals {
-      width: 48%;
-      margin-left: auto;
+      width: 100%;
       border-collapse: collapse;
-
-      border: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border: 1px solid <?php echo $brandBorder; ?>;
     }
 
     .totals td {
       padding: 10px 12px;
-
-      border-bottom: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border-bottom: 1px solid <?php echo $brandBorder; ?>;
     }
 
     .totals .grand td {
-      background: {
-          {
-          $brandBlue
-        }
-      }
-
-      ;
+      background: <?php echo $brandBlue; ?>;
       color: #ffffff;
       font-size: 15px;
       font-weight: 700;
     }
 
     .note-box {
-      margin-top: 16px;
       padding: 14px 16px;
-
-      background: {
-          {
-          $brandBg
-        }
-      }
-
-      ;
-
-      border-left: 4px solid {
-          {
-          $brandBlue
-        }
-      }
-
-      ;
+      background: <?php echo $brandBg; ?>;
+      border-left: 4px solid <?php echo $brandBlue; ?>;
       color: #374151;
     }
 
@@ -482,23 +312,9 @@ $logo = \App\Helpers\MainHelper::appLogo();
       left: 42px;
       right: 42px;
       bottom: -34px;
-
-      color: {
-          {
-          $brandMuted
-        }
-      }
-
-      ;
+      color: <?php echo $brandMuted; ?>;
       font-size: 10px;
-
-      border-top: 1px solid {
-          {
-          $brandBorder
-        }
-      }
-
-      ;
+      border-top: 1px solid <?php echo $brandBorder; ?>;
       padding-top: 8px;
     }
   </style>
@@ -611,24 +427,31 @@ $logo = \App\Helpers\MainHelper::appLogo();
     @endif
   </table>
 
-  <table class="totals" border="0" cellspacing="0" cellpadding="0">
+  <table class="payment-summary" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td>Total excluding tax</td>
-      <td class="right">{{MainHelper::toDollars($vars['invoice_amount_no_tax'])}}</td>
-    </tr>
-    <tr>
-      <td>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</td>
-      <td class="right">{{MainHelper::toDollars($vars['tax_amount'])}}</td>
-    </tr>
-    <tr class="grand">
-      <td>Total payment due</td>
-      <td class="right">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
+      <td class="payment-note-cell">
+        <div class="note-box">
+          You can pay and review this invoice in the {{\App\Helpers\MainHelper::getSiteName()}} user portal. All amounts are billed in {{$customizations->default_currency}}.
+        </div>
+      </td>
+      <td class="payment-totals-cell">
+        <table class="totals" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>Total excluding tax</td>
+            <td class="right">{{MainHelper::toDollars($vars['invoice_amount_no_tax'])}}</td>
+          </tr>
+          <tr>
+            <td>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</td>
+            <td class="right">{{MainHelper::toDollars($vars['tax_amount'])}}</td>
+          </tr>
+          <tr class="grand">
+            <td>Total payment due</td>
+            <td class="right">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
+          </tr>
+        </table>
+      </td>
     </tr>
   </table>
-
-  <div class="note-box">
-    You can pay and review this invoice in the {{\App\Helpers\MainHelper::getSiteName()}} user portal. All amounts are billed in {{$customizations->default_currency}}.
-  </div>
 
   <div class="page-break"></div>
 
