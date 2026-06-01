@@ -7,11 +7,11 @@ class AddGracePeriodExtensionToWorkspaceSuspensions extends Migration
 {
     public function up()
     {
-        if (Schema::hasTable('workspace_suspensions')) {
+        if (Schema::hasTable('workspaces_suspensions')) {
             return;
         }
 
-        Schema::create('workspace_suspensions', function (Blueprint $table) {
+        Schema::create('workspaces_suspensions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('workspace_id')->unsigned();
             $table->timestamp('suspended_at');
@@ -26,6 +26,6 @@ class AddGracePeriodExtensionToWorkspaceSuspensions extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('workspace_suspensions');
+        Schema::dropIfExists('workspaces_suspensions');
     }
 }
