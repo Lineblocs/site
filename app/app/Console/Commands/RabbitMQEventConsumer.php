@@ -570,7 +570,7 @@ class RabbitMQEventConsumer extends Command
 
         try {
             $invoiceId = NULL;
-            if ($data['invoice_generated']) {
+            if (isset($data['invoice_generated']) && $data['invoice_generated']) {
                 $invoiceId = $data['invoice_id'];
             }
 
