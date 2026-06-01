@@ -12,7 +12,7 @@ class AddInvoiceIdToSuspensions extends Migration
      */
     public function up()
     {
-        Schema::table('workspace_suspensions', function (Blueprint $table) {
+        Schema::table('workspaces_suspensions', function (Blueprint $table) {
             $table->unsignedInteger('invoice_id')->nullable();
             $table->foreign('invoice_id')->references('id')->on('users_invoices')->onDelete('set null');
         });
@@ -25,7 +25,7 @@ class AddInvoiceIdToSuspensions extends Migration
      */
     public function down()
     {
-        Schema::table('workspace_suspensions', function (Blueprint $table) {
+        Schema::table('workspaces_suspensions', function (Blueprint $table) {
             $table->dropForeign(['invoice_id']);
             $table->dropColumn('invoice_id');
         });
