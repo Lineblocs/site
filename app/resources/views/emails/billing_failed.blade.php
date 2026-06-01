@@ -64,6 +64,7 @@ Billing Failed
                                                         <p style="margin: 0; word-break: break-word; margin-top: 15px;">
                                                             <strong>Subscription ID:</strong> {{ $subscription_id }}<br>
                                                             <strong>Workspace ID:</strong> {{ $workspace_id }}<br>
+                                                            <strong>Card:</strong> {{ $card_brand }} ending in {{ $card_last_4 }}<br>
                                                             <strong>Reason:</strong> {{ $reason }}
                                                         </p>
                                                         <p style="margin: 0; word-break: break-word; margin-top: 15px;">

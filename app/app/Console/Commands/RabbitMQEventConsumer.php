@@ -101,7 +101,10 @@ class RabbitMQEventConsumer extends Command
         $result = EmailHelper::sendEmail("Action Required: Payment Failed", $user->email, "billing_failed", [
             'user' => $user,
             'reason' => $data['reason'],
-            'workspace_id' => $data['workspace_id']
+            'workspace_id' => $data['workspace_id'],
+            'subscription_id' => $data['subscription_id'],
+            'card_last_4' => $data['card_last_4'],
+            'card_brand' => $data['card_brand']
         ]);
 
         if ($result === TRUE) {
