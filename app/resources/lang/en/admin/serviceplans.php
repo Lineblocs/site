@@ -30,5 +30,6 @@ return [
     'minutes_per_month' => 'Call Minutes per month',
     'migrate_users' => 'Migrate users',
     'migrate_warning' => 'Warning: You cannot reverse this change. Users will be moved over to the new plan in the next billing cycle.',
-    'select_plan' => 'Select plan'
+    'select_plan' => 'Select plan',
+    'status' => 'Status',
 ];

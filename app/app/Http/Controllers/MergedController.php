@@ -873,7 +873,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
 
   public function getServicePlans(Request $request) {
-      $plans = ServicePlan::orderBy('rank')
+      $plans = ServicePlan::where('status', ServicePlanStatus::ACTIVE)
+                          ->orderBy('rank')
                           ->orderBy('nice_name')
                           ->get()
                           ->toArray();

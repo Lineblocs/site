@@ -81,6 +81,16 @@
             </div>
         </div>
 
+        <div class="form-group  {{ $errors->has('status') ? 'has-error' : '' }}">
+            {!! Form::label('status', trans("admin/serviceplans.status"), array('class' => 'control-label')) !!}
+            <div class="controls">
+                {!! Form::select('status', array_combine($statuses, $statuses), isset($serviceplan) ? $serviceplan->status : null, ['class' => 'form-control']) !!}
+                <span class="help-block">{{ $errors->first('status', ':message') }}</span>
+            </div>
+        </div>
+
+
+
         @foreach ( $features as $feature )
             <div class="form-group  {{ $errors->has($feature['key']) ? 'has-error' : '' }}">
                 {!! form::label($feature['key'], trans("admin/serviceplans." . $feature['key']), array('class' => 'control-label')) !!}

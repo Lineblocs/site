@@ -69,11 +69,7 @@ class HomeController extends BaseController {
   }
   public function pricing(Request $request)
   {
-    $plans = ServicePlan::where('include_in_pricing_pages', '1')
-      ->orderBy('rank')
-      ->orderBy('nice_name')
-      ->get();
-    $plans = ServicePlan::sortPlansByFeatures($plans);
+    $plans = ServicePlan::getAvailablePlans(TRUE);
     $competitors = Competitor::all();
     $savings = CostSaving::select(array('cost_savings.*', DB::raw('competitors.name AS competitor_name')));
     $savings = $savings->join('competitors', 'competitors.id', '=', 'cost_savings.competitor_id');
