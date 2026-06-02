@@ -205,10 +205,19 @@ class MergedController extends ApiAuthController
 
         // 1. Get the current subscription and the target plan
         $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+
+        if (!$subscription) {
+            return $this->response->errorBadRequest("Invalid subscription or plan.");
+        }
+
+        if (!empty($subscription->scheduled_plan_id)) {
+            return $this->response->errorBadRequest("A plan upgrade is already scheduled. Cannot upgrade again until it takes effect.");
+        }
+
         $newPlan = ServicePlan::where('key_name', $planKey)->first();
         $oldPlan = ServicePlan::find($subscription->current_plan_id);
 
-        if (!$subscription || !$newPlan) {
+        if (!$newPlan) {
             return $this->response->errorBadRequest("Invalid subscription or plan.");
         }
 
@@ -256,7 +265,7 @@ class MergedController extends ApiAuthController
 
         // 4. Update Subscription and Workspace
         $subscription->update([
-            'current_plan_id' => $newPlan->id,
+            'scheduled_plan_id' => $newPlan->id,
             'updated_at' => $now
         ]);
 
@@ -467,7 +476,8 @@ class MergedController extends ApiAuthController
             $cards,
             $config,
             $billingHistory,
-            $triggers
+            $triggers,
+            $subscription->toArray()
          ]); 
     }
     public function getCountries() {
