@@ -49,13 +49,13 @@ class RabbitMQHelper
 
             $channel->close();
             $connection->close();
-            
+
             Log::info("RabbitMQ published to {$queue}: " . json_encode($payload));
         } catch (Exception $e) {
             Log::error("RabbitMQ Publish Error on queue {$queue}: " . $e->getMessage());
             // In a production environment, you might want to throw this exception 
             // so the Controller knows the billing task failed to queue.
-            throw $e; 
+            throw $e;
         }
     }
 
@@ -98,12 +98,14 @@ class RabbitMQHelper
             $owner = \App\User::find($workspace->creator_id);
         }
 
-        $suspendedAt = $suspension && $suspension->suspended_at
-            ? $suspension->suspended_at->format('c')
-            : date('c');
+        if ($suspension && $suspension->suspended_at) {
+            $suspendedAt = $suspension->suspended_at->format('c');
+        } else {
+            $suspendedAt = date('c');
+        }
 
         $payload = [
-            'id' => $suspension ? (int) $suspension->id : null,
+            'id' => $suspension->id,
             'workspace_id' => (int) $workspace->id,
             'suspended_at' => $suspendedAt,
             'grace_period_extension' => $suspension ? $suspension->grace_period_extension : null,
@@ -199,5 +201,4 @@ class RabbitMQHelper
 
         return self::publish(self::INVOICE_QUEUE_ANNUAL, $payload);
     }
-    
 }
