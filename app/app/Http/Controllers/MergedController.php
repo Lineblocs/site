@@ -312,7 +312,15 @@ class MergedController extends ApiAuthController
       $workspace = $this->getWorkspace($request);
       //$plans = \Config::get("service_plans");
       //$plan = $plans[ $workspace->plan ];
-      $plan = ServicePlan::where('key_name', $workspace->plan)->firstOrFail();
+      $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+      $currentPlan = ServicePlan::find($subscription->current_plan_id);
+      $scheduledPlan = ServicePlan::find($subscription->scheduled_plan_id);
+      $effectivePlan = $currentPlan;
+      if (!empty($scheduledPlan)) {
+        $effectivePlan = $scheduledPlan;
+      }
+
+      $plan = $effectivePlan;
       while ($currentDay != $dayCount) {
         $labels[] = $cloned1->format("M-d");
         $cloned2 = clone $cloned1;
