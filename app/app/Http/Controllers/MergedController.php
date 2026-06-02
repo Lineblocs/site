@@ -56,6 +56,7 @@ use App\Helpers\AWSHelper;
 use App\Helpers\DNSHelper;
 use App\Helpers\PhoneProvisionHelper;
 use App\Helpers\BillingDataHelper;
+use App\Helpers\RabbitMQHelper;
 
 use App\Helpers\PortalSearchHelper;
 use App\Helpers\SMSHelper;
@@ -293,38 +294,13 @@ class MergedController extends ApiAuthController
             $scheduledEffectiveDate = (clone $anchorDateTime)->modify($modifier);
         }
 
-        // 5. Atomic Database Changes
-        DB::transaction(function () use ($now, $workspace, $subscription, $newPlan, $oldPlan, $prorationCents, $scheduledEffectiveDate, $planKey) {
-            
-            if ($prorationCents > 0) {
-                UserInvoiceLineItem::create([
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                    'is_recurring' => 0,
-                    'name' => "Upgrade Adjustment: {$oldPlan->name} to {$newPlan->name}",
-                    'cents' => (int) round($prorationCents),
-                    'invoice_id' => null,
-                    'workspace_id' => $workspace->id, // Added for reliable audit trail
-                    'key_name' => 'plan_upgrade_proration'
-                ]);
-            }
-
-            $subscription->update([
-                'scheduled_plan_id' => $newPlan->id,
-                'scheduled_effective_date' => $scheduledEffectiveDate->format('Y-m-d H:i:s'),
-                'updated_at' => $now
-            ]);
-
-            PlanUsagePeriod::where('workspace_id', $workspace->id)
-                ->whereNull('ended_at')
-                ->update(['ended_at' => $now]);
-
-            PlanUsagePeriod::create([
-                'workspace_id' => $workspace->id,
-                'started_at' => $now,
-                'plan' => $planKey
-            ]);
-        });
+        RabbitMQHelper::dispatchWorkspaceUpgrade(
+            $workspace->id,
+            (int) round($prorationCents),
+            $subscription->current_plan_id,
+            $newPlan->id,
+            $scheduledEffectiveDate ? $scheduledEffectiveDate->format('Y-m-d H:i:s') : null
+        );
 
         // 6. Side Effect Operations (Ideally should be queued background jobs)
         $props = [
