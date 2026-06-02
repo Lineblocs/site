@@ -197,13 +197,20 @@ class MergedController extends ApiAuthController
     public function upgradePlan(Request $request)
     {
         $json = $request->json()->all();
-        $planKey = $json['plan'];
+        $planKey = null;
+        if (isset($json['plan'])) {
+            $planKey = $json['plan'];
+        }
+        
+        if (!$planKey) {
+            return $this->response->errorBadRequest("Plan key is required.");
+        }
         
         $workspace = $this->getWorkspace($request);
         $user = $this->getUser($request);
         $now = new \DateTime();
 
-        // 1. Get the current subscription and the target plan
+        // 1. Fetch data & early guard clauses
         $subscription = Subscription::where('workspace_id', $workspace->id)->first();
 
         if (!$subscription) {
@@ -211,80 +218,119 @@ class MergedController extends ApiAuthController
         }
 
         if (!empty($subscription->scheduled_plan_id)) {
-            return $this->response->errorBadRequest("A plan upgrade is already scheduled. Cannot upgrade again until it takes effect.");
+            return $this->response->errorBadRequest("A plan upgrade is already scheduled.");
         }
 
         $newPlan = ServicePlan::where('key_name', $planKey)->first();
         $oldPlan = ServicePlan::find($subscription->current_plan_id);
 
-        if (!$newPlan) {
-            return $this->response->errorBadRequest("Invalid subscription or plan.");
+        if (!$newPlan || !$oldPlan) {
+            return $this->response->errorBadRequest("Invalid subscription or plan config.");
         }
 
-        // 2. Calculate Proration
-        // We determine the daily rate difference and multiply by days remaining
-        $periodEnd = new \DateTime($subscription->current_period_end);
-        $remainingDays = $now->diff($periodEnd)->days;
-        
-        // Determine the total days in this cycle to get an accurate daily ratio
+        // 2. Determine start date cleanly without a ternary
         $start_date = $subscription->last_billed_at;
         if (!$start_date) {
             $start_date = $subscription->created_at;
         }
+
+        // 3. Proration Calculation using Timestamp Precision
+        $periodEnd = new \DateTime($subscription->current_period_end);
         $lastBilled = new \DateTime($start_date);
-        $totalCycleDays = $lastBilled->diff($periodEnd)->days;
-        if ($totalCycleDays == 0) {
-            $totalCycleDays = 30; // Default to 30 if zero
+
+        $totalCycleSeconds = $periodEnd->getTimestamp() - $lastBilled->getTimestamp();
+        $remainingSeconds = $periodEnd->getTimestamp() - $now->getTimestamp();
+
+        if ($totalCycleSeconds <= 0) {
+            $totalCycleSeconds = 30 * 86400; // Default fallback to 30 days in seconds
         }
 
-        if ($subscription->billing_cycle === 'ANNUAL') {
+        // Explicit pricing logic without ternaries
+        $isAnnual = ($subscription->billing_cycle === 'ANNUAL');
+        if ($isAnnual) {
             $oldPrice = $oldPlan->annual_cost_cents;
             $newPrice = $newPlan->annual_cost_cents;
         } else {
             $oldPrice = $oldPlan->monthly_cost_cents;
             $newPrice = $newPlan->monthly_cost_cents;
         }
-
+        
         $priceDiff = $newPrice - $oldPrice;
         
         $prorationCents = 0;
-        if ($priceDiff > 0) {
-            $prorationCents = ($priceDiff * $remainingDays) / $totalCycleDays;
-            
-            // 3. Create the pending line item (orphan item with invoice_id = NULL)
-            UserInvoiceLineItem::create([
-                'created_at' => $now,
-                'updated_at' => $now,
-                'is_recurring' => 0,
-                'name' => "Upgrade Adjustment: {$oldPlan->name} to {$newPlan->name}",
-                'cents' => (int) $prorationCents,
-                'invoice_id' => null,
-                'key_name' => 'plan_upgrade_proration'
-            ]);
+        if ($priceDiff > 0 && $remainingSeconds > 0) {
+            $prorationCents = ($priceDiff * $remainingSeconds) / $totalCycleSeconds;
         }
 
-        // 4. Update Subscription and Workspace
-        $subscription->update([
-            'scheduled_plan_id' => $newPlan->id,
-            'updated_at' => $now
-        ]);
+        // 4. Determine Scheduled Effective Date without ternaries
+        $scheduledEffectiveDate = null;
+        $customizations = CustomizationsKVStore::getRecord();
+        
+        $billingFlow = 'ANNIVERSARY';
+        if (isset($customizations['billing_flow'])) {
+            $billingFlow = $customizations['billing_flow'];
+        }
 
-        // Update Plan Usage Periods
-        PlanUsagePeriod::where('workspace_id', $workspace->id)
-            ->whereNull('ended_at')
-            ->update(['ended_at' => $now]);
+        if ($billingFlow === 'ANNUAL') {
+            if ($isAnnual) {
+                $modifier = 'first day of january next year';
+            } else {
+                $modifier = 'first day of next month';
+            }
+            $scheduledEffectiveDate = (clone $now)->modify($modifier)->setTime(0, 0, 0);
+        } else {
+            $anchor_date = $subscription->last_billed_at;
+            if (!$anchor_date) {
+                $anchor_date = $subscription->created_at;
+            }
+            $anchorDateTime = new \DateTime($anchor_date);
+            
+            if ($isAnnual) {
+                $modifier = '+1 year';
+            } else {
+                $modifier = '+1 month';
+            }
+            $scheduledEffectiveDate = (clone $anchorDateTime)->modify($modifier);
+        }
 
-        PlanUsagePeriod::create([
-            'workspace_id' => $workspace->id,
-            'started_at' => $now,
-            'plan' => $planKey
-        ]);
+        // 5. Atomic Database Changes
+        DB::transaction(function () use ($now, $workspace, $subscription, $newPlan, $oldPlan, $prorationCents, $scheduledEffectiveDate, $planKey) {
+            
+            if ($prorationCents > 0) {
+                UserInvoiceLineItem::create([
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                    'is_recurring' => 0,
+                    'name' => "Upgrade Adjustment: {$oldPlan->name} to {$newPlan->name}",
+                    'cents' => (int) round($prorationCents),
+                    'invoice_id' => null,
+                    'workspace_id' => $workspace->id, // Added for reliable audit trail
+                    'key_name' => 'plan_upgrade_proration'
+                ]);
+            }
 
-        // Analytics and Communication
+            $subscription->update([
+                'scheduled_plan_id' => $newPlan->id,
+                'scheduled_effective_date' => $scheduledEffectiveDate->format('Y-m-d H:i:s'),
+                'updated_at' => $now
+            ]);
+
+            PlanUsagePeriod::where('workspace_id', $workspace->id)
+                ->whereNull('ended_at')
+                ->update(['ended_at' => $now]);
+
+            PlanUsagePeriod::create([
+                'workspace_id' => $workspace->id,
+                'started_at' => $now,
+                'plan' => $planKey
+            ]);
+        });
+
+        // 6. Side Effect Operations (Ideally should be queued background jobs)
         $props = [
             "billing_status" => "immediate_upgrade_pending_reconciliation",
             "new_plan" => $planKey,
-            "proration_applied" => $prorationCents
+            "proration_applied" => (int) round($prorationCents)
         ];
         WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
 
