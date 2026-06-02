@@ -262,7 +262,8 @@ final class WorkspaceInvoiceHelper
             'recording_costs' => $recordingCosts,
             'fax_costs' => $faxCosts,
             'membership_costs' => $membershipCosts,
-            'number_costs' => $numberCosts
+            'number_costs' => $numberCosts,
+            'source_service' => 'SITE'
         ]);
 
         $invoice->created_at = $rangeStart;
