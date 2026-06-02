@@ -873,11 +873,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       }
 
   public function getServicePlans(Request $request) {
-      $plans = ServicePlan::where('status', ServicePlanStatus::ACTIVE)
-                          ->orderBy('rank')
-                          ->orderBy('nice_name')
-                          ->get()
-                          ->toArray();
+      $plans = ServicePlan::getAvailablePlans();
 
       $features = [
         'fax',
@@ -917,7 +913,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $plan_benefits = [];
         // compare the previous plan with the current one to get the benefits
         $last_cnt = $cnt - 1;
-        if ( array_key_exists( $last_cnt, $plans) ) {
+        if ( isset( $plans[$last_cnt] ) ) {
           $last_plan = $plans[$last_cnt];
           foreach ($features as $feature) {
             $has_feature_1 = $plan[$feature];
