@@ -26,6 +26,10 @@ Workspace Suspended
 
                                         <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin-top:18px;border:1px solid #e5e7eb;border-radius:6px;">
                                             <tr>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;width:42%;">Suspension Reference</td>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;font-weight:700;word-break:break-word;">{{ $reference_id ? '#' . $reference_id : 'Not provided' }}</td>
+                                            </tr>
+                                            <tr>
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;width:42%;">Workspace</td>
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;font-weight:700;word-break:break-word;">{{ $workspace->name }} (#{{ $workspace_id }})</td>
                                             </tr>
@@ -34,8 +38,8 @@ Workspace Suspended
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;">{{ $owner ? $owner->email : (isset($event_data['owner_email']) ? $event_data['owner_email'] : 'Unknown') }}</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;">Suspended At</td>
-                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;">{{ $suspended_at }}</td>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;">Suspension Date</td>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;">{{ $suspended_at_formatted }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;">Reason</td>
@@ -43,7 +47,7 @@ Workspace Suspended
                                             </tr>
                                             <tr>
                                                 <td style="padding:12px 16px;font-size:13px;line-height:20px;color:#6b7280;">Grace Period Extension</td>
-                                                <td style="padding:12px 16px;font-size:15px;line-height:20px;color:#111827;">{{ $grace_period_extension_days === null ? 'None' : $grace_period_extension_days . ' days' }}</td>
+                                                <td style="padding:12px 16px;font-size:15px;line-height:20px;color:#111827;">{{ $grace_period_extension === null ? 'None' : $grace_period_extension . ' days' }}</td>
                                             </tr>
                                         </table>
                                     </td>

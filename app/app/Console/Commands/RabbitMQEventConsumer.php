@@ -10,6 +10,9 @@ use App\Helpers\RabbitMQHelper;
 use App\Helpers\WorkspaceInvoiceHelper;
 use App\User;
 use App\Workspace;
+use App\WorkspaceUser;
+use App\Mail\WorkspaceSuspendedNotification;
+use Carbon\Carbon;
 use Exception;
 use Log;
 
@@ -53,8 +56,14 @@ class RabbitMQEventConsumer extends Command
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, false, true, false, false);
         $channel->exchange_declare(RabbitMQHelper::BILLING_EVENTS_EXCHANGE, 'topic', false, true, false);
         $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, false, true, false, false);
+        $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE, false, true, false, false);
         $channel->queue_bind(
             RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE,
+            RabbitMQHelper::BILLING_EVENTS_EXCHANGE,
+            RabbitMQHelper::WORKSPACE_SUSPENDED_ROUTING_KEY
+        );
+        $channel->queue_bind(
+            RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE,
             RabbitMQHelper::BILLING_EVENTS_EXCHANGE,
             RabbitMQHelper::WORKSPACE_SUSPENDED_ROUTING_KEY
         );
@@ -73,6 +82,7 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, '', false, false, false, false, [$this, 'handleMonthlyInvoiceTask']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, '', false, false, false, false, [$this, 'handleAnnualInvoiceTask']);
         $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
+        $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
 
         // 3. Keep the process alive
         while (count($channel->callbacks)) {
@@ -409,78 +419,72 @@ class RabbitMQEventConsumer extends Command
             return;
         }
 
-        if (!isset($payload['event']) || $payload['event'] !== 'workspace.suspended') {
-            $event = isset($payload['event']) ? $payload['event'] : 'missing';
-            $this->logConsumerError(' [WORKSPACE_SUSPENDED] Unsupported event: ' . $event, [
-                'payload' => $payload
-            ]);
-            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-            return;
-        }
-
-        $data = isset($payload['data']) && is_array($payload['data']) ? $payload['data'] : array();
+        $data = $this->normalizeWorkspaceSuspendedPayload($payload);
         $workspaceId = isset($data['workspace_id']) ? (int) $data['workspace_id'] : 0;
         if ($workspaceId <= 0) {
             $this->logConsumerError(' [WORKSPACE_SUSPENDED] Missing workspace_id.', [
                 'payload' => $payload
             ]);
-            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            $this->rejectRabbitMessage($msg);
             return;
         }
 
         $workspace = Workspace::find($workspaceId);
         if (!$workspace) {
-            $this->logConsumerError(sprintf(' [WORKSPACE_SUSPENDED] Workspace #%d not found.', $workspaceId));
-            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            $this->logConsumerError(sprintf(' [WORKSPACE_SUSPENDED] Workspace #%d not found. Rejecting message.', $workspaceId), [
+                'payload' => $payload
+            ]);
+            $this->rejectRabbitMessage($msg);
             return;
         }
 
         $owner = $workspace->creatorUser()->first();
-        $ownerEmail = !empty($data['owner_email']) ? $data['owner_email'] : ($owner ? $owner->email : null);
-        $adminEmail = $this->resolveSystemAdminEmail();
+        $recipientEmails = $this->resolveWorkspaceSuspensionRecipients($workspace, $owner);
+        if (empty($recipientEmails)) {
+            $this->logConsumerError(sprintf(' [WORKSPACE_SUSPENDED] No owner or admin email addresses found for workspace #%d. Rejecting message.', $workspaceId), [
+                'payload' => $payload
+            ]);
+            $this->rejectRabbitMessage($msg);
+            return;
+        }
+
+        $suspendedAt = isset($data['suspended_at']) ? (string) $data['suspended_at'] : '';
+        $formattedSuspendedAt = $this->formatSuspendedAt($suspendedAt);
+        $gracePeriodExtension = null;
+        if (array_key_exists('grace_period_extension', $data)) {
+            $gracePeriodExtension = $data['grace_period_extension'];
+        } elseif (array_key_exists('grace_period_extension_days', $data)) {
+            $gracePeriodExtension = $data['grace_period_extension_days'];
+        }
 
         $emailData = array(
             'workspace' => $workspace,
             'owner' => $owner,
             'event' => $payload,
             'event_data' => $data,
+            'reference_id' => isset($data['id']) ? $data['id'] : null,
             'workspace_id' => $workspaceId,
-            'suspended_at' => isset($data['suspended_at']) ? $data['suspended_at'] : '',
+            'suspended_at' => $suspendedAt,
+            'suspended_at_formatted' => $formattedSuspendedAt,
             'reason' => isset($data['reason']) ? $data['reason'] : 'payment_past_due',
-            'grace_period_extension_days' => array_key_exists('grace_period_extension_days', $data) ? $data['grace_period_extension_days'] : null
+            'grace_period_extension' => $gracePeriodExtension,
+            'status' => array_key_exists('status', $data) ? $data['status'] : null
         );
 
-        $ownerResult = TRUE;
-        if (!empty($ownerEmail)) {
-            $ownerResult = EmailHelper::sendEmail(
-                'Account Suspended: Billing Action Required',
-                $ownerEmail,
-                'workspace_account_suspended',
-                $emailData
-            );
-        } else {
-            $this->logConsumerError(sprintf(' [WORKSPACE_SUSPENDED] Owner email missing for workspace #%d.', $workspaceId));
-            $ownerResult = FALSE;
+        $failedRecipients = array();
+        foreach ($recipientEmails as $email) {
+            $result = WorkspaceSuspendedNotification::sendTo($email, $emailData);
+
+            if ($result !== TRUE) {
+                $failedRecipients[$email] = $result;
+            }
         }
 
-        $adminResult = TRUE;
-        if (!empty($adminEmail)) {
-            $adminResult = EmailHelper::sendEmail(
-                sprintf('Workspace #%d Suspended', $workspaceId),
-                $adminEmail,
-                'workspace_suspended_admin',
-                $emailData
-            );
-        } else {
-            $this->logConsumerError(' [WORKSPACE_SUSPENDED] System admin email could not be resolved.');
-            $adminResult = FALSE;
-        }
-
-        if ($ownerResult === TRUE && $adminResult === TRUE) {
+        if (empty($failedRecipients)) {
             $this->logConsumerInfo(sprintf(' [v] Workspace suspension emails sent for workspace #%d.', $workspaceId), [
                 'workspace_id' => $workspaceId,
-                'owner_email' => $ownerEmail,
-                'admin_email' => $adminEmail
+                'recipients' => $recipientEmails,
+                'reference_id' => isset($data['id']) ? $data['id'] : null
             ]);
             $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
             return;
@@ -488,9 +492,64 @@ class RabbitMQEventConsumer extends Command
 
         $this->logConsumerError(sprintf(' [!] Workspace suspension email failed for workspace #%d.', $workspaceId), [
             'workspace_id' => $workspaceId,
-            'owner_result' => $ownerResult,
-            'admin_result' => $adminResult
+            'failed_recipients' => $failedRecipients
         ]);
+    }
+
+    private function normalizeWorkspaceSuspendedPayload(array $payload)
+    {
+        if (isset($payload['event']) && $payload['event'] === 'workspace.suspended') {
+            return isset($payload['data']) && is_array($payload['data']) ? $payload['data'] : array();
+        }
+
+        return $payload;
+    }
+
+    private function resolveWorkspaceSuspensionRecipients($workspace, $owner)
+    {
+        $emails = array();
+
+        if ($owner && !empty($owner->email)) {
+            $emails[] = $owner->email;
+        }
+
+        $adminUsers = WorkspaceUser::select(array('users.email'))
+            ->join('users', 'users.id', '=', 'workspaces_users.user_id')
+            ->where('workspaces_users.workspace_id', '=', $workspace->id)
+            ->where(function ($query) {
+                $query->where('workspaces_users.manage_billing', '=', 1)
+                    ->orWhere('workspaces_users.manage_workspace', '=', 1);
+            })
+            ->get();
+
+        foreach ($adminUsers as $adminUser) {
+            if (!empty($adminUser->email)) {
+                $emails[] = $adminUser->email;
+            }
+        }
+
+        $emails = array_filter(array_unique($emails));
+        return array_values($emails);
+    }
+
+    private function formatSuspendedAt($suspendedAt)
+    {
+        if (empty($suspendedAt)) {
+            return 'Not provided';
+        }
+
+        try {
+            return Carbon::parse($suspendedAt)
+                ->timezone(config('app.timezone', 'UTC'))
+                ->format('F j, Y g:i A T');
+        } catch (Exception $e) {
+            return $suspendedAt;
+        }
+    }
+
+    private function rejectRabbitMessage($msg)
+    {
+        $msg->delivery_info['channel']->basic_reject($msg->delivery_info['delivery_tag'], false);
     }
 
     private function resolveSystemAdminEmail()
