@@ -23,16 +23,20 @@ Account Suspended
                                     <td valign="top" style="padding:22px 30px 18px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;color:#393d47;font-size:16px;line-height:24px;text-align:left;">
                                         <h2 style="margin:0 0 8px;font-size:24px;line-height:30px;color:#0a1247;font-weight:700;">Your workspace has been suspended</h2>
                                         <p style="margin:0;">Dear {{ $owner ? $owner->getName() : 'Customer' }},</p>
-                                        <p style="margin:12px 0 0;color:#5f6b7a;">Your workspace access has been suspended because billing is past due. Please update your billing information or pay the outstanding invoice to restore service.</p>
+                                        <p style="margin:12px 0 0;color:#5f6b7a;">Your workspace access has been suspended. Please review the details below and contact support with the reference number if you need help restoring service.</p>
 
                                         <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin-top:18px;border:1px solid #e5e7eb;border-radius:6px;">
+                                            <tr>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;width:42%;">Suspension Reference</td>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;font-weight:700;word-break:break-word;">{{ $reference_id ? '#' . $reference_id : 'Not provided' }}</td>
+                                            </tr>
                                             <tr>
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;width:42%;">Workspace</td>
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;font-weight:700;word-break:break-word;">{{ $workspace->name }} (#{{ $workspace_id }})</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;">Suspended At</td>
-                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;">{{ $suspended_at }}</td>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;">Suspension Date</td>
+                                                <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;">{{ $suspended_at_formatted }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;">Reason</td>
@@ -40,7 +44,7 @@ Account Suspended
                                             </tr>
                                             <tr>
                                                 <td style="padding:12px 16px;font-size:13px;line-height:20px;color:#6b7280;">Grace Period Extension</td>
-                                                <td style="padding:12px 16px;font-size:15px;line-height:20px;color:#111827;">{{ $grace_period_extension_days === null ? 'None' : $grace_period_extension_days . ' days' }}</td>
+                                                <td style="padding:12px 16px;font-size:15px;line-height:20px;color:#111827;">{{ $grace_period_extension === null ? 'None' : $grace_period_extension . ' days' }}</td>
                                             </tr>
                                         </table>
 
