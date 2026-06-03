@@ -8,6 +8,8 @@ use App\Workspace;
 use App\PortNumber;
 use App\Subscription;
 use App\WorkspaceUser;
+
+use App\Enums\ServicePlanStatus;
 use App\Http\Requests\Admin\ServicePlanRequest;
 use App\Helpers\MainHelper;
 use Datatables;
@@ -45,7 +47,9 @@ class ServicePlanController extends AdminController
         $features = $this->getFeatureOptions();
         $callDurations = $this->getCallDurations();
         $recordingSpace = $this->getRecordingSpaceOptions();
-        return view('admin.serviceplan.create_edit', compact('features', 'callDurations', 'recordingSpace'));
+        $statuses = ServicePlanStatus::all();
+
+        return view('admin.serviceplan.create_edit', compact('features', 'callDurations', 'recordingSpace', 'statuses'));
     }
 
     /**
@@ -86,12 +90,13 @@ class ServicePlanController extends AdminController
         $features = $this->getFeatureOptions();
         $callDurations = $this->getCallDurations();
         $recordingSpace = $this->getRecordingSpaceOptions();
+        $statuses = ServicePlanStatus::all();
         $migratePlans = [];
         $allPlans = ServicePlan::where('id', '!=', $serviceplan->id)->get()->toArray();
         foreach ($allPlans as $key => $plan) {
             $migratePlans[$plan['nice_name']] = $plan['nice_name'] . ' (' . $plan['key_name'] . ')';
         }
-        return view('admin.serviceplan.create_edit', compact('serviceplan', 'features', 'callDurations', 'recordingSpace', 'migratePlans'));
+        return view('admin.serviceplan.create_edit', compact('serviceplan', 'features', 'callDurations', 'recordingSpace', 'migratePlans', 'statuses'));
     }
     /**
      * Migrate all users on this service plan to a target service plan.

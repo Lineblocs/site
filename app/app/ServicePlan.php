@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\ApiResource;
 use App\Helpers\MainHelper;
+use App\Enums\ServicePlanStatus;
 
 class ServicePlan extends Model {
   use SoftDeletes;
@@ -96,5 +97,18 @@ class ServicePlan extends Model {
   public static function getRecurringMembershipPlans() {
     return self::where('pay_as_you_go', '0')->get();
   }
+
+  public static function getAvailablePlans($pricingPage = false) {
+    $plans = ServicePlan::where('status', ServicePlanStatus::ACTIVE)
+                          ->orderBy('rank')
+                          ->orderBy('nice_name');
+    if ($pricingPage) {
+      $plans = $plans->where('include_in_pricing_pages', '1');
+    }
+
+    return $plans->get();
+  }
+
+
 
 }

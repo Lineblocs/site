@@ -16,6 +16,17 @@ class Subscription extends Model {
   protected $table = "subscriptions";
   protected $casts = array(
   );
+
+  public function toArray()
+  {
+    $array = parent::toArray();
+    if (!empty($this->scheduled_plan_id)) {
+      $array['effective_plan_id'] = $this->scheduled_plan_id;
+    } else {
+      $array['effective_plan_id'] = $this->current_plan_id;
+    }
+    return $array;
+  }
 }
 
 

@@ -63,22 +63,27 @@ final class WorkspaceInvoiceHelper
             $filePrefix = 'monthly';
         }
 
-        Mail::send('emails.workspace_invoices', [
-            'user' => $owner,
-            'workspace' => $workspace,
-            'site' => $siteName,
-            'site_name' => $siteName,
-            'customizations' => $customizations,
-            'period' => $period
-        ], function ($message) use ($owner, $mailConfig, $subject, $pdf, $invoice, $filePrefix) {
-            $message->to($owner->email);
-            $message->subject($subject);
-            $from = $mailConfig['from'];
-            $message->from($from['address'], $from['name']);
-            $message->attachData($pdf, sprintf('%s_invoice_%s.pdf', $filePrefix, $invoice->invoice_no), [
-                'mime' => 'application/pdf'
-            ]);
-        });
+        try {
+            Mail::send('emails.workspace_invoices', [
+                'user' => $owner,
+                'workspace' => $workspace,
+                'site' => $siteName,
+                'site_name' => $siteName,
+                'customizations' => $customizations,
+                'period' => $period
+            ], function ($message) use ($owner, $mailConfig, $subject, $pdf, $invoice, $filePrefix) {
+                $message->to($owner->email);
+                $message->subject($subject);
+                $from = $mailConfig['from'];
+                $message->from($from['address'], $from['name']);
+                $message->attachData($pdf, sprintf('%s_invoice_%s.pdf', $filePrefix, $invoice->invoice_no), [
+                    'mime' => 'application/pdf'
+                ]);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Failed to send invoice email for workspace #' . $workspace->id . ': ' . $e->getMessage());
+            throw $e;
+        }
 
         return [
             'workspace_id' => $workspace->id,
@@ -257,7 +262,8 @@ final class WorkspaceInvoiceHelper
             'recording_costs' => $recordingCosts,
             'fax_costs' => $faxCosts,
             'membership_costs' => $membershipCosts,
-            'number_costs' => $numberCosts
+            'number_costs' => $numberCosts,
+            'source_service' => 'SITE'
         ]);
 
         $invoice->created_at = $rangeStart;
