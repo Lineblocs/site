@@ -209,6 +209,7 @@ class MergedController extends ApiAuthController
         
         $workspace = $this->getWorkspace($request);
         $user = $this->getUser($request);
+        $card = UserCard::find($json['card_id']);
         $now = new \DateTime();
 
         // 1. Fetch data & early guard clauses
@@ -230,14 +231,38 @@ class MergedController extends ApiAuthController
         }
 
         // 2. Determine start date cleanly without a ternary
-        $start_date = $subscription->last_billed_at;
-        if (!$start_date) {
-            $start_date = $subscription->created_at;
+        $last_billable_date = $subscription->last_billed_at;
+        if (!$last_billable_date) {
+            $last_billable_date = $subscription->created_at;
         }
 
         // 3. Proration Calculation using Timestamp Precision
-        $periodEnd = new \DateTime($subscription->current_period_end);
-        $lastBilled = new \DateTime($start_date);
+        // Calculate period end in real time based on billing flow and cycle
+        $customizations = CustomizationsKVStore::getRecord();
+        $billingFlow = $customizations['billing_flow'];
+
+        $isAnnualSubscription = false;
+        if ($subscription->billing_cycle === 'ANNUAL') {
+            $isAnnualSubscription = true;
+        }
+        
+        if ($billingFlow === 'ANNUAL') {
+            if ($isAnnualSubscription) {
+                $periodEnd = (clone $now)->modify('first day of january next year')->setTime(0, 0, 0);
+            } else {
+                $periodEnd = (clone $now)->modify('first day of next month')->setTime(0, 0, 0);
+            }
+        } else {
+            // ANNIVERSARY billing flow
+            $anchorDate = new \DateTime($last_billable_date);
+            if ($isAnnualSubscription) {
+                $periodEnd = (clone $anchorDate)->modify('+1 year');
+            } else {
+                $periodEnd = (clone $anchorDate)->modify('+1 month');
+            }
+        }
+
+        $lastBilled = new \DateTime($last_billable_date);
 
         $totalCycleSeconds = $periodEnd->getTimestamp() - $lastBilled->getTimestamp();
         $remainingSeconds = $periodEnd->getTimestamp() - $now->getTimestamp();
@@ -247,8 +272,12 @@ class MergedController extends ApiAuthController
         }
 
         // Explicit pricing logic without ternaries
-        $isAnnual = ($subscription->billing_cycle === 'ANNUAL');
-        if ($isAnnual) {
+        $isAnnualSubscription = false;
+        if ($subscription->billing_cycle === 'ANNUAL') {
+            $isAnnualSubscription = true;
+        }
+        
+        if ($isAnnualSubscription) {
             $oldPrice = $oldPlan->annual_cost_cents;
             $newPrice = $newPlan->annual_cost_cents;
         } else {
@@ -256,24 +285,37 @@ class MergedController extends ApiAuthController
             $newPrice = $newPlan->monthly_cost_cents;
         }
         
+        \Log::info('Plan upgrade pricing calculation', [
+            'workspace_id' => $workspace->id,
+            'old_plan_id' => $oldPlan->id,
+            'new_plan_id' => $newPlan->id,
+            'is_annual' => $isAnnualSubscription,
+            'old_price_cents' => $oldPrice,
+            'new_price_cents' => $newPrice,
+        ]);
+        
         $priceDiff = $newPrice - $oldPrice;
         
         $prorationCents = 0;
         if ($priceDiff > 0 && $remainingSeconds > 0) {
             $prorationCents = ($priceDiff * $remainingSeconds) / $totalCycleSeconds;
         }
+        
+        \Log::info('Proration calculation', [
+            'workspace_id' => $workspace->id,
+            'price_diff_cents' => $priceDiff,
+            'remaining_seconds' => $remainingSeconds,
+            'total_cycle_seconds' => $totalCycleSeconds,
+            'proration_cents' => round($prorationCents),
+        ]);
 
         // 4. Determine Scheduled Effective Date without ternaries
         $scheduledEffectiveDate = null;
         $customizations = CustomizationsKVStore::getRecord();
         
-        $billingFlow = 'ANNIVERSARY';
-        if (isset($customizations['billing_flow'])) {
-            $billingFlow = $customizations['billing_flow'];
-        }
-
+        $billingFlow = $customizations['billing_flow'];
         if ($billingFlow === 'ANNUAL') {
-            if ($isAnnual) {
+            if ($isAnnualSubscription) {
                 $modifier = 'first day of january next year';
             } else {
                 $modifier = 'first day of next month';
@@ -286,7 +328,7 @@ class MergedController extends ApiAuthController
             }
             $anchorDateTime = new \DateTime($anchor_date);
             
-            if ($isAnnual) {
+            if ($isAnnualSubscription) {
                 $modifier = '+1 year';
             } else {
                 $modifier = '+1 month';
@@ -296,11 +338,16 @@ class MergedController extends ApiAuthController
 
         RabbitMQHelper::dispatchWorkspaceUpgrade(
             $workspace->id,
+            $workspace->creator_id,
             (int) round($prorationCents),
             $subscription->id,
             $subscription->current_plan_id,
             $newPlan->id,
-            $scheduledEffectiveDate ? $scheduledEffectiveDate->format('Y-m-d H:i:s') : null
+            $scheduledEffectiveDate->format('Y-m-d H:i:s'),
+            $card->id,
+            $card->stripe_payment_method_id,
+            $card->issuer,
+            $card->last_4
         );
 
         // 6. Side Effect Operations (Ideally should be queued background jobs)
@@ -376,7 +423,7 @@ class MergedController extends ApiAuthController
         && !empty($user->postal_code)
         && !empty($user->country)) {
           $checklist['filled_in_personal'] = TRUE;
-        }
+      }
       $didCount = DIDNumber::where('user_id', $user->id)->count();
       if ($didCount > 0) {
         $checklist['registered_did'] = TRUE;
