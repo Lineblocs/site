@@ -12,7 +12,8 @@ class RabbitMQHelper
     const INVOICE_QUEUE_MONTHLY = 'monthly_invoices';
     const INVOICE_QUEUE_ANNUAL = 'annual_invoices';
     const BILLING_EVENTS_EXCHANGE = 'billing.events';
-    const WORKSPACE_SUSPENDED_QUEUE = 'workspace_account_suspended';
+    const WORKSPACE_SUSPENDED_QUEUE = 'workspace_suspended';
+    const WORKSPACE_SUSPENDED_LEGACY_QUEUE = 'workspace_account_suspended';
     const WORKSPACE_SUSPENDED_ROUTING_KEY = 'workspace.account.suspended';
 
     /**
@@ -48,13 +49,13 @@ class RabbitMQHelper
 
             $channel->close();
             $connection->close();
-            
+
             Log::info("RabbitMQ published to {$queue}: " . json_encode($payload));
         } catch (Exception $e) {
             Log::error("RabbitMQ Publish Error on queue {$queue}: " . $e->getMessage());
             // In a production environment, you might want to throw this exception 
             // so the Controller knows the billing task failed to queue.
-            throw $e; 
+            throw $e;
         }
     }
 
@@ -97,20 +98,19 @@ class RabbitMQHelper
             $owner = \App\User::find($workspace->creator_id);
         }
 
-        $suspendedAt = $suspension && $suspension->suspended_at
-            ? $suspension->suspended_at->format('Y-m-d H:i:s')
-            : date('Y-m-d H:i:s');
+        if ($suspension && $suspension->suspended_at) {
+            $suspendedAt = $suspension->suspended_at->format('c');
+        } else {
+            $suspendedAt = date('c');
+        }
 
         $payload = [
-            'event' => 'workspace.suspended',
-            'timestamp' => gmdate('c'),
-            'data' => [
-                'workspace_id' => (int) $workspace->id,
-                'owner_email' => $owner ? $owner->email : null,
-                'suspended_at' => $suspendedAt,
-                'grace_period_extension_days' => $suspension ? $suspension->grace_period_extension : null,
-                'reason' => $suspension ? $suspension->reason : 'payment_past_due'
-            ]
+            'id' => $suspension->id,
+            'workspace_id' => (int) $workspace->id,
+            'suspended_at' => $suspendedAt,
+            'grace_period_extension' => $suspension ? $suspension->grace_period_extension : null,
+            'reason' => $suspension ? $suspension->reason : 'payment_past_due',
+            'status' => true
         ];
 
         return self::publishToExchange(
@@ -201,5 +201,4 @@ class RabbitMQHelper
 
         return self::publish(self::INVOICE_QUEUE_ANNUAL, $payload);
     }
-    
 }
