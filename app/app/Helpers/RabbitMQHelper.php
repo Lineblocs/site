@@ -202,8 +202,19 @@ class RabbitMQHelper
         return self::publish(self::INVOICE_QUEUE_ANNUAL, $payload);
     }
 
-    public static function dispatchWorkspaceUpgrade($workspaceId, $creatorId, $upgradeFee, $subscriptionId, $currentPlan, $scheduledPlan, $scheduledEffectiveDate)
-    {
+    public static function dispatchWorkspaceUpgrade(
+        $workspaceId,
+        $creatorId,
+        $upgradeFee,
+        $subscriptionId,
+        $currentPlan,
+        $scheduledPlan,
+        $scheduledEffectiveDate,
+        $cardId = null,
+        $paymentMethodId = null,
+        $cardType = null,
+        $cardLast4 = null
+    ) {
         $payload = [
             'run_id'                   => 'workspace_upgrade_' . (int) $workspaceId . '_' . time(),
             'workspace_id'             => (int) $workspaceId,
@@ -213,6 +224,10 @@ class RabbitMQHelper
             'current_plan'             => (int) $currentPlan,
             'scheduled_plan'           => (int) $scheduledPlan,
             'scheduled_effective_date' => (string) $scheduledEffectiveDate,
+            'card_id'        => $cardId,
+            'payment_method_id' => $paymentMethodId,
+            'card_type'                => $cardType,
+            'card_last_4'              => $cardLast4,
         ];
 
         return self::publish('workspace_upgrades', $payload);
