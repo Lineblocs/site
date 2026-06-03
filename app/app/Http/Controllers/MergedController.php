@@ -300,7 +300,7 @@ class MergedController extends ApiAuthController
             $subscription->id,
             $subscription->current_plan_id,
             $newPlan->id,
-            $scheduledEffectiveDate ? $scheduledEffectiveDate->format('Y-m-d H:i:s') : null
+            $scheduledEffectiveDate->format('Y-m-d H:i:s')
         );
 
         // 6. Side Effect Operations (Ideally should be queued background jobs)
