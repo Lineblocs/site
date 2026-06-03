@@ -297,6 +297,7 @@ class MergedController extends ApiAuthController
         RabbitMQHelper::dispatchWorkspaceUpgrade(
             $workspace->id,
             (int) round($prorationCents),
+            $subscription->id,
             $subscription->current_plan_id,
             $newPlan->id,
             $scheduledEffectiveDate ? $scheduledEffectiveDate->format('Y-m-d H:i:s') : null
