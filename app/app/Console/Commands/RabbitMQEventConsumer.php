@@ -624,11 +624,21 @@ class RabbitMQEventConsumer extends Command
                 return;
             }
 
-            $workspaceId = isset($data['workspace_id']) ? (int) $data['workspace_id'] : 0;
-            $userId = isset($data['user_id']) ? (int) $data['user_id'] : 0;
-            
-            if ($workspaceId <= 0) {
-                $this->logConsumerError(' [WORKSPACE_UPGRADE] Missing or invalid workspace_id.', [
+            if (!isset($data['workspace_id']) || !isset($data['creator_id'])) {
+                $this->logConsumerError(' [WORKSPACE_UPGRADE] Missing workspace_id or creator_id.', [
+                    'payload' => $data
+                ]);
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                return;
+            }
+
+            $workspaceId = (int) $data['workspace_id'];
+            $userId = (int) $data['creator_id'];
+
+            $this->logConsumerInfo(' [WORKSPACE_UPGRADE] Entire payload:' . json_encode(['payload' => $data]));
+
+            if ($workspaceId <= 0 || $userId <= 0) {
+                $this->logConsumerError(' [WORKSPACE_UPGRADE] Invalid workspace_id or creator_id.', [
                     'payload' => $data
                 ]);
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
@@ -638,13 +648,14 @@ class RabbitMQEventConsumer extends Command
             $this->info(" [WORKSPACE_UPGRADE] Received upgrade for workspace ID: " . $workspaceId);
 
             $action = isset($data['action']) ? $data['action'] : null;
+            $this->info(" [WORKSPACE_UPGRADE] Action: " . $action);
 
             switch ($action) {
                 case 'SUCCESSFUL_UPGRADE':
                     $this->info(" [WORKSPACE_UPGRADE] Processing successful upgrade for workspace ID: " . $workspaceId);
                     // Implementation for successful upgrade logic goes here
                     $user = \App\User::find($userId);
-                    $newPlan = \App\ServicePlan::find($data['upgraded_plan_id']);
+                    $newPlan = \App\ServicePlan::find($data['plan_id']);
                     if ($user && $newPlan) {
                         $planKey = $newPlan->key_name;
                         $emailData = ['user' => $user, 'plan' => $planKey];
@@ -657,7 +668,7 @@ class RabbitMQEventConsumer extends Command
                     $this->error(" [WORKSPACE_UPGRADE] Processing failed upgrade for workspace ID: " . $workspaceId);
                     // Implementation for failed upgrade logic goes here
                     $user = \App\User::find($userId);
-                    $newPlan = \App\ServicePlan::find($data['upgraded_plan_id']);
+                    $newPlan = \App\ServicePlan::find($data['plan_id']);
                     if ($user && $newPlan) {
                         $planKey = $newPlan->key_name;
                         $emailData = ['user' => $user, 'plan' => $planKey];

@@ -358,10 +358,6 @@ class MergedController extends ApiAuthController
         ];
         WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
 
-        $data = ['user' => $user, 'plan' => $planKey];
-        $subject = MainHelper::createEmailSubject(sprintf("Upgraded plan to %s", $planKey));
-        EmailHelper::sendEmail($subject, $user->email, 'plan_upgraded', $data);
-
         return $this->response->noContent();
     }
 
