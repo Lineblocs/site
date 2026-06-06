@@ -49,9 +49,8 @@ class WorkspaceController extends AdminController
     public function create()
     {
         $gracePeriodExtension = null;
-        $activeSuspension = null;
-        $isWorkspaceSuspended = false;
-        return view('admin.workspace.create_edit', compact('gracePeriodExtension', 'activeSuspension', 'isWorkspaceSuspended'));
+        $isSuspended = null;
+        return view('admin.workspace.create_edit', compact('gracePeriodExtension', 'isSuspended'));
     }
 
     /**
@@ -89,9 +88,12 @@ class WorkspaceController extends AdminController
         $routingACLs = WorkspaceHelper::getACLs($workspace);
         $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
         $gracePeriodExtension = WorkspaceSuspensionHelper::getGracePeriodExtension($workspace->id);
-        $activeSuspension = WorkspaceSuspensionHelper::getActiveSuspension($workspace->id);
-        $isWorkspaceSuspended = !empty($activeSuspension);
-        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices', 'gracePeriodExtension', 'activeSuspension', 'isWorkspaceSuspended'));
+        $isSuspended = NULL;
+        if (MainHelper::isWorkspaceSuspended($workspace->id)) {
+            $isSuspended = TRUE;
+        }
+
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices', 'gracePeriodExtension', 'isSuspended'));
     }
 
     /**
