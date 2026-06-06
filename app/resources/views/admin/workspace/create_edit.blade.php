@@ -36,6 +36,15 @@
                 <span class="help-block">{{ $errors->first('name', ':message') }}</span>
             </div>
         </div>
+        @if (isset($workspace))
+        <div class="form-group">
+            <div class="controls">
+                @if (!empty($isSuspended))
+                    <span class="label label-danger" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Suspended</span>
+                @endif
+            </div>
+        </div>
+        @endif
         <div class="form-group {{ $errors->has('active') ? 'has-error' : '' }}">
             {!! Form::label('active', trans("admin/workspaces.active"), array('class' => 'control-label')) !!}
             <div class="controls">
@@ -46,24 +55,7 @@
                 <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
             </div>
         </div>
-        @if (isset($workspace))
-        <div class="form-group">
-            {!! Form::label('workspace_status', 'Status', array('class' => 'control-label')) !!}
-            <div class="controls">
-                @if (!empty($activeSuspension))
-                    <span class="label label-danger" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Suspended</span>
-                    <span class="help-block">
-                        Reason: {{ $activeSuspension->reason }}.
-                        Suspended at: {{ $activeSuspension->suspended_at }}.
-                    </span>
-                @elseif (!empty($workspace->active))
-                    <span class="label label-success" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Active</span>
-                @else
-                    <span class="label label-default" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Inactive</span>
-                @endif
-            </div>
-        </div>
-        @endif
+
         <div class="form-group">
             <button type="submit" class="btn btn-sm btn-success">
                 <span class="glyphicon glyphicon-ok-circle"></span>

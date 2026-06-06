@@ -15,6 +15,7 @@ use App\CustomizationsKVStore;
 use App\ApiCredential;
 use App\ApiCredentialKVStore;
 use App\SupportTicket;
+use App\WorkspaceSuspension;
 use App\Helpersa\WebSvcHelper;
 use Config;
 use Auth;
@@ -1302,23 +1303,13 @@ final class MainHelper {
     }
 
     public static function isWorkspaceSuspended($workspaceId) {
-      $gracePeriod = 7 * 24 * 3600; // 7 days in seconds
-      
-      $suspensions = \App\WorkspaceSuspension::where('workspace_id', $workspaceId)->get();
-      
-      $now = new \DateTime();
-      
-      foreach ($suspensions as $suspension) {
-        $suspendedAt = $suspension->suspended_at;
-        $gracePeriodExtension = $suspension->grace_period_extension ?? 0;
-        
-        $totalGracePeriod = $gracePeriod + ($gracePeriodExtension * 3600);
-        
-        $suspensionDeadline = (new \DateTime($suspendedAt->format('Y-m-d H:i:s')))->modify("+{$totalGracePeriod} seconds");
-        
-        if ($now > $suspensionDeadline) {
-          return true;
-        }
+      $suspensions = WorkspaceSuspension::where('workspace_id', $workspaceId)
+        ->where('status', 'SUSPENDED')
+        ->orderBy('suspended_at', 'desc')
+        ->count();
+     
+      if ($suspensions > 0) {
+        return true;
       }
       
       return false;
