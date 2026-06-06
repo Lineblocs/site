@@ -195,6 +195,29 @@ class MergedController extends ApiAuthController
       return $this->response->array($plans);
     }
 
+    public function getUpgradeFees(Request $request)
+    {
+        $planKey = $request->get('plan_key');
+        if (!$planKey) {
+            return $this->response->errorBadRequest("Plan key is required.");
+        }
+
+        $workspace = $this->getWorkspace($request);
+        $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+
+        if (!$subscription) {
+            return $this->response->errorBadRequest("Invalid subscription or plan.");
+        }
+
+        $upgradeData = BillingDataHelper::getUpgradeData($subscription, $planKey, $workspace);
+        return $this->response->array([
+            'fees' => $upgradeData['fees'],
+            'fees_dollars' => $upgradeData['fees_dollars'],
+            'new_plan_cost_cents' => $upgradeData['new_plan_cost_cents'],
+            'new_plan_cost_dollars' => $upgradeData['new_plan_cost_dollars']
+        ]);
+    }
+
     public function upgradePlan(Request $request)
     {
         $json = $request->json()->all();
@@ -223,97 +246,17 @@ class MergedController extends ApiAuthController
             return $this->response->errorBadRequest("A plan upgrade is already scheduled.");
         }
 
-        $newPlan = ServicePlan::where('key_name', $planKey)->first();
-        $oldPlan = ServicePlan::find($subscription->current_plan_id);
-
-        if (!$newPlan || !$oldPlan) {
-            return $this->response->errorBadRequest("Invalid subscription or plan config.");
-        }
-
-        // 2. Determine start date cleanly without a ternary
-        $last_billable_date = $subscription->last_billed_at;
-        if (!$last_billable_date) {
-            $last_billable_date = $subscription->created_at;
-        }
-
-        // 3. Proration Calculation using Timestamp Precision
-        // Calculate period end in real time based on billing flow and cycle
-        $customizations = CustomizationsKVStore::getRecord();
-        $billingFlow = $customizations['billing_flow'];
-
-        $isAnnualSubscription = false;
-        if ($subscription->billing_cycle === 'ANNUAL') {
-            $isAnnualSubscription = true;
-        }
-        
-        if ($billingFlow === 'ANNUAL') {
-            if ($isAnnualSubscription) {
-                $periodEnd = (clone $now)->modify('first day of january next year')->setTime(0, 0, 0);
-            } else {
-                $periodEnd = (clone $now)->modify('first day of next month')->setTime(0, 0, 0);
-            }
-        } else {
-            // ANNIVERSARY billing flow
-            $anchorDate = new \DateTime($last_billable_date);
-            if ($isAnnualSubscription) {
-                $periodEnd = (clone $anchorDate)->modify('+1 year');
-            } else {
-                $periodEnd = (clone $anchorDate)->modify('+1 month');
-            }
-        }
-
-        $lastBilled = new \DateTime($last_billable_date);
-
-        $totalCycleSeconds = $periodEnd->getTimestamp() - $lastBilled->getTimestamp();
-        $remainingSeconds = $periodEnd->getTimestamp() - $now->getTimestamp();
-
-        if ($totalCycleSeconds <= 0) {
-            $totalCycleSeconds = 30 * 86400; // Default fallback to 30 days in seconds
-        }
-
-        // Explicit pricing logic without ternaries
-        $isAnnualSubscription = false;
-        if ($subscription->billing_cycle === 'ANNUAL') {
-            $isAnnualSubscription = true;
-        }
-        
-        if ($isAnnualSubscription) {
-            $oldPrice = $oldPlan->annual_cost_cents;
-            $newPrice = $newPlan->annual_cost_cents;
-        } else {
-            $oldPrice = $oldPlan->monthly_cost_cents;
-            $newPrice = $newPlan->monthly_cost_cents;
-        }
-        
-        \Log::info('Plan upgrade pricing calculation', [
-            'workspace_id' => $workspace->id,
-            'old_plan_id' => $oldPlan->id,
-            'new_plan_id' => $newPlan->id,
-            'is_annual' => $isAnnualSubscription,
-            'old_price_cents' => $oldPrice,
-            'new_price_cents' => $newPrice,
-        ]);
-        
-        $priceDiff = $newPrice - $oldPrice;
-        
-        $prorationCents = 0;
-        if ($priceDiff > 0 && $remainingSeconds > 0) {
-            $prorationCents = ($priceDiff * $remainingSeconds) / $totalCycleSeconds;
-        }
-        
-        \Log::info('Proration calculation', [
-            'workspace_id' => $workspace->id,
-            'price_diff_cents' => $priceDiff,
-            'remaining_seconds' => $remainingSeconds,
-            'total_cycle_seconds' => $totalCycleSeconds,
-            'proration_cents' => round($prorationCents),
-        ]);
-
+        $upgradeData = BillingDataHelper::getUpgradeData($subscription, $planKey, $workspace);
         // 4. Determine Scheduled Effective Date without ternaries
         $scheduledEffectiveDate = null;
         $customizations = CustomizationsKVStore::getRecord();
         
         $billingFlow = $customizations['billing_flow'];
+
+        $isAnnualSubscription = false;
+        if ($subscription->billing_cycle === 'ANNUAL') {
+            $isAnnualSubscription = true;
+        }
         if ($billingFlow === 'ANNUAL') {
             if ($isAnnualSubscription) {
                 $modifier = 'first day of january next year';
@@ -336,14 +279,15 @@ class MergedController extends ApiAuthController
             $scheduledEffectiveDate = (clone $anchorDateTime)->modify($modifier);
         }
 
+        $newPlan = $upgradeData['new_plan'];
         RabbitMQHelper::dispatchWorkspaceUpgrade(
             $workspace->id,
             $workspace->creator_id,
-            (int) round($prorationCents),
+            $upgradeData['fees'],
             $subscription->id,
             $subscription->current_plan_id,
             $newPlan->id,
-            $scheduledEffectiveDate->format('Y-m-d H:i:s'),
+            $scheduledEffectiveDate->format('Y-m-d'),
             $card->id,
             $card->stripe_payment_method_id,
             $card->issuer,
@@ -354,12 +298,13 @@ class MergedController extends ApiAuthController
         $props = [
             "billing_status" => "immediate_upgrade_pending_reconciliation",
             "new_plan" => $planKey,
-            "proration_applied" => (int) round($prorationCents)
+            "proration_applied" => $upgradeData['fees']
         ];
         WorkspaceEvent::addEvent($workspace, 'PLAN_UPGRADED', $props);
 
         return $this->response->noContent();
     }
+
 
     public function dashboard(Request $request)
     {

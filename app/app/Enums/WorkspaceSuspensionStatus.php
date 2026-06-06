@@ -7,23 +7,23 @@ namespace App\Enums;
  */
 abstract class WorkspaceSuspensionStatus
 {
-    public const NOT_SUSPENDED = '0';
-    public const PENDING_SUSPENSION = 'pending_suspension';
-    public const REAL_SUSPENSION = 'real_suspension';
+    public const INITIATED = 'INITIATED';
+    public const SUSPENDED = 'SUSPENDED';
+    public const LIFTED = 'LIFTED';
 
     public static function all(): array
     {
         return [
-            self::NOT_SUSPENDED,
-            self::PENDING_SUSPENSION,
-            self::REAL_SUSPENSION,
+            self::INITIATED,
+            self::SUSPENDED,
+            self::LIFTED,
         ];
     }
 
     public static function activeValues(): array
     {
         return [
-            self::REAL_SUSPENSION,
+            self::SUSPENDED,
             true,
             1,
             '1',
@@ -33,7 +33,7 @@ abstract class WorkspaceSuspensionStatus
     public static function activeDatabaseValues(): array
     {
         return [
-            self::REAL_SUSPENSION,
+            self::SUSPENDED,
             '1',
         ];
     }
@@ -41,7 +41,7 @@ abstract class WorkspaceSuspensionStatus
     public static function isActive($status): bool
     {
         return in_array($status, [
-            self::REAL_SUSPENSION,
+            self::SUSPENDED,
             true,
             1,
             '1',
@@ -51,13 +51,13 @@ abstract class WorkspaceSuspensionStatus
     public static function label($status): string
     {
         if (self::isActive($status)) {
-            return 'Real Suspension';
+            return 'Suspended';
         }
 
-        if ($status === self::PENDING_SUSPENSION) {
-            return 'Pending Suspension';
+        if ($status === self::INITIATED) {
+            return 'Initiated';
         }
 
-        return 'Not Suspended';
+        return 'Lifted';
     }
 }

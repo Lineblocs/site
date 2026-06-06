@@ -11,6 +11,7 @@ use App\Helpers\StripeBillingHelper;
 
 use App\CustomizationsKVStore;
 use App\ApiCredentialKVStore;
+use App\ServicePlan;
 use App\Settings;
 use App\UserCredit;
 use App\UserDebit;
@@ -34,7 +35,7 @@ final class BillingDataHelper {
   }
   public static function getBillingHistory($workspace) {
       //$data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));      $data = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
-      $data = DB::select(sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc where workspace_id = "%s";', $workspace->id));
+      $data = DB::select(sprintf('select id, status, cents, created_at, \'invoice\' as type, user_id from users_invoices where workspace_id = "%s" order by created_at desc;', $workspace->id));
       $data = array_map(function($item) {
         $array = (array) $item;
         $array['dollars'] = self::toDollars($array['cents']);
@@ -291,5 +292,103 @@ final class BillingDataHelper {
 
     $invoice->status = PaymentStatus::REFUNDED;
     $invoice->save();
+  }
+
+  public static function getUpgradeData($subscription, $planKey, $workspace) {
+      $newPlan = ServicePlan::where('key_name', $planKey)->first();
+      $oldPlan = ServicePlan::find($subscription->current_plan_id);
+
+      $now = new \DateTime();
+
+      // 2. Determine start date cleanly without a ternary
+      $last_billable_date = $subscription->last_billed_at;
+      if (!$last_billable_date) {
+          $last_billable_date = $subscription->created_at;
+      }
+
+      // 3. Proration Calculation using Timestamp Precision
+      // Calculate period end in real time based on billing flow and cycle
+      $customizations = CustomizationsKVStore::getRecord();
+      $billingFlow = $customizations['billing_flow'];
+
+      $isAnnualSubscription = false;
+      if ($subscription->billing_cycle === 'ANNUAL') {
+          $isAnnualSubscription = true;
+      }
+      
+      if ($billingFlow === 'ANNUAL') {
+          if ($isAnnualSubscription) {
+              $periodEnd = (clone $now)->modify('first day of january next year')->setTime(0, 0, 0);
+          } else {
+              $periodEnd = (clone $now)->modify('first day of next month')->setTime(0, 0, 0);
+          }
+      } else {
+          // ANNIVERSARY billing flow
+          $anchorDate = new \DateTime($last_billable_date);
+          if ($isAnnualSubscription) {
+              $periodEnd = (clone $anchorDate)->modify('+1 year');
+          } else {
+              $periodEnd = (clone $anchorDate)->modify('+1 month');
+          }
+      }
+
+      $lastBilled = new \DateTime($last_billable_date);
+
+      $totalCycleSeconds = $periodEnd->getTimestamp() - $lastBilled->getTimestamp();
+      $remainingSeconds = $periodEnd->getTimestamp() - $now->getTimestamp();
+
+      if ($totalCycleSeconds <= 0) {
+          $totalCycleSeconds = 30 * 86400; // Default fallback to 30 days in seconds
+      }
+
+      // Explicit pricing logic without ternaries
+      $isAnnualSubscription = false;
+      if ($subscription->billing_cycle === 'ANNUAL') {
+          $isAnnualSubscription = true;
+      }
+      
+      if ($isAnnualSubscription) {
+          $oldPrice = $oldPlan->annual_cost_cents;
+          $newPrice = $newPlan->annual_cost_cents;
+      } else {
+          $oldPrice = $oldPlan->monthly_cost_cents;
+          $newPrice = $newPlan->monthly_cost_cents;
+      }
+      
+      \Log::info('Plan upgrade pricing calculation', [
+          'workspace_id' => $workspace->id,
+          'old_plan_id' => $oldPlan->id,
+          'new_plan_id' => $newPlan->id,
+          'is_annual' => $isAnnualSubscription,
+          'old_price_cents' => $oldPrice,
+          'new_price_cents' => $newPrice,
+      ]);
+      
+      $priceDiff = $newPrice - $oldPrice;
+      
+      $prorationCents = 0;
+      if ($priceDiff > 0 && $remainingSeconds > 0) {
+          $prorationCents = ($priceDiff * $remainingSeconds) / $totalCycleSeconds;
+      }
+      
+      \Log::info('Proration calculation', [
+          'workspace_id' => $workspace->id,
+          'price_diff_cents' => $priceDiff,
+          'remaining_seconds' => $remainingSeconds,
+          'total_cycle_seconds' => $totalCycleSeconds,
+          'proration_cents' => round($prorationCents),
+      ]);
+
+      
+
+      $feesCents = (int) round($prorationCents);
+      return [
+          'fees' => $feesCents,
+          'fees_dollars' => MainHelper::toDollars($feesCents),
+          'new_plan_cost_cents' => $newPrice,
+          'new_plan_cost_dollars' => MainHelper::toDollars($newPrice),
+          'new_plan' => $newPlan,
+          'old_plan' => $oldPlan,
+      ];
   }
 }

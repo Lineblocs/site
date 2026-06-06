@@ -140,25 +140,14 @@ class WorkspaceController extends AdminController
     public function data()
     {
         $globalGracePeriod = WorkspaceSuspensionHelper::getGlobalGracePeriod();
-        $realSuspensionStatus = WorkspaceSuspensionStatus::REAL_SUSPENSION;
-        $activeSuspensionSelect = Schema::hasTable('workspace_suspensions')
-            ? DB::raw("(select count(*) from workspace_suspensions ws_status where ws_status.workspace_id = workspaces.id and ws_status.status in ('" . $realSuspensionStatus . "', '1')) as active_suspension")
-            : DB::raw('0 as active_suspension');
+        $activeSuspensionSelect = DB::raw("(select count(*) from workspaces_suspensions ws_status where ws_status.workspace_id = workspaces.id and ws_status.status = 'SUSPENDED') as active_suspension");
         $gracePeriodSources = array();
-        if (Schema::hasColumn('workspaces', 'grace_period_extension')) {
-            $gracePeriodSources[] = 'workspaces.grace_period_extension';
-        }
-        if (Schema::hasTable('workspace_suspensions')) {
-            $gracePeriodSources[] = "(select ws.grace_period_extension from workspace_suspensions ws where ws.workspace_id = workspaces.id and ws.status in ('" . $realSuspensionStatus . "', '1') and ws.grace_period_extension is not null order by ws.suspended_at desc limit 1)";
-        }
-        $gracePeriodSources[] = (int) $globalGracePeriod;
-        $gracePeriodSelect = DB::raw('COALESCE(' . implode(', ', $gracePeriodSources) . ') as grace_period');
 
         $workspaces = DB::table('workspaces')->select(array(
             'workspaces.id',
             'workspaces.name',
             'workspaces.active',
-            $gracePeriodSelect,
+            DB::raw('workspaces.grace_period_extension AS grace_period'),
             'workspaces.created_at',
             $activeSuspensionSelect
         ));

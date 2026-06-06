@@ -11,7 +11,7 @@ class WorkspaceSuspension extends Model
     protected $dates = ['suspended_at'];
 
     protected $guarded = array('id');
-    protected $table = 'workspace_suspensions';
+    protected $table = 'workspaces_suspensions';
     protected $casts = array(
         'status' => 'boolean',
         'grace_period_extension' => 'integer',
