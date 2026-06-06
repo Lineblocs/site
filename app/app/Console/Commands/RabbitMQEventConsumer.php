@@ -13,6 +13,7 @@ use App\Workspace;
 use App\WorkspaceUser;
 use App\Mail\WorkspaceSuspendedNotification;
 use Carbon\Carbon;
+use App\ServicePlan;
 use Exception;
 use Log;
 
@@ -51,6 +52,7 @@ class RabbitMQEventConsumer extends Command
         $channel->queue_declare('subscription_updates', false, true, false, false);
         $channel->queue_declare('payment_receipts', false, true, false, false);
         $channel->queue_declare('call_quality_surveys', false, true, false, false);
+        $channel->queue_declare('workspace_upgrades', false, true, false, false);
         $channel->queue_declare(self::CALL_ACTIVITY_QUEUE, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, false, true, false, false);
@@ -78,6 +80,8 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume('subscription_updates', '', false, false, false, false, [$this, 'handleSubscriptionUpdate']);
         $channel->basic_consume('payment_receipts', '', false, false, false, false, [$this, 'handlePaymentReceipt']);
         $channel->basic_consume('call_quality_surveys', '', false, false, false, false, [$this, 'handleSurvey']);
+        $channel->basic_consume('workspace_upgrades', '', false, false, false, false, [$this, 'handleWorkspaceUpgrade']);
+
         $channel->basic_consume(self::CALL_ACTIVITY_QUEUE, '', false, false, false, false, [$this, 'handleCallActivity']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_MONTHLY, '', false, false, false, false, [$this, 'handleMonthlyInvoiceTask']);
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, '', false, false, false, false, [$this, 'handleAnnualInvoiceTask']);
@@ -602,6 +606,93 @@ class RabbitMQEventConsumer extends Command
     {
         $this->error($message);
         Log::error($message, $context);
+    }
+
+    /**
+     * Handler for Workspace Upgrades
+     */
+    public function handleWorkspaceUpgrade($msg)
+    {
+        try {
+            $data = json_decode($msg->body, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+                $this->logConsumerError(' [WORKSPACE_UPGRADE] Malformed JSON: ' . json_last_error_msg(), [
+                    'body' => $msg->body
+                ]);
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                return;
+            }
+
+            if (!isset($data['workspace_id']) || !isset($data['creator_id'])) {
+                $this->logConsumerError(' [WORKSPACE_UPGRADE] Missing workspace_id or creator_id.', [
+                    'payload' => $data
+                ]);
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                return;
+            }
+
+            $workspaceId = (int) $data['workspace_id'];
+            $userId = (int) $data['creator_id'];
+
+            $this->logConsumerInfo(' [WORKSPACE_UPGRADE] Entire payload:' . json_encode(['payload' => $data]));
+
+            if ($workspaceId <= 0 || $userId <= 0) {
+                $this->logConsumerError(' [WORKSPACE_UPGRADE] Invalid workspace_id or creator_id.', [
+                    'payload' => $data
+                ]);
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                return;
+            }
+
+            $this->info(" [WORKSPACE_UPGRADE] Received upgrade for workspace ID: " . $workspaceId);
+
+            $action = isset($data['action']) ? $data['action'] : null;
+            $this->info(" [WORKSPACE_UPGRADE] Action: " . $action);
+
+            switch ($action) {
+                case 'SUCCESSFUL_UPGRADE':
+                    $this->info(" [WORKSPACE_UPGRADE] Processing successful upgrade for workspace ID: " . $workspaceId);
+                    // Implementation for successful upgrade logic goes here
+                    $user = \App\User::find($userId);
+                    $newPlan = \App\ServicePlan::find($data['plan_id']);
+                    if ($user && $newPlan) {
+                        $planKey = $newPlan->key_name;
+                        $emailData = ['user' => $user, 'plan' => $planKey];
+                        $subject = \App\Helpers\MainHelper::createEmailSubject(sprintf("Upgraded plan to %s", $planKey));
+                        \App\Helpers\EmailHelper::sendEmail($subject, $user->email, 'plan_upgraded', $emailData);
+                    }
+                    break;
+
+                case 'FAILED_UPGRADE':
+                    $this->error(" [WORKSPACE_UPGRADE] Processing failed upgrade for workspace ID: " . $workspaceId);
+                    // Implementation for failed upgrade logic goes here
+                    $user = \App\User::find($userId);
+                    $newPlan = \App\ServicePlan::find($data['plan_id']);
+                    if ($user && $newPlan) {
+                        $planKey = $newPlan->key_name;
+                        $emailData = ['user' => $user, 'plan' => $planKey];
+                        $subject = \App\Helpers\MainHelper::createEmailSubject(sprintf("Failed to upgrade plan to %s", $planKey));
+                        \App\Helpers\EmailHelper::sendEmail($subject, $user->email, 'failed_upgrade', $emailData);
+                    }
+                    break;
+
+                default:
+                    $this->logConsumerError(' [WORKSPACE_UPGRADE] Unknown action: ' . $action, [
+                        'action' => $action,
+                        'workspace_id' => $workspaceId
+                    ]);
+                    break;
+            }
+            
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            $this->info(" [v] Workspace upgrade event acknowledged for workspace #" . $workspaceId);
+        } catch (Exception $e) {
+            $this->logConsumerError(' [WORKSPACE_UPGRADE] ' . $e->getMessage(), [
+                'exception' => get_class($e)
+            ]);
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        }
     }
 
     public function handleMonthlyInvoiceTask($msg)

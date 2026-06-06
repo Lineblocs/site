@@ -587,6 +587,7 @@ $api->version('v1', function($api) {
     $api->get('dashboard', '\App\Http\Controllers\MergedController@dashboard');
     $api->get('feed', '\App\Http\Controllers\MergedController@feed');
     $api->post('upgradePlan', '\App\Http\Controllers\MergedController@upgradePlan');
+    $api->get('getUpgradeFees', '\App\Http\Controllers\MergedController@getUpgradeFees');
     $api->get('plans', '\App\Http\Controllers\MergedController@plans');
     $api->get('billing', '\App\Http\Controllers\MergedController@billing');
     $api->get('billing/viewEstimatedCharges', '\App\Http\Controllers\BillingController@viewEstimatedCharges');

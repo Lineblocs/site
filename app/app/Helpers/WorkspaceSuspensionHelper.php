@@ -24,30 +24,19 @@ final class WorkspaceSuspensionHelper
 
     public static function getActiveSuspension($workspaceId)
     {
-        if (!Schema::hasTable('workspace_suspensions')) {
-            return null;
-        }
-
-        $suspensions = WorkspaceSuspension::where('workspace_id', $workspaceId)
+        $suspension = WorkspaceSuspension::where('workspace_id', $workspaceId)
+            ->where('status', '=', WorkspaceSuspensionStatus::SUSPENDED)
             ->orderBy('suspended_at', 'desc')
-            ->get();
+            ->first();
 
-        foreach ($suspensions as $suspension) {
-            if (WorkspaceSuspensionStatus::isActive($suspension->status)) {
-                return $suspension;
-            }
-        }
-
-        return null;
+        return $suspension;
     }
 
     public static function getGracePeriodExtension($workspaceId)
     {
-        if (Schema::hasColumn('workspaces', 'grace_period_extension')) {
-            $workspace = Workspace::find($workspaceId);
-            if ($workspace && $workspace->grace_period_extension !== null) {
-                return (int) $workspace->grace_period_extension;
-            }
+        $workspace = Workspace::find($workspaceId);
+        if ($workspace && $workspace->grace_period_extension !== null) {
+            return (int) $workspace->grace_period_extension;
         }
 
         $suspension = self::getActiveSuspension($workspaceId);
@@ -76,30 +65,32 @@ final class WorkspaceSuspensionHelper
             $extension = (int) $value;
         }
 
-        if (Schema::hasColumn('workspaces', 'grace_period_extension')) {
-            $workspace->grace_period_extension = $extension;
-            $workspace->save();
-        }
+        $workspace->grace_period_extension = $extension;
+        $workspace->save();
 
         if ($extension !== null && !$workspace->active) {
             $workspace->active = true;
             $workspace->save();
         }
 
-        if (!Schema::hasTable('workspace_suspensions')) {
-            return $workspace;
-        }
-
-        $suspensions = WorkspaceSuspension::where('workspace_id', $workspace->id)->get();
+        $suspensions = WorkspaceSuspension::where('workspace_id', $workspace->id)
+            ->where('status', '!=', WorkspaceSuspensionStatus::LIFTED)
+            ->get();
 
         if ($suspensions->isEmpty()) {
             return $workspace;
         }
 
         foreach ($suspensions as $suspension) {
-            $suspension->grace_period_extension = $extension;
             if ($extension !== null) {
-                $suspension->status = WorkspaceSuspensionStatus::NOT_SUSPENDED;
+                $suspension->grace_period_extension = $extension;
+
+                $now = new DateTime();
+                $gracePeriodEnd = (new DateTime($suspension->suspension_initiated_at))->modify("+{$extension} days");
+                if ($now < $gracePeriodEnd) {
+                    $suspension->status = WorkspaceSuspensionStatus::INITIATED;
+                    $suspension->suspended_at = null;
+                }
             }
             $suspension->save();
         }
@@ -109,7 +100,7 @@ final class WorkspaceSuspensionHelper
 
     public static function suspendWorkspace(Workspace $workspace, $invoice = null, $daysPastDue = null, $threshold = null)
     {
-        if (!Schema::hasTable('workspace_suspensions')) {
+        if (!Schema::hasTable('workspaces_suspensions')) {
             return null;
         }
 

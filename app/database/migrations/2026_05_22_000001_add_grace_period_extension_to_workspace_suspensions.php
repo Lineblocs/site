@@ -17,7 +17,7 @@ class AddGracePeriodExtensionToWorkspaceSuspensions extends Migration
             $table->timestamp('suspended_at');
             $table->integer('grace_period_extension')->nullable();
             $table->string('reason');
-            $table->boolean('status')->default(true);
+            $table->string('status')->default('INITIATED');
 
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('CASCADE');
             $table->index(array('workspace_id', 'status'));
