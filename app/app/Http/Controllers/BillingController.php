@@ -20,6 +20,7 @@ use App\Helpers\WorkspaceHelper;
 use App\Helpers\InvoiceHelper;
 use App\Enums\PaymentStatus;
 use DateTime;
+use Exception;
 
 class BillingController extends ApiAuthController
 {
@@ -56,6 +57,65 @@ class BillingController extends ApiAuthController
         return $this->response->array([
           'info' => $billingInfo
         ]);
+    }
+
+    public function schedulePlanUpgrade(Request $request)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
+
+      $data = $request->json()->all();
+      if (!isset($data['plan_id'])) {
+        return $this->response->errorBadRequest('plan_id is required');
+      }
+
+      $newPlan = ServicePlan::find((int) $data['plan_id']);
+      if (!$newPlan) {
+        return $this->response->errorBadRequest('plan_id is invalid');
+      }
+
+      try {
+        $subscription = DB::transaction(function () use ($workspace, $newPlan) {
+          $subscription = Subscription::where('workspace_id', $workspace->id)
+            ->lockForUpdate()
+            ->firstOrFail();
+
+          if ((int) $subscription->current_plan_id === (int) $newPlan->id) {
+            throw new Exception('The requested plan is already active.');
+          }
+
+          $effectiveDate = $subscription->next_billing_date;
+          if (empty($effectiveDate)) {
+            $effectiveDate = $subscription->current_period_end;
+          }
+
+          if (empty($effectiveDate)) {
+            throw new Exception('Subscription has no billing cycle anchor.');
+          }
+
+          $subscription->scheduled_plan_id = $newPlan->id;
+          $subscription->scheduled_effective_date = $effectiveDate;
+          $subscription->save();
+
+          return $subscription;
+        });
+
+        RabbitMQHelper::dispatchPlanUpgradeScheduled($workspace, $subscription, $user);
+      } catch (Exception $e) {
+        return $this->response->errorBadRequest($e->getMessage());
+      }
+
+      return $this->response->array([
+        'subscription_id' => (int) $subscription->id,
+        'workspace_id' => (int) $workspace->id,
+        'current_plan_id' => (int) $subscription->current_plan_id,
+        'scheduled_plan_id' => (int) $subscription->scheduled_plan_id,
+        'scheduled_effective_date' => $subscription->scheduled_effective_date
+      ]);
     }
 
     public function getBillingHistory(Request $request)

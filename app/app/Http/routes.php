@@ -901,6 +901,7 @@ $api->version('v1', function($api) {
       // Current routes (example of grouping them for cleaner code)
       $api->get('info', '\App\Http\Controllers\BillingController@getBillingInfo');
       $api->get('history', '\App\Http\Controllers\BillingController@getBillingHistory');
+      $api->post('plan-upgrade', '\App\Http\Controllers\BillingController@schedulePlanUpgrade');
       
       // New Settlement Route
       $api->post('invoices/{invoiceId}/settle', '\App\Http\Controllers\BillingController@settleInvoice');
