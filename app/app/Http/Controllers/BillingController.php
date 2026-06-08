@@ -175,7 +175,7 @@ class BillingController extends ApiAuthController
         'payment_method_id' => $card->stripe_payment_method_id,
         'card_last_4' => $card->last_4,
         'card_brand' => $card->issuer,
-        'amount_to_pay' => $amountToPay,
+        'amount' => $amountToPay,
       ];
 
       RabbitMQHelper::publish('billing_tasks', $message);
