@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers\Admin;
+<?php
+
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
 use App\User;
@@ -9,13 +11,16 @@ use App\UsageTrigger;
 use App\PlanUsagePeriod;
 use App\UserInvoice;
 use App\Http\Requests\Admin\WorkspaceRequest;
+use App\Enums\WorkspaceSuspensionStatus;
 use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use App\Helpers\BillingDataHelper;
+use App\Helpers\WorkspaceSuspensionHelper;
 use Datatables;
 use DB;
 use Config;
 use Mail;
+use Schema;
 use Illuminate\Http\Request;
 
 class WorkspaceController extends AdminController
@@ -43,7 +48,10 @@ class WorkspaceController extends AdminController
      */
     public function create()
     {
-        return view('admin.workspace.create_edit');
+        $gracePeriodExtension = null;
+        $activeSuspension = null;
+        $isWorkspaceSuspended = false;
+        return view('admin.workspace.create_edit', compact('gracePeriodExtension', 'activeSuspension', 'isWorkspaceSuspended'));
     }
 
     /**
@@ -54,8 +62,11 @@ class WorkspaceController extends AdminController
     public function store(WorkspaceRequest $request)
     {
 
-        $workspace = new Workspace ($request->all());
+        $workspace = new Workspace($request->except('grace_period_extension'));
         $workspace->save();
+        if ($request->exists('grace_period_extension')) {
+            WorkspaceSuspensionHelper::saveGracePeriodExtension($workspace, $request->input('grace_period_extension'));
+        }
         header("X-Goto-URL: /admin/workspace/" . $workspace->id . "/edit");
     }
 
@@ -77,7 +88,10 @@ class WorkspaceController extends AdminController
         $usageTriggers = UsageTrigger::where("workspace_id", $workspace->id)->get();
         $routingACLs = WorkspaceHelper::getACLs($workspace);
         $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
-        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices'));
+        $gracePeriodExtension = WorkspaceSuspensionHelper::getGracePeriodExtension($workspace->id);
+        $activeSuspension = WorkspaceSuspensionHelper::getActiveSuspension($workspace->id);
+        $isWorkspaceSuspended = !empty($activeSuspension);
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices', 'gracePeriodExtension', 'activeSuspension', 'isWorkspaceSuspended'));
     }
 
     /**
@@ -88,7 +102,10 @@ class WorkspaceController extends AdminController
      */
     public function update(WorkspaceRequest $request, Workspace $workspace)
     {
-        $workspace->update($request->all());
+        $workspace->update($request->except('grace_period_extension'));
+        if ($request->exists('grace_period_extension')) {
+            WorkspaceSuspensionHelper::saveGracePeriodExtension($workspace, $request->input('grace_period_extension'));
+        }
         header("X-Goto-URL: /admin/workspace/" . $workspace->id . "/edit");
     }
 
@@ -122,20 +139,45 @@ class WorkspaceController extends AdminController
      */
     public function data()
     {
-        $workspaces = DB::table('workspaces')->select(array('workspaces.id', 'workspaces.name','workspaces.active', 'workspaces.created_at'));
+        $globalGracePeriod = WorkspaceSuspensionHelper::getGlobalGracePeriod();
+        $realSuspensionStatus = WorkspaceSuspensionStatus::REAL_SUSPENSION;
+        $activeSuspensionSelect = Schema::hasTable('workspace_suspensions')
+            ? DB::raw("(select count(*) from workspace_suspensions ws_status where ws_status.workspace_id = workspaces.id and ws_status.status in ('" . $realSuspensionStatus . "', '1')) as active_suspension")
+            : DB::raw('0 as active_suspension');
+        $gracePeriodSources = array();
+        if (Schema::hasColumn('workspaces', 'grace_period_extension')) {
+            $gracePeriodSources[] = 'workspaces.grace_period_extension';
+        }
+        if (Schema::hasTable('workspace_suspensions')) {
+            $gracePeriodSources[] = "(select ws.grace_period_extension from workspace_suspensions ws where ws.workspace_id = workspaces.id and ws.status in ('" . $realSuspensionStatus . "', '1') and ws.grace_period_extension is not null order by ws.suspended_at desc limit 1)";
+        }
+        $gracePeriodSources[] = (int) $globalGracePeriod;
+        $gracePeriodSelect = DB::raw('COALESCE(' . implode(', ', $gracePeriodSources) . ') as grace_period');
+
+        $workspaces = DB::table('workspaces')->select(array(
+            'workspaces.id',
+            'workspaces.name',
+            'workspaces.active',
+            $gracePeriodSelect,
+            'workspaces.created_at',
+            $activeSuspensionSelect
+        ));
 
         return Datatables::of($workspaces)
-            ->edit_column('active', '@if ($active=="1") <span class="glyphicon glyphicon-ok"></span> @else <span class=\'glyphicon glyphicon-remove\'></span> @endif')
+            ->edit_column('active', '@if ($active=="1") <span class="label label-success">Active</span> @elseif ($active_suspension > 0) <span class="label" style="background-color: #d9534f; color: #fff;">Suspended</span> @else <span class="label label-default">Inactive</span> @endif')
+            ->edit_column('grace_period', '{{ $grace_period }} days')
             ->add_column('actions', '<a href="{{{ url(\'admin/workspace/\' . $id . \'/edit\' ) }}}" class="btn btn-success btn-sm iframe" ><span class="glyphicon glyphicon-pencil"></span>  {{ trans("admin/modal.edit") }}</a>
             <a href="{{{ url(\'admin/supportticket/?workspace_id=\' . $id) }}}" class="btn btn-success btn-sm" ><span class="glyphicon glyphicon-headphones"></span>  {{ trans("admin/modal.support_tickets") }}</a>
                     <a href="{{{ url(\'admin/workspace/\' . $id . \'/delete\' ) }}}" class="btn btn-sm btn-danger iframe"><span class="glyphicon glyphicon-trash"></span> {{ trans("admin/modal.delete") }}</a>')
             ->remove_column('id')
+            ->remove_column('active_suspension')
             ->make();
     }
 
 
     public function refund_invoice(Workspace $workspace)
     {
+
         $invoiceId = request()->input('invoice_id');
         $invoice = UserInvoice::where('id', $invoiceId)->where('workspace_id', $workspace->id)->firstOrFail();
 

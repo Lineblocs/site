@@ -11,6 +11,7 @@ use \App\DIDNumberTag;
 use \App\UserDebit;
 use \App\Flow;
 use \App\Enums\DIDNumberAvailability;
+use \App\Enums\PaymentStatus;
 use \App\Transformers\DIDNumberTransformer;
 use \App\NumberService\NumberService;
 use \App\Helpers\MainHelper;
@@ -96,8 +97,10 @@ class DIDNumberController extends ApiAuthController {
               'source' => 'NUMBER_RENTAL',
               'cents' => MainHelper::toCents($cost),
               'user_id' => $user->id,
-              'status' => 'pending',
-              'module_id' => $number->id
+              'workspace_id' => $workspace->id,
+              'status' => PaymentStatus::PENDING,
+              'module_id' => $number->id,
+              'deduplication_key' => 'debit:number_rental:' . $workspace->id . ':' . $number->id
             ]);
          
             $flow = Flow::create([

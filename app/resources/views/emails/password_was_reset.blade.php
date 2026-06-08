@@ -1,4 +1,4 @@
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 @section('title')
 Password Changed
 @endsection
@@ -51,8 +51,8 @@ Password Changed
                                                         <a href="{{\App\Helpers\MainHelper::createUrl()}}"
                                                             target="_blank">
                                                             <img src="{{\Config::get("app.url").'/email-images/'}}logo.png"
-                                                                style="display: block; height: auto; border: 0; max-width: 238px; width: 100%;"
-                                                                width="238" />
+                                                                style="display: block; height: auto; border: 0; max-width: 180px; width: 180px; margin: 0 auto;"
+                                                                width="180" />
                                                         </a>
                                                     </div>
                                                 </td>

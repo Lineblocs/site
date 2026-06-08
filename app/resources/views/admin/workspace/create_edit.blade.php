@@ -46,6 +46,24 @@
                 <span class="help-block">{{ $errors->first('confirmed', ':message') }}</span>
             </div>
         </div>
+        @if (isset($workspace))
+        <div class="form-group">
+            {!! Form::label('workspace_status', 'Status', array('class' => 'control-label')) !!}
+            <div class="controls">
+                @if (!empty($activeSuspension))
+                    <span class="label label-danger" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Suspended</span>
+                    <span class="help-block">
+                        Reason: {{ $activeSuspension->reason }}.
+                        Suspended at: {{ $activeSuspension->suspended_at }}.
+                    </span>
+                @elseif (!empty($workspace->active))
+                    <span class="label label-success" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Active</span>
+                @else
+                    <span class="label label-default" style="font-size: 13px; display: inline-block; padding: 6px 10px;">Inactive</span>
+                @endif
+            </div>
+        </div>
+        @endif
         <div class="form-group">
             <button type="submit" class="btn btn-sm btn-success">
                 <span class="glyphicon glyphicon-ok-circle"></span>
@@ -79,6 +97,26 @@
     </div>
 
     <div class="tab-pane" id="tab-billing">
+        <?php
+            $gracePeriodOptions = array('' => 'Default system setting (7 days)');
+            for ($days = 7; $days <= 84; $days += 7) {
+                $gracePeriodOptions[$days] = $days . ' days';
+            }
+        ?>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-12">
+                <div class="form-group {{ $errors->has('grace_period_extension') ? 'has-error' : '' }}">
+                    {!! Form::label('grace_period_extension', 'Grace Period', array('class' => 'control-label')) !!}
+                    <div class="controls">
+                        {!! Form::select('grace_period_extension', $gracePeriodOptions, old('grace_period_extension', $gracePeriodExtension), array('class' => 'form-control')) !!}
+                        <span class="help-block">Select a grace period in 7 day gaps.</span>
+                        <span class="help-block">{{ $errors->first('grace_period_extension', ':message') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <h3>Billing Overview</h3>
@@ -122,6 +160,13 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm btn-success">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                {{ trans("admin/modal.edit") }}
+            </button>
         </div>
     </div>
 

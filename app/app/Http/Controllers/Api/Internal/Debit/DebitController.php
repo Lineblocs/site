@@ -39,10 +39,19 @@ class DebitController extends ApiAuthController {
       $cents = MainHelper::toCents( $dollars );
       $user = User::findOrFail($data['user_id']);
       $started = new DateTime();
+      $deduplicationKey = null;
+      if (!empty($data['deduplication_key'])) {
+        $deduplicationKey = $data['deduplication_key'];
+      }
+      if (empty($deduplicationKey) && !empty($data['module_id'])) {
+        $deduplicationKey = sprintf('debit:%s:%s:%s', $data['workspace_id'], $data['source'], $data['module_id']);
+      }
       $debit = UserDebit::create([
         'user_id' => $user->id,
+        'workspace_id' => $data['workspace_id'],
         'cents' => $cents,
-        'source' => $data['source']
+        'source' => $data['source'],
+        'deduplication_key' => $deduplicationKey
       ]);
       //return $this->response->array($debit->toArray())->withHeader("X-Debit-ID", $debit->id);
       return $this->response->noContent();
@@ -65,10 +74,19 @@ class DebitController extends ApiAuthController {
           $cents = MainHelper::toCents( $costs );
           $user = User::findOrFail($data['user_id']);
           $started = new DateTime();
+          $deduplicationKey = null;
+          if (!empty($data['deduplication_key'])) {
+            $deduplicationKey = $data['deduplication_key'];
+          }
+          if (empty($deduplicationKey) && !empty($params['request_id'])) {
+            $deduplicationKey = sprintf('debit:%s:%s:%s', $data['workspace_id'], $type, $params['request_id']);
+          }
           $debit = UserDebit::create([
             'user_id' => $user->id,
+            'workspace_id' => $data['workspace_id'],
             'cents' => $cents,
-            'source' => $source
+            'source' => $source,
+            'deduplication_key' => $deduplicationKey
           ]);
           }
 

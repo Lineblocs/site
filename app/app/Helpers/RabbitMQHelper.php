@@ -13,6 +13,10 @@ class RabbitMQHelper
     const INVOICE_QUEUE_ANNUAL = 'annual_invoices';
     const SUBSCRIPTION_UPDATES_QUEUE = 'subscription_updates';
     const SUBSCRIPTION_UPGRADE_SCHEDULED = 'subscription.plan_upgrade_scheduled';
+    const BILLING_EVENTS_EXCHANGE = 'billing.events';
+    const WORKSPACE_SUSPENDED_QUEUE = 'workspace_suspended';
+    const WORKSPACE_SUSPENDED_LEGACY_QUEUE = 'workspace_account_suspended';
+    const WORKSPACE_SUSPENDED_ROUTING_KEY = 'workspace.account.suspended';
 
     /**
      * Generic method to publish a message to any RabbitMQ queue.
@@ -47,14 +51,75 @@ class RabbitMQHelper
 
             $channel->close();
             $connection->close();
-            
+
             Log::info("RabbitMQ published to {$queue}: " . json_encode($payload));
         } catch (Exception $e) {
             Log::error("RabbitMQ Publish Error on queue {$queue}: " . $e->getMessage());
             // In a production environment, you might want to throw this exception 
             // so the Controller knows the billing task failed to queue.
-            throw $e; 
+            throw $e;
         }
+    }
+
+    public static function publishToExchange($exchange, $routingKey, array $payload, $exchangeType = 'topic')
+    {
+        try {
+            $connection = new AMQPStreamConnection(
+                env('RABBITMQ_HOST', 'localhost'),
+                env('RABBITMQ_PORT', 5672),
+                env('RABBITMQ_USER', 'guest'),
+                env('RABBITMQ_PASSWORD', 'guest')
+            );
+            $channel = $connection->channel();
+
+            $channel->exchange_declare($exchange, $exchangeType, false, true, false);
+
+            $msg = new AMQPMessage(
+                json_encode($payload),
+                [
+                    'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
+                    'content_type'  => 'application/json'
+                ]
+            );
+
+            $channel->basic_publish($msg, $exchange, $routingKey);
+
+            $channel->close();
+            $connection->close();
+
+            Log::info("RabbitMQ published to {$exchange} with routing key {$routingKey}: " . json_encode($payload));
+        } catch (Exception $e) {
+            Log::error("RabbitMQ Publish Error on exchange {$exchange}: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public static function dispatchWorkspaceSuspended($workspace, $suspension, $owner = null)
+    {
+        if (!$owner && $workspace && !empty($workspace->creator_id)) {
+            $owner = \App\User::find($workspace->creator_id);
+        }
+
+        if ($suspension && $suspension->suspended_at) {
+            $suspendedAt = $suspension->suspended_at->format('c');
+        } else {
+            $suspendedAt = date('c');
+        }
+
+        $payload = [
+            'id' => $suspension->id,
+            'workspace_id' => (int) $workspace->id,
+            'suspended_at' => $suspendedAt,
+            'grace_period_extension' => $suspension ? $suspension->grace_period_extension : null,
+            'reason' => $suspension ? $suspension->reason : 'payment_past_due',
+            'status' => true
+        ];
+
+        return self::publishToExchange(
+            self::BILLING_EVENTS_EXCHANGE,
+            self::WORKSPACE_SUSPENDED_ROUTING_KEY,
+            $payload
+        );
     }
 
     /**
@@ -211,5 +276,4 @@ class RabbitMQHelper
 
         return self::publish(self::INVOICE_QUEUE_ANNUAL, $payload);
     }
-    
 }

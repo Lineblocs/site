@@ -10,17 +10,26 @@
   <!--
 		<![endif]-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700" rel="stylesheet">
   <title>Your Title Here</title>
   <style type="text/css">
     body {
       margin: 0 !important;
-      padding: 0;
+      padding: 0 !important;
+      width: 100% !important;
+      min-width: 100% !important;
       background-color: #f5f8fa;
+      color-scheme: light;
+      supported-color-schemes: light;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
     }
 
     table {
       border-spacing: 0;
+      border-collapse: collapse;
       font-family: 'Roboto', Arial, Helvetica, sans-serif;
       color: #444444;
     }
@@ -34,6 +43,23 @@
 
     img {
       border: 0;
+      display: block;
+      max-width: 100%;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+    }
+
+    a {
+      word-break: break-word;
+    }
+
+    p,
+    div,
+    td {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
     }
 
     sup {
@@ -59,10 +85,6 @@
       -webkit-text-size-adjust: 100%;
     }
 
-    img {
-      display: block;
-    }
-
     span.preheader {
       display: none !important;
     }
@@ -76,15 +98,83 @@
       color: #FFFFFF !important
     }
 
+    .feedback-card {
+      border-radius: 6px;
+    }
+
+    .email-content-table {
+      width: 100%;
+      margin: 0 auto;
+    }
+
     @media screen and (max-width:600px) {
-      table[class="MainContainer"] {
-        width: 100% !important;
-        height: auto !important;
+      body,
+      .MainContainer {
+        background-color: #f5f8fa !important;
       }
 
-      table[class="SubContainer"] {
+      body {
         width: 100% !important;
+        min-width: 100% !important;
+      }
+
+      table,
+      tbody,
+      tr,
+      td {
+        box-sizing: border-box !important;
+      }
+
+      table[width="680"],
+      table[width="640"],
+      table[width="600"],
+      table[width="560"],
+      table[width="520"],
+      table[style*="width: 680px"],
+      table[style*="width:680px"],
+      table[style*="width: 600px"],
+      table[style*="width:600px"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      table[class="MainContainer"],
+      .MainContainer {
+        width: 100% !important;
+        max-width: 100% !important;
         height: auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      table[class="SubContainer"],
+      .SubContainer {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      table[class="email-content-table"],
+      .email-content-table {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      td[class="email-content-cell"],
+      .email-content-cell {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        text-align: left !important;
+      }
+
+      .email-content-table td {
+        text-align: left !important;
       }
 
       table[class="hide"],
@@ -97,12 +187,25 @@
         display: none !important;
       }
 
-      td[class="mobilespacer"] {
-        padding: 0 3.2% !important;
+      td[class="mobilespacer"],
+      .mobilespacer {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
 
-      td[class="mobilespacer2"] {
-        padding: 0 5% !important;
+      td[class="mobilespacer2"],
+      .mobilespacer2 {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
+
+      td[style*="padding: 0 30px"],
+      td[style*="padding-left: 30px"],
+      td[style*="padding-right: 30px"],
+      td[style*="padding:22px 30px"],
+      td[style*="padding: 22px 30px"] {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
       }
 
       td[class="spacer10"] {
@@ -119,29 +222,37 @@
         height: auto !important;
       }
 
-      td[class="vspacer10"] {
+      td[class="vspacer10"],
+      .vspacer10 {
         height: 10px !important;
       }
 
-      td[class="vspacer15"] {
-        height: 15px !important;
+      td[class="vspacer15"],
+      .vspacer15 {
+        height: 8px !important;
       }
 
-      td[class="vspacer20"] {
-        height: 20px !important;
+      td[class="vspacer20"],
+      .vspacer20 {
+        height: 12px !important;
       }
 
-      td[class="vspacer30"] {
-        height: 30px !important;
+      td[class="vspacer30"],
+      .vspacer30 {
+        height: 14px !important;
       }
 
-      td[class="vspacer40"] {
-        height: 40px !important;
+      td[class="vspacer40"],
+      .vspacer40 {
+        height: 24px !important;
       }
 
       table[class="wrap"] {
         width: 100% !important;
+        max-width: 100% !important;
         height: auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
 
       th[class="colSplit"],
@@ -187,10 +298,109 @@
         float: left !important;
       }
 
-      td[class="title"] {
-        font-size: 20px !important;
+      td[class="title"],
+      .title {
+        font-size: 18px !important;
+        line-height: 24px !important;
         height: auto !important;
         text-align: center !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        line-height: 1.25 !important;
+      }
+
+      h1 {
+        font-size: 22px !important;
+      }
+
+      h2,
+      h3,
+      h4,
+      h5 {
+        font-size: 19px !important;
+        line-height: 26px !important;
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+      }
+
+      p,
+      li,
+      span,
+      .email-content-table td {
+        font-size: 14px !important;
+        line-height: 22px !important;
+      }
+
+      td[style*="font-size:28px"],
+      td[style*="font-size: 28px"],
+      td[style*="font-size:26px"],
+      td[style*="font-size: 26px"],
+      td[style*="font-size:24px"],
+      td[style*="font-size: 24px"],
+      td[style*="font-size:20px"],
+      td[style*="font-size: 20px"],
+      p[style*="font-size:24px"],
+      p[style*="font-size: 24px"],
+      h5[style*="font-size:28px"],
+      h5[style*="font-size: 28px"],
+      h5[style*="font-size:26px"],
+      h5[style*="font-size: 26px"],
+      h2[style*="font-size:24px"],
+      h2[style*="font-size: 24px"],
+      h2[style*="font-size:30px"],
+      h2[style*="font-size: 30px"] {
+        font-size: 18px !important;
+        line-height: 25px !important;
+      }
+
+      td[style*="font-size:18px"],
+      td[style*="font-size: 18px"],
+      td[style*="font-size:17px"],
+      td[style*="font-size: 17px"],
+      td[style*="font-size:16px"],
+      td[style*="font-size: 16px"],
+      td[style*="font-size:14px"],
+      td[style*="font-size: 14px"],
+      div[style*="font-size:16px"],
+      div[style*="font-size: 16px"],
+      p[style*="font-size:16px"],
+      p[style*="font-size: 16px"] {
+        font-size: 14px !important;
+        line-height: 22px !important;
+      }
+
+      td[style*="line-height:30px"],
+      td[style*="line-height: 30px"],
+      td[style*="line-height:28px"],
+      td[style*="line-height: 28px"],
+      div[style*="line-height:150%"],
+      div[style*="line-height: 150%"] {
+        line-height: 22px !important;
+      }
+
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+
+      a[style*="font-size: 16px"],
+      a[style*="font-size:16px"] {
+        line-height: 22px !important;
+      }
+
+      td[bgcolor="#3f51b5"],
+      td[style*="background-color: #3f51b5"],
+      td[style*="background-color:#3f51b5"] {
+        width: auto !important;
+        height: auto !important;
+        padding: 12px 18px !important;
       }
 
       th[class="colSplit10"],
@@ -217,8 +427,68 @@
         margin: 0 auto !important;
       }
 
+      td[class="emailHeaderLogo"] table {
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      td[class="emailHeaderLogo"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
       td[class="emailHeaderAction"] {
-        padding-top: 15px !important;
+        padding-top: 10px !important;
+      }
+
+      td[class="feedback-card"] {
+        padding: 18px 14px !important;
+      }
+
+      table[class="feedback-button-wrap"] {
+        width: 100% !important;
+      }
+
+      table[class="feedback-button-wrap"] td,
+      table[class="feedback-button-wrap"] a {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      td[class="mobile-label"],
+      td[class="mobile-value"] {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      td[class="mobile-label"] {
+        padding-bottom: 4px !important;
+        border-bottom: 0 !important;
+      }
+
+      td[class="mobile-value"] {
+        padding-top: 0 !important;
+      }
+
+      td[width="32%"],
+      td[width="34%"],
+      td[width="38%"],
+      td[width="50%"] {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      td[style*="padding:18px 22px"],
+      td[style*="padding: 18px 22px"],
+      td[style*="padding:20px 22px"],
+      td[style*="padding: 20px 22px"],
+      td[style*="padding:0 22px"],
+      td[style*="padding: 0 22px"] {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
       }
     }
   </style>
@@ -237,34 +507,34 @@
     {{$site_name}} email
     @endif
   </span>
-  <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
     <tr>
-      <td>
+      <td align="center" style="text-align:center;">
         <table class="MainContainer" align="center" width="680" border="0" cellspacing="0" cellpadding="0"
-          style="margin:0 auto; max-width:680px; background:#f5f8fa;">
+          style="width:680px; max-width:680px; margin:0 auto; background:#f5f8fa;">
           <tr>
             <td valign="top">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%; margin:0 auto;">
                 <tr>
                   <td width="35" class="hide">&nbsp;</td>
                   <td class="mobilespacer2">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff" style="width:100%; margin:0 auto;">
                       <!-- Header Logo Area Start  -->
                       <tr>
-                        <td valign="top" bgcolor="#ffffff">
-                          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="MainContainer">
+                        <td valign="top" align="center" bgcolor="#ffffff" style="text-align:center;">
+                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%; margin:0 auto;">
                             <tr>
-                              <td>
-                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <td align="center" style="text-align:center;">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%; margin:0 auto;">
                                   <tr>
                                     <td height="30" valign="top"
                                       style="font-size:1px; line-height:30px; mso-line-height-rule:exactly;"
                                       bgcolor="#f5f8fa">&nbsp;</td>
                                   </tr>
                                   <tr>
-                                    <td valign="top">
-                                      <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f5f8fa"
-                                        style="">
+                                    <td valign="top" align="center" style="text-align:center;">
+                                      <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#f5f8fa"
+                                        style="width:100%; margin:0 auto;">
                                         <tr>
                                           <td valign="top" class="" height="25"
                                             style="mso-line-height-rule:exactly; font-size:1px; line-height:1px;">&nbsp;
@@ -276,15 +546,28 @@
                                               <tr>
                                                 <td valign="middle" align="center" class="emailHeaderLogo"
                                                   style="padding: 0 20px; text-align: center;">
-                                                  <!-- <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank">
-                                                    <img src="https://lineblocs.com/assets/img/eHfktslfassPW7lQXz5WNkB46wnD94.png"
-                                                      alt="" title="" width="160" height="" style="display:block; margin:0 auto;"
-                                                      border="0" /> -->
-                                                  <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank">
-                                                    <img src="{{\Config::get("app.url").'/email-images/'}}logo.png"
-                                                      alt="" title="" width="160" height="" style="display:block;"
-                                                      border="0" />
-                                                  </a>
+                                                  <table align="center" width="160" border="0" cellspacing="0"
+                                                    cellpadding="0" style="width:160px; max-width:160px; margin:0 auto;">
+                                                    <tr>
+                                                      <td align="center" valign="middle" style="text-align:center;">
+                                                        <a href="{{\App\Helpers\MainHelper::createUrl()}}"
+                                                          target="_blank" style="display:block; text-align:center;">
+                                                          <img
+                                                            src="https://lineblocs.com/assets/img/eHfktslfassPW7lQXz5WNkB46wnD94.png"
+                                                            alt="{{$site_name}}" title="{{$site_name}}" width="160"
+                                                            height="" align="center"
+                                                            style="display:block; width:160px; max-width:160px; height:auto; margin:0 auto; border:0; outline:none; text-decoration:none;"
+                                                            border="0" />
+                                                          <!-- <img
+                                                            src="{{\Config::get("app.url").'/email-images/'}}logo.png"
+                                                            alt="{{$site_name}}" title="{{$site_name}}" width="160"
+                                                            height="" align="center"
+                                                            style="display:block; width:160px; max-width:160px; height:auto; margin:0 auto; border:0; outline:none; text-decoration:none;"
+                                                            border="0" /> -->
+                                                        </a>
+                                                      </td>
+                                                    </tr>
+                                                  </table>
                                                 </td>
                                               </tr>
                                             </table>
@@ -307,11 +590,11 @@
                       <!-- Header Logo Area End  -->
                       <tr>
                         <td valign="top">
-                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%; margin:0 auto;">
                             <tr>
                               <td width="35" class="hide">&nbsp;</td>
                               <td class="mobilespacer2">
-                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%; margin:0 auto;">
                                   <tr>
                                     <td valign="top" height="50" class="vspacer30"
                                       style="mso-line-height-rule:exactly; font-size:1px; line-height:1px;">&nbsp;</td>
@@ -372,7 +655,14 @@
                                     </td>
                                   </tr>
                                   <!-- Header Banner One Column End  -->
-                                  <!-- Body Content One Column Start  --> @yield('content')
+                                  <!-- Body Content One Column Start  -->
+                                  <tr>
+                                    <td align="center" valign="top" class="email-content-cell" style="text-align:center;">
+                                      <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" class="email-content-table" style="width:100%; margin:0 auto;">
+                                        @yield('content')
+                                      </table>
+                                    </td>
+                                  </tr>
                                   <!-- Body Content One Column End  -->
                                   </tbody>
                                 </table>

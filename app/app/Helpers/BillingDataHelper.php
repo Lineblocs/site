@@ -106,7 +106,7 @@ final class BillingDataHelper {
       $membershipFees = 0;
       $amountOwed = 0;
       $planCost = 0;
-      $credits = UserCredit::where('user_id', '=',$user->id)->where('status', 'APPROVED')->get();
+      $credits = UserCredit::where('user_id', '=',$user->id)->where('status', PaymentStatus::APPROVED)->get();
       $debits = UserDebit::where('user_id', '=',$user->id)->get();
       $invoices = UserInvoice::where('user_id', '=',$user->id)->get();
       if (!empty($workspace) && !$plan->pay_as_you_go) {
@@ -275,6 +275,8 @@ final class BillingDataHelper {
       try {
         $stripeBillingHelper = new StripeBillingHelper();
         $stripeBillingHelper->refundInvoice($invoice->payment_gateway_id);
+        $invoice->status = PaymentStatus::REFUNDED;
+        $invoice->save();
         return true;
       } catch (\Exception $e) {
         Log::error('Stripe refund failed: ' . $e->getMessage());
@@ -287,7 +289,7 @@ final class BillingDataHelper {
       throw new \Exception('payment gateway code unimplemented');
     }
 
-    $invoice->status = 'REFUNDED';
+    $invoice->status = PaymentStatus::REFUNDED;
     $invoice->save();
   }
 }

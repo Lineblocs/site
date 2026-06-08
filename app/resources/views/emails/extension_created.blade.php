@@ -1,6 +1,6 @@
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 @section('title')
-Congratulations
+Extension Created
 @endsection
 @section('content')
 
@@ -13,22 +13,10 @@ Congratulations
                     <td width="30" class="hide">&nbsp;</td>
                     <td class="mobilespacer2">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-
                             <tbody>
                                 <tr>
-                                    <td valign="top" height="20"
-                                        style="mso-line-height-rule:exactly;font-size:1px;line-height:20px;">&nbsp;</td>
-                                </tr>
-
-                                <tr>
-                                    <td align="left" valign="top"
-                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:14px;line-height:23px;color:#252f5a; text-align: center;">
-                                        This email confirms you have created a new extension {{$extension->username}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="line-height: 30px; mso-line-height-rule: exactly; font-size: 0;"
-                                        height="30">&nbsp;</td>
+                                    <td valign="top" height="10"
+                                        style="mso-line-height-rule:exactly;font-size:1px;line-height:10px;">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <td bgcolor="#ffffff" valign="top" class="vspacer10" height="3"
@@ -41,54 +29,60 @@ Congratulations
                                 </tr>
                                 <tr>
                                     <td valign="top">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0"
-                                            class="SubContainer" style="border-radius: 3px;">
-
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <table align="left" width="100%" border="0" cellspacing="0"
-                                                            cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td width="50%" align="left"
-                                                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:23px;color:#252f5a; text-align: left;">
-                                                                        SIP Server
-                                                                    </td>
-                                                                    <td width="50%" align="left"
-                                                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:23px;color:#252f5a; font-weight: bold; text-align: left;">
-                                                                        {{$workspace->sipURL()}}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td width="50%" align="left"
-                                                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:23px;color:#252f5a; text-align: left;">
-                                                                        Username
-                                                                    </td>
-                                                                    <td width="50%" align="left"
-                                                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:23px;color:#252f5a; text-align: left;">
-                                                                        {{$extension->username}}
-
-                                                                    </td>
-                                                                </tr>
-                                                                <td width="50%" align="left"
-                                                                    style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:23px;color:#252f5a; text-align: left;">
-                                                                    Secret
+                                        <table border="0" cellpadding="0" cellspacing="0"
+                                            class="paragraph_block block-1" role="presentation"
+                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
+                                            width="100%">
+                                            <tr>
+                                                <td class="pad"
+                                                    style="padding-bottom: 15px; padding-left: 30px; padding-right: 30px; padding-top: 10px;">
+                                                    <div
+                                                        style="color: #393d47; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 16px; line-height: 150%; text-align: left; mso-line-height-alt: 24px;">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 18px;">
+                                                            <tr>
+                                                                <td width="58" valign="top">
+                                                                    <table border="0" cellpadding="0" cellspacing="0" width="48" height="48" style="background-color:#ecfdf3; border-radius:24px;">
+                                                                        <tr>
+                                                                            <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif; font-size: 27px; line-height: 27px; color:#16a34a;">
+                                                                                &#10003;
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
                                                                 </td>
-                                                                <td width="50%" align="left"
-                                                                    style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:12px;line-height:23px;color:#252f5a; text-align: left;">
-                                                                    {{$extension->secret}}
-
+                                                                <td valign="middle" style="font-family: Arial, Helvetica Neue, Helvetica, sans-serif; color:#1f2937;">
+                                                                    <p style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; word-break: break-word;">
+                                                                        Extension {{$extension->username}} is ready
+                                                                    </p>
+                                                                    <p style="margin: 4px 0 0; font-size: 14px; line-height: 21px; color:#6b7280; word-break: break-word;">
+                                                                        Your new SIP extension has been created successfully.
+                                                                    </p>
                                                                 </td>
-                                                </tr>
-
-                                            </tbody>
+                                                            </tr>
+                                                        </table>
+                                                        <p style="margin: 0; word-break: break-word;">
+                                                            This email confirms you created a new extension in your workspace.
+                                                        </p>
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 18px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                                                            <tr>
+                                                                <td style="padding: 14px 16px; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 15px; line-height: 23px; color:#393d47;">
+                                                                    <strong>SIP Server:</strong> {{$workspace->sipURL()}}<br>
+                                                                    <strong>Username:</strong> {{$extension->username}}<br>
+                                                                    <strong>Secret:</strong> {{$extension->secret}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            </tr>
                                         </table>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </td>
+                    <td width="30" class="hide">&nbsp;</td>
                 </tr>
                 <tr>
                     <td style="line-height: 1px; mso-line-height-rule: exactly; font-size: 0;" height="20">&nbsp;</td>
@@ -106,7 +100,6 @@ Congratulations
                 <tr>
                     <td style="line-height: 10px; mso-line-height-rule: exactly; font-size: 0;" height="10">&nbsp;</td>
                 </tr>
-
             </tbody>
         </table>
     </td>

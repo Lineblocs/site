@@ -1,4 +1,4 @@
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 @section('title')
 Two-Factor Authentication Updated
 @endsection

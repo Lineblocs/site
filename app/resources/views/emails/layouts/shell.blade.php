@@ -17,7 +17,7 @@
   </span>
   <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation" class="email-shell email-bg">
     <tr>
-      <td class="mobile-pad" style="padding: 40px 12px 24px;">
+      <td class="shell-pad mobile-pad" style="padding: 40px 12px 24px;">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation" class="email-container">
           @yield('email_body')
         </table>

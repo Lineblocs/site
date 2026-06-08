@@ -179,7 +179,7 @@ td[class="CtaText"] {
                                     <tr>
                                       <td valign="middle" align="center" style="">
                                           <a href="{{\App\Helpers\MainHelper::createUrl()}}" target="_blank" >
-                                              <img src="images/logo.png" alt="" title="" width="207" height="46" style="display:block;" border="0" />
+                                              <img src="{{\Config::get("app.url").'/email-images/'}}logo.png" alt="" title="" width="207" height="46" style="display:block; margin:0 auto;" border="0" />
                                           </a>
                                       </td>
                                     </tr>

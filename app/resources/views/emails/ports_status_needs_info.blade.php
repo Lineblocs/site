@@ -1,10 +1,9 @@
-@extends('emails.layouts.header')
+@extends('emails.layouts.alert_email')
 @section('title')
-Port status needs info
+Action Required: Port Request Needs Information
 @endsection
 @section('content')
 
-<!-- Body Content One Column Start  -->
 <tr>
     <td valign="top" class="mobilespacer">
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -13,83 +12,41 @@ Port status needs info
                     <td width="30" class="hide">&nbsp;</td>
                     <td class="mobilespacer2">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-
                             <tbody>
                                 <tr>
-                                    <td valign="top" height="20"
-                                        style="mso-line-height-rule:exactly;font-size:1px;line-height:20px;">&nbsp;</td>
+                                    <td valign="top" height="12" style="mso-line-height-rule:exactly;font-size:1px;line-height:12px;">&nbsp;</td>
                                 </tr>
+                                <tr>
+                                    <td bgcolor="#ffffff" valign="top" height="3" style="mso-line-height-rule:exactly;font-size:1px;line-height:3px;border-top:2px solid #f4f7fa;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" style="padding:22px 30px 18px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;color:#393d47;font-size:16px;line-height:24px;text-align:left;">
+                                        <h2 style="margin:0 0 10px;font-size:24px;line-height:30px;color:#0a1247;font-weight:700;">We need more information to continue your port</h2>
+                                        <p style="margin:0;">Hello {{$user->getName()}},</p>
+                                        <p style="margin:12px 0 0;color:#5f6b7a;">Your port request is still in progress, but the carrier needs additional information before we can move it forward.</p>
 
-                                <tr>
-                                    <td align="left" valign="top"
-                                        style="font-family:'Roboto', Arial, Helvetica, sans-serif; font-size:14px;line-height:23px;color:#252f5a; text-align: center;">
-                                        &nbsp;
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="line-height: 30px; mso-line-height-rule: exactly; font-size: 0;"
-                                        height="30">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td bgcolor="#ffffff" valign="top" class="vspacer10" height="3"
-                                        style="mso-line-height-rule:exactly; font-size:1px; line-height:3px; border-top: 2px solid #f4f7fa;">
-                                        &nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" height="15"
-                                        style="mso-line-height-rule:exactly;font-size:1px;line-height:1px;">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td valign="top">
-                                        <table border="0" cellpadding="0" cellspacing="0"
-                                            class="paragraph_block block-1" role="presentation"
-                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
-                                            width="100%">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin-top:18px;border:1px solid #e5e7eb;border-radius:6px;">
                                             <tr>
-                                                <td class="pad"
-                                                    style="padding-bottom: 10px; padding-left: 30px; padding-right: 30px; padding-top: 10px;">
-                                                    <div
-                                                        style="color: #393d47; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 16px; line-height: 150%; text-align: left; mso-line-height-alt: 24px;">
-                                                        <p style="margin: 0; word-break: break-word;">
-                                                            <span>
-                                                                <h5 style="font-size: 28px;">Hello {{$user->getName()}},</h5>
-                                                                <p>We are emailing you to let you know that your port request for number {{$port->number}} needs additional info. below is the info required: {{$port->info_needed}}</p>                                                                                                     
-                                                        </p>
-                                                        </span>
-                                                        </p>
-                                                        <p style="margin: 0; word-break: break-word;"></p>
-                                                        <p style="margin: 0; word-break: break-word;">
-                                                        </p>
-                                                    </div>
-                                                </td>
+                                                <td style="padding:13px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;line-height:20px;color:#6b7280;width:34%;">Phone Number</td>
+                                                <td style="padding:13px 16px;border-bottom:1px solid #e5e7eb;font-size:15px;line-height:20px;color:#111827;font-weight:700;word-break:break-word;">{{$port->number}}</td>
                                             </tr>
                                             <tr>
+                                                <td style="padding:13px 16px;font-size:13px;line-height:20px;color:#6b7280;vertical-align:top;">Information Needed</td>
+                                                <td style="padding:13px 16px;font-size:15px;line-height:22px;color:#111827;word-break:break-word;">{{$port->info_needed}}</td>
                                             </tr>
                                         </table>
 
+                                        <p style="margin:18px 0 0;color:#5f6b7a;font-size:14px;line-height:22px;">Please send the requested details as soon as possible. Once we receive them, we will continue processing the port and keep you updated on the next status change.</p>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </td>
+                    <td width="30" class="hide">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="line-height: 1px; mso-line-height-rule: exactly; font-size: 0;" height="20">&nbsp;</td>
+                    <td style="line-height:1px;mso-line-height-rule:exactly;font-size:0;" height="16">&nbsp;</td>
                 </tr>
-                <tr>
-                    <td bgcolor="#ffffff" valign="top" class="vspacer10" height="3"
-                        style="mso-line-height-rule:exactly; font-size:1px; line-height:3px; border-top: 2px solid #f4f7fa;">
-                        &nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td valign="top" height="20" style="mso-line-height-rule:exactly;font-size:1px;line-height:20px;">
-                        &nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="line-height: 10px; mso-line-height-rule: exactly; font-size: 0;" height="10">&nbsp;</td>
-                </tr>
-
             </tbody>
         </table>
     </td>
