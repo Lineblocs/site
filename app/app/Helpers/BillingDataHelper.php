@@ -109,7 +109,11 @@ final class BillingDataHelper {
       $planCost = 0;
       $credits = UserCredit::where('user_id', '=',$user->id)->where('status', PaymentStatus::APPROVED)->get();
       $debits = UserDebit::where('user_id', '=',$user->id)->get();
-      $invoices = UserInvoice::where('user_id', '=',$user->id)->get();
+      $invoices = UserInvoice::where('user_id', '=',$user->id)
+                            ->where('status', '!=', PaymentStatus::PAID)
+                            ->where('status', '!=', PaymentStatus::CANCELLED)
+                            ->get();
+
       if (!empty($workspace) && !$plan->pay_as_you_go) {
         if ($subscription->billing_cycle == 'ANNUAL') {
           $cycleStart = (new DateTime('first day of January this year'))->format('Y-m-d 00:00:00');

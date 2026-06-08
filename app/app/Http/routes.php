@@ -907,6 +907,7 @@ $api->version('v1', function($api) {
       $api->get('invoices/{invoiceId}/download', '\App\Http\Controllers\BillingController@downloadInvoice');
       $api->post('invoices/settle', '\App\Http\Controllers\BillingController@settleInvoices');
       $api->get('invoices', '\App\Http\Controllers\BillingController@getInvoices');
+      $api->get('overdueInvoices', '\App\Http\Controllers\BillingController@getOverdueInvoices');
     });
   });
 });

@@ -18,6 +18,7 @@ use App\Helpers\MainHelper;
 use App\Helpers\BillingDataHelper;
 use App\Helpers\WorkspaceHelper;
 use App\Helpers\InvoiceHelper;
+use App\Enums\PaymentStatus;
 use DateTime;
 
 class BillingController extends ApiAuthController
@@ -149,6 +150,7 @@ class BillingController extends ApiAuthController
         return $this->response->errorForbidden();
       }
       $data = $request->json()->all();
+      $amountToPay = $data['amount_to_pay'];
       $invoices = [];
       if (!empty($data['invoices'])) {
         $invoices = $data['invoices'];
@@ -162,23 +164,21 @@ class BillingController extends ApiAuthController
                       ->where('workspace_id', $workspace->id)
                       ->firstOrFail();
 
-      foreach ($invoices as $invoiceId) {
-        $invoice = UserInvoice::where('id', $invoiceId)
-          ->where('workspace_id', $workspace->id)
-          ->firstOrFail();
-        $message = [
-          'run_id' => 'settle_invoice_' . $invoice->id . '_' . time(),
-          'action' => 'SETTLE_INVOICE',
-          'invoice_id' => $invoice->id,
-          'user_id' => $user->id,
-          'workspace_id' => $workspace->id,
-          'payment_method_id' => $card->stripe_payment_method_id,
-          'card_last_4' => $card->last_4,
-          'card_brand' => $card->issuer,
-        ];
 
-        RabbitMQHelper::publish('billing_tasks', $message);
-      }
+
+      $message = [
+        'run_id' => 'settle_invoice_multi_' . time(),
+        'action' => 'SETTLE_INVOICES',
+        'invoice_id' => implode(',', $invoices),
+        'user_id' => $user->id,
+        'workspace_id' => $workspace->id,
+        'payment_method_id' => $card->stripe_payment_method_id,
+        'card_last_4' => $card->last_4,
+        'card_brand' => $card->issuer,
+        'amount_to_pay' => $amountToPay,
+      ];
+
+      RabbitMQHelper::publish('billing_tasks', $message);
 
       return $this->response->noContent();
     }
@@ -246,6 +246,28 @@ class BillingController extends ApiAuthController
 
       return $this->response->array(['invoices' => $invoices]);
     }
+
+    public function getOverdueInvoices(Request $request)
+    {
+      $user = $this->getUser($request);
+      $workspace = $this->getWorkspace($request);
+      if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
+        return $this->response->errorForbidden();
+      }
+      $status = $request->query('status');
+
+      $query = UserInvoice::where('workspace_id', $workspace->id)
+                        ->whereIn('status', [PaymentStatus::FAILED, PaymentStatus::PENDING]);
+
+      $invoices = $query->get()->map(function($item) {
+        $item['amount_in_dollars'] = MainHelper::toDollars($item['cents']);
+        $item['friendly_created_at'] = \Carbon\Carbon::parse($item['created_at'])->format('M d, Y');
+        return $item;
+      });
+
+      return $this->response->array(['invoices' => $invoices]);
+    }
+
 
     public function downloadInvoice(Request $request, $invoiceId)
     {
