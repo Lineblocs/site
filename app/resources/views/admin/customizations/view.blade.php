@@ -423,6 +423,18 @@
             </div>
 
             <div class="row form-group">
+                <label for="invoice_due_in_days">Invoice due in days</label>
+                <div class="controls">
+                    <select name="invoice_due_in_days" class="form-control" id="invoice_due_in_days">
+                        <option value="7" {{ $record->invoice_due_in_days == '7' ? 'selected' : '' }}>7 days</option>
+                        <option value="14" {{ $record->invoice_due_in_days == '14' ? 'selected' : '' }}>14 days</option>
+                        <option value="30" {{ $record->invoice_due_in_days == '30' ? 'selected' : '' }}>30 days</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
                 <label for="live_chat_enabled">Live chat enabled</label>
                 <div class="controls">
                     <select name="live_chat_enabled" class="form-control" id="live_chat_enabled">
