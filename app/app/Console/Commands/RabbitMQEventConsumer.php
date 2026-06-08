@@ -127,10 +127,46 @@ class RabbitMQEventConsumer extends Command
      */
     public function handleSubscriptionUpdate($msg)
     {
-        $data = json_decode($msg->body, true);
-        $this->info(" [SUBSCRIPTION] Received update for ID: " . $data['subscription_id']);
+        try {
+            $data = json_decode($msg->body, true);
+            if (!is_array($data)) {
+                throw new Exception('Invalid JSON payload.');
+            }
 
-        // Implementation for subscription logic goes here
+            $required = [
+                'event_type',
+                'version',
+                'event_id',
+                'occurred_at',
+                'subscription_id',
+                'workspace_id',
+                'actor_user_id',
+                'current_plan_id',
+                'scheduled_plan_id',
+                'billing_cycle',
+                'scheduled_effective_date'
+            ];
+
+            foreach ($required as $field) {
+                if (!array_key_exists($field, $data) || $data[$field] === null || $data[$field] === '') {
+                    throw new Exception("Invalid subscription update payload: missing {$field}");
+                }
+            }
+
+            if ($data['event_type'] !== RabbitMQHelper::SUBSCRIPTION_UPGRADE_SCHEDULED) {
+                throw new Exception('Unsupported subscription update event_type: ' . $data['event_type']);
+            }
+
+            if (!in_array($data['billing_cycle'], ['MONTHLY', 'ANNUAL'])) {
+                throw new Exception('Invalid subscription update payload: billing_cycle must be MONTHLY or ANNUAL');
+            }
+
+            $this->info(" [SUBSCRIPTION] Received scheduled upgrade for ID: " . $data['subscription_id']);
+        } catch (Exception $e) {
+            $this->error(" [SUBSCRIPTION] " . $e->getMessage());
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
         
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
         $this->info(" [v] Subscription event acknowledged.");

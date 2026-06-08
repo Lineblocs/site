@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStatusToWorkspacesUsers extends Migration
+class AddStatusToWorkspacesAcesUsers extends Migration
 {
     /**
      * Run the migrations.
