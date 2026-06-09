@@ -20,6 +20,7 @@
             <th>{!! trans("admin/tickets.workspace_id") !!}</th>
             <th>{!! trans("admin/tickets.subject") !!}</th>
             <th>{!! trans("admin/tickets.priority") !!}</th>
+            <th>{!! trans("admin/tickets.category") !!}</th>
             <th>{!! trans("admin/admin.created_at") !!}</th>
             <th>{!! trans("admin/admin.action") !!}</th>
         </tr>
