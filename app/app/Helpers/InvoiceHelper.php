@@ -116,7 +116,7 @@ final class InvoiceHelper
     $paymentRecvdDate = "N/A";
     if ($invoice->status == PaymentStatus::PAID) {
       $paidInvoice = TRUE;
-      $paymentRecvdDate = $invoice->complete_date->format('d M Y');
+      $paymentRecvdDate = $invoice->paid_date->format('d M Y');
     }
 
     $invoiceDesc = sprintf("%s invoice for %s", $site, $invoiceDate->format("M Y"));
