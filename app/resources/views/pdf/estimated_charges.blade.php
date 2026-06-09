@@ -80,7 +80,6 @@
         <tr>
           <th>Source</th>
           <th>Amount</th>
-          <th>Balance</th>
           <th>Date/Time</th>
           <th>Status</th>
         </tr>
@@ -90,7 +89,6 @@
         <tr>
           <td>{{$row->type}}</td>
           <td>${{number_format($row->dollars, 2)}}</td>
-          <td>${{number_format($row->balance, 2)}}</td>
           <td>{{$row->created_at}}</td>
           <td>{{$row->status}}</td>
         </tr>
