@@ -16,7 +16,7 @@ use \App\Helpers\MainHelper;
 use \App\Helpers\WorkspaceHelper;
 use \App\Helpers\EmailHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
-use \App\Enum\WorkspaceUserStatus;
+use \App\Enums\WorkspaceUserStatus;
 use App\WorkspaceUser;
 use App\WorkspaceInvite;
 use DB;
@@ -50,7 +50,6 @@ trait UserWorkflow {
     private function sendInvite($invite, $newUser, $workspaceUser, $workspace) {
         $mail = Config::get("mail");
         $mailData = compact('newUser', 'workspace');
-        $invite = $this->createInvite($workspaceUser);
         //$hash = $workspaceUser->createJoinHash();
         $link = MainHelper::createPortalLink("/#/join-workspace/". $invite->hash);
         $mailData['link'] =  $link;
@@ -89,10 +88,14 @@ trait UserWorkflow {
         }
 
         $resource = WorkspaceUser::create($attrs);
+
         UserEmailOption::create([
             'user_id' =>$resource->id,
         ]);
         $invite = $this->createInvite($resource);
+        $resource->update([
+            'hash' => $invite->hash
+        ]);
         $this->sendInvite($invite, $reqUser,$resource, $workspace);
         return $this->response->array($resource->toArray())->withHeader('X-WorkspaceUser-ID', $resource->public_id);
     }
