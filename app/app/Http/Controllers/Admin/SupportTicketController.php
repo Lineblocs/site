@@ -13,6 +13,7 @@ use App\Workspace;
 use App\PortNumber;
 use App\Http\Requests\Admin\SupportTicketRequest;
 use App\Helpers\MainHelper;
+use App\Helpers\EmailHelper;
 use Auth;
 use Datatables;
 use DB;
@@ -123,12 +124,23 @@ class SupportTicketController extends AdminController
     {
         $user = Auth::user();
         $data = $request->all();
-        SupportTicketUpdate::create([
+        $update = SupportTicketUpdate::create([
             'comment' => $data['comment'],
             'ticket_id' => $supportticket->id,
             'user_id' => $user->id,
             'direction' => 'STAFF'
         ]);
+
+        $subject = "New support ticket updated";
+        $emailData = [
+            'user' => $user,
+            'ticket' => $supportticket,
+            'update' => $update,
+        ];
+
+        $workspace = Workspace::find($supportticket->workspace_id);
+        $workspaceCreator = User::find($workspace->creator_id);
+        EmailHelper::sendEmail($subject, $workspaceCreator->email, 'support_ticket_updated', $emailData);
 
         return response();
     }
@@ -140,16 +152,16 @@ class SupportTicketController extends AdminController
      */
     public function data(Request $request)
     {
-        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.workspace_id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets.created_at', 'support_tickets.category_id', 'support_tickets_categories.name'));
-        $tickets = $tickets->join('support_tickets_categories', 'support_tickets_categories.id', '=', 'support_tickets.category_id');
-        $tickets->orderBy('created_at', 'DESC');
+        $tickets = SupportTicket::select(array('support_tickets.id', 'support_tickets.workspace_id', 'support_tickets.subject', 'support_tickets.priority', 'support_tickets_categories.name', 'support_tickets.created_at'));
+        $tickets = $tickets->leftJoin('support_tickets_categories', 'support_tickets_categories.id', '=', 'support_tickets.category_id');
+        $tickets->orderBy('support_tickets.created_at', 'DESC');
         $workspaceId = $request->get('workspace_id');
         if (!empty($workspaceId)) {
-            $tickets->where('workspace_id', $workspaceId);
+            $tickets->where('support_tickets.workspace_id', $workspaceId);
         }
         $ticketId = $request->get('id');
         if (!empty($ticketId)) {
-            $tickets->where('id', $ticketId);
+            $tickets->where('support_tickets.id', $ticketId);
         }
 
         return Datatables::of($tickets)

@@ -21,6 +21,17 @@ Support ticket updated
                                     <td class="feedback-card" bgcolor="#f7f9fc" style="padding: 30px 32px; border-radius: 6px; border: 1px solid #e7edf5;">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                             <tbody>
+
+                                                <tr>
+                                                    <td style="font-family: Roboto, Arial, Helvetica, sans-serif; font-size: 13px; line-height: 20px; color: #667085; padding-bottom: 4px;">
+                                                        Updated by
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-family: Roboto, Arial, Helvetica, sans-serif; font-size: 15px; line-height: 24px; color: #344054; padding-bottom: 18px;">
+                                                        {{ $user['email'] }}
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td style="font-family: Roboto, Arial, Helvetica, sans-serif; font-size: 13px; line-height: 20px; color: #667085; padding-bottom: 4px;">
                                                         Subject
@@ -38,7 +49,7 @@ Support ticket updated
                                                 </tr>
                                                 <tr>
                                                     <td style="font-family: Roboto, Arial, Helvetica, sans-serif; font-size: 15px; line-height: 24px; color: #344054; word-break: break-word;">
-                                                        {!! nl2br(e($update->comments)) !!}
+                                                        {!! nl2br(e($update->comment)) !!}
                                                     </td>
                                                 </tr>
                                             </tbody>
