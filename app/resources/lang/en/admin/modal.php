@@ -31,6 +31,7 @@ return [
     'termination' => 'Termination',
     'did_numbers' => 'DID Numbers',
     'rtpproxies' => 'RTP proxies',
+    'rtpengines' => 'RTP engines',
     'digitmapping' => 'Digit Mapping',
     'plandetails' => 'Plan Details',
     'users' => 'Users',

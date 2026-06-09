@@ -10,6 +10,7 @@ use App\PortNumber;
 use App\UsageTrigger;
 use App\PlanUsagePeriod;
 use App\UserInvoice;
+use App\WorkspaceSuspension;
 use App\Http\Requests\Admin\WorkspaceRequest;
 use App\Enums\WorkspaceSuspensionStatus;
 use App\Helpers\MainHelper;
@@ -88,12 +89,15 @@ class WorkspaceController extends AdminController
         $routingACLs = WorkspaceHelper::getACLs($workspace);
         $planHistory = PlanUsagePeriod::where("workspace_id", $workspace->id)->get();
         $gracePeriodExtension = WorkspaceSuspensionHelper::getGracePeriodExtension($workspace->id);
+        $suspensions = WorkspaceSuspension::where('workspace_id', $workspace->id)
+                                            ->orderBy('suspension_initiated_at', 'DESC')
+                                            ->get();
         $isSuspended = NULL;
         if (MainHelper::isWorkspaceSuspended($workspace->id)) {
             $isSuspended = TRUE;
         }
 
-        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'planHistory', 'invoices', 'gracePeriodExtension', 'isSuspended'));
+        return view('admin.workspace.create_edit', compact('workspace', 'users', 'billingHistory', 'billingInfo', 'usageTriggers', 'routingACLs', 'suspensions', 'planHistory', 'invoices', 'gracePeriodExtension', 'isSuspended'));
     }
 
     /**
