@@ -118,7 +118,37 @@
             </div>
         </div>
 
+
         <div class="row">
+            <div class="col-md-12">
+                <h3>Suspensions</h3>
+                <table class="table stripped">
+                    <thead>
+                        <th>Suspended At</th>
+                        <th>Suspension Initiated At</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($suspensions as $record)
+                            <tr>
+                                <td>{{$record['suspended_at']}}</td>
+                                <td>{{$record['suspension_initiated_at']}}</td>
+                                <td>{{$record['reason']}}</td>
+                                <td>
+                                    @if ($record['status'] == 'LIFTED')
+                                        <i class="fa fa-check" style="color:green"></i> Lifted 
+                                    @elseif ($record['status'] == 'SUSPENDED')
+                                        <i class="fa fa-times" style="color:red"></i> Suspended
+                                    @elseif ($record['status'] == 'INITIATED')
+                                        <i class="fa fa-clock-o" style="color:orange"></i> Initiated
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             <div class="col-md-12">
                 <h3>Invoices</h3>
                 <table class="table stripped">
@@ -126,27 +156,25 @@
                         <th>Amount</th>
                         <th>Status</th>
                         <th>Date/time</th>
-                        <th>Actions</th>
                     </thead>
                     <tbody>
                         @foreach ($invoices as $record)
                             <tr>
                                 <td>{{$record['dollars']}}</td>
                                 <td>
-                                    @if ($record['status'] == 'COMPLETE')
+                                    @if ($record['status'] == 'PAID')
                                         <i class="fa fa-check" style="color:green"></i> Paid
-                                    @elseif ($record['status'] == 'INCOMPLETE')
-                                        <i class="fa fa-times" style="color:red"></i> Unpaid
+                                    @elseif ($record['status'] == 'FAILED')
+                                        <i class="fa fa-times" style="color:red"></i> Charge Failed
                                     @elseif ($record['status'] == 'REFUNDED')
                                         <i class="fa fa-undo" style="color:orange"></i> Refunded
+                                   @elseif ($record['status'] == 'PENDING')
+                                        <i class="fa fa-clock-o" style="color:orange"></i> Pending
+                                    @else
+                                        {{$record['status']}}
                                     @endif
                                 </td>
                                 <td>{{$record['created_at']}}</td>
-                                <td>
-                                    @if ($record['status'] == 'COMPLETE')
-                                        <button type="button" data-invoice-id="{{$record['id']}}" class="btn btn-sm btn-danger refund-trigger">Refund</button>
-                                    @endif
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>

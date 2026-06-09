@@ -18,6 +18,12 @@
      <li><a href="#tab-rtpproxies" data-toggle="tab"> {{
             trans("admin/modal.rtpproxies") }}</a></li>
             @endif
+            @if (!empty($rtpengines))
+     <li><a href="#tab-rtpengines" data-toggle="tab"> {{
+            trans("admin/modal.rtpengines") }}</a></li>
+            @endif
+
+
 
 </ul>
 <!-- ./ tabs -->
@@ -315,6 +321,33 @@
             </div>
         </div>
             @endif
+
+    @if (isset($router))
+    <div class="tab-pane" id="tab-rtpengines">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table stripped">
+                    <thead>
+                        <th>Socket address</th>
+                        <th>Set ID</th>
+                        <th>Priority</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($rtpengines as $engine)
+                            <tr>
+                                <td>{{$engine->socket}}</td>
+                                <td>{{$engine->set_id}}</td>
+                                <td>{{$engine->priority}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            @endif
+
+
 
     {!! Form::close() !!}
     @endsection @section('scripts')

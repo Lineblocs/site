@@ -13,7 +13,6 @@ class WorkspaceSuspension extends Model
     protected $guarded = array('id');
     protected $table = 'workspaces_suspensions';
     protected $casts = array(
-        'status' => 'boolean',
         'grace_period_extension' => 'integer',
     );
 }
