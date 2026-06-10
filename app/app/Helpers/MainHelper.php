@@ -781,13 +781,14 @@ final class MainHelper {
         return strcmp(strtolower($a[$key]), strtolower($b[$key]));
       });
     }
-    public static function createWorkspaceLoginResult($token, $user, $workspace){
+    public static function createWorkspaceLoginResult($token, $user, $workspace, $availableWorkspaces = []){
         $result = [
             'token' => MainHelper::createJWTPayload($token),
             'workspace' => $workspace->toArrayWithRoles($user),
             'enable_2fa' => $user->enable_2fa,
             'isAdmin' => FALSE,
-            'adminWorkspaceToken' => ''
+            'adminWorkspaceToken' => '',
+            'availableWorkspaces' => $availableWorkspaces
             //'expire_in' => \Carbon\Carbon::now()->addMinutes(config('jwt.ttl'))->format('Y-m-d H:i:s')
         ];
         if ($user->admin) {
