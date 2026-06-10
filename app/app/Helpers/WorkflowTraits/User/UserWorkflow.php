@@ -16,7 +16,7 @@ use \App\Helpers\MainHelper;
 use \App\Helpers\WorkspaceHelper;
 use \App\Helpers\EmailHelper;
 use \App\Helpers\WorkflowTraits\User\UserWorkflow;
-use \App\Enum\WorkspaceUserStatus;
+use \App\Enums\WorkspaceUserStatus;
 use App\WorkspaceUser;
 use App\WorkspaceInvite;
 use DB;
@@ -50,7 +50,6 @@ trait UserWorkflow {
     private function sendInvite($invite, $newUser, $workspaceUser, $workspace) {
         $mail = Config::get("mail");
         $mailData = compact('newUser', 'workspace');
-        $invite = $this->createInvite($workspaceUser);
         //$hash = $workspaceUser->createJoinHash();
         $link = MainHelper::createPortalLink("/#/join-workspace/". $invite->hash);
         $mailData['link'] =  $link;
@@ -89,10 +88,14 @@ trait UserWorkflow {
         }
 
         $resource = WorkspaceUser::create($attrs);
+
         UserEmailOption::create([
             'user_id' =>$resource->id,
         ]);
         $invite = $this->createInvite($resource);
+        $resource->update([
+            'hash' => $invite->hash
+        ]);
         $this->sendInvite($invite, $reqUser,$resource, $workspace);
         return $this->response->array($resource->toArray())->withHeader('X-WorkspaceUser-ID', $resource->public_id);
     }
@@ -168,6 +171,52 @@ trait UserWorkflow {
         return $this->response->noContent();
     }
 
+
+    public function deactivateUser(Request $request, $userId)
+    {
+        $data = $request->json()->all();
+        $user = $this->getUser($request);
+        $workspaceUser = WorkspaceUser::select(DB::raw("workspaces_users.*, users.email, users.first_name, users.last_name"))->join('users', 'users.id', '=', 'workspaces_users.user_id')->where('workspaces_users.public_id', '=', $userId)->firstOrFail();
+        if (!$this->hasPermissions($request, $workspaceUser, 'manage_users')) {
+            return $this->response->errorForbidden();
+        }
+        $workspaceUser->update([
+            'status' => WorkspaceUserStatus::DEACTIVATED
+        ]);
+
+        $workspace = $this->getWorkspace($request);
+        $mailData = compact('user', 'workspace', 'workspaceUser');
+        $subject = "Your account has been deactivated";
+
+        \Log::info("Sending email to workspace user email address: " . $workspaceUser->email);
+        EmailHelper::sendEmail($subject, $workspaceUser->email, 'deactivated_account', $mailData);
+
+        return $this->response->noContent();
+    }
+
+
+    public function reactivateUser(Request $request, $userId)
+    {
+        $data = $request->json()->all();
+        $user = $this->getUser($request);
+        $workspaceUser = WorkspaceUser::select(DB::raw("workspaces_users.*, users.email, users.first_name, users.last_name"))->join('users', 'users.id', '=', 'workspaces_users.user_id')->where('workspaces_users.public_id', '=', $userId)->firstOrFail();
+        if (!$this->hasPermissions($request, $workspaceUser, 'manage_users')) {
+            return $this->response->errorForbidden();
+        }
+        $workspaceUser->update([
+            'status' => WorkspaceUserStatus::ACTIVE
+        ]);
+
+        $workspace = $this->getWorkspace($request);
+        $mailData = compact('user', 'workspace', 'workspaceUser');
+        $subject = "Your account has been reactivated";
+
+        \Log::info("Sending email to workspace user email address: " . $workspaceUser->email);
+        EmailHelper::sendEmail($subject, $workspaceUser->email, 'reactivated_account', $mailData);
+
+        return $this->response->noContent();
+    }
+
     public function resendInvite(Request $request, $userId)
     {
         $data = $request->json()->all();
@@ -181,8 +230,31 @@ trait UserWorkflow {
 
         WorkspaceInvite::where("workspace_user_id", $resource->id)->update(['valid' => FALSE]);
         $invite = $this->createInvite($resource);
-        //invalidate current invite if needed
+        $resource->update([
+            'hash' => $invite->hash
+        ]);
+
         $this->sendInvite($invite, $reqUser,$resource, $workspace);
         return $this->response->noContent();
     }
+
+    public function changeAccountType(Request $request, $userId)
+    {
+        $data = $request->json()->all();
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $resource = WorkspaceUser::where('public_id', $userId)->firstOrFail();
+        if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_users')) {
+            return $this->response->errorForbidden();
+        }
+
+        if (!empty($data['assigned_role_id'])) {
+            $resource->update([
+                'assigned_role_id' => $data['assigned_role_id']
+            ]);
+        }
+
+        return $this->response->array($resource->toArray());
+    }
+
 }

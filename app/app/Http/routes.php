@@ -533,6 +533,7 @@ $api->version('v1', function($api) {
       $api->post('authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
       $api->post('publicAuthenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticatePublic');
       $api->get('heartbeat', '\App\Http\Controllers\JWT\AuthenticateController@heartbeat');
+      $api->get('requestWorkspaceToken', '\App\Http\Controllers\JWT\AuthenticateController@requestWorkspaceToken');
     });
 
     $api->group([ 'prefix' => 'account'], function($api) {
@@ -583,6 +584,7 @@ $api->version('v1', function($api) {
     $api->get('getCallRoutingTemplates', '\App\Http\Controllers\MergedController@getCallRoutingTemplates');
     $api->get('getWorkspaceTokens', '\App\Http\Controllers\MergedController@getWorkspaceTokens');
     $api->get('refreshWorkspaceTokens', '\App\Http\Controllers\MergedController@refreshWorkspaceTokens');
+    $api->post('requestWorkspaceToken', '\App\Http\Controllers\MergedController@requestWorkspaceToken');
     $api->get('getConfig', '\App\Http\Controllers\ConfigController@getConfig');
     $api->get('dashboard', '\App\Http\Controllers\MergedController@dashboard');
     $api->get('feed', '\App\Http\Controllers\MergedController@feed');
@@ -824,6 +826,11 @@ $api->version('v1', function($api) {
         $api->post("/", "WorkspaceUserController@addUser");
         //$api->delete("/{userId}", "WorkspaceUserController@deleteUser");
         $api->post("/{userId}/terminate", "WorkspaceUserController@terminateUser");
+        $api->post("/{userId}/deactivate", "WorkspaceUserController@deactivateUser");
+        $api->post("/{userId}/reactivate", "WorkspaceUserController@reactivateUser");
+
+        $api->post("/{userId}/changeAccountType", "WorkspaceUserController@changeAccountType");
+
         $api->post("/{userId}", "WorkspaceUserController@updateUser");
         $api->put("/{userId}", "WorkspaceUserController@updateUser");
         $api->get("/{userId}", "WorkspaceUserController@userData");

@@ -10,6 +10,8 @@ abstract class WorkspaceUserStatus
     public const ACTIVE = 'ACTIVE';
     public const INVITED = 'INVITED';
     public const TERMINATED = 'TERMINATED';
+    public const DEACTIVATED = 'DEACTIVATED';
+
 
     /**
      * Optional: Helper to get all values for validation
@@ -20,6 +22,7 @@ abstract class WorkspaceUserStatus
             self::ACTIVE,
             self::INVITED,
             self::TERMINATED,
+            self::DEACTIVATED,
         ];
     }
 }

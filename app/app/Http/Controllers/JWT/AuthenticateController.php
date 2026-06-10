@@ -105,6 +105,17 @@ class AuthenticateController extends ApiAuthController
         $currentUser = Auth::user();
 
         $workspace = $this->getRequestedWorkspace($request, $currentUser);
+        $availableWorkspaces = Workspace::join('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id')
+            ->where('workspaces_users.user_id', $currentUser->id)
+            ->select('workspaces.id', 'workspaces.name')
+            ->get()
+            ->map(function ($workspace) {
+                return [
+                    'id' => $workspace->id,
+                    'name' => $workspace->name
+                ];
+            })
+            ->toArray();
         $workspaceUser = WorkspaceUser::select(array('workspaces_users.*'));
         $workspaceUser->where('workspaces_users.user_id', $currentUser->id);
         if (!empty($workspace)) {
@@ -167,9 +178,39 @@ class AuthenticateController extends ApiAuthController
             return $this->response->array($result);
         }
 
-        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace);
+        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace, $availableWorkspaces);
         return $this->response->array($result);
     }
+
+    public function requestWorkspaceToken(Request $request)
+    {
+        $currentUser = Auth::user();
+        $workspaceId = $request->get('workspace_id');
+        $workspace = Workspace::find($workspaceId);
+        if (empty($workspace)) {
+            return $this->errorInternal($request, 'No workspace found for user.');
+        }
+        
+        if (!$token = JWTAuth::fromUser($currentUser)) {
+            return response()->json(['error' => 'could not create token'], 401);
+        }
+        
+        $availableWorkspaces = Workspace::join('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id')
+            ->where('workspaces_users.user_id', $currentUser->id)
+            ->select('workspaces.id', 'workspaces.name')
+            ->get()
+            ->map(function ($workspace) {
+                return [
+                    'id' => $workspace->id,
+                    'name' => $workspace->name
+                ];
+            })
+            ->toArray();
+        
+        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace, $availableWorkspaces);
+        return $this->response->array($result);
+    }
+
     public function heartbeat(Request $request)
     {
       return $this->response->noContent();
