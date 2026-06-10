@@ -824,6 +824,11 @@ $api->version('v1', function($api) {
         $api->post("/", "WorkspaceUserController@addUser");
         //$api->delete("/{userId}", "WorkspaceUserController@deleteUser");
         $api->post("/{userId}/terminate", "WorkspaceUserController@terminateUser");
+        $api->post("/{userId}/deactivate", "WorkspaceUserController@deactivateUser");
+        $api->post("/{userId}/reactivate", "WorkspaceUserController@reactivateUser");
+
+        $api->post("/{userId}/changeAccountType", "WorkspaceUserController@changeAccountType");
+
         $api->post("/{userId}", "WorkspaceUserController@updateUser");
         $api->put("/{userId}", "WorkspaceUserController@updateUser");
         $api->get("/{userId}", "WorkspaceUserController@userData");
