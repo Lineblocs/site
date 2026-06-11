@@ -91,28 +91,22 @@ class AuthenticateController extends ApiAuthController
       }
 */
 
-          \Log::info("trying to authenticate user: " . $credentials['email']);
-        try {
-            // attempt to verify the credentials and create a token for the user
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
-            }
-        } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
-            \Log::info("error occured: " . $e->getMessage());
-            return $this->errorInternal($request, 'Could not create token');
-        }
-        $currentUser = Auth::user();
 
+          \Log::info("trying to authenticate user: " . $credentials['email']);
+          $loginResult = $this->processLoginCredentials($credentials);
+          $currentUser = $loginResult['currentUser'];
+          $token = $loginResult['token'];
+        
         $workspace = $this->getRequestedWorkspace($request, $currentUser);
         $availableWorkspaces = Workspace::join('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id')
             ->where('workspaces_users.user_id', $currentUser->id)
-            ->select('workspaces.id', 'workspaces.name')
+            ->select('workspaces.id', 'workspaces.name', 'workspaces.creator_id')
             ->get()
-            ->map(function ($workspace) {
+            ->map(function ($workspace) use ($currentUser) {
                 return [
                     'id' => $workspace->id,
-                    'name' => $workspace->name
+                    'name' => $workspace->name,
+                    'is_creator' => $workspace->creator_id == $currentUser->id
                 ];
             })
             ->toArray();
@@ -184,25 +178,27 @@ class AuthenticateController extends ApiAuthController
 
     public function requestWorkspaceToken(Request $request)
     {
-        $currentUser = Auth::user();
-        $workspaceId = $request->get('workspace_id');
+        $requestData = $request->all();
+        $workspaceId = $requestData['workspace_id'];
         $workspace = Workspace::find($workspaceId);
         if (empty($workspace)) {
             return $this->errorInternal($request, 'No workspace found for user.');
         }
-        
-        if (!$token = JWTAuth::fromUser($currentUser)) {
-            return response()->json(['error' => 'could not create token'], 401);
-        }
+
+
+        //$loginResult = $this->processLoginCredentials($credentials);
+        $token = $requestData['token'];
+        $currentUser = JWTAuth::authenticate($token);
         
         $availableWorkspaces = Workspace::join('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id')
             ->where('workspaces_users.user_id', $currentUser->id)
-            ->select('workspaces.id', 'workspaces.name')
+            ->select('workspaces.id', 'workspaces.name', 'workspaces.creator_id')
             ->get()
-            ->map(function ($workspace) {
+            ->map(function ($workspace) use ($currentUser) {
                 return [
                     'id' => $workspace->id,
-                    'name' => $workspace->name
+                    'name' => $workspace->name,
+                    'is_creator' => $workspace->creator_id == $currentUser->id
                 ];
             })
             ->toArray();
@@ -214,5 +210,24 @@ class AuthenticateController extends ApiAuthController
     public function heartbeat(Request $request)
     {
       return $this->response->noContent();
+    }
+
+    private function processLoginCredentials($credentials) {
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            \Log::info("error occured: " . $e->getMessage());
+            return $this->errorInternal($request, 'Could not create token');
+        }
+        $currentUser = Auth::user();
+        
+        return [
+            'currentUser' => $currentUser,
+            'token' => $token
+        ];
     }
 }

@@ -1316,5 +1316,15 @@ final class MainHelper {
       return false;
     }
 
-
+    public static function extractAuthToken() {
+        $headers = apache_request_headers();
+        $token = NULL;
+        foreach ( $headers as $key => $value ) {
+            $lower = strtolower($key);
+            if ( $lower == 'authorization' ) {
+                $token = $value;
+            }
+        }
+        return $token;
+    }
 }
