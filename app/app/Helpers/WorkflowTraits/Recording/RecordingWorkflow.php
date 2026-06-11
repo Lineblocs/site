@@ -28,11 +28,12 @@ trait RecordingWorkflow {
         DB::connection()->enableQueryLog();
         $paginate = $this->getPaginate( $request );
         $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
         $recordings = Recording::select(DB::raw("DISTINCT(recordings.id), recordings.*, calls.from AS call_from, calls.to AS call_to, calls.status AS call_status, calls.direction AS call_direction, (SELECT GROUP_CONCAT(recording_tags.tag) FROM recording_tags WHERE recording_tags.recording_id = recordings.id) AS tags"));
 
         $recordings->leftJoin('calls', 'calls.id', '=', 'recordings.call_id');
         $recordings->leftJoin('recording_tags', 'recording_tags.recording_id', '=', 'recordings.id');
-        $recordings->where('recordings.user_id', '=', $user->id);
+        $recordings->where('recordings.workspace_id', '=', $workspace->id);
         $search = $request->get("tags");
         if ( $search ) {
            \Log::info("tags are: " . $search);

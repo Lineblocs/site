@@ -6,6 +6,7 @@ use \JWTAuth;
 use \Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
+use App\Helpers\MainHelper;
 use App\Workspace;
 use App\WorkspaceUser;
 use App\Extension;
@@ -94,15 +95,7 @@ class ApiAuthController extends ApiController {
                return $user;
           }
           $user = NULL;
-          $headers = apache_request_headers();
-          $token = NULL;
-          foreach ( $headers as $key => $value ) {
-               $lower = strtolower($key);
-               if ( $lower == 'authorization' ) {
-                    $token = $value;
-               }
-          }
-              
+          $token = MainHelper::extractAuthToken();
           //$token = $headers['authorization'];
 
            if (!empty($token)) {

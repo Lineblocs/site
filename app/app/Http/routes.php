@@ -533,7 +533,7 @@ $api->version('v1', function($api) {
       $api->post('authenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticate');
       $api->post('publicAuthenticate', '\App\Http\Controllers\JWT\AuthenticateController@authenticatePublic');
       $api->get('heartbeat', '\App\Http\Controllers\JWT\AuthenticateController@heartbeat');
-      $api->get('requestWorkspaceToken', '\App\Http\Controllers\JWT\AuthenticateController@requestWorkspaceToken');
+      $api->post('requestWorkspaceToken', '\App\Http\Controllers\JWT\AuthenticateController@requestWorkspaceToken');
     });
 
     $api->group([ 'prefix' => 'account'], function($api) {
