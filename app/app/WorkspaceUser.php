@@ -3,6 +3,7 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \App\Enums\WorkspaceUserStatus;
 use \App\UserEmailOption;
 
 class WorkspaceUser extends PublicResource {
@@ -94,6 +95,7 @@ class WorkspaceUser extends PublicResource {
       }
       $attrs['user_id'] = $user->id;
       $attrs['workspace_id'] = $workspace->id;
+      $attrs['status'] = WorkspaceUserStatus::ACTIVE;
 
       $attrs = array_merge( $attrs, $extras );
       $user= WorkspaceUser::create($attrs);
