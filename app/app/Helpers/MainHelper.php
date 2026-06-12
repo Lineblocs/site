@@ -781,10 +781,11 @@ final class MainHelper {
         return strcmp(strtolower($a[$key]), strtolower($b[$key]));
       });
     }
-    public static function createWorkspaceLoginResult($token, $user, $workspace, $availableWorkspaces = []){
+    public static function createWorkspaceLoginResult($token, $user, $workspace, $workspaceUser, $availableWorkspaces = []){
         $result = [
             'token' => MainHelper::createJWTPayload($token),
             'workspace' => $workspace->toArrayWithRoles($user),
+            'currentWorkspaceUser' => $workspaceUser->toArray(),
             'enable_2fa' => $user->enable_2fa,
             'isAdmin' => FALSE,
             'adminWorkspaceToken' => '',
