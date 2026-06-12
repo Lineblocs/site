@@ -43,7 +43,7 @@ class PhoneGlobalSettingController extends ApiAuthController {
     public function deletePhoneGlobalSetting(Request $request, $phoneSettingId)
     {
         $phoneSettings = PhoneGlobalSetting::findOrFail($phoneSettingId);
-        if (!$this->hasPermissions($request, $phoneSettings, 'manage_phoneglobalsettings')) {
+        if (!$this->hasPermissions($request, $phoneSettings, 'delete_phoneglobalsetting')) {
             return $this->response->errorForbidden();
         }
         $phoneSettings->delete();

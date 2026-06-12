@@ -14,7 +14,7 @@ class AddTrunkPermsWorkspaces extends Migration
     {
         Schema::table('workspaces_users', function (Blueprint $table) {
             //
-            $table->boolean('create_trunks');
+            $table->boolean('create_trunk');
             $table->boolean('manage_trunks');
         });
     }

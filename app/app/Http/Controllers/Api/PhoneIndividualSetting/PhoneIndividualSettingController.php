@@ -48,7 +48,7 @@ class PhoneIndividualSettingController extends ApiAuthController {
     public function deletePhoneIndividualSetting(Request $request, $phoneSettingId)
     {
         $phoneSettings = PhoneIndividualSetting::findOrFail($phoneSettingId);
-        if (!$this->hasPermissions($request, $phoneSettings, 'manage_phoneindividualsettings')) {
+        if (!$this->hasPermissions($request, $phoneSettings, 'delete_phoneindividualsetting')) {
             return $this->response->errorForbidden();
         }
         $phoneSettings->delete();

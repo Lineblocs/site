@@ -38,7 +38,7 @@ class PhoneGroupController extends ApiAuthController {
     public function deletePhoneGroup(Request $request, $phoneGroupId)
     {
         $phoneGroup = PhoneGroup::findOrFail($phoneGroupId);
-        if (!$this->hasPermissions($request, $phoneGroup, 'manage_phonegroups')) {
+        if (!$this->hasPermissions($request, $phoneGroup, 'delete_phonegroup')) {
             return $this->response->errorForbidden();
         }
         $phoneGroup->delete();

@@ -168,7 +168,7 @@ trait ExtensionWorkflow {
         $data = $request->all();
         $workspace = $this->getWorkspace($request);
         $extension = Extension::where('public_id', '=', $extensionId)->firstOrFail();
-        if (!$this->hasPermissions($request, $extension, 'manage_extensions')) {
+        if (!$this->hasPermissions($request, $extension, 'delete_extension')) {
             return $this->response->errorForbidden();
         }
         $user = $this->getUser($request);

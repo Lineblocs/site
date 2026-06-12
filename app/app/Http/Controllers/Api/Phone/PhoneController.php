@@ -52,7 +52,7 @@ class PhoneController extends ApiAuthController {
     public function deletePhone(Request $request, $phoneId)
     {
         $phone = Phone::findOrFail($phoneId);
-        if (!$this->hasPermissions($request, $phone, 'manage_phones')) {
+        if (!$this->hasPermissions($request, $phone, 'delete_phone')) {
             return $this->response->errorForbidden();
         }
         $phone->delete();

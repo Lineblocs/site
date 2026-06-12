@@ -86,7 +86,7 @@ trait DIDNumberWorkflow {
     {
         $data = $request->json()->all();
         $number = DIDNumber::where('public_id', '=', $numberId)->firstOrFail();
-        if (!$this->hasPermissions($request, $number, 'manage_dids')) {
+        if (!$this->hasPermissions($request, $number, 'delete_did')) {
             return $this->response->errorForbidden();
         }
         //add unrenting
