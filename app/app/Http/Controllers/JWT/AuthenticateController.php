@@ -6,6 +6,7 @@ use JWTAuth;
 use JWTFactory;
 use Auth;
 use Hash;
+use Log;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiAuthController;
@@ -110,12 +111,17 @@ class AuthenticateController extends ApiAuthController
                 ];
             })
             ->toArray();
+        \Log::info("authenticate - current user id: " . $currentUser->id);
+        \Log::info("authenticate - workspace: " . json_encode($workspace));
         $workspaceUser = WorkspaceUser::select(array('workspaces_users.*'));
         $workspaceUser->where('workspaces_users.user_id', $currentUser->id);
         if (!empty($workspace)) {
-            $workspaceUser->where('id', $workspace->id);
+            \Log::info("authenticate - filtering by workspace id: " . $workspace->id);
+            $workspaceUser->where('workspaces_users.workspace_id', $workspace->id);
         }
+
         $workspaceUser = $workspaceUser->first();
+        \Log::info("authenticate - workspaceUser result: " . json_encode($workspaceUser));
 
         if (empty($workspace)) {
             $workspace = Workspace::find($workspaceUser->workspace_id);
@@ -172,7 +178,7 @@ class AuthenticateController extends ApiAuthController
             return $this->response->array($result);
         }
 
-        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace, $availableWorkspaces);
+        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace, $workspaceUser, $availableWorkspaces);
         return $this->response->array($result);
     }
 
@@ -202,8 +208,17 @@ class AuthenticateController extends ApiAuthController
                 ];
             })
             ->toArray();
-        
-        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace, $availableWorkspaces);
+       
+            
+        $workspaceUser = WorkspaceUser::select(array('workspaces_users.*'));
+
+        Log::info("requestWorkspaceToken - user_id: " . $currentUser->id . ", workspace_id: " . $workspace->id);
+        $workspaceUser->where('workspaces_users.user_id', $currentUser->id);
+        $workspaceUser->where('workspaces_users.workspace_id', $workspace->id);
+        $workspaceUser = $workspaceUser->first();
+        Log::info("requestWorkspaceToken - workspaceUser result: " . json_encode($workspaceUser));
+
+        $result = MainHelper::createWorkspaceLoginResult($token, $currentUser, $workspace, $workspaceUser, $availableWorkspaces);
         return $this->response->array($result);
     }
 
