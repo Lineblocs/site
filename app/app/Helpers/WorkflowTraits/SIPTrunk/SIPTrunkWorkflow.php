@@ -305,7 +305,7 @@ trait SIPTrunkWorkflow {
         $data = $request->json()->all();
         $trunk = SIPTrunk::where('public_id', $trunkId)->firstOrFail();
         $user = $this->getUser($request);
-        if (!$this->hasPermissions($request, $trunk, 'manage_trunks')) {
+        if (!$this->hasPermissions($request, $trunk, 'delete_trunk')) {
             return $this->response->errorForbidden();
         }
         $term_settings = SIPTrunkTermination::where('trunk_id', $trunk->id)->firstOrFail();

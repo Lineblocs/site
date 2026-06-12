@@ -106,7 +106,7 @@ class FlowController extends ApiAuthController {
     {
         $data = $request->json()->all();
         $flow = Flow::findOrFail($flowId);
-        if (!$this->hasPermissions($request, $flow, 'manage_flows')) {
+        if (!$this->hasPermissions($request, $flow, 'delete_flow')) {
             return $this->response->errorForbidden();
         }
         $flow->delete();

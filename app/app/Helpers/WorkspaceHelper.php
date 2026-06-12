@@ -98,8 +98,8 @@ case 'create_byo_did_number':
 case 'manage_trunks':
         return $settings->manage_trunks;
       break;
-case 'create_trunks':
-        return $settings->create_trunks;
+case 'create_trunk':
+        return $settings->create_trunk;
       break;
 
 

@@ -44,7 +44,7 @@ class BYOCarrierController extends BYOController {
     public function deleteCarrier(Request $request, $carrierId)
     {
         $carrier = BYOCarrier::where('public_id', $carrierId)->firstOrFail();
-        if (!$this->hasPermissions($request, $carrier, 'manage_byo_carriers')) {
+        if (!$this->hasPermissions($request, $carrier, 'delete_byo_carrier')) {
             return $this->response->errorForbidden();
         }
         $carrier->delete();

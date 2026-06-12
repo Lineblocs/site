@@ -24,7 +24,7 @@ class AddNewWorkspaceUserDeletePerms extends Migration
             $table->boolean('delete_phoneindividualsetting')->default(0)->after('create_phoneindividualsetting');
             $table->boolean('delete_byo_carrier')->default(0)->after('create_byo_carrier');
             $table->boolean('delete_byo_did_number')->default(0)->after('create_byo_did_number');
-            $table->boolean('delete_trunks')->default(0)->after('create_trunks');
+            $table->boolean('delete_trunk')->default(0)->after('create_trunk');
         });
     }
 
@@ -47,7 +47,7 @@ class AddNewWorkspaceUserDeletePerms extends Migration
                 'delete_phoneindividualsetting',
                 'delete_byo_carrier',
                 'delete_byo_did_number',
-                'delete_trunks'
+                'delete_trunk'
             ]);
         });
     }
