@@ -774,7 +774,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           return $this->errorInternal($request, 'Could not create token');
       }
 
-      $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace);
+      $result = MainHelper::createWorkspaceLoginResult($token, $user, $workspace, $workspaceUser);
       return $this->response->array( $result );
     }
     public function updateWorkspace(Request $request) {

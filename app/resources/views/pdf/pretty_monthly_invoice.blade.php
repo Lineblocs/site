@@ -359,7 +359,14 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
       </td>
       <td>
         <span class="label">Due Date</span>
-        <span class="value">{{$vars['due_date']->format('Y-m-d')}}</span>
+
+        <span class="value">
+          @if ($vars['due_date'])
+            {{ $vars['due_date']->format('Y-m-d') }}
+          @else
+            N/A
+          @endif
+        </span>
       </td>
       <td>
         <span class="label">Total Due</span>
@@ -390,7 +397,13 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
             </tr>
             <tr>
               <td class="key">Statement Date</td>
-              <td>{{$vars['statement_date']->format('Y-m-d')}}</td>
+              <td>
+                @if ($vars['statement_date'])
+                  {{ $vars['statement_date']->format('Y-m-d') }}
+                @else
+                  N/A
+                @endif
+              </td>
             </tr>
             <tr>
               <td class="key">Tax Number</td>
@@ -414,7 +427,13 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
       <th class="right">Amount</th>
     </tr>
     <tr>
-      <td>Outstanding balance on {{$vars['due_date']->format('Y-m-d')}}</td>
+      <td>Outstanding balance on 
+        @if ($vars['due_date'])
+          {{ $vars['due_date']->format('Y-m-d') }}
+        @else
+          N/A
+        @endif
+      </td>
       <td>{{$paymentStatus}}</td>
       <td class="right">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>
     </tr>
@@ -498,7 +517,13 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
     @forelse ($vars['invoice_items']['recurring_rows'] as $item)
     <tr>
       <td>{{$item['item_desc']}}</td>
-      <td>{{$item['date']->format('Y-m-d')}}</td>
+      <td>
+        @if ($item['date'])
+          {{ $item['date']->format('Y-m-d') }}
+        @else
+          N/A
+        @endif
+      </td>
       <td class="right">{{MainHelper::toDollars($item['total_amount_without_tax'])}}</td>
       <td class="right">{{MainHelper::toDollars($item['tax_amount'])}}</td>
       <td class="right">{{MainHelper::toDollars($item['total_amount'])}}</td>
@@ -529,7 +554,13 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
     @forelse ($vars['invoice_items']['fixed_rate_rows'] as $item)
     <tr>
       <td>{{$item['item_desc']}}</td>
-      <td>{{$item['date']->format('Y-m-d')}}</td>
+      <td>
+        @if ($item['date'])
+          {{ $item['date']->format('Y-m-d') }}
+        @else
+          N/A
+        @endif
+      </td>
       <td class="right">{{MainHelper::toDollars($item['total_amount_without_tax'])}}</td>
       <td class="right">{{MainHelper::toDollars($item['tax_amount'])}}</td>
       <td class="right">{{MainHelper::toDollars($item['total_amount'])}}</td>
@@ -591,7 +622,15 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
     </tr>
     <tr>
       <td><strong>Due date</strong></td>
-      <td>Please pay by {{$vars['due_date']->format('Y-m-d')}} to avoid service disruption.</td>
+      <td>
+        Please pay by
+        @if ($vars['due_date'])
+          {{ $vars['due_date']->format('Y-m-d') }}
+        @else
+          N/A
+        @endif
+        to avoid service disruption.
+      </td>
     </tr>
     <tr>
       <td><strong>Recurring charges</strong></td>
