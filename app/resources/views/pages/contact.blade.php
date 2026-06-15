@@ -3,6 +3,7 @@
 Contact
 @endsection
 @section('content')
+
     @if (Session::has('status'))
         <div class="blue-grey darken-1 thankyou">
             <center>
@@ -35,6 +36,10 @@ Contact
                         <div class="col-12 col-lg-6 contact-form column">
                             <p>Have queries regarding our offerings? Feel free to contact us.</p>
                             <form method="POST" action="/contact" id="contactFrm">
+
+                                @if ($errors->has('cf-turnstile-response'))
+                                    <p style="color: red;">{{ $errors->first('cf-turnstile-response') }}</p>
+                                @endif
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
@@ -78,6 +83,8 @@ Contact
                                                     data-callback='onSubmit' 
                                                     data-action='submit'>Send message</button>
                                         @else
+                                            <div class="cf-turnstile" data-sitekey="{{ $creds['cloudflare_site_key'] }}"></div>
+                                            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
                                             <button class="btn button" type="submit">Send message</button>
                                         @endif
                                     </div>

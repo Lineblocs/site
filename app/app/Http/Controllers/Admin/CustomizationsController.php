@@ -222,6 +222,12 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['customer_satisfaction_survey_enabled'] = $customer_satisfaction_survey_enabled;
 
+		$recaptcha_enabled = false;
+		if ( $update_params['recaptcha_enabled'] =='yes') {
+			$recaptcha_enabled = true;
+		}
+		$update_params['recaptcha_enabled'] = $recaptcha_enabled;
+
 		$enable_google_signin = false;
 
 		if ( !empty( $update_params['enable_google_signin'] ) ) {
@@ -297,21 +303,6 @@ class CustomizationsController extends AdminController {
 		}
 		$update_params['allow_app_feedback'] = $allow_app_feedback;
 
-
-
-
-		$recaptcha_enabled = false;
-
-		if ( !empty( $update_params['recaptcha_enabled'] ) ) {
-			$recaptcha_enabled = true;
-		}
-		$update_params['recaptcha_enabled'] = $recaptcha_enabled;
-
-
-		if ( !empty( $update_params['recaptcha_enabled'] ) ) {
-			$recaptcha_enabled = true;
-		}
-		$update_params['recaptcha_enabled'] = $recaptcha_enabled;
 
 		if ( !empty( $update_params['disqus_enabled'] ) ) {
 			$disqus_enabled = true;

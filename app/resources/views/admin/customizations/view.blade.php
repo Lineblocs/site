@@ -404,7 +404,8 @@
                 </div>
             </div>
 
-           <div class="row form-group">
+           
+            <div class="row form-group">
                 <label for="billing_flow">Billing flow</label>
                 <div class="controls">
                     <select name="billing_flow" class="form-control" id="billing_flow">
@@ -417,6 +418,24 @@
                         @else
                             <option value="ANNUAL">Annual</option>
                             <option value="ANNIVERSARY">Anniversary</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="upgrade_flow">Upgrade flow</label>
+                <div class="controls">
+                    <select name="upgrade_flow" class="form-control" id="upgrade_flow">
+                        @if ( $record->upgrade_flow == 'IMMEDIATE')
+                            <option value="IMMEDIATE" selected>Immediate</option>
+                            <option value="SCHEDULED">Scheduled</option>
+                        @elseif ( $record->upgrade_flow == 'SCHEDULED')
+                            <option value="IMMEDIATE">Immediate</option>
+                            <option value="SCHEDULED" selected>Scheduled</option>
+                        @else
+                            <option value="IMMEDIATE">Immediate</option>
+                            <option value="SCHEDULED">Scheduled</option>
                         @endif
                     </select>
                 </div>

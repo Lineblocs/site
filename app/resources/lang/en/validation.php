@@ -90,6 +90,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'cf-turnstile-response' => [
+            'turnstile' => 'The anti-bot verification failed. Please try again.',
+        ],
     ],
 
     /*
