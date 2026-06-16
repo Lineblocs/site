@@ -22,7 +22,11 @@ Contact
                         <div class="alert alert-info" role="alert">
                             Please let us know more about the issue and one of our team members will get back to you with a response within 48-72 hours
                         </div>
+
                             <form method="POST" action="/bug-report" id="bugReportFrm">
+                                @if ($errors->has('cf-turnstile-response'))
+                                    <p style="color: red;">{{ $errors->first('cf-turnstile-response') }}</p>
+                                @endif
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
@@ -86,6 +90,8 @@ Contact
                                                     data-callback='onSubmit' 
                                                     data-action='submit'>Send message</button>
                                         @else
+                                            <div class="cf-turnstile" data-sitekey="{{ $creds['cloudflare_site_key'] }}"></div>
+                                            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
                                             <button class="btn button" type="submit">Send message</button>
                                         @endif
                                     </div>

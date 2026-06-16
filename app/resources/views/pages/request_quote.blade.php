@@ -24,6 +24,10 @@ Contact
                             Please feel free to fill out the form below and one of our specialists will be in touch to discuss further.</p>
                         </div>
                             <form method="POST" action="/quote" id="quoteFrm">
+                                @if ($errors->has('cf-turnstile-response'))
+                                    <p style="color: red;">{{ $errors->first('cf-turnstile-response') }}</p>
+                                @endif
+
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="wrapper">
@@ -96,6 +100,8 @@ Contact
                                                     data-callback='onSubmit' 
                                                     data-action='submit'>Send message</button>
                                         @else
+                                            <div class="cf-turnstile" data-sitekey="{{ $creds['cloudflare_site_key'] }}"></div>
+                                            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
                                             <button class="btn button" type="submit">Send message</button>
                                         @endif
                                     </div>
