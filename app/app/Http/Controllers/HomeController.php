@@ -301,6 +301,11 @@ class HomeController extends BaseController {
         $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
         return view('pages.contact', $vars);
 		  }	
+    } else {
+      // Call validation using string format standard in 5.1
+      $this->validate($request, [
+          'cf-turnstile-response' => 'required|turnstile',
+      ]);
     }
 
     if (empty($data['first_name'])) {
@@ -385,6 +390,11 @@ class HomeController extends BaseController {
         $request->session()->flash('status', 'Invalid captcha validation. Please try again.');
         return view('pages.contact', $vars);
 		  }	
+    } else {
+      // Call validation using string format standard in 5.1
+      $this->validate($request, [
+          'cf-turnstile-response' => 'required|turnstile',
+      ]);
     }
 
     if (empty($data['first_name'])) {
