@@ -278,8 +278,11 @@ class RegisterController extends ApiAuthController
               'next_billing_date' => $periodEnd 
           ]);
 
-          // 2. Calculate Prorated Amount using BillingDataHelper
-          $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCost, $billingCycle);
+          // 2. Calculate Prorated Amount using BillingDataHelper (with prorations)
+          Log::info("Recurring cost: {$recurringCost} cents");
+          $recurringCostInDollars = BillingDataHelper::toDollars($recurringCost);
+          $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCostInDollars, $billingCycle);
+          Log::info("Amount to charge for signup (with prorations): {$amountToCharge} cents");
 
           // 3. Dispatch Immediate Billing Task
           try {
@@ -377,6 +380,7 @@ class RegisterController extends ApiAuthController
 
 
           $mailData = [];
+          $mailData['user'] = $user;
           $subject = sprintf("Welcome to %s", MainHelper::getSiteName());
           $result = EmailHelper::sendEmail($subject, $user->email, 'welcome_email', $mailData);
 

@@ -222,7 +222,7 @@ final class BillingDataHelper {
     return  $cents;
   }
 
-  public static function calculateProratedAmount($baseCost, $billingCycle, $returnCents = FALSE)
+  public static function calculateProratedAmount($baseCost, $billingCycle)
   {
     if (!is_numeric($baseCost)) {
         return $baseCost;
@@ -245,11 +245,8 @@ final class BillingDataHelper {
         // (Yearly Price / Days in Year) * Days left
         $prorated = ($baseCost / $daysInYear) * $daysRemaining;
         $result = (float) round($prorated, 2);
-        if ($returnCents) {
-            return self::toCents($result);
-        } else {
-            return $result;
-        }
+
+        return $result;
     }
 
     // Default: MONTHLY
@@ -261,11 +258,7 @@ final class BillingDataHelper {
     $prorated = ($baseCost / $daysInMonth) * $daysRemaining;
     $result = (float) round($prorated, 2);
     
-    if ($returnCents) {
-        return self::toCents($result);
-    } else {
-        return $result;
-    }
+    return $result;
   }
   public static function refundInvoice($invoice)
   {
