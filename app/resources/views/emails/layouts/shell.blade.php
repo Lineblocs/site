@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@yield('page_title', trim($__env->yieldContent('title')) ?: $site_name)</title>
+  <title>@yield('page_title', trim($__env->yieldContent('title')) ?: \App\Helpers\MainHelper::getSiteName())</title>
   @include('emails.layouts.styles')
 </head>
 <body class="email-bg">
@@ -12,7 +12,7 @@
     @if (!empty(trim($__env->yieldContent('preheader'))))
       @yield('preheader')
     @else
-      {{ $site_name }} email
+      {{ \App\Helpers\MainHelper::getSiteName() }} email
     @endif
   </span>
   <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation" class="email-shell email-bg">

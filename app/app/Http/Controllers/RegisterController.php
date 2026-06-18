@@ -468,7 +468,10 @@ class RegisterController extends ApiAuthController
     }
     public function forgot(Request $request) {
        $email = $request->get('email');
-       $info = ['email' => $email];
+
+       $info = [
+            'email' => $email,
+       ];
        $response = Password::sendResetLink($info, function (\Illuminate\Mail\Message $message) {
            $message->subject('Your Password Reset Link');
 

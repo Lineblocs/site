@@ -1,3 +1,7 @@
+<?php
+    $customizations = \App\CustomizationsKVStore::getRecord();
+?>
+
 <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
     <tbody>
         <tr>
@@ -15,7 +19,7 @@
 
                                 <tr>
                                     <td style="mso-height-rule: exactly; text-align: center; font-size: 12px; line-height: 20px; font-weight: normal; color: #566e89;">
-                                        {{$site_name}} <br /> {!! nl2br($customizations->contact_address) !!}<br/>
+                                        {{\App\Helpers\MainHelper::getSiteName()}} <br /> {!! nl2br($customizations->contact_address) !!}<br/>
                                     </td>
                                 </tr>
                                 <tr>

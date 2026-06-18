@@ -504,7 +504,7 @@
     @if (!empty($__env->yieldContent('preheader')))
     @yield('preheader')
     @else
-    {{$site_name}} email
+    {{\App\Helpers\MainHelper::getSiteName()}} email
     @endif
   </span>
   <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
