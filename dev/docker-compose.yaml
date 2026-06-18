@@ -46,7 +46,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
   site:
-    # use image from docker hub. Need side project live but not develop site project
+    # use this image below from docker hub. Need site project live but not develop site project
     #image: lineblocs/site:master
     # end of use image from docker hub
     # use dockerfile as image. Development site project, use this config
@@ -54,9 +54,33 @@ services:
       context: ../app
       dockerfile: Dockerfile
     image: lineblocs-site
-    volumes:
-      - ../app:/var/www/html
     # end of use docekrfile as image
+    # Please choose, use block of "volumes" or "develop"
+    # volumes:
+    #   - ../app:/var/www/html
+    develop:
+      watch:
+        - action: sync
+          path: ../app
+          target: /var/www/html
+          ignore: 
+            - node_modules/
+            - vendor/
+        - action: sync+restart
+          path: ../app/shell_scripts/entrypoint.sh
+          target: /var/www/html/shell_scripts/entrypoint.sh
+        - action: sync+restart
+          path: ../app/composer.json
+          target: /var/www/html/composer.json
+        - action: sync+restart
+          path: ../app/package.json
+          target: /var/www/html/package.json
+        - action: rebuild
+          path: ../app/Dockerfile
+        - action: rebuild
+          path: ./docker-compose.yaml
+        - action: rebuild
+          path: ./.env            
     logging: *default-logging
     container_name: lineblocs-site
     restart: unless-stopped
