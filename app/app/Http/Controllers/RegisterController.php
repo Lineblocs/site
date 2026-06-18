@@ -28,6 +28,7 @@ use App\CustomizationsKVStore;
 use Illuminate\Support\Facades\Password;
 use \Log;
 use App\UserDevice;
+use Illuminate\Support\Str;
 use App\UsageTrigger;
 use App\Helpers\WorkspaceHelper;
 use App\Workspace;
@@ -467,57 +468,87 @@ class RegisterController extends ApiAuthController
       return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);
     }
     public function forgot(Request $request) {
-       $email = $request->get('email');
+        $data = $request->all();
+        $email = $data['email'];
 
-       $info = [
+        // Find user by email
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return $this->response->errorBadRequest('User not found');
+        }
+
+        // Generate password reset token
+        $token = bin2hex(random_bytes(32));
+        \DB::table('password_resets')->insert([
             'email' => $email,
-       ];
-       $response = Password::sendResetLink($info, function (\Illuminate\Mail\Message $message) {
-           $message->subject('Your Password Reset Link');
+            'token' => \Hash::make($token),
+            'created_at' => new DateTime()
+        ]);
 
-       });
-        Log::info("reset response is: " . $response);
-       switch ($response) {
-           case Password::RESET_LINK_SENT:
-               return $this->response->noContent();
-            break;
+        // Send email using EmailHelper with runtime SMTP config
+        $resetUrl = MainHelper::createAppUrl('#/reset?token=' . $token . '&email=' . urlencode($email));
+        $emailSent = EmailHelper::sendEmail(
+            'Password Reset Request',
+            $email,
+            'password_reset',
+            ['resetUrl' => $resetUrl, 'user' => $user]
+        );
 
-           case Password::INVALID_USER:
-               return $this->response->errorBadRequest();
-          break;
-  
-       }
+        if ($emailSent === TRUE) {
+            Log::info("Password reset email sent to: " . $email);
+            return $this->response->noContent();
+        } else {
+            Log::error("Failed to send password reset email to: " . $email);
+            return $this->response->errorBadRequest('Failed to send reset email');
+        }
     }
    public function reset(Request $request) {
        $credentials = $request->only(
            'email', 'password', 'password_confirmation', 'token'
        );
 
-       $response = Password::reset($credentials, function ($user, $password) {
-           $user->password = bcrypt($password);
-
-           $user->save();
-
-           //Auth::login($user);
-       });
-       Log::info("reset reply is: " . $response);
-       switch ($response) {
-           case Password::PASSWORD_RESET:
-               return $this->response->noContent();
-            break;
-           case Password::INVALID_PASSWORD:
-               return $this->response->errorBadRequest("Password strength is not sufficient");
-            break;
-            case Password::INVALID_TOKEN:
-               return $this->response->errorBadRequest("Invalid signature");
-            break;
-
-           default:
-               return $this->response->errorBadRequest();
-          break;
-    
-
+       // Validate password confirmation
+       if ($credentials['password'] !== $credentials['password_confirmation']) {
+           return $this->response->errorBadRequest('Passwords do not match');
        }
+
+       // Find reset token record
+       $resetRecord = \DB::table('password_resets')
+           ->where('email', $credentials['email'])
+           ->orderBy('created_at', 'desc')
+           ->first();
+
+       if (!$resetRecord) {
+           return $this->response->errorBadRequest('Invalid or expired token');
+       }
+
+       // Verify token
+       if (!\Hash::check($credentials['token'], $resetRecord->token)) {
+           return $this->response->errorBadRequest('Invalid token');
+       }
+
+       // Check token expiration (tokens expire after 1 hour)
+       $tokenAge = (new DateTime())->getTimestamp() - (new DateTime($resetRecord->created_at))->getTimestamp();
+       if ($tokenAge > 3600) {
+           return $this->response->errorBadRequest('Token has expired');
+       }
+
+       // Find user and update password
+       $user = User::where('email', $credentials['email'])->first();
+       if (!$user) {
+           return $this->response->errorBadRequest('User not found');
+       }
+
+       $user->password = bcrypt($credentials['password']);
+       $user->save();
+
+       // Delete used token
+       \DB::table('password_resets')
+           ->where('email', $credentials['email'])
+           ->delete();
+
+       Log::info("Password reset successful for: " . $credentials['email']);
+       return $this->response->noContent();
   } 
   public function provisionCallSystem(Request $request) {
         $data = $request->all();
