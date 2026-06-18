@@ -194,6 +194,9 @@ final class EmailHelper {
         return FALSE;
     }
     public static function sendEmail($subject, $to, $template, $data, $mailLib='SWIFT') {
+        $data['site_name'] = MainHelper::getSiteName();
+        $data['customizations'] = CustomizationsKVStore::getRecord();
+
         switch ($mailLib) {
             case 'SWIFT':
                 return self::sendWithSwift($subject, $to, $template, $data);

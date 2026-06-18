@@ -135,7 +135,7 @@ class RabbitMQHelper
             'subscription_id' => (int) $subscription->id,
             'creator_id'      => (int) $user->id,
             'action'          => 'IMMEDIATE',
-            'amount'          => (float) $amount, // e.g. 14.52
+            'amount'          => $amount,
             'plan_to_bill'    => (int) $servicePlan->id
         ];
 
