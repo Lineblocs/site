@@ -67,7 +67,6 @@ final class EmailHelper {
      * Sends email using the native Swift Mailer library for more granular control.
      */
     public static function sendEmailDirect($subject, $to, $template, $data) {
-        $customizations = CustomizationsKVStore::getRecord();
         $apiCreds = ApiCredentialKVStore::getRecord();
 
         Log::info("EmailHelper: Starting Direct Swift process for $to");
@@ -104,8 +103,6 @@ final class EmailHelper {
 
             // 5. Build the Body using Laravel's View factory
             $siteName = MainHelper::getSiteName();
-            $data['customizations'] = $customizations;
-            $data['site_name'] = $siteName;
             
             $htmlBody = view('emails.'.$template, $data)->render();
 
@@ -133,11 +130,10 @@ final class EmailHelper {
     public static function sendWithSwift($subject, $to, $template, $data) {
         $customizations = CustomizationsKVStore::getRecord();
         $apiCreds = ApiCredentialKVStore::getRecord();
+        $siteName = MainHelper::getSiteName();
+
 
         Log::info("EmailHelper: Starting process for $to using {$customizations->mail_provider}");
-
-        $data['customizations'] = $customizations;
-        $data['site_name'] = MainHelper::getSiteName();
 
         if ($customizations->mail_provider == 'smtp-gateway') {
             try {
@@ -168,7 +164,7 @@ final class EmailHelper {
 
                 // Set From address to match SMTP username
                 Config::set('mail.from.address', $apiCreds->smtp_user);
-                Config::set('mail.from.name', $data['site_name']);
+                Config::set('mail.from.name', $siteName);
 
                 // 2. Refresh Mailer Service
                 (new MailServiceProvider(app()))->register();
