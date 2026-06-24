@@ -250,7 +250,7 @@ class RegisterController extends ApiAuthController
         $anchorDay = (int)$now->format('j');
         $isTrial = false;
         
-        if ($customizations['is_trial_enabled'] && $plan['free_trial_exempt']) {
+        if ($customizations['is_trial_enabled'] && !$plan['free_trial_exempt']) {
             $isTrial = TRUE;
         }
 
