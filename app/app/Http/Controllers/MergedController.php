@@ -1015,7 +1015,6 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           $trialInterval = new \DateInterval('P' . $trialDurationDays . 'D');
           
           $nextMonthlyDateWithTrial = clone $currentDate;
-          $nextMonthlyDateWithTrial->add(new \DateInterval('P1M'));
           
           // Handle date clamping for monthly
           $originalDay = $currentDate->format('d');
@@ -1029,7 +1028,6 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           $billingDates['next_monthly_billing_date_w_trial_formatted'] = $nextMonthlyDateWithTrial->format('M d, Y');
 
           $nextAnnualDateWithTrial = clone $currentDate;
-          $nextAnnualDateWithTrial->add(new \DateInterval('P1Y'));
           
           // Handle date clamping for annual (leap years)
           $originalDay = $currentDate->format('d');
