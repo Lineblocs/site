@@ -51,7 +51,6 @@ class RegisterController extends ApiAuthController
 {
     public function register(Request $request)
     {
-		// dd($request->all());
         $data = $request->all();
         $email = $data['email'];
         
@@ -87,8 +86,6 @@ class RegisterController extends ApiAuthController
             'default_router_id' => $mainRouter->id
         ]);
 
-
-
         PlanUsagePeriod::create([
             'workspace_id' => $workspace->id,
             'started_at' => new DateTime()
@@ -113,7 +110,6 @@ class RegisterController extends ApiAuthController
       $data = $request->all();
       $user = User::findOrFail($data['userId']);
       $code = $data['confirmation_code'];
-      $code = $data['confirmation_code'];
       $bypass = "BYPASS-0uu5hIw0CL";
       if ($user->call_code == $code || $code == $bypass) {
 
@@ -131,7 +127,7 @@ class RegisterController extends ApiAuthController
     {
       $code = rand(100000, 999999); 
       $data = $request->all();
-     $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+      $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
       $number = $data['mobile_number'];
       $user = User::findOrFail($data['userId']);
       $customizations = CustomizationsKVStore::getRecord();
@@ -184,7 +180,7 @@ class RegisterController extends ApiAuthController
       $data = $request->all();
       $userId = $data['userId'];
       $user = User::findOrFail($userId);
-     $response = new VoiceResponse();
+      $response = new VoiceResponse();
       $callCode = str_split($user->call_code);
       $say = "Your verification code is";
       $times = 5;
@@ -200,10 +196,11 @@ class RegisterController extends ApiAuthController
         }
       }
 
-    return response((string) $response, 200, [
+      return response((string) $response, 200, [
         'Content-Type' => 'application/xml'
       ]);
     }
+
     public function saveRegistrationQuestionResponses(Request $request)
     {
         $data = $request->json()->all();
@@ -219,174 +216,172 @@ class RegisterController extends ApiAuthController
 
         return $this->response->array(['success' => TRUE]);
     }
+
     public function userSpinup(Request $request)
     {
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
-        $customizations =CustomizationsKVStore::getRecord();
+        $customizations = CustomizationsKVStore::getRecord();
         $plan = ServicePlan::where('key_name', $data['plan'])->firstOrFail();
-        //$plan = $plans[$data['plan']];
         $region = SIPPoPRegion::findOrFail( $customizations->default_region );
         $info = MainHelper::getHostIPForUser($region->code, $user);
-          //$reservedIp = AWSHelper::reserveIP($region, $ip['main'], $ip['reservedIp']);
-          //$reservedIp = VultrHelper::reserveIP($region, $ip['main'], $ip."/32");
-          /*
-          if (!$reservedIp) {
-            return $this->response->errorInternal('could not register IP for user');
-          }
-          */
 
+        $workspace = Workspace::where('creator_id', '=', $user->id)->first();
+        $workspace->update([
+          'default_region' => $region->code
+        ]);
 
-          $workspace = Workspace::where('creator_id', '=', $user->id)->first();
-          // setup default region
-          $workspace->update([
-            'default_region' => $region->code
-          ]);
+        Log::info('adding new user to SIP proxy database tables.');
+        $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
 
-          Log::info('adding new user to SIP proxy database tables.');
-          $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
+        if (!$result) {
+          return $this->errorInternal($request, 'could not create/provision user on PBX server');
+        }
 
-          if (!$result) {
-            return $this->errorInternal($request, 'could not create/provision user on PBX server');
-          }
+        if (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') {
+            $billingCycle = 'ANNUAL';
+        } else {
+            $billingCycle = 'MONTHLY';
+        }
+        $recurringCost = NULL;
+        
+        $now = new DateTime();
+        $anchorDay = (int)$now->format('j');
 
-          // Standardize billing cycle naming for the Go service
+        if ($billingCycle === 'ANNUAL') {
+            $periodEnd = (clone $now)->modify('+1 year')->setTime(0,0,0);
+            $recurringCost = $plan->annual_cost_cents;
+        } else {
+            // FIXED: Look ahead to prevent native PHP +1 month edge-case rollover anomalies
+            $nextMonth = (clone $now)->modify('+1 month');
+            $daysInNextMonth = (int)$nextMonth->format('t');
 
-          if (isset($data['billing_cycle']) && strtoupper($data['billing_cycle']) === 'ANNUAL') {
-              $billingCycle = 'ANNUAL';
-          } else {
-              $billingCycle = 'MONTHLY';
-          }
-          $recurringCost = NULL;
-          
-          $now = new DateTime();
-          if ($billingCycle === 'ANNUAL') {
-              $periodEnd = (clone $now)->modify('first day of next year')->setTime(0,0,0);
-              $recurringCost = $plan->annual_cost_cents;
-          } else {
-              $periodEnd = (clone $now)->modify('first day of next month')->setTime(0,0,0);
-              $recurringCost = $plan->monthly_cost_cents;
-          }
-
-          // 1. Create Subscription with Safety Gate anchor
-          $subscription = Subscription::create([
-              'workspace_id' => $workspace->id,
-              'current_plan_id' => $plan->id,
-              'status' => 'ACTIVE',
-              'billing_cycle' => $billingCycle,
-              'current_period_end' => $periodEnd,
-              'next_billing_date' => $periodEnd 
-          ]);
-
-          // 2. Calculate Prorated Amount using BillingDataHelper (with prorations)
-          Log::info("Recurring cost: {$recurringCost} cents");
-          $recurringCostInDollars = BillingDataHelper::toDollars($recurringCost);
-          $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCostInDollars, $billingCycle);
-          Log::info("Amount to charge for signup (with prorations): {$amountToCharge} cents");
-
-          // 3. Dispatch Immediate Billing Task
-          try {
-              RabbitMQHelper::dispatchImmediateBilling(
-                  $workspace,
-                  $subscription,
-                  $user,
-                  $plan,
-                  $billingCycle,
-                  $amountToCharge
-              );
-              Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
-          } catch (\Exception $e) {
-              Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
-          }
-
-
-          Log::info('added user successfully.');
-
-
-          // create k8s deployments
-          $svc = "lineblocs-k8s-user";
-          $params = array(
-              'workspace' => $workspace->name,
-              'user_id' => $user->id,
-              'workspace_id' => $workspace->id,
-          );
-
-          if ( $customizations->custom_code_containers_enabled  ) {
-            Log::info('deploying new container for custom user functions');
-            $result = WebSvcHelper::post($svc, '/createContainer', $params);
-            if (!$result) {
-              return $this->errorInternal($request, 'Error occured when creating user containers');
+            if ($anchorDay > $daysInNextMonth) {
+                // Clamp period end to absolute upper bound of the target calendar block
+                $periodEnd = $nextMonth->setDate((int)$nextMonth->format('Y'), (int)$nextMonth->format('n'), $daysInNextMonth)->setTime(0,0,0);
+            } else {
+                $periodEnd = (clone $now)->modify('+1 month')->setTime(0,0,0);
             }
+            $recurringCost = $plan->monthly_cost_cents;
+        }
 
-            Log::info('deployed container successfully.');
-          }
+        //$billingFlow = MainHelper::getBillingFlow($customizations);
+        $billingFlow = $customizations['billing_flow'];
+        $nextBillingDateStr = $periodEnd->format('Y-m-d');
 
+        $subscription = Subscription::create([
+            'workspace_id' => $workspace->id,
+            'current_plan_id' => $plan->id,
+            'status' => 'ACTIVE',
+            'billing_cycle' => $billingCycle,
+            'current_period_end' => $periodEnd,
+            'next_billing_date' => $nextBillingDateStr,
+            'billing_anchor_day' => $anchorDay
+        ]);
 
-          Log::info('updating DNS records.');
-          $result = DNSHelper::refreshIPs();
-          if (!$result) {
-            return $this->errorInternal($request, 'DNS error occured');
-          }
+        Log::info("Recurring cost: {$recurringCost} cents");
+        $recurringCostInDollars = $recurringCost / 100;
 
-          Log::info('updated DNS successfully.');
+        if ($billingFlow === 'ANNIVERSARY') {
+            $amountToCharge = $recurringCostInDollars;
+            Log::info("Anniversary Billing active: Charging 100% full plan fee.");
+        } else {
+            $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCostInDollars, $billingCycle);
+            Log::info("Calendar Static Billing active: Calculating prorated fee block.");
+        }
+        Log::info("Amount to charge for signup: {$amountToCharge} dollars");
 
-          //add register credit for user
-          $registerCredits = 0;
-          if (!empty($customizations->register_credits)) {
-            $registerCredits = $customizations->register_credits;
-          }
+        try {
+            RabbitMQHelper::dispatchImmediateBilling(
+                $workspace,
+                $subscription,
+                $user,
+                $plan,
+                $billingCycle,
+                $amountToCharge,
+                $nextBillingDateStr
+            );
+            Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
+        } catch (\Exception $e) {
+            Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
+        }
 
-          $amountInCents = $registerCredits*100;
-          $credit = [
-            'cents' => $amountInCents,
-            'card_id' => NULL,
+        Log::info('added user successfully.');
+
+        $svc = "lineblocs-k8s-user";
+        $params = array(
+            'workspace' => $workspace->name,
             'user_id' => $user->id,
             'workspace_id' => $workspace->id,
-            'status' => PaymentStatus::APPROVED,
-            'deduplication_key' => 'credit:register:' . $workspace->id
-          ];
+        );
 
-          UserCredit::create($credit, $plan);
-          $now = new \DateTime();
-          $user->update([
+        if ( $customizations->custom_code_containers_enabled  ) {
+          Log::info('deploying new container for custom user functions');
+          $result = WebSvcHelper::post($svc, '/createContainer', $params);
+          if (!$result) {
+            return $this->errorInternal($request, 'Error occured when creating user containers');
+          }
+          Log::info('deployed container successfully.');
+        }
+
+        Log::info('updating DNS records.');
+        $result = DNSHelper::refreshIPs();
+        if (!$result) {
+          return $this->errorInternal($request, 'DNS error occured');
+        }
+        Log::info('updated DNS successfully.');
+
+        $registerCredits = 0;
+        if (!empty($customizations->register_credits)) {
+          $registerCredits = $customizations->register_credits;
+        }
+
+        $amountInCents = $registerCredits*100;
+        $credit = [
+          'cents' => $amountInCents,
+          'card_id' => NULL,
+          'user_id' => $user->id,
+          'workspace_id' => $workspace->id,
+          'status' => PaymentStatus::APPROVED,
+          'deduplication_key' => 'credit:register:' . $workspace->id
+        ];
+
+        UserCredit::create($credit, $plan);
+        $now = new \DateTime();
+        $user->update([
+          'last_login' => $now
+        ]);
+        $detect = new \Mobile_Detect();
+        $userAgent = $detect->getUserAgent();
+        
+        UserDevice::create([
+            'user_id' => $user->id,
+            'user_agent' => $userAgent,
+            'trusted' => TRUE,
             'last_login' => $now
-          ]);
-          $detect = new \Mobile_Detect();
-          $userAgent = $detect->getUserAgent();
-          //first device
-          UserDevice::create([
-              'user_id' => $user->id,
-              'user_agent' => $userAgent,
-              'trusted' => TRUE,
-              'last_login' => $now
-          ]);
-          UsageTrigger::create([
-              'user_id' => $user->id,
-              'percentage' => 50
-          ]);
+        ]);
+        UsageTrigger::create([
+            'user_id' => $user->id,
+            'percentage' => 50
+        ]);
 
-          // TODO integrate custom email workflows
-          // admin should be able to select from one of many email providers
-          // integrate code for handling emails
-          $link = route('email-verify', ['hash' => $user->email_verify_hash]);
-          $data = [
-            'user' => $user,
-            'link' => $link
-          ];
+        $link = route('email-verify', ['hash' => $user->email_verify_hash]);
+        $data = [
+          'user' => $user,
+          'link' => $link
+        ];
 
-          Log::info('sending new user verification email');
-          $subject =MainHelper::createEmailSubject("Verify Your Email");
-          $result = EmailHelper::sendEmail($subject, $user->email, 'verify_email', $data);
+        Log::info('sending new user verification email');
+        $subject = MainHelper::createEmailSubject("Verify Your Email");
+        $result = EmailHelper::sendEmail($subject, $user->email, 'verify_email', $data);
 
+        $mailData = [];
+        $mailData['user'] = $user;
+        $subject = sprintf("Welcome to %s", MainHelper::getSiteName());
+        $result = EmailHelper::sendEmail($subject, $user->email, 'welcome_email', $mailData);
 
-          $mailData = [];
-          $mailData['user'] = $user;
-          $subject = sprintf("Welcome to %s", MainHelper::getSiteName());
-          $result = EmailHelper::sendEmail($subject, $user->email, 'welcome_email', $mailData);
-
-          return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
+        return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
     }
-
 
     public function getSelf(Request $request)
     {
@@ -407,19 +402,9 @@ class RegisterController extends ApiAuthController
       $user = $this->getUser($request);
       $user->update( $data );
       if (isset($data['password'])) {
-          $mail = Config::get("mail");
           $data = [];
           $subject = "Password reset successfully";
           $result = EmailHelper::sendEmail($subject, $user->email, 'password_was_reset', $data);
-          /*
-          Mail::send('emails.password_was_reset', $data, function ($message) use ($user, $mail) {
-              $message->to($user->email);
-              $subject =MainHelper::createEmailSubject("Password reset successfully");
-              $message->subject($subject);
-              $from = $mail['from'];
-              $message->from($from['address'], $from['name']);
-          });
-          */
       }
       return $this->response->noContent();
     }
@@ -468,20 +453,18 @@ class RegisterController extends ApiAuthController
         'plan' => $plan,
         'started_at' => new DateTime()
       ]);
-      $attrs = [];
       return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArray()]);
     }
+
     public function forgot(Request $request) {
         $data = $request->all();
         $email = $data['email'];
 
-        // Find user by email
         $user = User::where('email', $email)->first();
         if (!$user) {
             return $this->response->errorBadRequest('User not found');
         }
 
-        // Generate password reset token
         $token = bin2hex(random_bytes(32));
         \DB::table('password_resets')->insert([
             'email' => $email,
@@ -489,7 +472,6 @@ class RegisterController extends ApiAuthController
             'created_at' => new DateTime()
         ]);
 
-        // Send email using EmailHelper with runtime SMTP config
         $resetUrl = MainHelper::createAppUrl('#/reset?token=' . $token . '&email=' . urlencode($email));
         $emailSent = EmailHelper::sendEmail(
             'Password Reset Request',
@@ -506,17 +488,16 @@ class RegisterController extends ApiAuthController
             return $this->response->errorBadRequest('Failed to send reset email');
         }
     }
-   public function reset(Request $request) {
+
+    public function reset(Request $request) {
        $credentials = $request->only(
            'email', 'password', 'password_confirmation', 'token'
        );
 
-       // Validate password confirmation
        if ($credentials['password'] !== $credentials['password_confirmation']) {
            return $this->response->errorBadRequest('Passwords do not match');
        }
 
-       // Find reset token record
        $resetRecord = \DB::table('password_resets')
            ->where('email', $credentials['email'])
            ->orderBy('created_at', 'desc')
@@ -526,18 +507,15 @@ class RegisterController extends ApiAuthController
            return $this->response->errorBadRequest('Invalid or expired token');
        }
 
-       // Verify token
        if (!\Hash::check($credentials['token'], $resetRecord->token)) {
            return $this->response->errorBadRequest('Invalid token');
        }
 
-       // Check token expiration (tokens expire after 1 hour)
        $tokenAge = (new DateTime())->getTimestamp() - (new DateTime($resetRecord->created_at))->getTimestamp();
        if ($tokenAge > 3600) {
            return $this->response->errorBadRequest('Token has expired');
        }
 
-       // Find user and update password
        $user = User::where('email', $credentials['email'])->first();
        if (!$user) {
            return $this->response->errorBadRequest('User not found');
@@ -546,31 +524,31 @@ class RegisterController extends ApiAuthController
        $user->password = bcrypt($credentials['password']);
        $user->save();
 
-       // Delete used token
        \DB::table('password_resets')
            ->where('email', $credentials['email'])
            ->delete();
 
        Log::info("Password reset successful for: " . $credentials['email']);
        return $this->response->noContent();
-  } 
-  public function provisionCallSystem(Request $request) {
+    }
+
+    public function provisionCallSystem(Request $request) {
         $data = $request->all();
         $user = User::findOrFail($data['userId']);
         $workspace = Workspace::where('creator_id', '=', $user->id)->first();
         $template = CallSystemTemplate::findOrFail($data['templateId']);
-        $status =MainHelper::provisionCallSystem($user, $workspace, $template);
+        $status = MainHelper::provisionCallSystem($user, $workspace, $template);
         if (!$status) {
           return $this->response->errorInternal();
         }
-      return $this->response->noContent();
-  }
+        return $this->response->noContent();
+    }
 
-  public function thirdPartyLogin(Request $request)
-  {
+    public function thirdPartyLogin(Request $request)
+    {
         $data = $request->all();
         $user = User::where('email', $data['email'])->first();
-        $challenge=  $request->get('challenge');
+        $challenge = $request->get('challenge');
         if ($challenge) {
           if (!MainHelper::checkUserInWorkspace($challenge, $currentUser)) {
             return $this->errorInternal($request, 'workspace challenge failed.');
@@ -579,7 +557,6 @@ class RegisterController extends ApiAuthController
 
         if ($user) {
           $workspace = Workspace::where('creator_id', $user->id)->first();
-          //MainHelper::checkUserInWorkspace($workspace->name, $user);
           if ($workspace) {
               $token = JWTAuth::fromUser($user);
               if (!$token) {
@@ -595,7 +572,6 @@ class RegisterController extends ApiAuthController
                 'confirmed' => FALSE,
                 'info' => $info,
                 'userId' => $user->id
-
               ]);
             }
             return $this->response->array([
@@ -617,289 +593,277 @@ class RegisterController extends ApiAuthController
                   'confirmed' => FALSE,
                   'info' => $info,
                   'userId' => $user->id
-
                 ]);
+        }
 
-      }
-      //create a new user
-      
-      $user = MainHelper::createUser([
-        'email' => $data['email'],
-        'first_name' => $data['first_name'],
-        'last_name' => $data['last_name']
-      ]);
-      $token = JWTAuth::fromUser($user);
-      if (!$token) {
-          return $token;
-      }
+        $user = MainHelper::createUser([
+          'email' => $data['email'],
+          'first_name' => $data['first_name'],
+          'last_name' => $data['last_name']
+        ]);
+        $token = JWTAuth::fromUser($user);
+        if (!$token) {
+            return $token;
+        }
 
+        $info = [
+          'workspace' => [],
+          'token' => MainHelper::createJWTPayload($token)
+        ];
+        return $this->response->array([
+                'confirmed' => FALSE,
+                'info' => $info,
+                'userId' => $user->id
+              ]);
+    }
 
-      $info = [
-        'workspace' => [],
-        'token' => MainHelper::createJWTPayload($token)
-      ];
-      return $this->response->array([
-              'confirmed' => FALSE,
-              'info' => $info,
-              'userId' => $user->id
-
-            ]);
-
-  }
-  public function getUserInfo(Request $request)
-  {
+    public function getUserInfo(Request $request)
+    {
         $email = $request->get('email');
         $user = User::where('email', $email)->first();
-      if ( $user ) {
+        if ( $user ) {
+          return $this->response->array([
+            'found' => TRUE,
+            'info' => [
+              'name' => $user->getName()
+            ]
+          ]);
+        }
         return $this->response->array([
-          'found' => TRUE,
-          'info' => [
-            'name' => $user->getName()
-          ]
+            'found' => FALSE
+          ]);
+    }
+
+    private function normalizeOneTimeLoginPayload(Request $request)
+    {
+        $payload = $request->all();
+        if (empty($payload)) {
+            $payload = $request->json()->all();
+        }
+        return is_array($payload) ? $payload : [];
+    }
+
+    private function userBelongsToWorkspace($user, $workspace)
+    {
+        if (!$user || !$workspace) {
+            return false;
+        }
+        if ((int) $workspace->creator_id === (int) $user->id) {
+            return true;
+        }
+        $workspaceUserCount = WorkspaceUser::where('workspace_id', $workspace->id)
+            ->where('user_id', $user->id)
+            ->count();
+        return $workspaceUserCount > 0;
+    }
+
+    public function sendOneTimeLoginLink(Request $request)
+    {
+        $data = $this->normalizeOneTimeLoginPayload($request);
+        $userId = array_key_exists('userId', $data) ? (int) $data['userId'] : (array_key_exists('user_id', $data) ? (int) $data['user_id'] : 0);
+        $workspaceId = array_key_exists('workspaceId', $data) ? (int) $data['workspaceId'] : (array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0);
+
+        if ($userId <= 0 || $workspaceId <= 0) {
+            return $this->response->array([
+                'success' => false,
+                'message' => 'userId and workspaceId are required.'
+            ]);
+        }
+
+        $user = User::find($userId);
+        $workspace = Workspace::find($workspaceId);
+        if (!$user || !$workspace) {
+            return $this->response->array([
+                'success' => false,
+                'message' => 'User or workspace not found.'
+            ]);
+        }
+
+        if (!$this->userBelongsToWorkspace($user, $workspace)) {
+            return $this->response->array([
+                'success' => false,
+                'message' => 'User does not belong to this workspace.'
+            ]);
+        }
+
+        $ttlMinutes = array_key_exists('expiry_minutes', $data) ? (int) $data['expiry_minutes'] : (int) env('ONE_TIME_LOGIN_LINK_TTL', 60);
+        if ($ttlMinutes <= 0) {
+            $ttlMinutes = 60;
+        }
+
+        $token = TokenHelper::createToken('one_time_login', [
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
+            'email' => (string) $user->email
+        ], $ttlMinutes);
+
+        if (empty($token)) {
+            return $this->response->array([
+                'success' => false,
+                'message' => 'Could not generate one-time token.'
+            ]);
+        }
+
+        $tokenHash = hash('sha256', $token);
+        $now = new DateTime();
+        $expiresAt = (clone $now)->modify(sprintf('+%d minutes', $ttlMinutes));
+
+        OneTimeLoginLink::where('user_id', $user->id)
+            ->where('workspace_id', $workspace->id)
+            ->whereNull('used_at')
+            ->update([
+                'used_at' => $now->format('Y-m-d H:i:s')
+            ]);
+
+        OneTimeLoginLink::create([
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
+            'token_hash' => $tokenHash,
+            'expires_at' => $expiresAt->format('Y-m-d H:i:s')
         ]);
-      }
-      return $this->response->array([
-          'found' => FALSE
+
+        $linkExpiresAt = time() + ($ttlMinutes * 60);
+        $linkParams = [
+            'token' => $token,
+            'userId' => $user->id,
+            'workspaceId' => $workspace->id,
+            'expires' => $linkExpiresAt
+        ];
+        $linkParams['sig'] = TokenHelper::signLinkParams($linkParams);
+
+        $loginLink = MainHelper::createUrl('one-time-login') . '?' . http_build_query($linkParams);
+
+        $subject = MainHelper::createEmailSubject('Your One-Time Login Link');
+        $result = EmailHelper::sendEmail($subject, $user->email, 'one_time_login_link', [
+            'user' => $user,
+            'workspace' => $workspace,
+            'login_link' => $loginLink,
+            'expires_minutes' => $ttlMinutes
         ]);
 
-  }
+        return $this->response->array([
+            'success' => $result === TRUE,
+            'email' => $user->email,
+            'workspace_id' => $workspace->id,
+            'expires_minutes' => $ttlMinutes
+        ]);
+    }
 
-  private function normalizeOneTimeLoginPayload(Request $request)
-  {
-      $payload = $request->all();
-      if (empty($payload)) {
-          $payload = $request->json()->all();
-      }
+    public function consumeOneTimeLoginLink(Request $request)
+    {
+        $token = $request->query('token');
+        $linkUserId = (int) $request->query('userId', 0);
+        $linkWorkspaceId = (int) $request->query('workspaceId', 0);
+        $linkExpires = (int) $request->query('expires', 0);
+        $linkSignature = (string) $request->query('sig', '');
 
-      return is_array($payload) ? $payload : [];
-  }
+        if (empty($token)) {
+            return response('Invalid or expired one-time login link.', 403);
+        }
 
-  private function userBelongsToWorkspace($user, $workspace)
-  {
-      if (!$user || !$workspace) {
-          return false;
-      }
+        if ($linkExpires <= 0 || $linkExpires < time()) {
+            return response('This one-time login link has expired.', 403);
+        }
 
-      if ((int) $workspace->creator_id === (int) $user->id) {
-          return true;
-      }
+        $isValidLinkSignature = TokenHelper::validateLinkSignature([
+            'token' => $token,
+            'userId' => $linkUserId,
+            'workspaceId' => $linkWorkspaceId,
+            'expires' => $linkExpires
+        ], $linkSignature);
 
-      $workspaceUserCount = WorkspaceUser::where('workspace_id', $workspace->id)
-          ->where('user_id', $user->id)
-          ->count();
+        if (!$isValidLinkSignature) {
+            return response('Invalid one-time login link signature.', 403);
+        }
 
-      return $workspaceUserCount > 0;
-  }
+        $payload = TokenHelper::getPayload($token);
+        if (empty($payload)) {
+            return response('Invalid or expired one-time login link.', 403);
+        }
 
-  public function sendOneTimeLoginLink(Request $request)
-  {
-      $data = $this->normalizeOneTimeLoginPayload($request);
-      $userId = array_key_exists('userId', $data) ? (int) $data['userId'] : (array_key_exists('user_id', $data) ? (int) $data['user_id'] : 0);
-      $workspaceId = array_key_exists('workspaceId', $data) ? (int) $data['workspaceId'] : (array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0);
+        $userId = array_key_exists('user_id', $payload) ? (int) $payload['user_id'] : 0;
+        $workspaceId = array_key_exists('workspace_id', $payload) ? (int) $payload['workspace_id'] : 0;
+        $email = array_key_exists('email', $payload) ? (string) $payload['email'] : '';
+        if ($userId <= 0 || $workspaceId <= 0 || empty($email)) {
+            return response('Invalid one-time login link.', 403);
+        }
 
-      if ($userId <= 0 || $workspaceId <= 0) {
-          return $this->response->array([
-              'success' => false,
-              'message' => 'userId and workspaceId are required.'
-          ]);
-      }
+        if ($linkUserId !== $userId || $linkWorkspaceId !== $workspaceId) {
+            return response('Invalid one-time login link.', 403);
+        }
 
-      $user = User::find($userId);
-      $workspace = Workspace::find($workspaceId);
-      if (!$user || !$workspace) {
-          return $this->response->array([
-              'success' => false,
-              'message' => 'User or workspace not found.'
-          ]);
-      }
+        $isValidToken = TokenHelper::validateToken($token, 'one_time_login', [
+            'user_id' => $userId,
+            'workspace_id' => $workspaceId,
+            'email' => $email
+        ]);
 
-      if (!$this->userBelongsToWorkspace($user, $workspace)) {
-          return $this->response->array([
-              'success' => false,
-              'message' => 'User does not belong to this workspace.'
-          ]);
-      }
+        if (!$isValidToken) {
+            return response('Invalid or expired one-time login link.', 403);
+        }
 
-      $ttlMinutes = array_key_exists('expiry_minutes', $data) ? (int) $data['expiry_minutes'] : (int) env('ONE_TIME_LOGIN_LINK_TTL', 60);
-      if ($ttlMinutes <= 0) {
-          $ttlMinutes = 60;
-      }
+        $tokenHash = hash('sha256', $token);
+        $record = OneTimeLoginLink::where('token_hash', $tokenHash)->first();
+        if (!$record) {
+            return response('Login link not found.', 403);
+        }
 
-      $token = TokenHelper::createToken('one_time_login', [
-          'user_id' => $user->id,
-          'workspace_id' => $workspace->id,
-          'email' => (string) $user->email
-      ], $ttlMinutes);
+        if (!empty($record->used_at)) {
+            return response('This one-time login link has already been used.', 410);
+        }
 
-      if (empty($token)) {
-          return $this->response->array([
-              'success' => false,
-              'message' => 'Could not generate one-time token.'
-          ]);
-      }
+        if (strtotime($record->expires_at) <= time()) {
+            return response('This one-time login link has expired.', 403);
+        }
 
-      $tokenHash = hash('sha256', $token);
-      $now = new DateTime();
-      $expiresAt = (clone $now)->modify(sprintf('+%d minutes', $ttlMinutes));
+        $user = User::find($record->user_id);
+        $workspace = Workspace::find($record->workspace_id);
+        if (!$this->userBelongsToWorkspace($user, $workspace)) {
+            return response('Invalid one-time login link.', 403);
+        }
 
-      OneTimeLoginLink::where('user_id', $user->id)
-          ->where('workspace_id', $workspace->id)
-          ->whereNull('used_at')
-          ->update([
-              'used_at' => $now->format('Y-m-d H:i:s')
-          ]);
+        $updated = \DB::table('one_time_login_links')
+            ->where('id', $record->id)
+            ->whereNull('used_at')
+            ->update([
+                'used_at' => date('Y-m-d H:i:s')
+            ]);
 
-      OneTimeLoginLink::create([
-          'user_id' => $user->id,
-          'workspace_id' => $workspace->id,
-          'token_hash' => $tokenHash,
-          'expires_at' => $expiresAt->format('Y-m-d H:i:s')
-      ]);
+        if ((int) $updated !== 1) {
+            return response('This one-time login link has already been used.', 410);
+        }
 
-      $linkExpiresAt = time() + ($ttlMinutes * 60);
-      $linkParams = [
-          'token' => $token,
-          'userId' => $user->id,
-          'workspaceId' => $workspace->id,
-          'expires' => $linkExpiresAt
-      ];
-      $linkParams['sig'] = TokenHelper::signLinkParams($linkParams);
+        $loginToken = JWTAuth::fromUser($user);
+        if (!$loginToken) {
+            return response('Could not create login token.', 500);
+        }
 
-      $loginLink = MainHelper::createUrl('one-time-login') . '?' . http_build_query($linkParams);
+        $redirectUrl = MainHelper::createPortalLink(sprintf('?auth=%s&workspaceId=%d', $loginToken, $workspace->id));
+        return redirect($redirectUrl);
+    }
 
-      $subject = MainHelper::createEmailSubject('Your One-Time Login Link');
-      $result = EmailHelper::sendEmail($subject, $user->email, 'one_time_login_link', [
-          'user' => $user,
-          'workspace' => $workspace,
-          'login_link' => $loginLink,
-          'expires_minutes' => $ttlMinutes
-      ]);
+    public function isTestNumber($number) {
+        $tag = "\\+\\dTEST\\-0uu5hIw0CL";
+        if (preg_match("/^" . $tag . "/", $number, $matches)) {
+          return TRUE; 
+        }
+        return FALSE;
+    }
 
-      return $this->response->array([
-          'success' => $result === TRUE,
-          'email' => $user->email,
-          'workspace_id' => $workspace->id,
-          'expires_minutes' => $ttlMinutes
-      ]);
-  }
+    public function addCard(Request $request)
+    {
+      $user = User::findOrFail($request->get("user_id"));
+      $workspace = Workspace::findOrFail($request->get("workspace_id"));
+      $data = $request->json()->all();
+      MainHelper::addCard($data, $user, $workspace);
+      return $this->response->noContent();
+    }
 
-  public function consumeOneTimeLoginLink(Request $request)
-  {
-      $token = $request->query('token');
-      $linkUserId = (int) $request->query('userId', 0);
-      $linkWorkspaceId = (int) $request->query('workspaceId', 0);
-      $linkExpires = (int) $request->query('expires', 0);
-      $linkSignature = (string) $request->query('sig', '');
-
-      if (empty($token)) {
-          return response('Invalid or expired one-time login link.', 403);
-      }
-
-      if ($linkExpires <= 0 || $linkExpires < time()) {
-          return response('This one-time login link has expired.', 403);
-      }
-
-      $isValidLinkSignature = TokenHelper::validateLinkSignature([
-          'token' => $token,
-          'userId' => $linkUserId,
-          'workspaceId' => $linkWorkspaceId,
-          'expires' => $linkExpires
-      ], $linkSignature);
-
-      if (!$isValidLinkSignature) {
-          return response('Invalid one-time login link signature.', 403);
-      }
-
-      $payload = TokenHelper::getPayload($token);
-      if (empty($payload)) {
-          return response('Invalid or expired one-time login link.', 403);
-      }
-
-      $userId = array_key_exists('user_id', $payload) ? (int) $payload['user_id'] : 0;
-      $workspaceId = array_key_exists('workspace_id', $payload) ? (int) $payload['workspace_id'] : 0;
-      $email = array_key_exists('email', $payload) ? (string) $payload['email'] : '';
-      if ($userId <= 0 || $workspaceId <= 0 || empty($email)) {
-          return response('Invalid one-time login link.', 403);
-      }
-
-      if ($linkUserId !== $userId || $linkWorkspaceId !== $workspaceId) {
-          return response('Invalid one-time login link.', 403);
-      }
-
-      $isValidToken = TokenHelper::validateToken($token, 'one_time_login', [
-          'user_id' => $userId,
-          'workspace_id' => $workspaceId,
-          'email' => $email
-      ]);
-
-      if (!$isValidToken) {
-          return response('Invalid or expired one-time login link.', 403);
-      }
-
-      $tokenHash = hash('sha256', $token);
-      $record = OneTimeLoginLink::where('token_hash', $tokenHash)->first();
-      if (!$record) {
-          return response('Login link not found.', 403);
-      }
-
-      if (!empty($record->used_at)) {
-          return response('This one-time login link has already been used.', 410);
-      }
-
-      if (strtotime($record->expires_at) <= time()) {
-          return response('This one-time login link has expired.', 403);
-      }
-
-      $user = User::find($record->user_id);
-      $workspace = Workspace::find($record->workspace_id);
-      if (!$this->userBelongsToWorkspace($user, $workspace)) {
-          return response('Invalid one-time login link.', 403);
-      }
-
-      $updated = \DB::table('one_time_login_links')
-          ->where('id', $record->id)
-          ->whereNull('used_at')
-          ->update([
-              'used_at' => date('Y-m-d H:i:s')
-          ]);
-
-      if ((int) $updated !== 1) {
-          return response('This one-time login link has already been used.', 410);
-      }
-
-      $loginToken = JWTAuth::fromUser($user);
-      if (!$loginToken) {
-          return response('Could not create login token.', 500);
-      }
-
-      $redirectUrl = MainHelper::createPortalLink(sprintf('?auth=%s&workspaceId=%d', $loginToken, $workspace->id));
-      return redirect($redirectUrl);
-  }
-
-  public function isTestNumber($number) {
-      $tag = "\\+\\dTEST\\-0uu5hIw0CL";
-      if (preg_match("/^" . $tag . "/", $number, $matches)) {
-        return TRUE; 
-      }
-      return FALSE;
-  }
-
-  public function addCard(Request $request)
-  {
-    $user = User::findOrFail($request->get("user_id"));
-    $workspace = Workspace::findOrFail($request->get("workspace_id"));
-    $data = $request->json()->all();
-    MainHelper::addCard($data, $user, $workspace);
-    return $this->response->noContent();
-  }
-
-  public function emailTest(){
-    $email = 'tgblinkss@gmail.com';
-    $data = 'This is a test';
-    $subject =MainHelper::createEmailSubject("Verify Your Email");
-    $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
-    return json_encode($result);
-    // return $this->response->array(['success' => TRUE, 'workspace' => $workspace->toArrayWithRoles($user)]);
-  }
-
+    public function emailTest(){
+      $email = 'tgblinkss@gmail.com';
+      $data = 'This is a test';
+      $subject = MainHelper::createEmailSubject("Verify Your Email");
+      $result = EmailHelper::sendEmail($subject, $email, 'verify_email', $data);
+      return json_encode($result);
+    }
 }

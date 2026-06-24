@@ -32,4 +32,5 @@ return [
     'migrate_warning' => 'Warning: You cannot reverse this change. Users will be moved over to the new plan in the next billing cycle.',
     'select_plan' => 'Select plan',
     'status' => 'Status',
+    'free_trial_exempt' => 'Free Trial Exempt'
 ];

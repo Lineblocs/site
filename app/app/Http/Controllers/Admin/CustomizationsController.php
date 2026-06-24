@@ -151,6 +151,20 @@ class CustomizationsController extends AdminController {
 			}
 			$update_params['admin_portal_logo'] = $admin_logo;
 		}
+		$is_trial_enabled = false;
+		if ( !empty( $update_params['is_trial_enabled'] ) ) {
+			if ( $update_params['billing_flow'] === 'ANNUAL' ) {
+				$session = $request->session();
+				$session->flash('type', 'error');
+				$session->flash('message', 'Trial mode cannot be enabled with ANNUAL billing flow');
+				return redirect("/admin/customizations");
+			}
+			if ( $update_params['billing_flow'] === 'ANNIVERSARY' ) {
+				$is_trial_enabled = true;
+			}
+		}
+		$update_params['is_trial_enabled'] = $is_trial_enabled;
+
 		$payments_enabled = false;
 
 		if ( $update_params['payment_gateway_enabled'] =='yes') {

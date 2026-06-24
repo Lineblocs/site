@@ -452,6 +452,35 @@
                 </div>
             </div>
 
+            <div class="row">
+                <h3>Free Trial Mode</h3>
+                <hr/>
+            </div>
+
+            <div class="row form-group">
+                <label for="is_trial_enabled">Enable Free Trial</label>
+                <div class="controls">
+                    @if ( $record->is_trial_enabled )
+                        <input id="is_trial_enabled" type="checkbox"  name="is_trial_enabled" checked/>
+                    @else
+                        <input id="is_trial_enabled" type="checkbox"  name="is_trial_enabled"/>
+                    @endif
+                    <label for="is_trial_enabled">Enable free trial mode for service plans</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label for="trial_duration_days">Trial Duration (days)</label>
+                <div class="controls">
+                    <select name="trial_duration_days" class="form-control" id="trial_duration_days">
+                        <option value="">Select trial duration</option>
+                        <option value="7" {{ $record->trial_duration_days == 7 ? 'selected' : '' }}>7 days</option>
+                        <option value="14" {{ $record->trial_duration_days == 14 ? 'selected' : '' }}>14 days</option>
+                        <option value="31" {{ $record->trial_duration_days == 31 ? 'selected' : '' }}>31 days</option>
+                    </select>
+                </div>
+            </div>
+
 
             <div class="row form-group">
                 <label for="live_chat_enabled">Live chat enabled</label>

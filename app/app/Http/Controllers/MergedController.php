@@ -86,6 +86,7 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use App\Transformers\RecordingTransformer;
 use App\Transformers\CallTransformer;
+use App\Enums\WorkspaceUserStatus;
 
 use App\UserCredit;
 use DateTime;
@@ -760,7 +761,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       $workspace = Workspace::findOrFail($workspaceUser->workspace_id);
       $workspaceUser->update([
         'accepted' => TRUE,
-        'hash_expired' => TRUE
+        'hash_expired' => TRUE,
+        'status' => WorkspaceUserStatus::ACTIVE
       ]);
 
 
@@ -962,8 +964,112 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
         $item['benefits'] = $plan_benefits;
         $results[] = $item;
       }
-        return $this->response->array($results);
+
+      // Calculate next billing dates once
+      $currentDate = new \DateTime();
+      $billingDates = [];
+      
+      // Check billing flow configuration (anniversary vs annual billing)
+      $customizations = CustomizationsKVStore::getRecord();
+      $billingFlow = $customizations['billing_flow'];
+      
+      // For anniversary billing: add 1 month to current date with date clamping
+      if ($billingFlow === 'ANNIVERSARY') {
+        // Add 1 month for monthly billing
+        $nextMonthlyDate = clone $currentDate;
+        $nextMonthlyDate->add(new \DateInterval('P1M'));
+        
+        // Handle date clamping: if the day doesn't exist in next month, move to end of month
+        $originalDay = $currentDate->format('d');
+        $lastDayOfMonth = $nextMonthlyDate->format('t');
+        if ((int)$originalDay > (int)$lastDayOfMonth) {
+          $nextMonthlyDate->setDate($nextMonthlyDate->format('Y'), $nextMonthlyDate->format('m'), $lastDayOfMonth);
+        }
+
+        $billingDates['next_monthly_billing_date'] = $nextMonthlyDate->format('Y-m-d');
+        $billingDates['next_monthly_billing_date_formatted'] = $nextMonthlyDate->format('M d, Y');
+        
+        // Add 1 year for annual billing with same date clamping
+        $nextAnnualDate = clone $currentDate;
+        $nextAnnualDate->add(new \DateInterval('P1Y'));
+        
+        // Handle date clamping for leap years (Feb 29)
+        $originalDay = $currentDate->format('d');
+        $lastDayOfMonth = $nextAnnualDate->format('t');
+        if ((int)$originalDay > (int)$lastDayOfMonth) {
+          $nextAnnualDate->setDate($nextAnnualDate->format('Y'), $nextAnnualDate->format('m'), $lastDayOfMonth);
+        }
+
+        // Apply trial period to billing dates if enabled and plan is not exempt
+        $isTrialEnabled = $customizations['is_trial_enabled'];
+        $trialDurationDays = $customizations['trial_duration_days'];
+        
+        $billingDates['next_annual_billing_date'] = $nextAnnualDate->format('Y-m-d');
+        $billingDates['next_annual_billing_date_formatted'] = $nextAnnualDate->format('M d, Y');
+        $billingDates['next_monthly_billing_date'] = $nextMonthlyDate->format('Y-m-d');
+        $billingDates['next_monthly_billing_date_formatted'] = $nextMonthlyDate->format('M d, Y');
+
+
+        if ($isTrialEnabled && $trialDurationDays > 0) {
+          // Add trial duration to billing dates
+          $trialInterval = new \DateInterval('P' . $trialDurationDays . 'D');
+          
+          $nextMonthlyDateWithTrial = clone $currentDate;
+          $nextMonthlyDateWithTrial->add(new \DateInterval('P1M'));
+          
+          // Handle date clamping for monthly
+          $originalDay = $currentDate->format('d');
+          $lastDayOfMonth = $nextMonthlyDateWithTrial->format('t');
+          if ((int)$originalDay > (int)$lastDayOfMonth) {
+            $nextMonthlyDateWithTrial->setDate($nextMonthlyDateWithTrial->format('Y'), $nextMonthlyDateWithTrial->format('m'), $lastDayOfMonth);
+          }
+          
+          $nextMonthlyDateWithTrial->add($trialInterval);
+          $billingDates['next_monthly_billing_date_w_trial'] = $nextMonthlyDateWithTrial->format('Y-m-d');
+          $billingDates['next_monthly_billing_date_w_trial_formatted'] = $nextMonthlyDateWithTrial->format('M d, Y');
+
+          $nextAnnualDateWithTrial = clone $currentDate;
+          $nextAnnualDateWithTrial->add(new \DateInterval('P1Y'));
+          
+          // Handle date clamping for annual (leap years)
+          $originalDay = $currentDate->format('d');
+          $lastDayOfMonth = $nextAnnualDateWithTrial->format('t');
+          if ((int)$originalDay > (int)$lastDayOfMonth) {
+            $nextAnnualDateWithTrial->setDate($nextAnnualDateWithTrial->format('Y'), $nextAnnualDateWithTrial->format('m'), $lastDayOfMonth);
+          }
+          
+          $nextAnnualDateWithTrial->add($trialInterval);
+          $billingDates['next_annual_billing_date_w_trial'] = $nextAnnualDateWithTrial->format('Y-m-d');
+          $billingDates['next_annual_billing_date_w_trial_formatted'] = $nextAnnualDateWithTrial->format('M d, Y');
+
+        }
+      } else {
+        // Monthly billing: set to first day of next month
+        $nextMonthlyDate = clone $currentDate;
+        $nextMonthlyDate->add(new \DateInterval('P1M'));
+        $nextMonthlyDate->setDate($nextMonthlyDate->format('Y'), $nextMonthlyDate->format('m'), 1);
+        $billingDates['next_monthly_billing_date'] = $nextMonthlyDate->format('Y-m-d');
+        $billingDates['next_monthly_billing_date_formatted'] = $nextMonthlyDate->format('M d, Y');
+        
+        // Annual billing: set to first day of next year
+        $nextAnnualDate = clone $currentDate;
+        $nextAnnualDate->add(new \DateInterval('P1Y'));
+        $nextAnnualDate->setDate($nextAnnualDate->format('Y'), 1, 1);
+        $billingDates['next_annual_billing_date'] = $nextAnnualDate->format('Y-m-d');
+        $billingDates['next_annual_billing_date_formatted'] = $nextAnnualDate->format('M d, Y');
       }
+
+
+
+      $data = [
+        'plans' => $results,
+        'billing_dates' => $billingDates,
+        'trial_duration_days' => $trialDurationDays
+      ];
+
+
+      return $this->response->array($data);
+  }
 
   public function search(Request $request) {
       $query = $request->get("query");
