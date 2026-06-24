@@ -28,7 +28,8 @@ class ServicePlan extends Model {
   'featured_plan' => 'boolean',
   'pay_as_you_go' => 'boolean',
   'registration_plan' => 'boolean',
-  'include_in_pricing_pages' => 'boolean'
+  'include_in_pricing_pages' => 'boolean',
+  'free_trial_exempt' => 'boolean'
   );
   protected $table ='service_plans';
   public static function sortPlansByFeatures( $plans )
