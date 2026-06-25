@@ -295,8 +295,7 @@ class RegisterController extends ApiAuthController
 
         //$billingFlow = MainHelper::getBillingFlow($customizations);
         $nextBillingDateStr = $periodEnd->format('Y-m-d');
-
-        $subscription = Subscription::create([
+        $subscriptionParams = [
             'workspace_id' => $workspace->id,
             'current_plan_id' => $plan->id,
             'status' => 'ACTIVE',
@@ -304,7 +303,15 @@ class RegisterController extends ApiAuthController
             'current_period_end' => $periodEnd,
             'next_billing_date' => $nextBillingDateStr,
             'billing_anchor_day' => $anchorDay
-        ]);
+        ];
+
+        if ($isTrial) {
+            $subscriptionParams['is_free_trial_active'] = true;
+            $subscriptionParams['free_trial_start_date'] = $now;
+            $subscriptionParams['free_trial_end_date'] = $periodEnd;
+        }
+
+        $subscription = Subscription::create($subscriptionParams);
 
         Log::info("Recurring cost: {$recurringCost} cents");
         $recurringCostInDollars = $recurringCost / 100;

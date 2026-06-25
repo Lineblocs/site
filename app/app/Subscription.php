@@ -15,6 +15,7 @@ class Subscription extends Model {
   protected $guarded  = array('id');
   protected $table = "subscriptions";
   protected $casts = array(
+    'is_free_trial_active' => 'boolean',
   );
 
   public function toArray()
