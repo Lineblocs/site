@@ -231,6 +231,7 @@ class RegisterController extends ApiAuthController
           'default_region' => $region->code
         ]);
 
+        $billingFlow = $customizations['billing_flow'];
         Log::info('adding new user to SIP proxy database tables.');
         $result = SIPRouterHelper::updateProxyToEnableWorkspace($user, $workspace, $info['proxy']);
 
@@ -247,29 +248,54 @@ class RegisterController extends ApiAuthController
         
         $now = new DateTime();
         $anchorDay = (int)$now->format('j');
+        $isTrial = false;
+        
+        if ($customizations['is_trial_enabled'] && !$plan['free_trial_exempt']) {
+            $isTrial = TRUE;
+        }
 
-        if ($billingCycle === 'ANNUAL') {
-            $periodEnd = (clone $now)->modify('+1 year')->setTime(0,0,0);
-            $recurringCost = $plan->annual_cost_cents;
-        } else {
-            // FIXED: Look ahead to prevent native PHP +1 month edge-case rollover anomalies
-            $nextMonth = (clone $now)->modify('+1 month');
-            $daysInNextMonth = (int)$nextMonth->format('t');
+        $trialDurationDays = $customizations['trial_duration_days'];
 
-            if ($anchorDay > $daysInNextMonth) {
-                // Clamp period end to absolute upper bound of the target calendar block
-                $periodEnd = $nextMonth->setDate((int)$nextMonth->format('Y'), (int)$nextMonth->format('n'), $daysInNextMonth)->setTime(0,0,0);
+        if ($billingFlow === 'ANNUAL') {
+            if ($billingCycle === 'ANNUAL') {
+                $periodEnd = (clone $now)->modify('+1 year')->setTime(0,0,0);
+                $recurringCost = $plan->annual_cost_cents;
             } else {
-                $periodEnd = (clone $now)->modify('+1 month')->setTime(0,0,0);
+                // FIXED: Look ahead to prevent native PHP +1 month edge-case rollover anomalies
+                $nextMonth = (clone $now)->modify('+1 month');
+                $daysInNextMonth = (int)$nextMonth->format('t');
+
+                if ($anchorDay > $daysInNextMonth) {
+                    // Clamp period end to absolute upper bound of the target calendar block
+                    $periodEnd = $nextMonth->setDate((int)$nextMonth->format('Y'), (int)$nextMonth->format('n'), $daysInNextMonth)->setTime(0,0,0);
+                } else {
+                    $periodEnd = (clone $now)->modify('+1 month')->setTime(0,0,0);
+                }
+                $recurringCost = $plan->monthly_cost_cents;
             }
-            $recurringCost = $plan->monthly_cost_cents;
+        } else if ($billingFlow === 'ANNIVERSARY') {
+            
+            if ($isTrial) {
+                if ($billingCycle === 'ANNUAL') {
+                    $periodEnd = (clone $now)->modify('+1 year');
+                    $recurringCost = $plan->annual_cost_cents;
+                } else {
+                    $periodEnd = (clone $now)->modify('+1 month');
+                    $recurringCost = $plan->monthly_cost_cents;
+                }
+            } else {
+                $periodEnd = (clone $now)->modify(sprintf('+%d days', $trialDurationDays));
+                if ($billingCycle === 'ANNUAL') {
+                    $recurringCost = $plan->annual_cost_cents;
+                } else {
+                    $recurringCost = $plan->monthly_cost_cents;
+                }
+            }
         }
 
         //$billingFlow = MainHelper::getBillingFlow($customizations);
-        $billingFlow = $customizations['billing_flow'];
         $nextBillingDateStr = $periodEnd->format('Y-m-d');
-
-        $subscription = Subscription::create([
+        $subscriptionParams = [
             'workspace_id' => $workspace->id,
             'current_plan_id' => $plan->id,
             'status' => 'ACTIVE',
@@ -277,7 +303,15 @@ class RegisterController extends ApiAuthController
             'current_period_end' => $periodEnd,
             'next_billing_date' => $nextBillingDateStr,
             'billing_anchor_day' => $anchorDay
-        ]);
+        ];
+
+        if ($isTrial) {
+            $subscriptionParams['is_free_trial_active'] = true;
+            $subscriptionParams['free_trial_start_date'] = $now;
+            $subscriptionParams['free_trial_end_date'] = $periodEnd;
+        }
+
+        $subscription = Subscription::create($subscriptionParams);
 
         Log::info("Recurring cost: {$recurringCost} cents");
         $recurringCostInDollars = $recurringCost / 100;
@@ -292,16 +326,18 @@ class RegisterController extends ApiAuthController
         Log::info("Amount to charge for signup: {$amountToCharge} dollars");
 
         try {
-            RabbitMQHelper::dispatchImmediateBilling(
-                $workspace,
-                $subscription,
-                $user,
-                $plan,
-                $billingCycle,
-                $amountToCharge,
-                $nextBillingDateStr
-            );
-            Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
+            if (!$isTrial) {
+                RabbitMQHelper::dispatchImmediateBilling(
+                    $workspace,
+                    $subscription,
+                    $user,
+                    $plan,
+                    $billingCycle,
+                    $amountToCharge,
+                    $nextBillingDateStr
+                );
+                Log::info("Signup Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
+            }
         } catch (\Exception $e) {
             Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
         }

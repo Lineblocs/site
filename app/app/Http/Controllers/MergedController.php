@@ -375,6 +375,21 @@ class MergedController extends ApiAuthController
         $checklist['added_billing_info'] = TRUE;
       }
 
+      // Add metrics to API result
+      $today = date('Y-m-d');
+      $callsToday = Call::where('workspace_id', $workspace->id)
+        ->whereDate('created_at', '=', $today)
+        ->count();
+      
+      $activeDIDs = DIDNumber::where('workspace_id', $workspace->id)->count();
+      
+      $activeMembers = WorkspaceUser::where('workspace_id', $workspace->id)->count();
+      
+      $metrics = [
+        'calls_today' => $callsToday,
+        'active_did_numbers' => $activeDIDs,
+        'active_members' => $activeMembers
+      ];
 
       return $this->response->array([
         $graph,
@@ -382,7 +397,8 @@ class MergedController extends ApiAuthController
         $self->toArray(TRUE),
         $checklist,
         $plan,
-        $workspace->toArrayWithRoles($user)
+        $workspace->toArrayWithRoles($user),
+        $metrics
       ]);
     }
 
@@ -1015,7 +1031,6 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           $trialInterval = new \DateInterval('P' . $trialDurationDays . 'D');
           
           $nextMonthlyDateWithTrial = clone $currentDate;
-          $nextMonthlyDateWithTrial->add(new \DateInterval('P1M'));
           
           // Handle date clamping for monthly
           $originalDay = $currentDate->format('d');
@@ -1029,7 +1044,6 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
           $billingDates['next_monthly_billing_date_w_trial_formatted'] = $nextMonthlyDateWithTrial->format('M d, Y');
 
           $nextAnnualDateWithTrial = clone $currentDate;
-          $nextAnnualDateWithTrial->add(new \DateInterval('P1Y'));
           
           // Handle date clamping for annual (leap years)
           $originalDay = $currentDate->format('d');
