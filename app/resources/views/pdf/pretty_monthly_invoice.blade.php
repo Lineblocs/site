@@ -111,7 +111,6 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
     }
 
     .status-pill {
-      display: inline-block;
       padding: 6px 12px;
       border-radius: 16px;
       background: #fff7ed;
@@ -337,21 +336,23 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
     </table>
   </div>
 
-  <table class="header-table" border="0" cellspacing="0" cellpadding="0">
+  <table class="header-table" width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td class="header-logo-cell" valign="top">
         <img src="{{$logo}}" alt="{{$site}}" class="logo" />
       </td>
-      <td class="header-meta-cell" valign="top">
+      <td class="header-meta-cell" valign="top" align="right">
         <div class="invoice-title">Invoice</div>
         <div class="statement-label">{{$site}} monthly statement</div>
-        <div class="status-wrap"><span class="status-pill">{{$statusText}}</span></div>
+        <div class="status-wrap">
+          <span class="status-pill">{{$statusText}}</span>
+        </div>
       </td>
     </tr>
   </table>
   <div class="brand-rule">&nbsp;</div>
 
-  <table class="summary" border="0" cellspacing="0" cellpadding="0">
+  <table class="summary" width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td>
         <span class="label">Invoice Number</span>
@@ -368,7 +369,7 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
           @endif
         </span>
       </td>
-      <td>
+      <td align="right">
         <span class="label">Total Due</span>
         <span class="value total">{{MainHelper::toDollars($vars['invoice_amount'])}}</span>
       </td>
@@ -459,10 +460,12 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
             <td>Total excluding tax</td>
             <td class="right">{{MainHelper::toDollars($vars['invoice_amount_no_tax'])}}</td>
           </tr>
-          <tr>
-            <td>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</td>
-            <td class="right">{{MainHelper::toDollars($vars['tax_amount'])}}</td>
-          </tr>
+          @if (!empty($vars['tax_name']) && !empty($vars['tax_percentage']))
+            <tr>
+              <td>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</td>
+              <td class="right">{{MainHelper::toDollars($vars['tax_amount'])}}</td>
+            </tr>
+          @endif
           <tr class="grand">
             <td>Total payment due</td>
             <td class="right">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>

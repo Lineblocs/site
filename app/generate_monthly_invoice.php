@@ -16,7 +16,7 @@ $workspace = Workspace::where('creator_id', $user->id)->first();
 $month = new DateTime();
 $month->modify('first day of this month');
 $end = new DateTime();
-$end->modify('last day of this month');
+$end->modify('last day of next month');
 $invoiceSubtotal = 100*100;
 $callCosts = 100*20;
 $recordingCosts = 100*20;

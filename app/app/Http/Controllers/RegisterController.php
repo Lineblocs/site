@@ -75,6 +75,8 @@ class RegisterController extends ApiAuthController
         $planKey = $data['plan'] ?? 'pay-as-you-go';
         $mainRouter = SIPRouter::getMainRouter();
         $servicePlan = ServicePlan::where('key_name', $planKey)->firstOrFail();
+        $accountNo = InvoiceHelper::generateAccountNumber();
+
 
         $workspace = Workspace::create([
             'creator_id' => $user->id,
@@ -83,7 +85,8 @@ class RegisterController extends ApiAuthController
             'api_secret' => MainHelper::createAPISecret(),
             'plan' => $planKey,
             'trial_mode' => TRUE,
-            'default_router_id' => $mainRouter->id
+            'default_router_id' => $mainRouter->id,
+            'account_no' => $accountNo
         ]);
 
         PlanUsagePeriod::create([

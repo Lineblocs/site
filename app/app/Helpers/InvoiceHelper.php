@@ -87,8 +87,8 @@ final class InvoiceHelper
     $accountName = self::placeholderIfEmpty($user->company_name, "N/A");
     $taxNumber = self::placeholderIfEmpty($user->tax_number);
     if (is_null($tax)) {
-      $tax1 = "N/A";
-      $taxPercentage = "N/A";
+      $tax1 = NULL;
+      $taxPercentage = NULL;
     } else {
       $tax1 = $tax['name'];
       $taxPercentage = sprintf("%d%%", $tax->tax_percentage);
@@ -196,4 +196,27 @@ final class InvoiceHelper
     // $pdf = PDF::loadView('pdf.invoice_new', $mergedValues);
     return $pdf;
   }
+
+  public static function generateAccountNumber()
+  {
+    $timestamp = time();
+    $randomPart = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+    $accountNumber = 'ACC' . substr($timestamp, -6) . $randomPart;
+    
+    // Ensure uniqueness
+    $maxAttempts = 10;
+    $attempt = 0;
+    while ($attempt < $maxAttempts) {
+      if (!DB::table('workspaces')->where('account_no', $accountNumber)->exists()) {
+        return $accountNumber;
+      }
+      $randomPart = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+      $accountNumber = 'ACC' . substr($timestamp, -6) . $randomPart;
+      $attempt++;
+    }
+    
+    // Fallback: use UUID-based approach
+    return 'ACC' . strtoupper(substr(str_replace('-', '', uniqid('', true)), 0, 10));
+  }
+
 }
