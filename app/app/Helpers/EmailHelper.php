@@ -102,7 +102,8 @@ final class EmailHelper {
 
         foreach (self::$categorizedEmails as $category => $templates) {
             if (in_array($templateName, $templates, true)) {
-                return isset($user->$category) && (bool) $user->$category === false;
+                $attributeName = 'email_mute_' . $category;
+                return isset($user->$attributeName) && (bool) $user->$attributeName === false;
             }
         }
         return false;
@@ -264,7 +265,7 @@ final class EmailHelper {
      */
     public static function sendEmail($subject, $to, $template, $data, $mailLib='SWIFT') {
         $user = NULL;
-        if (!empty($data['user']) && $data['user'] instanceof Model) {
+        if (!empty($data['user']) && $data['user']) {
             $user = $data['user'];
         }
 
