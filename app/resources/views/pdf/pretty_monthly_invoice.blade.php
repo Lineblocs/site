@@ -460,10 +460,12 @@ if (strpos($logo, '/') === 0 && file_exists(public_path(ltrim($logo, '/')))) {
             <td>Total excluding tax</td>
             <td class="right">{{MainHelper::toDollars($vars['invoice_amount_no_tax'])}}</td>
           </tr>
-          <tr>
-            <td>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</td>
-            <td class="right">{{MainHelper::toDollars($vars['tax_amount'])}}</td>
-          </tr>
+          @if (!empty($vars['tax_name']) && !empty($vars['tax_percentage']))
+            <tr>
+              <td>{{$vars['tax_name']}} {{$vars['tax_percentage']}}</td>
+              <td class="right">{{MainHelper::toDollars($vars['tax_amount'])}}</td>
+            </tr>
+          @endif
           <tr class="grand">
             <td>Total payment due</td>
             <td class="right">{{MainHelper::toDollars($vars['invoice_amount'])}}</td>

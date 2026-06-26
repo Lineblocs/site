@@ -87,8 +87,8 @@ final class InvoiceHelper
     $accountName = self::placeholderIfEmpty($user->company_name, "N/A");
     $taxNumber = self::placeholderIfEmpty($user->tax_number);
     if (is_null($tax)) {
-      $tax1 = "N/A";
-      $taxPercentage = "N/A";
+      $tax1 = NULL;
+      $taxPercentage = NULL;
     } else {
       $tax1 = $tax['name'];
       $taxPercentage = sprintf("%d%%", $tax->tax_percentage);
