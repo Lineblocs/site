@@ -14,14 +14,105 @@ use Swift_Mailer;
 use Swift_SmtpTransport;
 use Swift_Message;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 final class EmailHelper {
+
+    /**
+     * Categorized mappings matching the Eloquent model attributes / HTML form input names.
+     * Removed the 'array' type hint from the property definition for maximum PHP 7.4 compliance.
+     *
+     * @var array
+     */
+    private static $categorizedEmails = [
+        'auditing' => [
+            'admin_email',
+            'app_feedback_request',
+            'call_activity_alert',
+            'call_quality_survey',
+            'contact',
+            'contact_confirm',
+            'support_ticket_created',
+            'support_ticket_updated',
+            'usage_trigger',
+        ],
+        'account_changes' => [
+            'billing_agreement_cancelled',
+            'billing_failed',
+            'card_expiring',
+            'deactivated_account',
+            'did_purchased',
+            'failed_upgrade',
+            'free_trial_expiring',
+            'inactive_user',
+            'one_time_login_link',
+            'password',
+            'password_reset',
+            'password_was_reset',
+            'payment_receipt',
+            'plan_upgraded',
+            'quote',
+            'quote_confirm',
+            'reactivated_account',
+            'service_plan_being_migrated',
+            'two_factor_acknowledgement',
+            'unknown_device_login',
+            'verify_email',
+            'welcome_email',
+        ],
+        'workspace_changes' => [
+            'extension_created',
+            'invited_to_workspace',
+            'phone_created',
+            'sip_credentials',
+            'workspace_account_suspended',
+            'workspace_invoices',
+            'workspace_suspended_admin',
+        ],
+        'system_status_updates' => [
+            'alert_email',
+            'port_started',
+            'ports_status_completed',
+            'ports_status_confirmed',
+            'ports_status_needs_info',
+            'ports_status_received',
+            'ports_status_submitted',
+            'sys_update',
+            'test_email',
+        ],
+        'debugger' => [
+            'bug_report',
+            'debugger_error',
+        ],
+    ];
+
+    /**
+     * Check if a template falls under a category the user has disabled (set to false) on their model.
+     * PHP 7.4 compliant nullable type hint syntax.
+     *
+     * @param Model|null $user
+     * @param string $templateName
+     * @return bool
+     */
+    private static function isUnsubscribed($user, $templateName)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        foreach (self::$categorizedEmails as $category => $templates) {
+            if (in_array($templateName, $templates, true)) {
+                return isset($user->$category) && (bool) $user->$category === false;
+            }
+        }
+        return false;
+    }
+
     public static function sendWithPHPMailer($subject, $to, $template, $data) {
         $apiCreds = ApiCredentialKVStore::getRecord();
-        $mail = new PHPMailer(true); // Enable exceptions
+        $mail = new PHPMailer(true);
 
         try {
-            // Server settings
             $mail->isSMTP();
             $mail->Host = $apiCreds->smtp_host;
             $mail->SMTPAuth = true;
@@ -29,17 +120,12 @@ final class EmailHelper {
             $mail->Password = $apiCreds->smtp_password;
             $mail->Port = (int) $apiCreds->smtp_port;
 
-            // Dynamic SSL/TLS Configuration
-            // Note: 'ssl' (port 465) maps to ENCRYPTION_SMTPS
-            // Note: 'tls' (port 587/2525) maps to ENCRYPTION_STARTTLS
             if ($apiCreds->smtp_tls === 'ssl') {
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             } else if ($apiCreds->smtp_tls === 'tls') {
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             }
 
-            // SSL Certificate Verification (Useful for internal relays, 
-            // but use with caution on production public networks)
             $mail->SMTPOptions = [
                 'ssl' => [
                     'verify_peer' => false,
@@ -48,39 +134,24 @@ final class EmailHelper {
                 ]
             ];
 
-            // Recipients
             $mail->setFrom($apiCreds->smtp_user, MainHelper::getSiteName());
             $mail->addAddress($to);
 
-            // Content
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body = view('emails.'.$template, $data)->render();
 
             return $mail->send();
         } catch (\Exception $e) {
-            // Log the error if necessary for debugging
             return $mail->ErrorInfo;
         }
     }
-    /**
-     * Sends email using the native Swift Mailer library for more granular control.
-     */
+
     public static function sendEmailDirect($subject, $to, $template, $data) {
         $apiCreds = ApiCredentialKVStore::getRecord();
-
         Log::info("EmailHelper: Starting Direct Swift process for $to");
 
         try {
-            // 1. Determine Encryption
-            $encryption = null;
-            if ($apiCreds->smtp_tls === 'tls') {
-                $encryption = 'tls';
-            } elseif ($apiCreds->smtp_tls === 'ssl') {
-                $encryption = 'ssl';
-            }
-
-            // 2. Create the Transport
             $transport = Swift_SmtpTransport::newInstance(
                 $apiCreds->smtp_host,
                 2525,
@@ -89,7 +160,6 @@ final class EmailHelper {
             ->setUsername($apiCreds->smtp_user)
             ->setPassword($apiCreds->smtp_password);
 
-            // 3. Bypass SSL Verification (Direct Stream Options)
             $transport->setStreamOptions([
                 'ssl' => [
                     'allow_self_signed' => true,
@@ -98,23 +168,16 @@ final class EmailHelper {
                 ]
             ]);
 
-            // 4. Instantiate the Mailer
             $mailer = Swift_Mailer::newInstance($transport);
-
-            // 5. Build the Body using Laravel's View factory
             $siteName = MainHelper::getSiteName();
-            
             $htmlBody = view('emails.'.$template, $data)->render();
 
-            // 6. Construct the Message
             $message = Swift_Message::newInstance($subject)
                 ->setFrom([$apiCreds->smtp_user => $siteName])
                 ->setTo([$to])
                 ->setBody($htmlBody, 'text/html');
 
-            // 8. Send
             $result = $mailer->send($message);
-
             Log::info("EmailHelper: Direct Swift Dispatch successful. Units sent: $result");
             return TRUE;
 
@@ -132,12 +195,10 @@ final class EmailHelper {
         $apiCreds = ApiCredentialKVStore::getRecord();
         $siteName = MainHelper::getSiteName();
 
-
         Log::info("EmailHelper: Starting process for $to using {$customizations->mail_provider}");
 
         if ($customizations->mail_provider == 'smtp-gateway') {
             try {
-                // 1. Dynamic Config Mapping
                 Config::set('mail.driver', 'smtp');
                 Config::set('mail.host', $apiCreds->smtp_host);
                 Config::set('mail.port', (int) $apiCreds->smtp_port);
@@ -150,10 +211,8 @@ final class EmailHelper {
                 } elseif ($apiCreds->smtp_tls === 'ssl') {
                     $encryption = 'ssl';
                 }
-                
                 Config::set('mail.encryption', $encryption);
 
-                // --- NEW: Bypass SSL Verification ---
                 Config::set('mail.stream', [
                     'ssl' => [
                         'allow_self_signed' => true,
@@ -162,11 +221,9 @@ final class EmailHelper {
                     ],
                 ]);
 
-                // Set From address to match SMTP username
                 Config::set('mail.from.address', $apiCreds->smtp_user);
                 Config::set('mail.from.name', $siteName);
 
-                // 2. Refresh Mailer Service
                 (new MailServiceProvider(app()))->register();
 
                 Log::info("EmailHelper: Attempting SMTP dispatch.", [
@@ -176,7 +233,6 @@ final class EmailHelper {
                     'username' => Config::get('mail.username'),
                 ]);
 
-                // 3. Send and Log Payload
                 Mail::send('emails.'.$template, $data, function ($message) use ($subject, $to) {
                     $message->to($to);
                     $message->subject($subject);
@@ -193,7 +249,25 @@ final class EmailHelper {
         }
         return FALSE;
     }
-    public static function sendEmail($subject, $to, $template, $data, $mailLib='SWIFT') {
+
+    /**
+     * Master send method. Intercepts unsubscribed users based on their Eloquent model boolean settings.
+     * Fully compatible with scalar and nullable type hints on PHP 7.4.
+     *
+     * @param string $subject
+     * @param string $to
+     * @param string $template
+     * @param array $data
+     * @param Model|null $user
+     * @param string $mailLib
+     * @return mixed
+     */
+    public static function sendEmail($subject, $to, $template, $data, $user = null, $mailLib='SWIFT') {
+        if (self::isUnsubscribed($user, $template)) {
+            Log::info("EmailHelper: Dispatch skipped. User ID " . ($user->id ?? 'unknown') . " ($to) has disabled the category containing '$template'.");
+            return FALSE; 
+        }
+
         $data['site_name'] = MainHelper::getSiteName();
         $data['customizations'] = CustomizationsKVStore::getRecord();
 
