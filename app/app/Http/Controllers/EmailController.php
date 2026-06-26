@@ -28,41 +28,42 @@ use \ReCaptcha\ReCaptcha;
 class EmailController extends BaseController {
 
   private function createOption($key, $optionsRecord) {
+
+    $labelKey = str_replace("email_mute_", "", $key);
     return [
       'name' => $key,
-      'label' => str_replace("_", " ", ucwords($key)),
+      'label' => str_replace("_", " ", ucwords($labelKey)),
       'enabled' => $optionsRecord->{$key}
     ];
   }
   /**
-   * Show the application dashboard to the user.
+   * Show email unsubscribe options page.
    *
    * @return Response
    */
-  public function unsubscribe()
+  public function unsubscribe(Request $request)
   {
-    // todo: get user from jwt token
-    //$user = WorkspaceUser::user();
-    $user = WorkspaceUser::all()[0];
-    $optionsRecord = UserEmailOption::where('user_id', $user->id)->first();
+    $token = $request->query('token');
+    $user = User::where('unsubscribe_token', $token)->first();
+    
     $emailOptions = [
-      'auditing' => $this->createOption('auditing', $optionsRecord),
-      'account_changes' => $this->createOption('account_changes', $optionsRecord),
-      'workspace_changes' => $this->createOption('workspace_changes', $optionsRecord),
-      'system_status_updates' => $this->createOption('system_status_updates', $optionsRecord),
-      'debugger' => $this->createOption('debugger', $optionsRecord)
+      'email_mute_auditing' => $this->createOption('email_mute_auditing', $user),
+      'email_mute_account_changes' => $this->createOption('email_mute_account_changes', $user),
+      'email_mute_workspace_changes' => $this->createOption('email_mute_workspace_changes', $user),
+      'email_mute_system_status_updates' => $this->createOption('email_mute_system_status_updates', $user),
+      'email_mute_debugger' => $this->createOption('email_mute_debugger', $user)
     ];
+    
     return view('pages.email_unsubscribe', compact('user', 'emailOptions'));
   }
 
   public function unsubscribe_update(Request $request)
   {
     // todo: get user from jwt token
-    //$user = WorkspaceUser::user();
-    $user = WorkspaceUser::all()[0];
-    $emailOptions = UserEmailOption::where('user_id', $user->id)->first();
+    $token = $request->query('token');
+    $user = User::where('unsubscribe_token', $token)->first();
     $updatedOptions = $this->processEmailOptions( $request->all() );
-    $emailOptions->update( $updatedOptions );
+    $user->update( $updatedOptions );
     $request->session()->flash('status', 'Email options were updated successfully.');
     return redirect("/email/unsubscribe");
   }
