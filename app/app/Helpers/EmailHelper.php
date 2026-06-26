@@ -262,7 +262,12 @@ final class EmailHelper {
      * @param string $mailLib
      * @return mixed
      */
-    public static function sendEmail($subject, $to, $template, $data, $user = null, $mailLib='SWIFT') {
+    public static function sendEmail($subject, $to, $template, $data, $mailLib='SWIFT') {
+        $user = NULL;
+        if (!empty($data['user']) && $data['user'] instanceof Model) {
+            $user = $data['user'];
+        }
+
         if (self::isUnsubscribed($user, $template)) {
             Log::info("EmailHelper: Dispatch skipped. User ID " . ($user->id ?? 'unknown') . " ($to) has disabled the category containing '$template'.");
             return FALSE; 

@@ -1445,7 +1445,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
     $sipHost = $workspace->sipURL();
     $sipRouter = SIPRouter::getMainRouter();
 
-    $sipCredentials = [
+    $emailData = [
       'username' => $sipUsername,
       'password' => $sipPassword,
       'host' => $sipHost,
@@ -1454,7 +1454,8 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       'websocket_settings' => [
         'port' => $sipRouter['wss_port'] ?? 7443,
         'gateway' => 'wss://' . $sipHost . ':' . ($sipRouter['wss_port'] ?? 7443)
-      ]
+      ],
+      'user' => $user
     ];
 
 
@@ -1462,7 +1463,7 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       'Your SIP Credentials',
       $data['to_email'],
       'sip_credentials',
-      $sipCredentials
+      $emailData
     );
 
     return $this->response->noContent();

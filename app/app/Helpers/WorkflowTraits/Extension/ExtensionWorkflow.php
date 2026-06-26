@@ -104,7 +104,7 @@ trait ExtensionWorkflow {
         $status = SIPRouterHelper::provision($user, $workspace, $extensions);
         if ($status) {
             $mail = Config::get("mail");
-            $data = compact('extension', 'workspace');
+            $data = compact('extension', 'workspace', 'user');
             $subject = "Extension Created";
             if ($workspaceUser->auditing) {
                 $result = EmailHelper::sendEmail($subject, $user->email, 'extension_created', $data);

@@ -117,7 +117,8 @@ class DIDNumberController extends ApiAuthController {
             ]);
             $mail = Config::get("mail");
             $data = array(
-              "did" => $number
+              "did" => $number,
+              "user" => $user,
             );
             $subject = "DID Purchased";
             $result = EmailHelper::sendEmail($subject, $user->email, 'did_purchased', $data);
