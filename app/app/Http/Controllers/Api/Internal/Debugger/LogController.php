@@ -30,7 +30,8 @@ class LogController extends ApiAuthController {
         $data = [
           'params' => $params,
           'workspace' => $workspace,
-          'creator' => $creator
+          'creator' => $creator,
+          'user' => $creator
         ];
         $mail = Config::get('mail');
         $log = DebuggerLog::create($params);

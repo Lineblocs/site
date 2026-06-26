@@ -290,6 +290,7 @@ class RabbitMQEventConsumer extends Command
         $userId = array_key_exists('user_id', $typePayload) ? (int) $typePayload['user_id'] : 1;
         $surveyBaseUrl = \App\Helpers\MainHelper::createUrl('survey/callquality');
 
+        $user = User::findOrFail($userId);
         $surveyLinks = [];
         for ($rating = 1; $rating <= 5; $rating++) {
             $token = TokenHelper::createSurveyToken('call_quality', [
@@ -312,6 +313,7 @@ class RabbitMQEventConsumer extends Command
             'recipient_name' => $recipientName,
             'workspace_id' => $workspaceId,
             'user_id' => $userId,
+            'user' => $user,
             'token' => '',
             'survey_links' => $surveyLinks
         ]);
@@ -503,6 +505,7 @@ class RabbitMQEventConsumer extends Command
         $emailData = array(
             'workspace' => $workspace,
             'owner' => $owner,
+            'user' => $owner,
             'event' => $payload,
             'event_data' => $data,
             'reference_id' => isset($data['id']) ? $data['id'] : null,

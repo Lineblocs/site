@@ -105,7 +105,7 @@ class PhoneController extends ApiAuthController {
         $phoneDef = PhoneDefinition::where('phone_type', $data['phone_type'])->first();
         PhoneTag::updateModelTags($tags, $phone->id);
             $mail = Config::get("mail");
-            $data = compact('phone', 'phoneDef');
+            $data = compact('phone', 'phoneDef', 'user');
             $subject = "Phone Created";
             $result = EmailHelper::sendEmail($subject, $user->email, 'phone_created', $data);
             /*
