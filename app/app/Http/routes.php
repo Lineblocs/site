@@ -817,6 +817,7 @@ $api->version('v1', function($api) {
         $api->get("/list", "CardController@listCards");
         $api->post("/", "CardController@addCard");
         $api->put("/{cardId}/setPrimary", "CardController@setPrimary");
+        $api->put("/{cardId}/setBackup", "CardController@setBackup");
         $api->delete("/{cardId}", "CardController@deleteCard");
     });
 
