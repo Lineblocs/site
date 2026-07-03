@@ -38,8 +38,21 @@ class CardController extends HasStripeController {
         $workspace = $this->getWorkspace($request);
         $card = UserCard::findOrFail($cardId);
         MainHelper::makeCardPrimary($card, $user, $workspace);
-        return $this->response->noContent();
+        $card->backup = false;
+        $card->save();
 
+        return $this->response->noContent();
+    }
+
+    public function setBackup(Request $request, $cardId)
+    {
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $card = UserCard::findOrFail($cardId);
+        MainHelper::makeCardBackup($card, $user, $workspace);
+        $card->primary = false;
+        $card->save();
+        return $this->response->noContent();
     }
 
     public function listCards(Request $request)

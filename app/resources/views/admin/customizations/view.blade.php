@@ -404,7 +404,8 @@
                 </div>
             </div>
 
-           
+          
+            <!--
             <div class="row form-group">
                 <label for="billing_flow">Billing flow</label>
                 <div class="controls">
@@ -422,7 +423,9 @@
                     </select>
                 </div>
             </div>
+            -->
 
+            <!--
             <div class="row form-group">
                 <label for="upgrade_flow">Upgrade flow</label>
                 <div class="controls">
@@ -440,6 +443,7 @@
                     </select>
                 </div>
             </div>
+            -->
 
             <div class="row form-group">
                 <label for="invoice_due_in_days">Invoice due in days</label>

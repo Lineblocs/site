@@ -1028,6 +1028,12 @@ final class MainHelper {
 
       }
 
+  public static function makeCardBackup($card, $user, $workspace)
+  {
+        $all = UserCard::where('workspace_id', $workspace->id)->update(['backup' => FALSE]);
+        $card->update(['backup' => TRUE]);
+  }
+
     public static function determineFileType( $mime, $extension ) {
             if ( $mime == 'text/csv') {
                 return 'csv';
