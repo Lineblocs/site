@@ -94,7 +94,7 @@ class ServicePlanController extends AdminController
         $migratePlans = [];
         $allPlans = ServicePlan::where('id', '!=', $serviceplan->id)->get()->toArray();
         foreach ($allPlans as $key => $plan) {
-            $migratePlans[$plan['nice_name']] = $plan['nice_name'] . ' (' . $plan['key_name'] . ')';
+            $migratePlans[$plan['key_name']] = $plan['nice_name'] . ' (' . $plan['key_name'] . ')';
         }
         return view('admin.serviceplan.create_edit', compact('serviceplan', 'features', 'callDurations', 'recordingSpace', 'migratePlans', 'statuses'));
     }
@@ -108,13 +108,13 @@ class ServicePlanController extends AdminController
     public function migrate(Request $request, ServicePlan $serviceplan)
     {
         try {
-            $targetPlanNiceName = $request->input('migrate_plan');
+            $targetPlanKeyName = $request->input('migrate_plan');
             
-            if (!$targetPlanNiceName) {
+            if (!$targetPlanKeyName) {
                 return redirect()->back()->withErrors(['migrate_plan' => 'Please select a target plan for migration.']);
             }
 
-            $targetPlan = ServicePlan::where('nice_name', $targetPlanNiceName)->first();
+            $targetPlan = ServicePlan::where('key_name', $targetPlanKeyName)->first();
 
             if (!$targetPlan) {
                 return redirect()->back()->withErrors(['migrate_plan' => 'Target service plan not found.']);
@@ -122,6 +122,16 @@ class ServicePlanController extends AdminController
 
             if ($targetPlan->id === $serviceplan->id) {
                 return redirect()->back()->withErrors(['migrate_plan' => 'Cannot migrate to the exact same plan.']);
+            }
+
+            // Determine scheduled effective date
+            $effectiveDate = \Carbon\Carbon::now();
+            $dateOption = $request->input('scheduled_effective_date', 'now');
+            
+            if ($dateOption === 'next_month') {
+                $effectiveDate = \Carbon\Carbon::now()->firstOfNextMonth();
+            } elseif ($dateOption === 'next_year') {
+                $effectiveDate = \Carbon\Carbon::now()->firstOfYear()->addYear();
             }
 
             DB::beginTransaction();
@@ -153,9 +163,10 @@ class ServicePlanController extends AdminController
                     }
                 }
             }
+
             Subscription::where('current_plan_id', $serviceplan->id)->update([
                 'scheduled_plan_id' => $targetPlan->id,
-                'scheduled_effective_date' => \Carbon\Carbon::now()
+                'scheduled_effective_date' => $effectiveDate
             ]);
 
             DB::commit();

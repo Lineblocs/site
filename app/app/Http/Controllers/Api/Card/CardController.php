@@ -38,6 +38,9 @@ class CardController extends HasStripeController {
         $workspace = $this->getWorkspace($request);
         $card = UserCard::findOrFail($cardId);
         MainHelper::makeCardPrimary($card, $user, $workspace);
+        $card->backup = false;
+        $card->save();
+
         return $this->response->noContent();
     }
 
@@ -47,6 +50,8 @@ class CardController extends HasStripeController {
         $workspace = $this->getWorkspace($request);
         $card = UserCard::findOrFail($cardId);
         MainHelper::makeCardBackup($card, $user, $workspace);
+        $card->primary = false;
+        $card->save();
         return $this->response->noContent();
     }
 
