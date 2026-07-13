@@ -1092,11 +1092,16 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
 
   public function billingDiscontinue(Request $request) {
-    // downgrade plan to pay as you go
+    // set cancel_at_period_end on the subscription
     $workspace = $this->getWorkspace($request);
-    $servicePlan = ServicePlan::getPayAsYouGoplan();
-    $workspace->update([
-      'plan' => $servicePlan->key_name
+    $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+    
+    if (!$subscription) {
+      return $this->response->errorNotFound('Subscription not found');
+    }
+    
+    $subscription->update([
+      'cancel_at_period_end' => true
     ]);
     $props = array(
       "billing_status" => "pending_processing"

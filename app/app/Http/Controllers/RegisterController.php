@@ -15,6 +15,7 @@ use App\Helpers\DNSHelper;
 use App\Helpers\WebSvcHelper;
 use App\Helpers\EmailHelper;
 use App\Helpers\RabbitMQHelper;
+use App\Helpers\InvoiceHelper;
 use App\Helpers\TokenHelper;
 use App\Helpers\BillingDataHelper;
 use \Config;
@@ -43,6 +44,7 @@ use App\UserRegistrationQuestionResponse;
 use App\Subscription;
 use App\OneTimeLoginLink;
 use App\Enums\PaymentStatus;
+use App\Enums\SubscriptionStatus;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use DateTime;
@@ -301,7 +303,7 @@ class RegisterController extends ApiAuthController
         $subscriptionParams = [
             'workspace_id' => $workspace->id,
             'current_plan_id' => $plan->id,
-            'status' => 'ACTIVE',
+            'status' => SubscriptionStatus::ACTIVE,
             'billing_cycle' => $billingCycle,
             'current_period_end' => $periodEnd,
             'next_billing_date' => $nextBillingDateStr,
