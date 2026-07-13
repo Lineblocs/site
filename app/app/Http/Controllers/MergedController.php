@@ -398,7 +398,8 @@ class MergedController extends ApiAuthController
         $checklist,
         $plan,
         $workspace->toArrayWithRoles($user),
-        $metrics
+        $metrics,
+        $subscription->toArray()
       ]);
     }
 
