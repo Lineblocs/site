@@ -16,6 +16,7 @@ class Subscription extends Model {
   protected $table = "subscriptions";
   protected $casts = array(
     'is_free_trial_active' => 'boolean',
+    'cancel_at_period_end' => 'boolean',
   );
 
   public function toArray()
