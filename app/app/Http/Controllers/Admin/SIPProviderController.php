@@ -295,9 +295,9 @@ $rates = [];
     }
     public function providerTypes() {
         return [
-            'inbound' => 'inbound',
-            'outbound' => 'outbound',
-            'both' => 'both'
+            'INBOUND' => 'INBOUND',
+            'OUTBOUND' => 'OUTBOUND',
+            'BOTH' => 'BOTH'
         ];
     }
 }
