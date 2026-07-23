@@ -1615,4 +1615,40 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->errorInternal('Turnstile verification failed');
     }
   }
+
+  public function saveAutoTopupSettings(Request $request) {
+    $data = $request->json()->all();
+    
+    $workspace = $this->getWorkspace($request);
+    $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+    
+    if (!$subscription) {
+      return $this->response->errorNotFound('Subscription not found');
+    }
+    
+    if (isset($data['auto_topup_enabled'])) {
+      $subscription->auto_topup_enabled = (bool) $data['auto_topup_enabled'];
+    }
+    
+    if (isset($data['auto_topup_threshold'])) {
+      $subscription->auto_topup_threshold = (int) $data['auto_topup_threshold'];
+    }
+    
+    if (isset($data['auto_topup_amount'])) {
+      $subscription->auto_topup_amount = (int) $data['auto_topup_amount'];
+    }
+    
+    $subscription->save();
+    
+    return $this->response->array([
+      'success' => true,
+      'message' => 'Auto topup settings saved successfully',
+      'data' => [
+        'auto_topup_enabled' => $subscription->auto_topup_enabled,
+        'auto_topup_threshold' => $subscription->auto_topup_threshold,
+        'auto_topup_amount' => $subscription->auto_topup_amount
+      ]
+    ]);
+  }
+
 }

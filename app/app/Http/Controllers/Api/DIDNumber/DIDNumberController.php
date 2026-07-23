@@ -133,7 +133,7 @@ class DIDNumberController extends ApiAuthController {
             */
             return $this->response->array(['success' => TRUE, 'number' => $number->toArray()])->withHeader('X-Number-ID', $number->public_id);
         }
-        return $this->errorInternal($request, 'DID register error');
+        return $this->errorInternal($request, 'DID register error: Failed to register the DID number with the provider. Please reach out to support for assistance.');
     }
 
 

@@ -17,6 +17,8 @@ class Subscription extends Model {
   protected $casts = array(
     'is_free_trial_active' => 'boolean',
     'cancel_at_period_end' => 'boolean',
+    'pay_as_you_go' => 'boolean',
+    'auto_topup_enabled' => 'boolean',
   );
 
   public function toArray()

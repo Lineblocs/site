@@ -201,7 +201,6 @@ $this->createFeatureOption('allows_monthly'),
             $this->createFeatureOption('multiple_sip_domains'),
             $this->createFeatureOption('bring_carrier'),
             $this->createFeatureOption('featured_plan'),
-            $this->createFeatureOption('pay_as_you_go'),
             $this->createFeatureOption('include_in_pricing_pages'),
             $this->createFeatureOption('free_trial_exempt'),
         ];

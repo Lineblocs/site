@@ -521,6 +521,7 @@ $api->version('v1', function($api) {
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
     $api->get('getSIPCredentials', '\App\Http\Controllers\MergedController@getSIPCredentials');
     $api->post('emailSIPCredentials', '\App\Http\Controllers\MergedController@emailSIPCredentials');
+    $api->post('saveAutoTopupSettings', '\App\Http\Controllers\MergedController@saveAutoTopupSettings');
 
 
     $api->group([ 'prefix' => 'paypal'], function($api) {

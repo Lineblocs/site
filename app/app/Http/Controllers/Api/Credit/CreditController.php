@@ -17,6 +17,8 @@ use \App\UserCredit;
 use \App\Helpers\SIPRouterHelper;
 use \App\Helpers\StripeBillingHelper;
 use \App\Enums\PaymentStatus;
+use \App\Subscription;
+use \App\ServicePlan;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
@@ -28,6 +30,7 @@ use PayPal\Api\Transaction;
 use PayPal\Api\PaymentExecution;
 
 use App\Helpers\EmailHelper;
+use App\Helpers\RabbitMQHelper;
 
 use \Config;
 use \Exception;
@@ -40,61 +43,70 @@ class CreditController extends HasStripeController {
     public function addCredit(Request $request)
     {
         $data = $request->all();
+        
+        // Validate required fields
+        if (!isset($data['amount']) || !isset($data['card_id'])) {
+          return $this->response->errorBadRequest('Missing required fields: amount and card_id');
+        }
+        
+        // Validate amount is positive
+        if (!is_numeric($data['amount']) || $data['amount'] <= 0) {
+          return $this->response->errorBadRequest('Amount must be a positive number');
+        }
+        
         $amountInCents = MainHelper::toCents($data['amount']);
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+        
         if (!WorkspaceHelper::canPerformAction($user, $workspace, 'manage_billing')) {
           return $this->response->errorForbidden();
         }
+        
+        // Verify card exists and belongs to workspace
         $card = UserCard::where('id', $data['card_id'])
                         ->where('workspace_id', $workspace->id)
-                        ->firstOrFail();
-        $deduplicationKey = null;
-        if (!empty($data['deduplication_key'])) {
-          $deduplicationKey = $data['deduplication_key'];
+                        ->first();
+        
+        if (!$card) {
+          return $this->response->errorNotFound('Card not found');
         }
-        if (!empty($deduplicationKey)) {
-          $existingCredit = UserCredit::where('workspace_id', $workspace->id)
-                                      ->where('deduplication_key', $deduplicationKey)
-                                      ->first();
-          if ($existingCredit) {
-            return $this->response->noContent();
-          }
-        }
+        
         try {
-          MainHelper::chargeCard($user, $card, $amountInCents);
+          $amountInDollars = $amountInCents / 100;
+          $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+          $servicePlan = null;
+          if ($subscription) {
+            $servicePlan = ServicePlan::find($subscription->current_plan_id);
+          }
+          $billingCycle = null;
+          if ($subscription) {
+            $billingCycle = $subscription->billing_cycle;
+          }
+          RabbitMQHelper::dispatchImmediateBilling(
+              $workspace,
+              $subscription,
+              $user,
+              $servicePlan,
+              $billingCycle,
+              $amountInDollars,
+              null,
+              'ADD_CREDITS'
+          );
+          Log::info("Add Credits Billing Queued: Workspace {$workspace->id}, Amount: {$amountInDollars}");
         } catch (Exception $ex) {
-          \Log::error("error while charging stripe customer: " . $ex->getMessage());
-          return $this->errorInternal($request, 'Error charging stripe user');
-        }
 
-        $credit = [
-          'cents' => $amountInCents,
-          'card_id' => $data['card_id'],
-          'user_id' => $user->id,
-          'workspace_id' => $workspace->id,
-          'status' => PaymentStatus::APPROVED,
-          'deduplication_key' => $deduplicationKey
-        ];
-        UserCredit::create($credit);
+          \Log::error("error while dispatching billing for add credits: " . $ex->getMessage());
+          \Log::error($ex->getTraceAsString());
+          return $this->errorInternal($request, 'Error processing credit payment');
+        }
       
         // TODO: make this a database option. when it's enabled
         // the user's workspace should be upgraded automatically. also,
         // they should get emailed that the plan was upgraded.
+        // NOTE: we may add a feature flag that moves the user off of free trial mode
+        // once a credit payment is made
         $autoUpgradesEnabled = FALSE;
-        if ($autoUpgradesEnabled && $user->trial_mode) {
-          $user->update([
-            'trial_mode' => FALSE,
-            'plan' => 'standard'
-          ]);
-          $plans = Config::get("service_plans");
-          $standard = $plans['standard'];
-          $upgraded = SIPRouterHelper::modifyUser($user, $standard['ports']);
-          if (!$upgraded) {
-            return FALSE;
-          }
-        }
-        
+
         return $this->response->noContent();
     }
     public function checkoutWithPayPal(Request $request)
@@ -166,8 +178,7 @@ class CreditController extends HasStripeController {
         $deduplicationKey = null;
         if (!empty($data['deduplication_key'])) {
           $deduplicationKey = $data['deduplication_key'];
-        }
-        if (empty($deduplicationKey)) {
+        } else {
           $deduplicationKey = 'credit:paypal:' . $workspace->id . ':' . $paypalInvoiceNumber;
         }
         $credit = [
@@ -321,14 +332,14 @@ class CreditController extends HasStripeController {
     // Step 2: Post IPN data back to PayPal to validate
     $apiCredentials = ApiCredentialKVStore::getRecord();
     $paypalMode = 'live';
-    if ($apiCredentials && empty($apiCredentials['paypal_api_mode'])) {
-      $paypalMode = 'sandbox';
-    }
-    if ($apiCredentials && $apiCredentials['paypal_api_mode'] === 'sandbox') {
-      $paypalMode = 'sandbox';
-    }
-    if ($apiCredentials && $apiCredentials['paypal_api_mode'] === 'test') {
-      $paypalMode = 'sandbox';
+    if ($apiCredentials) {
+      if (empty($apiCredentials['paypal_api_mode'])) {
+        $paypalMode = 'sandbox';
+      } elseif ($apiCredentials['paypal_api_mode'] === 'sandbox') {
+        $paypalMode = 'sandbox';
+      } elseif ($apiCredentials['paypal_api_mode'] === 'test') {
+        $paypalMode = 'sandbox';
+      }
     }
     $paypalIpnUrl = 'https://ipnpb.paypal.com/cgi-bin/webscr';
     if ($paypalMode === 'sandbox') {

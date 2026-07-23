@@ -53,15 +53,23 @@ class User extends Model implements AuthenticatableContract,
     }
     public function canBuyNumber($workspace, $user, $number, $cost) {
       $limit = MainHelper::checkLimit($workspace, $user, "numbers");
+
       if ($limit) {
-        if ($workspace->trial_mode) {
+        $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+        if ($subscription && $subscription->is_free_trial_active) {
           return array(FALSE, "Trial accounts cannot buy more than 1 number");
         } else {
           return array(FALSE, "Cannot purchase more numbers under this plan");
         }
       }
       $balance = BillingDataHelper::getBillingInfo($this);
-      if ($balance['remainingBalance']<=$cost && $workspace->plan == 'pay-as-you-go') {
+
+      $subscription = Subscription::select(array('service_plans.pay_as_you_go'))
+                ->join('service_plans', 'service_plans.id', '=', 'subscriptions.current_plan_id')
+                ->where('workspace_id', $workspace->id)
+                ->first();
+      
+      if ($balance['remainingBalance']<=$cost && $subscription && $subscription->pay_as_you_go) {
         return array(FALSE, "Your remaining balance is below the number's monthly cost");
       }
       return array(TRUE, "");
