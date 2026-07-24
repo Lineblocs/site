@@ -309,5 +309,18 @@ class RabbitMQHelper
         return self::publish('workspace_upgrades', $payload);
     }
 
+    public static function dispatchBalanceCheck(
+        $workspaceId,
+        $source,
+        $createdAt
+    ) {
+        $payload = [
+            'workspace_id' => (int) $workspaceId,
+            'source'       => (string) $source,
+            'created_at'   => (string) $createdAt,
+        ];
+
+        return self::publish('alerting_queue', $payload);
+    }
 
 }
