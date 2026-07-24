@@ -154,6 +154,7 @@ final class BillingDataHelper {
           $remainingBalance -= $debit->cents;
       }
       foreach ($invoices as $invoice) {
+
           if ($invoice->status != PaymentStatus::PAID) {
             $accountBalance += $invoice->cents;
           }

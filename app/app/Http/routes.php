@@ -521,6 +521,7 @@ $api->version('v1', function($api) {
     $api->get('getServicePlans', '\App\Http\Controllers\MergedController@getServicePlans');
     $api->get('getSIPCredentials', '\App\Http\Controllers\MergedController@getSIPCredentials');
     $api->post('emailSIPCredentials', '\App\Http\Controllers\MergedController@emailSIPCredentials');
+    $api->post('saveAutoTopupSettings', '\App\Http\Controllers\MergedController@saveAutoTopupSettings');
 
 
     $api->group([ 'prefix' => 'paypal'], function($api) {
@@ -563,6 +564,8 @@ $api->version('v1', function($api) {
     $api->get('search', '\App\Http\Controllers\MergedController@search');
     $api->post('billing/discontinue', '\App\Http\Controllers\MergedController@billingDiscontinue');
     $api->post('billingDiscontinue', '\App\Http\Controllers\MergedController@billingDiscontinue');
+    $api->post('billingReactivate', '\App\Http\Controllers\MergedController@billingReactivate');
+
     $api->post('save2FASettings', '\App\Http\Controllers\MergedController@save2FASettings');
     $api->get('get2FAConfig', '\App\Http\Controllers\MergedController@get2FAConfig');
     $api->get('request2FACode', '\App\Http\Controllers\MergedController@request2FACode');

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
 use App\ServicePlan;
 use App\WorkspaceUser;
+use App\Subscription;
 
 class Workspace extends Model {
   protected $dates = ['created_at', 'updated_at'];
@@ -27,10 +28,23 @@ class Workspace extends Model {
     return MainHelper::createSubdomain($this->name);
   }
 
+  // TODO: rework this and use SQL joins with subscriptions data to make
+  // things more performant.
   public function toArrayWithRoles(User $user) {
         $array = $this->toArray();
         $workspaceUser = WorkspaceUser::where('user_id', '=', $user->id)->where('workspace_id', '=', $this->id)->first();
+        $subscription = Subscription::select(array(
+            'service_plans.key_name', 
+            'service_plans.pay_as_you_go', 
+            'subscriptions.*'
+        ));
+
+        $subscription = $subscription->join('service_plans', 'service_plans.id', '=', 'subscriptions.current_plan_id')
+                    ->where('subscriptions.workspace_id', '=', $this->id)
+                    ->first();
+
         $array['user_info'] = $workspaceUser->toArray();
+        $array['subscription_info'] = $subscription->toArray();
       return $array;
   }
   public function provisionURL() {

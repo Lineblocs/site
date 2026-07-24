@@ -28,6 +28,7 @@ class ServicePlan extends Model {
   'featured_plan' => 'boolean',
   'pay_as_you_go' => 'boolean',
   'registration_plan' => 'boolean',
+  'is_free_trial_active' => 'boolean',
   'include_in_pricing_pages' => 'boolean',
   'free_trial_exempt' => 'boolean'
   );

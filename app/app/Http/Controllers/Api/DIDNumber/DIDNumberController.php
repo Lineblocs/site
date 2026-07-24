@@ -16,6 +16,7 @@ use \App\Transformers\DIDNumberTransformer;
 use \App\NumberService\NumberService;
 use \App\Helpers\MainHelper;
 use \App\Helpers\EmailHelper;
+use \App\Helpers\RabbitMQHelper;
 use \App\Helpers\WorkflowTraits\DIDNumber\DIDNumberWorkflow;
 use \DB;
 use Mail;
@@ -100,7 +101,7 @@ class DIDNumberController extends ApiAuthController {
               'workspace_id' => $workspace->id,
               'status' => PaymentStatus::PENDING,
               'module_id' => $number->id,
-              'deduplication_key' => 'debit:number_rental:' . $workspace->id . ':' . $number->id
+              'deduplication_key' => 'DEBIT:NUMBER_RENTAL:' . $workspace->id . ':' . $number->id
             ]);
          
             $flow = Flow::create([
@@ -123,6 +124,8 @@ class DIDNumberController extends ApiAuthController {
             $subject = "DID Purchased";
             $result = EmailHelper::sendEmail($subject, $user->email, 'did_purchased', $data);
 
+            RabbitMQHelper::dispatchBalanceCheck($workspace->id, 'DID_PURCHASE', date('c'));
+
             /*
             Mail::send('emails.did_purchased', $data, function ($message) use ($user, $mail) {
                 $message->to($user->email);
@@ -133,7 +136,7 @@ class DIDNumberController extends ApiAuthController {
             */
             return $this->response->array(['success' => TRUE, 'number' => $number->toArray()])->withHeader('X-Number-ID', $number->public_id);
         }
-        return $this->errorInternal($request, 'DID register error');
+        return $this->errorInternal($request, 'DID register error: Failed to register the DID number with the provider. Please reach out to support for assistance.');
     }
 
 

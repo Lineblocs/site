@@ -32,5 +32,9 @@ return [
     'migrate_warning' => 'Warning: You cannot reverse this change. Users will be moved over to the new plan in the next billing cycle.',
     'select_plan' => 'Select plan',
     'status' => 'Status',
-    'free_trial_exempt' => 'Free Trial Exempt'
+    'free_trial_exempt' => 'Free Trial Exempt',
+    'allow_multiple_workspace_users' => 'Allow multiple workspace users',
+    'trial_ends_on_purchase' => 'Trial ends on purchase',
+    'save_first_to_migrate' => 'Save the plan first before you can migrate users'
+
 ];

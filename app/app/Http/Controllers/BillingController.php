@@ -301,6 +301,7 @@ class BillingController extends ApiAuthController
       $invoices = $query->get()->map(function($item) {
         $item['amount_in_dollars'] = MainHelper::toDollars($item['cents']);
         $item['friendly_created_at'] = \Carbon\Carbon::parse($item['created_at'])->format('M d, Y');
+        $item['friendly_due_date'] = \Carbon\Carbon::parse($item['due_date'])->format('M d, Y');
         return $item;
       });
 
@@ -317,11 +318,14 @@ class BillingController extends ApiAuthController
       $status = $request->query('status');
 
       $query = UserInvoice::where('workspace_id', $workspace->id)
-                        ->whereIn('status', [PaymentStatus::FAILED, PaymentStatus::PENDING]);
+                        ->whereNotIn('status', [PaymentStatus::PAID, PaymentStatus::CANCELLED])
+                        ->orderBy('due_date', 'desc');
 
       $invoices = $query->get()->map(function($item) {
         $item['amount_in_dollars'] = MainHelper::toDollars($item['cents']);
         $item['friendly_created_at'] = \Carbon\Carbon::parse($item['created_at'])->format('M d, Y');
+        $item['friendly_due_date'] = \Carbon\Carbon::parse($item['due_date'])->format('M d, Y');
+
         return $item;
       });
 

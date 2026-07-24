@@ -87,6 +87,7 @@ use League\Fractal\Resource\Collection;
 use App\Transformers\RecordingTransformer;
 use App\Transformers\CallTransformer;
 use App\Enums\WorkspaceUserStatus;
+use App\Enums\SubscriptionStatus;
 
 use App\UserCredit;
 use DateTime;
@@ -398,7 +399,8 @@ class MergedController extends ApiAuthController
         $checklist,
         $plan,
         $workspace->toArrayWithRoles($user),
-        $metrics
+        $metrics,
+        $subscription->toArray()
       ]);
     }
 
@@ -1092,17 +1094,122 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
   }
 
   public function billingDiscontinue(Request $request) {
-    // downgrade plan to pay as you go
+    // set cancel_at_period_end on the subscription
     $workspace = $this->getWorkspace($request);
-    $servicePlan = ServicePlan::getPayAsYouGoplan();
-    $workspace->update([
-      'plan' => $servicePlan->key_name
+    $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+    
+    if (!$subscription) {
+      return $this->response->errorNotFound('Subscription not found');
+    }
+    
+    $subscription->update([
+      'cancel_at_period_end' => true
     ]);
     $props = array(
       "billing_status" => "pending_processing"
     );
     WorkspaceEvent::addEvent($workspace, 'PLAN_CANCELLED', $props);
   }
+
+  public function billingReactivate(Request $request) {
+    // reactivate a cancelled subscription
+    $workspace = $this->getWorkspace($request);
+    $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+    
+    if (!$subscription) {
+      return $this->response->errorNotFound('Subscription not found');
+    }
+
+    // Check if subscription is already active and not cancelled
+    if ($subscription->status === SubscriptionStatus::ACTIVE && !$subscription->cancel_at_period_end) {
+      return $this->response->array(['message' => 'The subscription cannot be reactivated as it\'s active already.'], 200);
+    }
+
+    // If subscription is active but marked for cancellation, just update the flags
+    if ($subscription->status === SubscriptionStatus::ACTIVE && $subscription->cancel_at_period_end) {
+      $subscription->update([
+        'cancel_at_period_end' => false
+      ]);
+      return $this->response->array(['message' => 'Subscription reactivated successfully.'], 200);
+    }
+
+    $plan = ServicePlan::findOrFail($subscription->current_plan_id);
+    $customizations = CustomizationsKVStore::getRecord();
+    $user = $this->getUser($request);
+
+    $now = new DateTime();
+    $anchorDay = (int)$now->format('j');
+    $billingCycle = $subscription->billing_cycle;
+
+    // Calculate period end based on billing cycle
+    if ($billingCycle === 'ANNUAL') {
+      $periodEnd = (clone $now)->modify('+1 year')->setTime(0, 0, 0);
+      $recurringCost = $plan->annual_cost_cents;
+    } else {
+      // MONTHLY - handle month edge cases
+      $nextMonth = (clone $now)->modify('+1 month');
+      $daysInNextMonth = (int)$nextMonth->format('t');
+
+      if ($anchorDay > $daysInNextMonth) {
+        $periodEnd = $nextMonth->setDate((int)$nextMonth->format('Y'), (int)$nextMonth->format('n'), $daysInNextMonth)->setTime(0, 0, 0);
+      } else {
+        $periodEnd = (clone $now)->modify('+1 month')->setTime(0, 0, 0);
+      }
+      $recurringCost = $plan->monthly_cost_cents;
+    }
+
+    $nextBillingDateStr = $periodEnd->format('Y-m-d');
+
+    // Update subscription
+    $subscription->update([
+      'status' => SubscriptionStatus::ACTIVE,
+      'cancel_at_period_end' => false,
+      'current_period_end' => $periodEnd,
+      'next_billing_date' => $nextBillingDateStr,
+      'billing_anchor_day' => $anchorDay,
+      'billing_start_date' => $now
+    ]);
+
+    // Calculate prorated or full amount
+    $recurringCostInDollars = $recurringCost / 100;
+    $billingFlow = 'ANNUAL'; // Default, adjust if needed from customizations
+    
+    if ($billingFlow === 'ANNIVERSARY') {
+      $amountToCharge = $recurringCostInDollars;
+      Log::info("Billing Reactivate Anniversary: Charging 100% full plan fee.");
+    } else {
+      $amountToCharge = BillingDataHelper::calculateProratedAmount($recurringCostInDollars, $billingCycle);
+      Log::info("Billing Reactivate Calendar: Calculating prorated fee block.");
+    }
+
+    Log::info("Amount to charge for reactivation: {$amountToCharge} dollars");
+
+    // Dispatch billing event
+    try {
+      RabbitMQHelper::dispatchImmediateBilling(
+        $workspace,
+        $subscription,
+        $user,
+        $plan,
+        $billingCycle,
+        $amountToCharge,
+        $nextBillingDateStr
+      );
+      Log::info("Reactivation Billing Queued: Workspace {$workspace->id}, Amount: {$amountToCharge}");
+    } catch (\Exception $e) {
+      Log::error("RabbitMQ Billing Dispatch Failed: " . $e->getMessage());
+      return $this->response->errorInternal();
+    }
+
+    $props = array(
+      "billing_status" => "pending_processing"
+    );
+    WorkspaceEvent::addEvent($workspace, 'PLAN_REACTIVATED', $props);
+
+    return $this->response->noContent();
+  }
+
+
 
   public function save2FASettings(Request $request) {
     $user = $this->getUser($request);
@@ -1508,4 +1615,40 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       return $this->response->errorInternal('Turnstile verification failed');
     }
   }
+
+  public function saveAutoTopupSettings(Request $request) {
+    $data = $request->json()->all();
+    
+    $workspace = $this->getWorkspace($request);
+    $subscription = Subscription::where('workspace_id', $workspace->id)->first();
+    
+    if (!$subscription) {
+      return $this->response->errorNotFound('Subscription not found');
+    }
+    
+    if (isset($data['auto_topup_enabled'])) {
+      $subscription->auto_topup_enabled = (bool) $data['auto_topup_enabled'];
+    }
+    
+    if (isset($data['auto_topup_threshold'])) {
+      $subscription->auto_topup_threshold = (int) $data['auto_topup_threshold'];
+    }
+    
+    if (isset($data['auto_topup_amount'])) {
+      $subscription->auto_topup_amount = (int) $data['auto_topup_amount'];
+    }
+    
+    $subscription->save();
+    
+    return $this->response->array([
+      'success' => true,
+      'message' => 'Auto topup settings saved successfully',
+      'data' => [
+        'auto_topup_enabled' => $subscription->auto_topup_enabled,
+        'auto_topup_threshold' => $subscription->auto_topup_threshold,
+        'auto_topup_amount' => $subscription->auto_topup_amount
+      ]
+    ]);
+  }
+
 }

@@ -126,7 +126,7 @@ class RabbitMQHelper
      * Dispatches the 'immediate' billing task.
      * $amount should be the prorated value calculated via MainHelper.
      */
-    public static function dispatchImmediateBilling($workspace, $subscription, $user, $servicePlan, $billingCycle, $amount, $nextBillingDate)
+    public static function dispatchImmediateBilling($workspace, $subscription, $user, $servicePlan, $billingCycle, $amount, $nextBillingDate, $action='IMMEDIATE')
     {
         $payload = [
             'run_id'          => 'signup_' . $user->id . '_' . time(),
@@ -134,7 +134,7 @@ class RabbitMQHelper
             'workspace_id'    => (int) $workspace->id,
             'subscription_id' => (int) $subscription->id,
             'creator_id'      => (int) $user->id,
-            'action'          => 'IMMEDIATE',
+            'action'          => $action,
             'amount'          => $amount,
             'plan_to_bill'    => (int) $servicePlan->id,
             'next_billing_date' => $nextBillingDate
@@ -309,5 +309,18 @@ class RabbitMQHelper
         return self::publish('workspace_upgrades', $payload);
     }
 
+    public static function dispatchBalanceCheck(
+        $workspaceId,
+        $source,
+        $createdAt
+    ) {
+        $payload = [
+            'workspace_id' => (int) $workspaceId,
+            'source'       => (string) $source,
+            'created_at'   => (string) $createdAt,
+        ];
+
+        return self::publish('alerting_queue', $payload);
+    }
 
 }
