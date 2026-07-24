@@ -87,6 +87,7 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume(RabbitMQHelper::INVOICE_QUEUE_ANNUAL, '', false, false, false, false, [$this, 'handleAnnualInvoiceTask']);
         $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
         $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
+        $channel->basic_consume(RabbitMQHelper::PAY_AS_YOU_GO_BALANCE_QUEUE, '', false, false, false, false, [$this, 'handlePayAsYouGoBalanceAlert']);
 
         // 3. Keep the process alive
         while (count($channel->callbacks)) {
@@ -776,4 +777,83 @@ class RabbitMQEventConsumer extends Command
             $this->error(sprintf(' [!] %s invoice failed for workspace #%d: %s', $period, $workspaceId, $e->getMessage()));
         }
     }
+
+    public function handlePayAsYouGoBalanceAlert($msg)
+    {
+        $data = json_decode($msg->body, true);
+        $workspaceId = array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0;
+        $this->info(sprintf(" [PAY_AS_YOU_GO_ALERT] Received balance alert for workspace #%d", $workspaceId));
+
+        $workspace = Workspace::find($workspaceId);
+        if (!$workspace) {
+            $this->error(sprintf('Workspace #%d not found. Acknowledging and skipping.', $workspaceId));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $owner = $workspace->creatorUser()->first();
+        $recipientEmails = $this->resolveWorkspaceSuspensionRecipients($workspace, $owner);
+        if (empty($recipientEmails)) {
+            $this->error(sprintf('No owner or admin email addresses found for workspace #%d. Acknowledging and skipping.', $workspaceId));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        try {
+            $subscription = $workspace->subscriptions()->first();
+            $autoTopupEnabled = false;
+            $wasToppedup = false;
+
+            if ($subscription) {
+                $autoTopupEnabled = (bool) $subscription->auto_topup_enabled;
+                $wasToppedup = array_key_exists('was_topped_up', $data) ? (bool) $data['was_topped_up'] : false;
+            }
+
+            $currentBalance = array_key_exists('current_balance', $data) ? (float) $data['current_balance'] : 0;
+            $threshold = array_key_exists('threshold', $data) ? (float) $data['threshold'] : 0;
+
+            $emailTemplate = 'balance_low_alert';
+            $emailSubject = 'Workspace Balance Alert';
+            $emailData = [
+                'workspace' => $workspace,
+                'owner' => $owner,
+                'user' => $owner,
+                'current_balance' => $currentBalance,
+                'threshold' => $threshold,
+                'auto_topup_enabled' => $autoTopupEnabled,
+                'was_topped_up' => $wasToppedup
+            ];
+
+            if ($autoTopupEnabled && $wasToppedup) {
+                $emailSubject = 'Workspace Balance Topped Up';
+                $topupAmount = array_key_exists('topup_amount', $data) ? (float) $data['topup_amount'] : 0;
+                $emailData['topup_amount'] = $topupAmount;
+            }
+
+            $failedRecipients = [];
+            foreach ($recipientEmails as $email) {
+                $result = EmailHelper::sendEmail($emailSubject, $email, $emailTemplate, $emailData);
+
+                if ($result !== TRUE) {
+                    $failedRecipients[$email] = $result;
+                }
+            }
+
+            if (empty($failedRecipients)) {
+                $this->info(sprintf(
+                    " [v] Balance alert email sent for workspace #%d (balance: %f, threshold: %f, auto_topup: %s)",
+                    $workspaceId,
+                    $currentBalance,
+                    $threshold,
+                    $autoTopupEnabled ? 'enabled' : 'disabled'
+                ));
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            } else {
+                $this->error(sprintf(' [!] Balance alert email failed for workspace #%d', $workspaceId));
+            }
+        } catch (Exception $e) {
+            $this->error(sprintf(' [!] Pay-as-you-go balance alert failed for workspace #%d: %s', $workspaceId, $e->getMessage()));
+        }
+    }
+
 }
