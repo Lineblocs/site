@@ -17,6 +17,8 @@ class RabbitMQHelper
     const WORKSPACE_SUSPENDED_QUEUE = 'workspace_suspended';
     const WORKSPACE_SUSPENDED_LEGACY_QUEUE = 'workspace_account_suspended';
     const WORKSPACE_SUSPENDED_ROUTING_KEY = 'workspace.account.suspended';
+    const PAY_AS_YOU_GO_BALANCE_QUEUE = 'pay_as_you_go_balance_alerts';
+
 
     /**
      * Generic method to publish a message to any RabbitMQ queue.

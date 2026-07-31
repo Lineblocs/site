@@ -59,6 +59,8 @@ class RabbitMQEventConsumer extends Command
         $channel->exchange_declare(RabbitMQHelper::BILLING_EVENTS_EXCHANGE, 'topic', false, true, false);
         $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE, false, true, false, false);
+        $channel->queue_declare(RabbitMQHelper::PAY_AS_YOU_GO_BALANCE_QUEUE, false, true, false, false);
+
         $channel->queue_bind(
             RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE,
             RabbitMQHelper::BILLING_EVENTS_EXCHANGE,
