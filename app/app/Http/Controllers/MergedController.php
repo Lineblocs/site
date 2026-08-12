@@ -237,11 +237,17 @@ class MergedController extends ApiAuthController
         $card = UserCard::find($json['card_id']);
         $now = new \DateTime();
 
+
         // 1. Fetch data & early guard clauses
         $subscription = Subscription::where('workspace_id', $workspace->id)->first();
 
         if (!$subscription) {
             return $this->response->errorBadRequest("Invalid subscription or plan.");
+        }
+
+        $currentPlan = ServicePlan::where('id', $subscription->current_plan_id)->first();
+        if ($currentPlan && $currentPlan->pay_as_you_go) {
+            MainHelper::processCreditRefund($workspace->id);
         }
 
         if (!empty($subscription->scheduled_plan_id)) {
@@ -1650,5 +1656,4 @@ $phoneDefault = $phoneDefault->where('phone_type', $phoneType);
       ]
     ]);
   }
-
 }
