@@ -75,7 +75,13 @@ class UserController extends AdminController
      */
     public function edit(Request $request, User $user)
     {
-        $workspace = $this->getWorkspace($request);
+        $workspace = Workspace::where('creator_id', $user->id)->first();
+        if (!$workspace) {
+            $workspaceUser = WorkspaceUser::where('user_id', $user->id)->first();
+            if ($workspaceUser) {
+                $workspace = Workspace::where('id', $workspaceUser->workspace_id)->first();
+            }
+        }
         $numbers = DIDNumber::where('user_id', $user->id)->get();
         $workspaces = Workspace::select(DB::raw("workspaces.name, users.email AS creator_email"));
         $workspaces->leftJoin('workspaces_users', 'workspaces_users.workspace_id', '=', 'workspaces.id');
