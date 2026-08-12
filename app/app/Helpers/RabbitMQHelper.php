@@ -18,6 +18,8 @@ class RabbitMQHelper
     const WORKSPACE_SUSPENDED_LEGACY_QUEUE = 'workspace_account_suspended';
     const WORKSPACE_SUSPENDED_ROUTING_KEY = 'workspace.account.suspended';
     const PAY_AS_YOU_GO_BALANCE_QUEUE = 'pay_as_you_go_balance_alerts';
+    const PAY_AS_YOU_GO_TOPUPS_QUEUE = 'pay_as_you_go_topups';
+
 
 
     /**

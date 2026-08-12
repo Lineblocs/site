@@ -60,6 +60,7 @@ class RabbitMQEventConsumer extends Command
         $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE, false, true, false, false);
         $channel->queue_declare(RabbitMQHelper::PAY_AS_YOU_GO_BALANCE_QUEUE, false, true, false, false);
+        $channel->queue_declare(RabbitMQHelper::PAY_AS_YOU_GO_TOPUPS_QUEUE, false, true, false, false);
 
         $channel->queue_bind(
             RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE,
@@ -90,6 +91,8 @@ class RabbitMQEventConsumer extends Command
         $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
         $channel->basic_consume(RabbitMQHelper::WORKSPACE_SUSPENDED_LEGACY_QUEUE, '', false, false, false, false, [$this, 'handleWorkspaceSuspended']);
         $channel->basic_consume(RabbitMQHelper::PAY_AS_YOU_GO_BALANCE_QUEUE, '', false, false, false, false, [$this, 'handlePayAsYouGoBalanceAlert']);
+        $channel->basic_consume(RabbitMQHelper::PAY_AS_YOU_GO_TOPUPS_QUEUE, '', false, false, false, false, [$this, 'handlePayAsYouGoTopupAlert']);
+
 
         // 3. Keep the process alive
         while (count($channel->callbacks)) {
@@ -858,4 +861,63 @@ class RabbitMQEventConsumer extends Command
         }
     }
 
+    public function handlePayAsYouGoTopupAlert($msg)
+    {
+        $data = json_decode($msg->body, true);
+        $workspaceId = array_key_exists('workspace_id', $data) ? (int) $data['workspace_id'] : 0;
+        $this->info(sprintf(" [PAY_AS_YOU_GO_TOPUP_ALERT] Received topup alert for workspace #%d", $workspaceId));
+
+        $workspace = Workspace::find($workspaceId);
+        if (!$workspace) {
+            $this->error(sprintf('Workspace #%d not found. Acknowledging and skipping.', $workspaceId));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        $owner = $workspace->creatorUser()->first();
+        $recipientEmails = $this->resolveWorkspaceSuspensionRecipients($workspace, $owner);
+        if (empty($recipientEmails)) {
+            $this->error(sprintf('No owner or admin email addresses found for workspace #%d. Acknowledging and skipping.', $workspaceId));
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            return;
+        }
+
+        try {
+            $currentBalance = array_key_exists('current_balance', $data) ? (float) $data['current_balance'] : 0;
+            $topupAmount = array_key_exists('topup_amount', $data) ? (float) $data['topup_amount'] : 0;
+
+            $emailTemplate = 'topup_successful';
+            $emailSubject = 'Workspace Balance Topped Up';
+            $emailData = [
+                'workspace' => $workspace,
+                'owner' => $owner,
+                'user' => $owner,
+                'current_balance' => $currentBalance,
+                'topup_amount' => $topupAmount
+            ];
+
+            $failedRecipients = [];
+            foreach ($recipientEmails as $email) {
+                $result = EmailHelper::sendEmail($emailSubject, $email, $emailTemplate, $emailData);
+
+                if ($result !== TRUE) {
+                    $failedRecipients[$email] = $result;
+                }
+            }
+
+            if (empty($failedRecipients)) {
+                $this->info(sprintf(
+                    " [v] Topup alert email sent for workspace #%d (balance: %f, topup_amount: %f)",
+                    $workspaceId,
+                    $currentBalance,
+                    $topupAmount
+                ));
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+            } else {
+                $this->error(sprintf(' [!] Topup alert email failed for workspace #%d', $workspaceId));
+            }
+        } catch (Exception $e) {
+            $this->error(sprintf(' [!] Pay-as-you-go topup alert failed for workspace #%d: %s', $workspaceId, $e->getMessage()));
+        }
+    }
 }
