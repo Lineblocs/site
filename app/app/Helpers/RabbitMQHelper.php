@@ -325,4 +325,15 @@ class RabbitMQHelper
         return self::publish('alerting_queue', $payload);
     }
 
+    public static function publishBalanceCheck($workspaceId) {
+        $payload = [
+            'action' => 'CHECK_BALANCE',
+            'workspace_id' => (int) $workspaceId,
+            'source'       => 'CALL',
+            'created_at'   => date('Y-m-d H:i:s'),
+        ];
+
+        return self::publish('alerting_tasks', $payload);
+    }
+
 }
