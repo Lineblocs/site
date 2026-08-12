@@ -17,6 +17,7 @@ use App\Helpers\MainHelper;
 use App\Helpers\WorkspaceHelper;
 use App\Helpers\BillingDataHelper;
 use App\Helpers\WorkspaceSuspensionHelper;
+use App\Helpers\RabbitMQHelper;
 use Datatables;
 use DB;
 use Config;
@@ -181,7 +182,23 @@ class WorkspaceController extends AdminController
         }
 
         try {
-            BillingDataHelper::refundInvoice($invoice);
+            //BillingDataHelper::refundInvoice($invoice);
+
+            $creator = $workspace->getCreator();
+            $subscription = $workspace->subscription;
+
+            RabbitMQHelper::dispatchImmediateBilling(
+                $workspace,
+                $subscription,
+                $creator,
+                null,
+                null,
+                $invoice->amount,
+                null,
+                'REFUND_ACCOUNT',
+                [$invoice->payment_gateway_id]
+            );
+
             return response()->json(['success' => true, 'message' => 'Invoice refunded successfully']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to refund invoice: ' . $e->getMessage()], 400);
