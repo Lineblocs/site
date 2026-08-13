@@ -245,6 +245,10 @@ class MergedController extends ApiAuthController
             return $this->response->errorBadRequest("Invalid subscription or plan.");
         }
 
+        if ($subscription->pay_as_you_go) {
+            return $this->response->errorBadRequest("Pay as you go subscriptions cannot be upgraded.");
+        }
+
         $currentPlan = ServicePlan::where('id', $subscription->current_plan_id)->first();
         if ($currentPlan && $currentPlan->pay_as_you_go) {
             MainHelper::processCreditRefund($workspace->id);
