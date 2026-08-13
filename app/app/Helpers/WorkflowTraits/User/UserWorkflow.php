@@ -30,6 +30,7 @@ trait UserWorkflow {
     private function createUser($data, $workspace) {
         $user = $data['user'];
         //TODO send invite
+
         $newUser = MainHelper::createUserWithoutPaymentGateway($user, TRUE);
         return $newUser;
     }
@@ -65,11 +66,29 @@ trait UserWorkflow {
         */
 
     }
+    private function planAllowsMultipleWorkspaceUsers($workspace)
+    {
+        $subscription = DB::table('subscriptions')
+            ->join('service_plans', 'subscriptions.current_plan_id', '=', 'service_plans.id')
+            ->where('subscriptions.id', '=', $workspace->subscription_id)
+            ->select('service_plans.allow_multiple_workspace_users')
+            ->first();
+
+        if (!$subscription) {
+            return false;
+        }
+
+        return (bool) $subscription->allow_multiple_workspace_users;
+    }
     public function addUser(Request $request)
     {
         $data = $request->json()->all();
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
+
+        if (!$this->planAllowsMultipleWorkspaceUsers($workspace)) {
+            return $this->response->errorForbidden("Your current plan does not allow adding multiple workspace users");
+        }
         //check if they exist already
         $reqUser = User::where('email', '=', $data['user']['email'])->first();
         if (!$reqUser) {
