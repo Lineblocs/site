@@ -263,17 +263,24 @@ true)) !!}
                 <thead>
                     <th>Source</th>
                     <th>Amount</th>
-                    <th>Balance</th>
                     <th>Date/Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </thead>
                 <tbody>
                     @foreach ($billingHistory as $item)
                     <tr>
                         <td>{{$item['type']}}</td>
                         <td>{{$item['dollars']}}</td>
-                        <td>{{$item['balance']}}</td>
                         <td>{{$item['created_at']}}</td>
                         <td>{{$item['status']}}</td>
+                        <td>
+                            @if ($item['status'] === 'PAID')
+                            <button type="button" class="btn-danger btn-sm btn-warn refund-invoice-btn"
+                                data-workspace-id="{{$user['workspace_id']}}"
+                                data-invoice-id="{{$item['id']}}">Refund</button>
+                            @endif
+                        </td> 
                     </tr>
                     @endforeach
                 </tbody>
@@ -363,6 +370,30 @@ true)) !!}
                         alert("email sent successfully..");
                     });
                 })
+
+                $(".refund-invoice-btn").on("click", function() {
+                    var $btn = $( this );
+                    var workspaceId = $btn.data("workspace-id");
+                    var invoiceId = $btn.data("invoice-id");
+
+                    if (!confirm("Are you sure you want to refund this invoice?")) {
+                        return;
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/admin/workspace/' + workspaceId + '/refund_invoice',
+                        data: {
+                            _token: '{{csrf_token()}}',
+                            invoice_id: invoiceId
+                        }
+                    }).done(function () {
+                        alert("invoice refunded successfully..");
+                        location.reload();
+                    }).fail(function (xhr) {
+                        alert("failed to refund invoice: " + (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
+                    });
+                });
         });
     </script>
 </div>

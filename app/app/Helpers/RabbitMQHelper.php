@@ -17,6 +17,10 @@ class RabbitMQHelper
     const WORKSPACE_SUSPENDED_QUEUE = 'workspace_suspended';
     const WORKSPACE_SUSPENDED_LEGACY_QUEUE = 'workspace_account_suspended';
     const WORKSPACE_SUSPENDED_ROUTING_KEY = 'workspace.account.suspended';
+    const PAY_AS_YOU_GO_BALANCE_QUEUE = 'pay_as_you_go_balance_alerts';
+    const PAY_AS_YOU_GO_TOPUPS_QUEUE = 'pay_as_you_go_topups';
+
+
 
     /**
      * Generic method to publish a message to any RabbitMQ queue.
@@ -321,6 +325,17 @@ class RabbitMQHelper
         ];
 
         return self::publish('alerting_queue', $payload);
+    }
+
+    public static function publishBalanceCheck($workspaceId) {
+        $payload = [
+            'action' => 'CHECK_BALANCE',
+            'workspace_id' => (int) $workspaceId,
+            'source'       => 'CALL',
+            'created_at'   => date('Y-m-d H:i:s'),
+        ];
+
+        return self::publish('alerting_tasks', $payload);
     }
 
 }

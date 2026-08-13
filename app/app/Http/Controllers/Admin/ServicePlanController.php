@@ -185,20 +185,21 @@ class ServicePlanController extends AdminController
 }
 
     private function getFeatureOptions() {
+
         return [
 $this->createFeatureOption('allows_monthly'),
             $this->createFeatureOption('allows_annual'),
-            $this->createFeatureOption('fax'),
-            $this->createFeatureOption('im_integrations'),
-            $this->createFeatureOption('productivity_integrations'),
+            // $this->createFeatureOption('fax'),
+            // $this->createFeatureOption('im_integrations'),
+            // $this->createFeatureOption('productivity_integrations'),
             $this->createFeatureOption('voice_analytics'),
             $this->createFeatureOption('fraud_protection'),
-            $this->createFeatureOption('crm_integrations'),
-            $this->createFeatureOption('programmable_toolkit'),
-            $this->createFeatureOption('sso'),
-            $this->createFeatureOption('provisioner'),
-            $this->createFeatureOption('vpn'),
-            $this->createFeatureOption('multiple_sip_domains'),
+            // $this->createFeatureOption('crm_integrations'),
+            //$this->createFeatureOption('programmable_toolkit'),
+            // $this->createFeatureOption('sso'),
+            // $this->createFeatureOption('provisioner'),
+            //$this->createFeatureOption('vpn'),
+            //$this->createFeatureOption('multiple_sip_domains'),
             $this->createFeatureOption('bring_carrier'),
             $this->createFeatureOption('featured_plan'),
             $this->createFeatureOption('include_in_pricing_pages'),

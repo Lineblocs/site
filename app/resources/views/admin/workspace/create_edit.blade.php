@@ -156,6 +156,7 @@
                         <th>Amount</th>
                         <th>Status</th>
                         <th>Date/time</th>
+                        <th>Action</th>
                     </thead>
                     <tbody>
                         @foreach ($invoices as $record)
@@ -175,6 +176,11 @@
                                     @endif
                                 </td>
                                 <td>{{$record['created_at']}}</td>
+                                <td>
+                                    @if ($record['status'] === 'PAID')
+                                    <button type="button" class="btn btn-danger btn-sm refund-trigger" data-invoice-id="{{$record['id']}}">Refund</button>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

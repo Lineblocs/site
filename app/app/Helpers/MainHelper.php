@@ -1323,6 +1323,41 @@ final class MainHelper {
       return false;
     }
 
+    public static function processCreditRefund($workspaceId) {
+        $creditRecords = \App\UserCredit::where('workspace_id', $workspaceId)
+            ->whereNotNull('payment_intent_id')
+            ->get();
+
+        if ($creditRecords->isEmpty()) {
+            return;
+        }
+
+        $refundIds = $creditRecords->pluck('payment_intent_id')->filter()->values()->toArray();
+
+        if (empty($refundIds)) {
+            return;
+        }
+
+        $workspace = \App\Workspace::find($workspaceId);
+        $subscription = \App\Subscription::where('workspace_id', $workspaceId)->first();
+        $user = \App\User::find($workspace->creator_id ?? null);
+        $servicePlan = $subscription ? \App\ServicePlan::find($subscription->current_plan_id) : null;
+        $billingCycle = $subscription ? $subscription->billing_cycle : null;
+        $nextBillingDate = $subscription ? $subscription->next_billing_date : null;
+
+        \App\Helpers\RabbitMQHelper::dispatchImmediateBilling(
+            $workspace,
+            $subscription,
+            $user,
+            $servicePlan,
+            $billingCycle,
+            null,
+            $nextBillingDate,
+            'REFUND_ACCOUNT',
+            $refundIds
+        );
+    }
+
     public static function extractAuthToken() {
         $headers = apache_request_headers();
         $token = NULL;
@@ -1334,4 +1369,6 @@ final class MainHelper {
         }
         return $token;
     }
+
+
 }

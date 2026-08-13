@@ -30,7 +30,8 @@ class ServicePlan extends Model {
   'registration_plan' => 'boolean',
   'is_free_trial_active' => 'boolean',
   'include_in_pricing_pages' => 'boolean',
-  'free_trial_exempt' => 'boolean'
+  'free_trial_exempt' => 'boolean',
+  'allow_multiple_workspace_users' => 'boolean',
   );
   protected $table ='service_plans';
   public static function sortPlansByFeatures( $plans )

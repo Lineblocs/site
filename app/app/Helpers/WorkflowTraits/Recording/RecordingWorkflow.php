@@ -161,4 +161,56 @@ trait RecordingWorkflow {
             ->header('Content-Length', strlen($fileContents));
     }
 
+    public function generatePresignedURL(Request $request) {
+        $user = $this->getUser($request);
+        $workspace = $this->getWorkspace($request);
+        $data = $request->json()->all();
+        if (empty($data['recording_id'])) {
+            return $this->response->errorBadRequest("recording_id is required");
+        }
+
+        $recording = Recording::where('id', $data['recording_id'])
+                            ->where('workspace_id', $workspace->id)
+                            ->first();
+
+        if (!$recording) {
+            return $this->response->errorNotFound();
+        }
+
+        if (empty($recording->s3_key)) {
+            return $this->response->errorNotFound("Recording does not have an S3 key.");
+        }
+
+        // Generate a presigned URL for the S3 object
+        try {
+            $record = \App\ApiCredentialKVStore::getRecord();
+            $s3Region = $record['aws_region'];
+            $s3Key = $record['aws_access_key_id'];
+            $s3Secret = $record['aws_secret_access_key'];
+            $bucket = $record['s3_bucket'];
+
+            $s3Client = new \Aws\S3\S3Client([
+                'version' => 'latest',
+                'region' => $s3Region,
+                'credentials' => [
+                    'key' => $s3Key,
+                    'secret' => $s3Secret,
+                ],
+            ]);
+            $key = ltrim($recording->s3_key, '/');
+
+            $cmd = $s3Client->getCommand('GetObject', [
+                'Bucket' => $bucket,
+                'Key' => $key
+            ]);
+
+            $request = $s3Client->createPresignedRequest($cmd, '+20 minutes');
+            $presignedUrl = (string) $request->getUri();
+
+            return response()->json(['presigned_url' => $presignedUrl]);
+        } catch (\Exception $e) {
+            return $this->response->errorInternal("Could not generate presigned URL: " . $e->getMessage());
+        }
+    }
+
 }

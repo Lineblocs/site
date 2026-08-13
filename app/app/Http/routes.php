@@ -755,6 +755,7 @@ $api->version('v1', function($api) {
         $api->post("/{recordingId}/tag", "RecordingController@addRecordingTag");
         $api->delete("/{recordingId}/tag/{tagName}", "RecordingController@removeRecordingTag");
         $api->post("/downloadRecordings", "RecordingController@downloadRecordings");
+        $api->post("/generatePresignedURL", "RecordingController@generatePresignedURL");
     });
 
     $api->group([ 'prefix' => 'phone', 'namespace' => '\App\Http\Controllers\Api\Phone'], function($api) {

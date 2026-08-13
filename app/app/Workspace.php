@@ -44,7 +44,11 @@ class Workspace extends Model {
                     ->first();
 
         $array['user_info'] = $workspaceUser->toArray();
-        $array['subscription_info'] = $subscription->toArray();
+        $array['subscription_info'] = NULL;
+        if (!empty($subscription)) {
+            $array['subscription_info'] = $subscription->toArray();
+        }
+
       return $array;
   }
   public function provisionURL() {
