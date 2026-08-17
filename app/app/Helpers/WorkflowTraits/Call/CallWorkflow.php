@@ -72,7 +72,13 @@ trait CallWorkflow {
         }
 
         $info = $call->toArray();
-        $info['recordings'] = Recording::where('call_id', '=', $call->id)->get()->toArray();
+        $recordings = Recording::where('call_id', '=', $call->id)->get();
+
+        $info['recordings'] = $recordings->map(function ($recording) {
+            $data = $recording->toArray();
+            $data['presigned_url'] = MainHelper::generatePresignedURL($recording->s3_key);
+            return $data;
+        })->values()->toArray();
         $info['ai_summary'] = $this->createAISummary($call);
 
         return $this->response->array($info);

@@ -1370,5 +1370,41 @@ final class MainHelper {
         return $token;
     }
 
+    public static function generatePresignedURL($s3_key) {
+        if (empty($s3_key)) {
+            return null;
+        }
+
+        // Generate a presigned URL for the S3 object
+        try {
+            $record = \App\ApiCredentialKVStore::getRecord();
+            $s3Region = $record['aws_region'];
+            $s3Key = $record['aws_access_key_id'];
+            $s3Secret = $record['aws_secret_access_key'];
+            $bucket = $record['s3_bucket'];
+
+            $s3Client = new \Aws\S3\S3Client([
+                'version' => 'latest',
+                'region' => $s3Region,
+                'credentials' => [
+                    'key' => $s3Key,
+                    'secret' => $s3Secret,
+                ],
+            ]);
+            $key = 'recordings/' . $s3_key;
+
+            $cmd = $s3Client->getCommand('GetObject', [
+                'Bucket' => $bucket,
+                'Key' => $key
+            ]);
+
+            $s3Request = $s3Client->createPresignedRequest($cmd, '+20 minutes');
+            $presignedUrl = (string) $s3Request->getUri();
+
+            return $presignedUrl;
+        } catch (\Exception $e) {
+            throw new \Exception("Could not generate presigned URL: " . $e->getMessage());
+        }
+    }
 
 }
