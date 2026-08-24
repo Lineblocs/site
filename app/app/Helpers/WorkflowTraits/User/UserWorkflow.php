@@ -70,7 +70,7 @@ trait UserWorkflow {
     {
         $subscription = DB::table('subscriptions')
             ->join('service_plans', 'subscriptions.current_plan_id', '=', 'service_plans.id')
-            ->where('subscriptions.id', '=', $workspace->subscription_id)
+            ->where('subscriptions.workspace_id', '=', $workspace->id)
             ->select('service_plans.allow_multiple_workspace_users')
             ->first();
 

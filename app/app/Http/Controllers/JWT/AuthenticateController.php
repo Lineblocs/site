@@ -73,6 +73,16 @@ class AuthenticateController extends ApiAuthController
             return $workspace;
         }
 
+        // get the first available workspace for the user
+        $workspace = Workspace::join('workspaces_users', 'workspaces.id', '=', 'workspaces_users.workspace_id')
+            ->join('users', 'workspaces_users.user_id', '=', 'users.id')
+            ->where('workspaces_users.user_id', '=', $currentUser->id)
+            ->select('workspaces.*')
+            ->first();
+        if (!empty($workspace)) {
+            return $workspace;
+        }
+
         return NULL;
     }
 

@@ -50,6 +50,7 @@ final class EmailHelper {
             'password_reset',
             'password_was_reset',
             'payment_receipt',
+            'forgot_password',
             'plan_upgraded',
             'quote',
             'quote_confirm',
@@ -103,7 +104,11 @@ final class EmailHelper {
         foreach (self::$categorizedEmails as $category => $templates) {
             if (in_array($templateName, $templates, true)) {
                 $attributeName = 'email_mute_' . $category;
-                return isset($user->$attributeName) && (bool) $user->$attributeName === false;
+                if ($user->$attributeName) {
+                    return true;
+                }
+
+                return false;
             }
         }
         return false;

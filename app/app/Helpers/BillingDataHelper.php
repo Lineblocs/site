@@ -107,9 +107,9 @@ final class BillingDataHelper {
       $membershipFees = 0;
       $amountOwed = 0;
       $planCost = 0;
-      $credits = UserCredit::where('user_id', '=',$user->id)->where('status', PaymentStatus::APPROVED)->get();
-      $debits = UserDebit::where('user_id', '=',$user->id)->get();
-      $invoices = UserInvoice::where('user_id', '=',$user->id)
+      $credits = UserCredit::where('workspace_id', '=',$workspace->id)->where('status', PaymentStatus::APPROVED)->get();
+      $debits = UserDebit::where('workspace_id', '=',$workspace->id)->get();
+      $invoices = UserInvoice::where('workspace_id', '=',$workspace->id)
                             ->where('status', '!=', PaymentStatus::PAID)
                             ->where('status', '!=', PaymentStatus::CANCELLED)
                             ->get();

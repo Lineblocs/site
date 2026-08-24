@@ -357,7 +357,7 @@ class MergedController extends ApiAuthController
       }
       $graph = ['labels' => $labels, 'data' => $data];
       $user = $this->getUser($request);
-        $billingInfo = BillingDataHelper::getBillingInfo($user, $plan);
+        $billingInfo = BillingDataHelper::getBillingInfo($user, $plan, $subscription, $workspace);
        $billing = [
           'info' => $billingInfo
         ];
@@ -510,9 +510,9 @@ class MergedController extends ApiAuthController
           'info' => $billingInfo
         ];
         $user = $this->getUser($request);
-        $cards = UserCard::where('user_id', $user->id)->get()->toArray();
+        $cards = UserCard::where('workspace_id', $workspace->id)->get()->toArray();
         $config = MainHelper::getPublicConfig();
-        $billingHistory = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id from users_invoices order by created_at desc) as U where U.user_id = "%s";', $user->id));
+        $billingHistory = DB::select(sprintf('select * from (select status, cents, created_at, \'credit\' as type, user_id, workspace_id from users_credits  union  select status, cents, created_at, \'invoice\' as type, user_id, workspace_id from users_invoices order by created_at desc) as U where U.user_id = "%s" and U.workspace_id = "%s";', $user->id, $workspace->id));
 
         foreach ($billingHistory as $key => $item) {
           $item->dollars = MainHelper::toDollars($item->cents);
