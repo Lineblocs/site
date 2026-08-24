@@ -6,18 +6,22 @@
     <li class="active"><a href="#tab-general" data-toggle="tab"> {{
             trans("admin/modal.general") }}</a></li>
             @if (!empty($servers))
-     <li><a href="#tab-digitmapping" data-toggle="tab"> {{
+            <!--
+            <li><a href="#tab-digitmapping" data-toggle="tab"> {{
             trans("admin/modal.digitmapping") }}</a></li>
+            -->
             @endif
 
             @if (!empty($servers))
      <li><a href="#tab-servers" data-toggle="tab"> {{
             trans("admin/modal.servers") }}</a></li>
             @endif
+            <!--
             @if (!empty($rtpproxies))
      <li><a href="#tab-rtpproxies" data-toggle="tab"> {{
             trans("admin/modal.rtpproxies") }}</a></li>
             @endif
+            -->
             @if (!empty($rtpengines))
      <li><a href="#tab-rtpengines" data-toggle="tab"> {{
             trans("admin/modal.rtpengines") }}</a></li>

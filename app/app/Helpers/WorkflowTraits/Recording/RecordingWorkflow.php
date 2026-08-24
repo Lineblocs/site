@@ -125,13 +125,37 @@ trait RecordingWorkflow {
         $zipFileName = 'recordings_' . time() . '.zip';
         $zipPath = public_path('/recordings/' . $zipFileName);
 
+        $record = \App\ApiCredentialKVStore::getRecord();
+        $s3Region = $record['aws_region'];
+        $s3Key = $record['aws_access_key_id'];
+        $s3Secret = $record['aws_secret_access_key'];
+        $bucket = $record['s3_bucket'];
+
+        $s3Client = new \Aws\S3\S3Client([
+            'version' => 'latest',
+            'region' => $s3Region,
+            'credentials' => [
+                'key' => $s3Key,
+                'secret' => $s3Secret,
+            ],
+        ]);
+
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
             $hasFiles = false;
             foreach ($recordings as $recording) {
-                if (!empty($recording->s3_url)) {
-                    $fileContents = @file_get_contents($recording->s3_url);
+                if (!empty($recording->s3_key)) {
+                    try {
+                        $key = 'recordings/' . $recording->s3_key;
+                        $result = $s3Client->getObject([
+                            'Bucket' => $bucket,
+                            'Key' => $key
+                        ]);
+                        $fileContents = (string) $result['Body'];
+                    } catch (\Exception $e) {
+                        $fileContents = false;
+                    }
                     if ($fileContents !== false) {
-                        $fileName = !empty($recording->name) ? $recording->name : basename(parse_url($recording->s3_url, PHP_URL_PATH));
+                        $fileName = !empty($recording->name) ? $recording->name : basename($recording->s3_key);
                         if (empty($fileName)) {
                             $fileName = 'recording_' . $recording->id . '.wav';
                         }
@@ -162,6 +186,7 @@ trait RecordingWorkflow {
     }
 
     public function generatePresignedURL(Request $request) {
+
         $user = $this->getUser($request);
         $workspace = $this->getWorkspace($request);
         $data = $request->json()->all();
@@ -181,31 +206,9 @@ trait RecordingWorkflow {
             return $this->response->errorNotFound("Recording does not have an S3 key.");
         }
 
-        // Generate a presigned URL for the S3 object
+
         try {
-            $record = \App\ApiCredentialKVStore::getRecord();
-            $s3Region = $record['aws_region'];
-            $s3Key = $record['aws_access_key_id'];
-            $s3Secret = $record['aws_secret_access_key'];
-            $bucket = $record['s3_bucket'];
-
-            $s3Client = new \Aws\S3\S3Client([
-                'version' => 'latest',
-                'region' => $s3Region,
-                'credentials' => [
-                    'key' => $s3Key,
-                    'secret' => $s3Secret,
-                ],
-            ]);
-            $key = ltrim($recording->s3_key, '/');
-
-            $cmd = $s3Client->getCommand('GetObject', [
-                'Bucket' => $bucket,
-                'Key' => $key
-            ]);
-
-            $request = $s3Client->createPresignedRequest($cmd, '+20 minutes');
-            $presignedUrl = (string) $request->getUri();
+            $presignedUrl = MainHelper::generatePresignedURL($recording->s3_key);
 
             return response()->json(['presigned_url' => $presignedUrl]);
         } catch (\Exception $e) {

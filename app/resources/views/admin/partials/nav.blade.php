@@ -85,12 +85,14 @@
                             </a>
                         </li>
 
-                        
+
+                        <!--
                         <li>
                             <a href="{{url('admin/rtpproxy')}}">
                                 <i class="glyphicon glyphicon-user"></i> RTP proxies
                             </a>
                         </li>
+                        -->
 
                         <li>
                             <a href="{{url('admin/rtpengine')}}">
@@ -235,21 +237,27 @@
                                 <i class="glyphicon glyphicon-user"></i> DNS Records
                             </a>
                         </li>
+                        <!--
                         <li>
                             <a href="{{url('admin/systemstatus')}}">
                                 <i class="glyphicon glyphicon-user"></i> System Status
                             </a>
                         </li>
+                        -->
+                        <!--
                         <li>
                             <a href="{{url('admin/errortrace')}}">
                                 <i class="glyphicon glyphicon-user"></i> Error Trace
                             </a>
                         </li>
+                        -->
+                        <!--
                         <li>
                             <a href="{{url('admin/routingeditor')}}">
                                 <i class="glyphicon glyphicon-user"></i> Routing Editor
                             </a>
                         </li>
+                        -->
                     </ul>
                 </li>
                 <li>

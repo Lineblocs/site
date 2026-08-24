@@ -16,6 +16,8 @@ use App\Console\Commands\QueueAnnualInvoiceCommand;
 use App\Console\Commands\SendMonthlyWorkspaceInvoiceCommand;
 use App\Console\Commands\SendAnnualWorkspaceInvoiceCommand;
 use App\Console\Commands\SendEmailTemplatePreviewsCommand;
+use App\Console\Commands\MigrateBillingStrategy;
+use App\Console\Commands\BackfillRecordingS3Keys;
 // use App\Console\Commands\SuspendPastDueWorkspacesCommand;
 
 class Kernel extends ConsoleKernel
@@ -39,6 +41,8 @@ class Kernel extends ConsoleKernel
         SendMonthlyWorkspaceInvoiceCommand::class,
         SendAnnualWorkspaceInvoiceCommand::class,
         SendEmailTemplatePreviewsCommand::class,
+        MigrateBillingStrategy::class,
+        BackfillRecordingS3Keys::class,
         // SuspendPastDueWorkspacesCommand::class
     ];
 
