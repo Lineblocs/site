@@ -1,0 +1,27 @@
+{
+  "apps": [
+    {
+      "name": "laravel-queue-worker",
+      "script": "artisan",
+      "args": "queue:work --sleep=3 --tries=3 --timeout=600",
+      "interpreter": "php",
+      "cwd": "./",
+      "autorestart": true,
+      "watch": false,
+      "max_memory_restart": "500M",
+      "env": {
+        "APP_ENV": "production"
+      }
+    },
+    {
+      "name": "laravel-scheduler",
+      "script": "artisan",
+      "args": "schedule:run",
+      "interpreter": "php",
+      "cwd": "./",
+      "autorestart": true,
+      "cron_restart": "* * * * *",
+      "watch": false
+    }
+  ]
+}

@@ -60,6 +60,7 @@
                     @endif
                 </div>
             </div>
+            <!--
             <div class="row">
                 <h3>Theme settings</h3>
                 <hr/>
@@ -88,8 +89,8 @@
                             <option value="normal">Normal</option>
                         @endif
 
-                        <!--<option>Wide</option>-->
-                        <!--<option>Compact</option>-->
+                        <option>Wide</option>
+                        <option>Compact</option>
 
                     </select>
                 </div>
@@ -104,8 +105,8 @@
                         @else
                             <option value="arial">Arial</option>
                         @endif
-                        <!--<option>Wide</option>-->
-                        <!--<option>Compact</option>-->
+                        <option>Wide</option>-
+                        <option>Compact</option>
                     </select>
                 </div>
             </div>
@@ -120,11 +121,10 @@
                         @else
                             <option value="arial">Arial</option>
                         @endif
-                        <!--<option>Wide</option>-->
-                        <!--<option>Compact</option>-->
                     </select>
                 </div>
             </div>
+            -->
 
            <div class="row">
                 <h3>Global contact details</h3>
@@ -265,6 +265,7 @@
             </div>
 
 
+            <!--
             <div class="row form-group">
                 <label for="mail_provider">SSO options</label>
                 <div class="controls">
@@ -292,6 +293,7 @@
                     <label>Enable Apple</label>
                 </div>
             </div>
+            -->
 
             <div class="row form-group">
                 <label for="app_logo">Annual pricing</label>

@@ -546,6 +546,7 @@ class RabbitMQEventConsumer extends Command
             'workspace_id' => $workspaceId,
             'failed_recipients' => $failedRecipients
         ]);
+        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
     }
 
     private function normalizeWorkspaceSuspendedPayload(array $payload)
